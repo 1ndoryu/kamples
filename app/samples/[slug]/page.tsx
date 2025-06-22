@@ -2,14 +2,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { obtenerSamplePorSlug } from '@/services/swordApi';
-import DetalleSample from '@/components/DetalleSample'; // <-- 1. Importar el nuevo componente cliente
+import DetalleSample from '@/components/DetalleSample';
 
-type Props = {
-    params: { slug: string };
-};
-
-// La función generateMetadata se mantiene igual, se ejecuta en el servidor.
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+// CORRECCIÓN: Se elimina el tipo 'Props' y se define el tipo de los parámetros de forma "inline".
+export async function generateMetadata(
+    { params }: { params: { slug: string } }
+): Promise<Metadata> {
     const sample = await obtenerSamplePorSlug(params.slug);
     if (!sample) {
         return { title: 'Sample no encontrado' };
@@ -20,8 +18,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
-// La página sigue siendo un Server Component para el SEO y la obtención de datos.
-export default async function PaginaDeSample({ params }: Props) {
+// CORRECCIÓN: Se aplica la misma lógica de tipado inline para el componente de la página.
+export default async function PaginaDeSample({ params }: { params: { slug: string } }) {
     const { slug } = params;
     const sample = await obtenerSamplePorSlug(slug);
 
@@ -29,7 +27,6 @@ export default async function PaginaDeSample({ params }: Props) {
         notFound();
     }
 
-    // 2. Renderizamos el componente cliente, pasándole los datos.
-    // Toda la lógica de presentación (incluido styled-jsx) está ahora en DetalleSample.
+    // El componente de cliente se encarga de la presentación.
     return <DetalleSample sample={sample} />;
 }
