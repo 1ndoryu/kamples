@@ -4,13 +4,12 @@ import type { RespuestaApiSamples, Sample } from '@/types/sample';
 
 // Se mantiene el manejador de errores personalizado
 class ApiError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'ApiError';
-    }
+    constructor(message: string) {
+        super(message);
+        this.name = 'ApiError';
+    }
 }
 
-// --- REFACTORIZACIÓN (Regla 4 y 11) ---
 // Función base refactorizada con timeout y mejor manejo de errores.
 async function fetchApi<T>(endpoint: string, options: RequestInit = {}, timeout = 8000): Promise<T> {
     const controller = new AbortController();
@@ -29,10 +28,10 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}, timeout 
     }
 
     try {
-        const respuesta = await fetch(url, { 
-            ...options, 
+        const respuesta = await fetch(url, {
+            ...options,
             headers,
-            signal: controller.signal // Clave para el timeout
+            signal: controller.signal
         });
         
         clearTimeout(idTimeout);
@@ -48,15 +47,21 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}, timeout 
         }
 
         return respuesta.json();
-    } catch (error: any) {
+    } catch (error: unknown) { // CORRECCIÓN: 'any' cambiado a 'unknown'
         clearTimeout(idTimeout);
-        if (error.name === 'AbortError') {
+        if (error instanceof Error && error.name === 'AbortError') {
             const mensajeError = `La petición a la API (${url}) superó el tiempo de espera de ${timeout / 1000}s.`;
             console.error(mensajeError);
             throw new ApiError(mensajeError);
         }
-        console.error(`Error crítico en fetchApi (${url}):`, error.message);
-        throw error instanceof ApiError ? error : new ApiError('Ocurrió un error de conexión con la API.');
+        
+        // Si el error ya es conocido (ApiError), lo relanzamos. Si no, creamos uno nuevo.
+        if (error instanceof ApiError) {
+            throw error;
+        }
+        
+        console.error(`Error crítico en fetchApi (${url}):`, error);
+        throw new ApiError('Ocurrió un error de conexión con la API.');
     }
 }
 

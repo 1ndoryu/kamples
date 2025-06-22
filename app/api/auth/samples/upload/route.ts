@@ -20,23 +20,14 @@ export async function POST(request: NextRequest) {
                 Authorization: `Bearer ${token}`,
             },
             body: formData,
-            signal: AbortSignal.timeout(30000), 
+            signal: AbortSignal.timeout(30000),
         });
 
-
-        // --- AQUÍ ESTÁ LA LÓGICA QUE CONTIENE EL CONSOLE.ERROR ---
         // 3. Verificamos si la respuesta del backend es JSON antes de procesarla.
         const contentType = respuestaApi.headers.get('content-type');
-
         if (!contentType || !contentType.includes('application/json')) {
-            // Si NO es JSON, es porque PHP falló y devolvió un error HTML.
-            const respuestaTexto = await respuestaApi.text(); // Leemos la respuesta como texto.
-            
-            // ¡ESTA ES LA LÍNEA CLAVE QUE BUSCAS!
-            // Imprime el error de PHP en la consola de tu servidor Next.js (la terminal).
+            const respuestaTexto = await respuestaApi.text();
             console.error('La API de SwordPHP no devolvió JSON. Respuesta recibida:', respuestaTexto);
-            
-            // Y luego enviamos un error controlado (502) al navegador.
             return NextResponse.json(
                 {
                     error: {
@@ -47,9 +38,7 @@ export async function POST(request: NextRequest) {
                 { status: 502 }
             );
         }
-        // --- FIN DE LA LÓGICA DE VERIFICACIÓN ---
         
-        // Si el código llega aquí, es porque la respuesta SÍ fue JSON.
         const datosRespuesta = await respuestaApi.json();
 
         if (!respuestaApi.ok) {
@@ -58,11 +47,14 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json(datosRespuesta, { status: 201 });
 
-    } catch (error: any) {
+    } catch (error: unknown) { // CORRECCIÓN: 'any' cambiado a 'unknown'
         console.error('Error en /api/samples/upload:', error);
-        if (error.name === 'AbortError') {
+        
+        // Verificamos si es un error de tipo AbortError para un mensaje específico
+        if (error instanceof Error && error.name === 'AbortError') {
             return NextResponse.json({ error: { message: 'La subida del archivo ha tardado demasiado y fue cancelada.' } }, { status: 408 });
         }
+        
         return NextResponse.json({ error: { message: 'Error interno del servidor al procesar la subida.' } }, { status: 500 });
     }
 }

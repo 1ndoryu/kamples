@@ -34,27 +34,27 @@ export default function FormularioSubirSample({alCerrar}: Props) {
         formData.append('estado', 'publicado');
 
         try {
-            // --- CORRECCIÓN CLAVE ---
-            // La URL ahora incluye el segmento /auth/ para coincidir con la estructura de archivos.
             const respuesta = await fetch('/api/auth/samples/upload', {
                 method: 'POST',
                 body: formData
-                // No se necesita 'Content-Type', el navegador lo pone automáticamente
             });
 
             const datos = await respuesta.json();
 
             if (!respuesta.ok) {
-                // El mensaje de error viene de nuestra API proxy
                 throw new Error(datos.error?.message || 'Error desconocido al subir el sample.');
             }
 
-            // Si todo fue bien:
             console.log('Sample subido con éxito:', datos.data);
-            alCerrar(); // Cierra el modal
-            router.refresh(); // Refresca los datos de la página actual para ver el nuevo sample
-        } catch (err: any) {
-            setError(err.message);
+            alCerrar();
+            router.refresh();
+        } catch (err: unknown) { // CORRECCIÓN: 'any' cambiado a 'unknown'
+            // Verificamos si el error es una instancia de Error para acceder a '.message'
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('Ocurrió un error inesperado.');
+            }
         } finally {
             setCargando(false);
         }
