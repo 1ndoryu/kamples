@@ -11,9 +11,6 @@ export default async function PaginaPrincipal() {
 
     return (
         <section className="contenedorPrincipal">
-            <h1>Biblioteca de Samples</h1>
-            <p>Estos son los últimos samples subidos.</p>
-
             {/* Usamos el componente cliente para mostrar los datos */}
             <ListaSamples samples={samples} />
             

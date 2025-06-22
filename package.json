@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@simplr-sh/avatar": "^0.0.3",
+    "geist": "^1.4.2",
     "jwt-decode": "^4.0.0",
     "next": "15.3.4",
     "react": "^19.0.0",

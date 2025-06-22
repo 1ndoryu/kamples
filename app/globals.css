@@ -580,3 +580,55 @@ a.logo svg {
     gap: 1rem;
     align-items: center;
 }
+
+/* Estilos para MenuDesplegable.tsx */
+.contenedorMenuPrincipal {
+    position: relative;
+    display: inline-block;
+}
+
+.botonMenu {
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+}
+
+.menuDesplegable {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background-color: var(--color-fondo-secundario);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radius);
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.menuDesplegable ul {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem;
+}
+
+.itemMenu {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.itemMenu:hover {
+    background-color: var(--color-tarjeta-fondo-hover);
+}
+
+.itemMenu.peligro {
+    color: #e53e3e;
+}
+
+.itemMenu.peligro:hover {
+    background-color: rgba(229, 62, 62, 0.1);
+}

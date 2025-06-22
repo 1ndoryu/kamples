@@ -6,7 +6,6 @@ import {useRouter} from 'next/navigation';
 import InfoUsuario from '@/components/ui/InfoUsuario';
 import ZonaArrastre from './previews/ZonaArrastre';
 import Boton from '../ui/Boton';
-
 interface Props {
     alCerrar: () => void;
 }

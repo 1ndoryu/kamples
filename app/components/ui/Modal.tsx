@@ -99,7 +99,7 @@ export default function Modal({titulo, estaAbierto, alCerrar, children}: Props) 
                     opacity: 1;
                 }
                 .modalCuerpo {
-                    padding: 1.5rem;
+                    padding: 1.2rem;
                     overflow-y: auto;
                 }
             `}</style>
