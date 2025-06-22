@@ -1,3 +1,5 @@
+// app/types/sample.ts
+
 // Basado en la documentación de la API /content
 export interface Sample {
     id: number;
@@ -9,7 +11,7 @@ export interface Sample {
     estado: 'publicado' | 'borrador' | 'privado';
     tipocontenido: string; // 'sample', 'post', etc.
     metadata: {
-        [key: string]: any; // Para campos personalizados como _imagen_destacada_id
+        [key: string]: unknown; // CORRECCIÓN: 'any' cambiado a 'unknown'.
     };
     created_at: string; // Formato ISO 8601
     updated_at: string; // Formato ISO 8601
