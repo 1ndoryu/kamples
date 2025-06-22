@@ -4,18 +4,18 @@ import {notFound} from 'next/navigation';
 import {obtenerSamplePorSlug} from '@/services/swordApi';
 import DetalleSample from '@/components/DetalleSample';
 import type {Metadata} from 'next';
-import type {Sample} from '@/types/sample';
 
-// 1. (CORRECCIÓN) Creamos una interfaz para los parámetros
+// CORRECCIÓN: La interfaz de props para una página debe incluir `params` y `searchParams`.
 interface PaginaSampleProps {
 	params: {
 		slug: string;
 	};
+	searchParams: {[key: string]: string | string[] | undefined};
 }
 
-// 2. (CORRECCIÓN) Usamos la interfaz para tipar los 'params'
+// La firma de generateMetadata ahora utiliza la interfaz correcta.
 export async function generateMetadata({params}: PaginaSampleProps): Promise<Metadata> {
-	const sample: Sample | null = await obtenerSamplePorSlug(params.slug);
+	const sample = await obtenerSamplePorSlug(params.slug);
 
 	if (!sample) {
 		return {title: 'Sample no encontrado'};
@@ -26,7 +26,7 @@ export async function generateMetadata({params}: PaginaSampleProps): Promise<Met
 	};
 }
 
-// Componente asíncrono para la carga de datos.
+// Componente asíncrono para la carga de datos (sin cambios).
 async function SampleLoader({slug}: {slug: string}) {
 	const sample = await obtenerSamplePorSlug(slug);
 	if (!sample) {
@@ -35,7 +35,7 @@ async function SampleLoader({slug}: {slug: string}) {
 	return <DetalleSample sample={sample} />;
 }
 
-// 3. (CORRECCIÓN) Tipamos los 'params' también en el componente de la página
+// El componente de la página ahora también utiliza la interfaz correcta.
 export default function PaginaDeSample({params}: PaginaSampleProps) {
 	return (
 		<div>
