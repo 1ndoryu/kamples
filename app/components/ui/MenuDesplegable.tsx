@@ -39,6 +39,12 @@ export function ContenedorMenu({children}: {children: ReactNode}) {
         <MenuContext.Provider value={{abierto, setAbierto}}>
             <div ref={menuRef} className="contenedorMenuPrincipal">
                 {children}
+                <style jsx>{`
+                    .contenedorMenuPrincipal {
+                        position: relative;
+                        display: inline-block;
+                    }
+                `}</style>
             </div>
         </MenuContext.Provider>
     );
@@ -55,19 +61,39 @@ export function BotonMenu({children, className}: {children: ReactNode; className
 }
 
 /** La lista de opciones que aparece y desaparece */
-export function ListaMenu({children, ancho = 200}: {children: ReactNode; ancho?: number}) {
+export function Menu({children, ancho = 200}: {children: ReactNode; ancho?: number}) {
     const {abierto} = useMenu();
     if (!abierto) return null;
 
     return (
-        <div className="menuDesplegable" role="menu" style={{width: `${ancho}px`}}>
-            <ul>{children}</ul>
+        <div className="menuContenedor">
+            <ul className="menuLista" role="menu" style={{width: `${ancho}px`}}>
+                {children}
+            </ul>
+            <style jsx>{`
+                .menuContenedor {
+                    position: absolute;
+                    right: 0;
+                    top: 100%;
+                    z-index: 10;
+                    padding-top: 0.5rem;
+                }
+                .menuLista {
+                    list-style: none;
+                    margin: 0;
+                    padding: 0.5rem;
+                    background-color: var(--color-fondo);
+                    border: 1px solid var(--color-borde);
+                    border-radius: var(--radius);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                }
+            `}</style>
         </div>
     );
 }
 
 /** Cada uno de los ítems clickeables dentro del menú */
-export function ItemMenu({children, onClick, tipo = 'normal'}: {children: ReactNode; onClick: () => void; tipo?: 'normal' | 'peligro'}) {
+export function MenuItem({children, onClick, tipo = 'normal'}: {children: ReactNode; onClick: () => void; tipo?: 'normal' | 'peligro'}) {
     const {setAbierto} = useMenu();
     const manejarClick = () => {
         onClick();
@@ -77,6 +103,29 @@ export function ItemMenu({children, onClick, tipo = 'normal'}: {children: ReactN
     return (
         <li role="menuitem" className={`itemMenu ${tipo}`} onClick={manejarClick}>
             {children}
+            <style jsx>{`
+                .itemMenu {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    padding: 0.5rem 0.75rem;
+                    border-radius: var(--radius);
+                    cursor: pointer;
+                    font-size: 0.9rem;
+                    transition: background-color 0.2s;
+                    white-space: nowrap;
+                }
+                .itemMenu:hover {
+                    background-color: var(--color-tarjeta-fondo-hover);
+                }
+                .itemMenu.peligro {
+                    color: #e53e3e;
+                }
+                .itemMenu.peligro:hover {
+                    background-color: rgba(229, 62, 62, 0.1);
+                    color: #c53030;
+                }
+            `}</style>
         </li>
     );
 }
