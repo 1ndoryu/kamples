@@ -4,26 +4,28 @@
 import Link from 'next/link';
 import InterruptorTema from './InterruptorTema';
 import Boton from '@/components/ui/Boton';
-import { useAuth } from '@/context/AuthContext';
-import SubirSample from '@/components/SubirSample'; // <-- 1. Importar
+import {useAuth} from '@/context/AuthContext';
+import SubirSample from '@/components/SubirSample';
 
 export default function Header() {
-    const { usuario, logout, cargando } = useAuth();
+    const {usuario, logout, cargando} = useAuth();
 
     return (
         <header className="cabeceraPrincipal">
             <div className="contenedor">
+                {/* El logo se puede mantener o mover al menú lateral si se prefiere */}
                 <Link href="/" className="logo">
                     Kamples
                 </Link>
-                <nav className="navegacionPrincipal">
-                    <Link href="/explorar">Explorar</Link>
 
+                {/* La navegación principal ahora está en el menú lateral */}
+                {/* Dejamos aquí los controles de usuario y tema */}
+                <div className="controlesCabecera">
                     {cargando ? (
                         <div className="cargandoAuth"></div>
                     ) : usuario ? (
                         <>
-                            <SubirSample /> {/* <-- 2. Reemplazar el botón de enlace */}
+                            <SubirSample />
                             <span className="nombreUsuario">Hola, {usuario.nombremostrado}</span>
                             <Boton onClick={logout} variante="primario">
                                 Cerrar Sesión
@@ -39,24 +41,25 @@ export default function Header() {
                             </Boton>
                         </>
                     )}
-
                     <InterruptorTema />
-                </nav>
+                </div>
             </div>
             <style jsx>{`
-                /* ... se mantiene el CSS anterior ... */
                 .cabeceraPrincipal {
                     padding: 1rem 2rem;
                     background-color: var(--color-fondo-secundario);
                     border-bottom: 1px solid var(--color-borde);
                     transition: background-color 0.3s, border-color 0.3s;
+                    position: sticky; /* Hacemos el header pegajoso */
+                    top: 0;
+                    z-index: 10;
+                    width: 100%;
                 }
                 .contenedor {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    max-width: 1200px;
-                    margin: 0 auto;
+                    width: 100%;
                 }
                 .logo {
                     font-size: 1.5rem;
@@ -64,27 +67,15 @@ export default function Header() {
                     text-decoration: none;
                     color: var(--color-texto);
                 }
-                .navegacionPrincipal {
+                .controlesCabecera {
                     display: flex;
                     align-items: center;
                     gap: 1rem;
                 }
-                .navegacionPrincipal > :global(a) {
-                    text-decoration: none;
-                    color: var(--color-texto);
-                    opacity: 0.8;
-                    transition: opacity 0.2s;
-                    padding: 0.6rem 0.4rem;
-                }
-                .navegacionPrincipal > :global(a):hover {
-                    opacity: 1;
-                }
-
                 .nombreUsuario {
                     font-weight: 600;
                     opacity: 0.9;
                 }
-
                 .cargandoAuth {
                     width: 70px;
                     height: 20px;

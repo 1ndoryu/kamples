@@ -4,6 +4,7 @@
 import {useState} from 'react';
 import Input from '@/components/ui/Input';
 import Boton from '@/components/ui/Boton';
+import {useRouter} from 'next/navigation'; // Importante para la recarga de datos
 
 interface Props {
     alCerrar: () => void;
@@ -14,6 +15,7 @@ export default function FormularioSubirSample({alCerrar}: Props) {
     const [archivo, setArchivo] = useState<File | null>(null);
     const [error, setError] = useState('');
     const [cargando, setCargando] = useState(false);
+    const router = useRouter(); // Hook para refrescar la página
 
     const manejarSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -27,47 +29,34 @@ export default function FormularioSubirSample({alCerrar}: Props) {
 
         const formData = new FormData();
         formData.append('titulo', titulo);
-        formData.append('archivoSample', archivo); // El archivo en sí
+        formData.append('archivoSample', archivo);
         formData.append('tipocontenido', 'sample');
-        formData.append('estado', 'publicado'); // o 'borrador'
+        formData.append('estado', 'publicado');
 
-        /*
-         * TODO: BACKEND
-         * La API de SwordPHP necesita un endpoint que acepte `multipart/form-data`.
-         * El endpoint actual `POST /content` solo acepta `application/json`.
-         * Se debe crear un nuevo endpoint, por ejemplo `POST /content/upload` o modificar el existente.
-         *
-         * Cuando esté listo, aquí se haría la llamada fetch:
-         *
-         * try {
-         * const respuesta = await fetch('/api/proxy-a-sword', {
-         * method: 'POST',
-         * body: formData,
-         * // No se necesita 'Content-Type', el navegador lo pone automáticamente con FormData
-         * });
-         * const datos = await respuesta.json();
-         * if (!respuesta.ok) throw new Error(datos.error.message);
-         * * // Si todo fue bien:
-         * console.log('Sample subido!', datos);
-         * alCerrar(); // Cierra el modal
-         *
-         * } catch (err) {
-         * setError(err.message);
-         * } finally {
-         * setCargando(false);
-         * }
-         */
+        try {
+            // Usamos la nueva ruta proxy de Next.js
+            const respuesta = await fetch('/api/samples/upload', {
+                method: 'POST',
+                body: formData
+                // No se necesita 'Content-Type', el navegador lo pone automáticamente
+            });
 
-        // Simulación temporal
-        console.log('Enviando datos:', {
-            titulo,
-            archivo
-        });
-        setTimeout(() => {
-            console.log('¡Simulación de subida completada!');
+            const datos = await respuesta.json();
+
+            if (!respuesta.ok) {
+                // El mensaje de error viene de la API
+                throw new Error(datos.error?.message || 'Error desconocido al subir el sample.');
+            }
+
+            // Si todo fue bien:
+            console.log('Sample subido con éxito:', datos.data);
+            alCerrar(); // Cierra el modal
+            router.refresh(); // Refresca los datos de la página actual para ver el nuevo sample
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
             setCargando(false);
-            alCerrar();
-        }, 1500);
+        }
     };
 
     return (
@@ -101,7 +90,7 @@ export default function FormularioSubirSample({alCerrar}: Props) {
                     display: flex;
                     justify-content: flex-end;
                     gap: 1rem;
-                    margin-top: 0.5rem; /* Ajuste para reducir espacio extra del último input */
+                    margin-top: 0.5rem;
                 }
             `}</style>
         </form>
