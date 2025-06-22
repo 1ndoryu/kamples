@@ -1,58 +1,57 @@
 // app/api/auth/sesion/route.ts
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { jwtDecode } from 'jwt-decode';
+import { NextResponse, type NextRequest } from 'next/server';
 
-// Interface para el payload esperado en el JWT que genera tu API
-interface JwtPayload {
-    id: number;
-    nombreusuario: string;
-    nombremostrado: string;
-    correoelectronico: string;
-    rol: string;
-    // iat, exp, etc., que son campos estándar de JWT
-}
+export async function GET(request: NextRequest) {
+    // Se cambia el método de obtención de la cookie para mayor robustez,
+    // usando el objeto `request` que recibe la función.
+    const tokenCookie = request.cookies.get('kamples_token');
 
-export async function GET() {
-    const cookieStore = cookies();
-    const tokenCookie = cookieStore.get('kamples_token');
-
-    if (!tokenCookie) {
+    if (!tokenCookie || !tokenCookie.value) {
         return NextResponse.json({ error: 'No autorizado, token no encontrado' }, { status: 401 });
     }
 
     const token = tokenCookie.value;
+    const apiUrl = process.env.NEXT_PUBLIC_SWORD_API_URL;
 
     try {
-        /*
-         * ADVERTENCIA DE SEGURIDAD IMPORTANTE:
-         * Esto es una simulación. jwt-decode solo decodifica el token, NO verifica su firma.
-         * Un token modificado o falso sería aceptado aquí.
-         *
-         * SOLUCIÓN RECOMENDADA:
-         * 1. Crea un endpoint en tu API de SwordPHP (ej: GET /auth/me o /auth/verify).
-         * 2. Desde esta función, envía el token a tu API.
-         * 3. Tu API debe verificar la firma, la expiración y devolver los datos del usuario.
-         * 4. Si tu API dice que el token es válido, devuelves los datos. Si no, devuelves un error 401.
-        */
-        const decodificado = jwtDecode<JwtPayload>(token);
+        // --- CAMBIO FUNDAMENTAL ---
+        // Ya no decodificamos el token. Lo enviamos a un nuevo endpoint en el backend
+        // para que sea él quien verifique la sesión y nos devuelva los datos.
+        const respuestaApi = await fetch(`${apiUrl}/users/me`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            // Buena práctica: añadir un timeout para evitar que se quede colgado.
+            signal: AbortSignal.timeout(5000)
+        });
 
-        // Creamos el objeto de usuario a partir de la información del token
-        const usuario = {
-            id: decodificado.id,
-            nombreusuario: decodificado.nombreusuario,
-            nombremostrado: decodificado.nombremostrado,
-            correoelectronico: decodificado.correoelectronico,
-            rol: decodificado.rol,
-        };
+        // Si el backend dice que el token no es válido (ej. devuelve 401),
+        // replicamos ese error al cliente.
+        if (!respuestaApi.ok) {
+            const errorData = await respuestaApi.json().catch(() => ({}));
+            const message = errorData?.error?.message || 'Token inválido o sesión expirada en el backend';
+            
+            // Limpiamos la cookie rota del navegador
+            const respuestaError = NextResponse.json({ error: message }, { status: respuestaApi.status });
+            respuestaError.cookies.set('kamples_token', '', { expires: new Date(0), path: '/' });
+            return respuestaError;
+        }
+
+        // Si el backend confirma que el token es válido, nos dará los datos del usuario.
+        const datosUsuario = await respuestaApi.json();
+
+        // NOTA: Tu API puede devolver los datos directamente o anidados en un objeto "data".
+        // Asumo que puede ser { "data": { ...usuario } } o simplemente { ...usuario }.
+        // Este código contempla ambas posibilidades.
+        const usuario = datosUsuario.data || datosUsuario;
 
         return NextResponse.json({ usuario });
 
     } catch (error) {
-        console.error("Error al procesar el token de sesión:", error);
-        // Si jwt-decode falla (token malformado o expirado), borramos la cookie inválida.
-        const respuesta = NextResponse.json({ error: 'Token inválido o expirado' }, { status: 401 });
-        respuesta.cookies.set('kamples_token', '', { expires: new Date(0), path: '/' });
-        return respuesta;
+        console.error("Error al verificar la sesión con el backend:", error);
+        // Este error ocurriría por un problema de red o un timeout.
+        return NextResponse.json({ error: 'Error de comunicación con el servidor de autenticación' }, { status: 500 });
     }
 }

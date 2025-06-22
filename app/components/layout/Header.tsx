@@ -4,10 +4,11 @@
 import Link from 'next/link';
 import InterruptorTema from './InterruptorTema';
 import Boton from '@/components/ui/Boton';
-import {useAuth} from '@/context/AuthContext'; // <-- Importamos el hook de autenticación
+import { useAuth } from '@/context/AuthContext';
+import SubirSample from '@/components/SubirSample'; // <-- 1. Importar
 
 export default function Header() {
-    const {usuario, logout, cargando} = useAuth(); // <-- Obtenemos el usuario y la función logout
+    const { usuario, logout, cargando } = useAuth();
 
     return (
         <header className="cabeceraPrincipal">
@@ -18,14 +19,11 @@ export default function Header() {
                 <nav className="navegacionPrincipal">
                     <Link href="/explorar">Explorar</Link>
 
-                    {/* Renderizado condicional basado en el estado de carga y el usuario */}
                     {cargando ? (
-                        <div className="cargandoAuth"></div> // Placeholder de carga
+                        <div className="cargandoAuth"></div>
                     ) : usuario ? (
                         <>
-                            <Boton href="/subir" variante="secundario">
-                                Subir Sample
-                            </Boton>
+                            <SubirSample /> {/* <-- 2. Reemplazar el botón de enlace */}
                             <span className="nombreUsuario">Hola, {usuario.nombremostrado}</span>
                             <Boton onClick={logout} variante="primario">
                                 Cerrar Sesión

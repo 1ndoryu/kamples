@@ -1,39 +1,45 @@
 // app/login/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // 1. Importar useEffect
 import Boton from '@/components/ui/Boton';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
 export default function PaginaLogin() {
-    const { login, usuario } = useAuth();
+    const { login, usuario, cargando: cargandoAuth } = useAuth();
     const router = useRouter();
     const [nombreUsuario, setNombreUsuario] = useState('');
     const [clave, setClave] = useState('');
     const [error, setError] = useState('');
-    const [cargando, setCargando] = useState(false);
+    const [cargandoSubmit, setCargandoSubmit] = useState(false);
 
-    // Si el usuario ya está logueado, redirigir a la página principal
-    if (usuario) {
-        router.push('/');
-        return null; // Renderiza null mientras redirige
-    }
+    // 2. Usar useEffect para el efecto secundario de la redirección
+    useEffect(() => {
+        // Si el usuario ya está autenticado y la carga inicial del contexto ha terminado, redirigir
+        if (usuario && !cargandoAuth) {
+            router.push('/');
+        }
+    }, [usuario, cargandoAuth, router]); // Se ejecuta cuando estos valores cambian
 
     const manejarSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        setCargando(true);
+        setCargandoSubmit(true);
 
         const resultado = await login(nombreUsuario, clave);
 
         if (!resultado.exito) {
             setError(resultado.error || 'Ocurrió un error inesperado.');
+            setCargandoSubmit(false);
         }
-        // Si el login es exitoso, el AuthContext se encargará de redirigir.
-
-        setCargando(false);
+        // La redirección después de un login exitoso ya es manejada por el AuthContext
     };
+
+    // 3. Mientras se determina el estado de autenticación, no mostrar nada para evitar un parpadeo
+    if (cargandoAuth || usuario) {
+        return null; // O un componente de carga si lo prefieres
+    }
 
     return (
         <>
@@ -44,23 +50,22 @@ export default function PaginaLogin() {
                     <form onSubmit={manejarSubmit}>
                         <div className="campoFormulario">
                             <label htmlFor="nombreUsuario">Nombre de Usuario</label>
-                            <input id="nombreUsuario" type="text" value={nombreUsuario} onChange={e => setNombreUsuario(e.target.value)} required disabled={cargando}/>
+                            <input id="nombreUsuario" type="text" value={nombreUsuario} onChange={e => setNombreUsuario(e.target.value)} required disabled={cargandoSubmit}/>
                         </div>
                         <div className="campoFormulario">
                             <label htmlFor="clave">Contraseña</label>
-                            <input id="clave" type="password" value={clave} onChange={e => setClave(e.target.value)} required disabled={cargando}/>
+                            <input id="clave" type="password" value={clave} onChange={e => setClave(e.target.value)} required disabled={cargandoSubmit}/>
                         </div>
                         {error && <p className="mensajeError">{error}</p>}
 
-                        {/* MEJORA: Tipo 'submit' explícito, onClick eliminado, estado 'disabled' añadido */}
-                        <Boton type="submit" className="anchoCompleto" disabled={cargando}>
-                            {cargando ? 'Iniciando...' : 'Iniciar Sesión'}
+                        <Boton type="submit" className="anchoCompleto" disabled={cargandoSubmit}>
+                            {cargandoSubmit ? 'Iniciando...' : 'Iniciar Sesión'}
                         </Boton>
                     </form>
                 </div>
             </section>
 
-            {/* El CSS no cambia, se mantiene igual */}
+            {/* El CSS se mantiene sin cambios */}
             <style jsx>{`
                 .contenedorLogin {
                     display: flex;

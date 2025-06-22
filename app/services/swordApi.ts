@@ -2,17 +2,20 @@
 
 import type { RespuestaApiSamples, Sample } from '@/types/sample';
 
-// Creamos un manejador de errores personalizado para la API
+// Se mantiene el manejador de errores personalizado
 class ApiError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'ApiError';
-    }
+    constructor(message: string) {
+        super(message);
+        this.name = 'ApiError';
+    }
 }
 
-// Función base para realizar peticiones a la API. Es reutilizable.
-async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    // CORRECCIÓN: Usamos la variable de entorno específica para la API
+// --- REFACTORIZACIÓN (Regla 4 y 11) ---
+// Función base refactorizada con timeout y mejor manejo de errores.
+async function fetchApi<T>(endpoint: string, options: RequestInit = {}, timeout = 8000): Promise<T> {
+    const controller = new AbortController();
+    const idTimeout = setTimeout(() => controller.abort(), timeout);
+
     const url = `${process.env.NEXT_PUBLIC_SWORD_API_URL}${endpoint}`;
     const apiKey = process.env.SWORD_API_KEY;
 
@@ -21,16 +24,20 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
         ...(options.headers as Record<string, string> | undefined)
     };
 
-    // Si la petición no es pública, añadimos el token de autenticación.
     if (apiKey) {
         headers['Authorization'] = `Bearer ${apiKey}`;
     }
 
     try {
-        const respuesta = await fetch(url, { ...options, headers });
+        const respuesta = await fetch(url, { 
+            ...options, 
+            headers,
+            signal: controller.signal // Clave para el timeout
+        });
+        
+        clearTimeout(idTimeout);
 
         if (!respuesta.ok) {
-            // Intenta parsear el error del cuerpo de la respuesta si es posible
             const errorBody = await respuesta.json().catch(() => null);
             const errorMessage = errorBody?.error?.message || `Error en la petición: ${respuesta.status} ${respuesta.statusText}`;
             throw new ApiError(errorMessage);
@@ -41,9 +48,15 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
         }
 
         return respuesta.json();
-    } catch (error) {
-        console.error('Error en fetchApi:', error);
-        throw error;
+    } catch (error: any) {
+        clearTimeout(idTimeout);
+        if (error.name === 'AbortError') {
+            const mensajeError = `La petición a la API (${url}) superó el tiempo de espera de ${timeout / 1000}s.`;
+            console.error(mensajeError);
+            throw new ApiError(mensajeError);
+        }
+        console.error(`Error crítico en fetchApi (${url}):`, error.message);
+        throw error instanceof ApiError ? error : new ApiError('Ocurrió un error de conexión con la API.');
     }
 }
 
@@ -58,7 +71,7 @@ export async function obtenerSamples(): Promise<Sample[]> {
         const respuesta = await fetchApi<RespuestaApiSamples>(endpoint);
         return respuesta.data.items;
     } catch (error) {
-        console.error("Error al obtener la lista de samples:", error);
+        console.error("Error al obtener la lista de samples:", error instanceof Error ? error.message : String(error));
         return [];
     }
 }
@@ -70,18 +83,16 @@ export async function obtenerSamples(): Promise<Sample[]> {
  * @returns Una promesa que resuelve al sample encontrado o null si no existe.
  */
 export async function obtenerSamplePorSlug(slug: string): Promise<Sample | null> {
-    // Usamos el endpoint que te recomendé añadir a tu API.
     const endpoint = `/content?type=sample&slug=${slug}`;
 
     try {
         const respuesta = await fetchApi<RespuestaApiSamples>(endpoint);
-        // La API devuelve un array, tomamos el primer (y único) elemento.
         if (respuesta.data.items && respuesta.data.items.length > 0) {
             return respuesta.data.items[0];
         }
-        return null; // No se encontró el sample
+        return null;
     } catch (error) {
-        console.error(`Error al obtener el sample con slug "${slug}":`, error);
+        console.error(`Error al obtener el sample con slug "${slug}":`, error instanceof Error ? error.message : String(error));
         return null;
     }
 }
