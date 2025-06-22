@@ -5,15 +5,15 @@ import { obtenerSamplePorSlug } from '@/services/swordApi';
 import DetalleSample from '@/components/DetalleSample';
 import type { Sample } from '@/types/sample';
 
-// CORRECCIÓN: Definimos una interfaz completa que coincide con la de Next.js,
-// incluyendo `params` y `searchParams` para máxima compatibilidad.
-interface PageProps {
+// CORRECCIÓN: Se renombra la interfaz a un nombre único para evitar
+// conflictos con los tipos autogenerados por Next.js en el directorio .next/
+interface SamplePageProps {
   params: { slug: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export async function generateMetadata(
-    { params }: PageProps
+    { params }: SamplePageProps
 ): Promise<Metadata> {
     const sample: Sample | null = await obtenerSamplePorSlug(params.slug);
 
@@ -26,7 +26,7 @@ export async function generateMetadata(
     };
 }
 
-export default async function PaginaDeSample({ params }: PageProps) {
+export default async function PaginaDeSample({ params }: SamplePageProps) {
     const { slug } = params;
     const sample: Sample | null = await obtenerSamplePorSlug(slug);
 
