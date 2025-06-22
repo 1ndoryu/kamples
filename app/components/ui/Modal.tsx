@@ -57,7 +57,7 @@ export default function Modal({titulo, estaAbierto, alCerrar, children}: Props) 
                     border: var(--borde);
                     border-radius: var(--radius);
                     width: 90%;
-                    max-width: 500px;
+                    max-width: 600px;
                     max-height: 90vh;
                     display: flex;
                     flex-direction: column;

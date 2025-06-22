@@ -1,7 +1,7 @@
 // app/components/forms/FormularioSubirSample.tsx
 'use client';
 
-import {useState} from 'react';
+import {useState, useRef, useCallback} from 'react';
 import {useRouter} from 'next/navigation';
 import InfoUsuario from '@/components/ui/InfoUsuario';
 import ZonaArrastre from './previews/ZonaArrastre';
@@ -13,15 +13,21 @@ interface Props {
 
 export default function FormularioSubirSample({alCerrar}: Props) {
     const [contenido, setContenido] = useState('');
-    const [archivos, setArchivos] = useState<File[]>([]);
+    const [archivoAudio, setArchivoAudio] = useState<File | null>(null);
+    const [archivoImagen, setArchivoImagen] = useState<File | null>(null);
+
     const [error, setError] = useState('');
     const [cargando, setCargando] = useState(false);
+    const [estaArrastrando, setEstaArrastrando] = useState(false);
     const router = useRouter();
+
+    const inputAudioRef = useRef<HTMLInputElement>(null);
+    const inputImagenRef = useRef<HTMLInputElement>(null);
 
     const manejarSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (archivos.length === 0) {
-            setError('Por favor, añade al menos un archivo de audio.');
+        if (!archivoAudio) {
+            setError('El archivo de audio es obligatorio.');
             return;
         }
 
@@ -29,25 +35,19 @@ export default function FormularioSubirSample({alCerrar}: Props) {
         setCargando(true);
 
         const formData = new FormData();
-        // Extraer tags del contenido
         const tags = contenido.match(/#(\w+)/g)?.map(tag => tag.substring(1)) || [];
 
-        formData.append('contenido', contenido);
-        formData.append('post_tags', JSON.stringify(tags)); // Enviamos los tags como un JSON array
+        formData.append('archivoSample', archivoAudio);
+        if (archivoImagen) {
+            formData.append('archivoImagen', archivoImagen);
+        }
 
-        // Asumiendo que el primer audio es el principal y el resto son adjuntos
-        // La API necesita esta lógica definida. Por ahora, adjuntamos todos.
-        archivos.forEach((archivo, index) => {
-            // El nombre del campo debe coincidir con la API. Usaré 'archivos[]' como convención.
-            formData.append(`archivos[${index}]`, archivo);
-        });
-
-        // Aquí puedes agregar la lógica de los checkboxes
-        // formData.append('fancheck', '1');
+        formData.append('titulo', contenido.trim() || archivoAudio.name.replace(/\.[^/.]+$/, ''));
+        formData.append('tipocontenido', 'sample');
+        formData.append('estado', 'publicado');
+        formData.append('post_tags', JSON.stringify(tags));
 
         try {
-            // NOTA: El endpoint '/api/auth/samples/upload' debe ser actualizado
-            // para manejar múltiples archivos y el nuevo formato de datos.
             const respuesta = await fetch('/api/auth/samples/upload', {
                 method: 'POST',
                 body: formData
@@ -56,10 +56,9 @@ export default function FormularioSubirSample({alCerrar}: Props) {
             const datos = await respuesta.json();
 
             if (!respuesta.ok) {
-                throw new Error(datos.error?.message || 'Error al subir el post.');
+                throw new Error(datos.error?.message || 'Error al subir el sample.');
             }
 
-            console.log('Post creado con éxito:', datos.data);
             alCerrar();
             router.refresh();
         } catch (err: unknown) {
@@ -69,47 +68,113 @@ export default function FormularioSubirSample({alCerrar}: Props) {
         }
     };
 
+    const manejarArrastre = (e: React.DragEvent<HTMLFormElement>, activo: boolean) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setEstaArrastrando(activo);
+    };
+
+    const manejarSoltar = useCallback((e: React.DragEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setEstaArrastrando(false);
+        setError('');
+
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            const archivosSoltados = Array.from(e.dataTransfer.files);
+            const audio = archivosSoltados.find(f => f.type.startsWith('audio/'));
+            const imagen = archivosSoltados.find(f => f.type.startsWith('image/'));
+
+            if (audio) setArchivoAudio(audio);
+            if (imagen) setArchivoImagen(imagen);
+
+            if (!audio && !imagen) {
+                setError('Solo puedes arrastrar archivos de audio o imagen.');
+            }
+        }
+    }, []);
+
+    const manejarSeleccionArchivo = (e: React.ChangeEvent<HTMLInputElement>, tipo: 'audio' | 'imagen') => {
+        if (e.target.files && e.target.files.length > 0) {
+            const archivo = e.target.files[0];
+            if (tipo === 'audio') {
+                setArchivoAudio(archivo);
+            } else {
+                setArchivoImagen(archivo);
+            }
+        }
+    };
+
+    // Variable para controlar la visibilidad del preview
+    const hayArchivos = archivoAudio || archivoImagen;
+
     return (
-        // Usamos la estructura HTML solicitada con clases para que apliques tus estilos
-        <form className="bloqueFormulario" onSubmit={manejarSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+        <form className={`bloqueFormulario ${estaArrastrando ? 'arrastreActivo' : ''}`} onSubmit={manejarSubmit} onDragEnter={e => manejarArrastre(e, true)} onDragOver={e => manejarArrastre(e, true)} onDragLeave={e => manejarArrastre(e, false)} onDrop={manejarSoltar}>
             <InfoUsuario />
 
-            <div>
-                {/* Este `textarea` simula el `contenteditable` y es más fácil de controlar en React */}
-                <textarea id="textoRs" value={contenido} onChange={e => setContenido(e.target.value)} placeholder="Agrega tags usando #, puedes agregar varios audios a la vez" className="postTagsDABVYT" rows={1}></textarea>
-            </div>
+            <textarea id="textoRs" value={contenido} onChange={e => setContenido(e.target.value)} placeholder="Describe tu sample, usa #tags para clasificar..." className="postTagsDABVYT" rows={1}></textarea>
 
-            <ZonaArrastre archivos={archivos} setArchivos={setArchivos} />
+            {/* AJUSTE: La zona de preview solo se muestra si hay archivos */}
+            {hayArchivos && <ZonaArrastre archivoAudio={archivoAudio} archivoImagen={archivoImagen} onAdjuntarAudio={() => inputAudioRef.current?.click()} onAdjuntarImagen={() => inputImagenRef.current?.click()} onEliminarAudio={() => setArchivoAudio(null)} onEliminarImagen={() => setArchivoImagen(null)} />}
 
-            {/* Placeholder para los checkboxes y opciones adicionales */}
-            <div id="opcionesAdicionales" style={{display: 'none'}}>
-                {/* Aquí irían los checkboxes de la estructura HTML */}
-            </div>
+            <input type="file" ref={inputAudioRef} onChange={e => manejarSeleccionArchivo(e, 'audio')} accept="audio/*" style={{display: 'none'}} />
+            <input type="file" ref={inputImagenRef} onChange={e => manejarSeleccionArchivo(e, 'imagen')} accept="image/*" style={{display: 'none'}} />
 
             {error && <p className="mensajeError">{error}</p>}
 
-            <div className="botonesForm">
-                {/* Puedes añadir los botones de icono aquí si lo deseas */}
-                <Boton type="button" variante="secundario" onClick={alCerrar} disabled={cargando}>
-                    Cancelar
-                </Boton>
-                <Boton type="submit" variante="secundario" disabled={archivos.length === 0 || cargando}>
-                    {cargando ? 'Publicando...' : 'Publicar'}
-                </Boton>
+            {/* AJUSTE: Contenedor para TODOS los botones de acción */}
+            <div className="accionesFormulario">
+                {/* Botones para adjuntar archivos */}
+                <div className="botonesAdjuntar">
+                    <Boton type="button" onClick={() => inputAudioRef.current?.click()} variante="secundario">
+                        {archivoAudio ? 'Cambiar Audio' : 'Adjuntar Audio'}
+                    </Boton>
+                    <Boton type="button" onClick={() => inputImagenRef.current?.click()} variante="secundario">
+                        {archivoImagen ? 'Cambiar Imagen' : 'Adjuntar Imagen'}
+                    </Boton>
+                </div>
+
+                {/* Botones para enviar o cancelar */}
+                <div className="botonesPublicar">
+                    <Boton type="button" variante="secundario" onClick={alCerrar} disabled={cargando}>
+                        Cancelar
+                    </Boton>
+                    <Boton type="submit" variante="secundario" disabled={!archivoAudio || cargando}>
+                        {cargando ? 'Publicando...' : 'Publicar'}
+                    </Boton>
+                </div>
             </div>
 
             <style jsx>{`
-                .botonesForm {
+                .bloqueFormulario {
                     display: flex;
-                    justify-content: flex-end;
-                    gap: 1rem;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    transition: background-color 0.2s;
+                    border-radius: var(--radius);
+                    max-width: 600px;
+                    width: 100%;
+                }
+                .bloqueFormulario.arrastreActivo {
+                    background-color: rgba(var(--color-primario-rgb), 0.1);
+                    border-color: var(--color-primario);
+                }
+                .accionesFormulario {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 0.5rem;
+                }
+                .botonesAdjuntar,
+                .botonesPublicar {
+                    display: flex;
+                    gap: 0.5rem;
                 }
                 .mensajeError {
                     color: #e53e3e;
                     font-size: 0.9rem;
                     text-align: center;
                 }
-
                 textarea#textoRs {
                     border-bottom: unset !important;
                 }
