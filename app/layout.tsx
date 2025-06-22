@@ -5,7 +5,7 @@ import './globals.css';
 
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import MenuLateral from '@/components/layout/MenuLateral'; // <-- 1. Importar
+import MenuLateral from '@/components/layout/MenuLateral';
 import {TemaProvider} from '@/context/TemaContext';
 import {AuthProvider} from '@/context/AuthContext';
 
@@ -30,7 +30,6 @@ export default function RootLayout({
             <body className={sourceSans.className}>
                 <TemaProvider>
                     <AuthProvider>
-                        {/* --- 2. Modificar la estructura principal --- */}
                         <div className="layoutPrincipal">
                             <MenuLateral />
                             <div className="contenidoPagina">
@@ -41,24 +40,7 @@ export default function RootLayout({
                         </div>
                     </AuthProvider>
                 </TemaProvider>
-
-                {/* --- 3. Añadir CSS mínimo para la nueva estructura --- */}
-                <style jsx global>{`
-                    .layoutPrincipal {
-                        display: flex;
-                        min-height: 100vh;
-                    }
-                    .contenidoPagina {
-                        flex-grow: 1;
-                        display: flex;
-                        flex-direction: column;
-                    }
-                    .contenidoPrincipal {
-                       flex-grow: 1;
-                       padding: 2rem; /* Añadimos padding aquí para consistencia */
-                    }
-                `}</style>
-
+                {/* El bloque <style jsx global> ha sido eliminado para corregir el error */}
             </body>
         </html>
     );

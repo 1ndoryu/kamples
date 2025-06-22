@@ -44,45 +44,6 @@ export default function Header() {
                     <InterruptorTema />
                 </div>
             </div>
-            <style jsx>{`
-                .cabeceraPrincipal {
-                    padding: 1rem 2rem;
-                    background-color: var(--color-fondo-secundario);
-                    border-bottom: 1px solid var(--color-borde);
-                    transition: background-color 0.3s, border-color 0.3s;
-                    position: sticky; /* Hacemos el header pegajoso */
-                    top: 0;
-                    z-index: 10;
-                    width: 100%;
-                }
-                .contenedor {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    width: 100%;
-                }
-                .logo {
-                    font-size: 1.5rem;
-                    font-weight: bold;
-                    text-decoration: none;
-                    color: var(--color-texto);
-                }
-                .controlesCabecera {
-                    display: flex;
-                    align-items: center;
-                    gap: 1rem;
-                }
-                .nombreUsuario {
-                    font-weight: 600;
-                    opacity: 0.9;
-                }
-                .cargandoAuth {
-                    width: 70px;
-                    height: 20px;
-                    border-radius: 4px;
-                    background-color: var(--color-borde);
-                }
-            `}</style>
         </header>
     );
 }

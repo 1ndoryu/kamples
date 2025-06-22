@@ -4,7 +4,7 @@
 import {useState} from 'react';
 import Input from '@/components/ui/Input';
 import Boton from '@/components/ui/Boton';
-import {useRouter} from 'next/navigation'; // Importante para la recarga de datos
+import {useRouter} from 'next/navigation';
 
 interface Props {
     alCerrar: () => void;
@@ -15,7 +15,7 @@ export default function FormularioSubirSample({alCerrar}: Props) {
     const [archivo, setArchivo] = useState<File | null>(null);
     const [error, setError] = useState('');
     const [cargando, setCargando] = useState(false);
-    const router = useRouter(); // Hook para refrescar la página
+    const router = useRouter();
 
     const manejarSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,8 +34,9 @@ export default function FormularioSubirSample({alCerrar}: Props) {
         formData.append('estado', 'publicado');
 
         try {
-            // Usamos la nueva ruta proxy de Next.js
-            const respuesta = await fetch('/api/samples/upload', {
+            // --- CORRECCIÓN CLAVE ---
+            // La URL ahora incluye el segmento /auth/ para coincidir con la estructura de archivos.
+            const respuesta = await fetch('/api/auth/samples/upload', {
                 method: 'POST',
                 body: formData
                 // No se necesita 'Content-Type', el navegador lo pone automáticamente
@@ -44,7 +45,7 @@ export default function FormularioSubirSample({alCerrar}: Props) {
             const datos = await respuesta.json();
 
             if (!respuesta.ok) {
-                // El mensaje de error viene de la API
+                // El mensaje de error viene de nuestra API proxy
                 throw new Error(datos.error?.message || 'Error desconocido al subir el sample.');
             }
 
