@@ -37,35 +37,7 @@ export default function Header() {
 					</>
 				)}
 			</div>
-
-			<style jsx>{`
-				.cabeceraPrincipal {
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-					padding: 1rem 2rem;
-					border-bottom: 1px solid var(--color-borde);
-					background-color: var(--color-fondo);
-				}
-				.espaciador {
-					flex-grow: 1;
-				}
-				.controlesCabecera {
-					display: flex;
-					align-items: center;
-					gap: 1rem;
-				}
-				.nombreUsuario {
-					font-weight: 600;
-				}
-				.cargandoAuth {
-					/* Placeholder para un futuro spinner */
-					width: 70px;
-					height: 24px;
-					border-radius: 8px;
-					background-color: var(--color-borde);
-				}
-			`}</style>
+			{/* El bloque <style jsx> ha sido movido a LayoutStyles.tsx */}
 		</header>
 	);
 }

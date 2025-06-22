@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer';
 import MenuLateral from '@/components/layout/MenuLateral';
 import {TemaProvider} from '@/context/TemaContext';
 import {AuthProvider} from '@/context/AuthContext';
+import LayoutStyles from '@/components/layout/LayoutStyles'; // <-- Importamos el nuevo componente
 
 const sourceSans = Source_Sans_3({
 	variable: '--font-principal',
@@ -30,6 +31,7 @@ export default function RootLayout({
 			<body className={sourceSans.className}>
 				<TemaProvider>
 					<AuthProvider>
+						<LayoutStyles /> {/* <-- Renderizamos el componente de estilos */}
 						<div className="layoutPrincipal">
 							<MenuLateral />
 							<div className="contenidoPagina">
@@ -40,29 +42,7 @@ export default function RootLayout({
 						</div>
 					</AuthProvider>
 				</TemaProvider>
-				{/* (CORRECCIÓN) Estilos globales para la estructura principal del layout */}
-				<style jsx global>{`
-					:root {
-						--ancho-menu-lateral: 240px;
-					}
-					.layoutPrincipal {
-						display: flex;
-						min-height: 100vh;
-					}
-					.contenidoPagina {
-						flex-grow: 1;
-						display: flex;
-						flex-direction: column;
-						width: calc(100% - var(--ancho-menu-lateral));
-					}
-					.contenidoPrincipal {
-						flex-grow: 1;
-						padding: 2rem;
-					}
-					.cargandoContenido {
-						padding: 2rem;
-					}
-				`}</style>
+				{/* El bloque <style jsx global> ha sido eliminado de aquí */}
 			</body>
 		</html>
 	);
