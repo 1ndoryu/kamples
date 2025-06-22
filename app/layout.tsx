@@ -1,20 +1,17 @@
 // app/layout.tsx
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import type {Metadata} from 'next';
+import {Source_Sans_3} from 'next/font/google';
 import './globals.css';
 
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { TemaProvider } from '@/context/TemaContext';
+import {TemaProvider} from '@/context/TemaContext';
+import {AuthProvider} from '@/context/AuthContext'; // <-- 1. Importar
 
-const geistSans = Geist({
-    variable: '--font-geist-sans',
-    subsets: ['latin']
-});
-
-const geistMono = Geist_Mono({
-    variable: '--font-geist-mono',
-    subsets: ['latin']
+const sourceSans = Source_Sans_3({
+    variable: '--font-principal',
+    subsets: ['latin'],
+    display: 'swap'
 });
 
 export const metadata: Metadata = {
@@ -29,13 +26,17 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="es" data-tema="oscuro" suppressHydrationWarning>
-            <body className={`${geistSans.variable} ${geistMono.variable}`}>
+            <body className={sourceSans.className}>
                 <TemaProvider>
-                    <div className="appContenedor">
-                        <Header />
-                        <main>{children}</main>
-                        <Footer />
-                    </div>
+                    <AuthProvider>
+                        {' '}
+                        {/* <-- 2. Envolver la aplicación */}
+                        <div className="appContenedor">
+                            <Header />
+                            <main>{children}</main>
+                            <Footer />
+                        </div>
+                    </AuthProvider>
                 </TemaProvider>
             </body>
         </html>

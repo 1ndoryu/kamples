@@ -1,4 +1,5 @@
-// Regla 8: Se incluye el archivo completo para facilitar la copia.
+// app/services/swordApi.ts
+
 import type { RespuestaApiSamples, Sample } from '@/types/sample';
 
 // Creamos un manejador de errores personalizado para la API
@@ -11,7 +12,8 @@ class ApiError extends Error {
 
 // Función base para realizar peticiones a la API. Es reutilizable.
 async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const url = `${process.env.SWORD_API_URL}${endpoint}`;
+    // CORRECCIÓN: Usamos la variable de entorno específica para la API
+    const url = `${process.env.NEXT_PUBLIC_SWORD_API_URL}${endpoint}`;
     const apiKey = process.env.SWORD_API_KEY;
 
     const headers: Record<string, string> = {
@@ -28,7 +30,10 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
         const respuesta = await fetch(url, { ...options, headers });
 
         if (!respuesta.ok) {
-            throw new ApiError(`Error en la petición: ${respuesta.status} ${respuesta.statusText}`);
+            // Intenta parsear el error del cuerpo de la respuesta si es posible
+            const errorBody = await respuesta.json().catch(() => null);
+            const errorMessage = errorBody?.error?.message || `Error en la petición: ${respuesta.status} ${respuesta.statusText}`;
+            throw new ApiError(errorMessage);
         }
 
         if (respuesta.status === 204) {

@@ -50,6 +50,9 @@ html[data-tema='claro'] {
     --color-enlace: #0070f3;
     --color-enlace-hover: #0056b3;
     --color-tarjeta-fondo-hover: #fafafa;
+    --color-primario: #3c65f5;
+    --color-primario-hover: #2a4ec7;
+    --color-texto-primario: #ffffff;
 }
 
 /* Tema Oscuro */
@@ -61,6 +64,9 @@ html[data-tema='oscuro'] {
     --color-enlace: #58a6ff;
     --color-enlace-hover: #80baff;
     --color-tarjeta-fondo-hover: #1a1a1a;
+    --color-primario: #5a7ff7;
+    --color-primario-hover: #7b9aff;
+    --color-texto-primario: #0d1117;
 }
 
 body {
