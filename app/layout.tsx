@@ -37,7 +37,7 @@ export default function RootLayout({
 							<div className="contenidoPagina">
 								<Header />
 								<main className="contenidoPrincipal">{children}</main>
-								<Footer />
+								
 							</div>
 						</div>
 					</AuthProvider>

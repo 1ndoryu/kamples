@@ -8,9 +8,8 @@ export default function MenuLateral() {
 	const pathname = usePathname();
 
 	const enlaces = [
-		{href: '/', texto: 'Inicio'},
-		{href: '/explorar', texto: 'Explorar'}
-		// Añadir más enlaces aquí en el futuro (ej. Mis Samples, Perfil)
+		{href: '/', texto: ''},
+
 	];
 
 	return (
@@ -18,7 +17,10 @@ export default function MenuLateral() {
 			<aside className="menuLateral">
 				<div className="logoContenedor">
 					<Link href="/" className="logo">
-						Kamples
+						<svg id="uuid-aaaa7a22-0b65-42e8-a69c-056d1307c32f" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25.2 25.2">
+							<rect y="12.6" width="12.6" height="12.6" fill="#efefef" />
+							<rect x="12.6" width="12.6" height="12.6" fill="#efefef" />
+						</svg>
 					</Link>
 				</div>
 				<nav className="navegacionPrincipal">
@@ -33,52 +35,6 @@ export default function MenuLateral() {
 					</ul>
 				</nav>
 			</aside>
-			<style jsx>{`
-				.menuLateral {
-					width: var(--ancho-menu-lateral);
-					flex-shrink: 0;
-					background-color: var(--color-fondo-secundario);
-					border-right: 1px solid var(--color-borde);
-					padding: 1.5rem;
-					display: flex;
-					flex-direction: column;
-					gap: 2rem;
-				}
-				.logoContenedor {
-					text-align: center;
-				}
-				.logo {
-					font-size: 1.8rem;
-					font-weight: 700;
-					color: var(--color-texto);
-					text-decoration: none;
-				}
-				.navegacionPrincipal ul {
-					list-style: none;
-					padding: 0;
-					margin: 0;
-					display: flex;
-					flex-direction: column;
-					gap: 0.5rem;
-				}
-				.enlaceMenu {
-					display: block;
-					padding: 0.75rem 1rem;
-					border-radius: 8px;
-					text-decoration: none;
-					color: var(--color-texto);
-					font-weight: 500;
-					transition: background-color 0.2s, color 0.2s;
-				}
-				.enlaceMenu:hover {
-					background-color: var(--color-tarjeta-fondo-hover);
-				}
-				.enlaceMenu.activo {
-					background-color: var(--color-primario);
-					color: var(--color-texto-primario);
-					font-weight: 600;
-				}
-			`}</style>
 		</>
 	);
 }

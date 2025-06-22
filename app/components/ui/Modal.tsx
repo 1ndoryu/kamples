@@ -11,7 +11,6 @@ interface Props {
 }
 
 export default function Modal({titulo, estaAbierto, alCerrar, children}: Props) {
-    // Efecto para cerrar el modal con la tecla 'Escape'
     useEffect(() => {
         const manejarTeclaEsc = (evento: KeyboardEvent) => {
             if (evento.key === 'Escape') {
@@ -36,12 +35,6 @@ export default function Modal({titulo, estaAbierto, alCerrar, children}: Props) 
         <>
             <div className="modalTelon" onClick={alCerrar}>
                 <div className="modalContenedor" onClick={e => e.stopPropagation()}>
-                    <header className="modalCabecera">
-                        <h2 className="modalTitulo">{titulo}</h2>
-                        <button onClick={alCerrar} className="modalBotonCerrar">
-                            &times;
-                        </button>
-                    </header>
                     <main className="modalCuerpo">{children}</main>
                 </div>
             </div>
@@ -60,9 +53,9 @@ export default function Modal({titulo, estaAbierto, alCerrar, children}: Props) 
                     z-index: 1000;
                 }
                 .modalContenedor {
-                    background-color: var(--color-fondo-secundario);
-                    border: 1px solid var(--color-borde);
-                    border-radius: 12px;
+                    background-color: var(--fondo);
+                    border: var(--borde);
+                    border-radius: var(--radius);
                     width: 90%;
                     max-width: 500px;
                     max-height: 90vh;
@@ -89,7 +82,7 @@ export default function Modal({titulo, estaAbierto, alCerrar, children}: Props) 
                 }
                 .modalTitulo {
                     margin: 0;
-                    font-size: 1.25rem;
+                    font-size: 1rem;
                     font-weight: 600;
                 }
                 .modalBotonCerrar {

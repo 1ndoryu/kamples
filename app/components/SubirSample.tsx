@@ -16,7 +16,7 @@ export default function SubirSample() {
             </Boton>
 
             <Modal
-                titulo="Subir Nuevo Sample"
+                titulo=""
                 estaAbierto={modalAbierto}
                 alCerrar={() => setModalAbierto(false)}
             >

@@ -13,7 +13,7 @@ interface Props {
     disabled?: boolean;
 }
 
-export default function Boton({ href, onClick, children, variante = 'primario', className = '', type = 'button', disabled = false }: Props) {
+export default function Boton({href, onClick, children, variante = 'primario', className = '', type = 'button', disabled = false}: Props) {
     const clasesBoton = `boton ${variante} ${className}`;
 
     if (href) {
@@ -33,16 +33,15 @@ export default function Boton({ href, onClick, children, variante = 'primario', 
             {/* CORRECCIÓN: Se elimina 'global' para encapsular los estilos (Regla #3) */}
             <style jsx>{`
                 .boton {
-                    display: inline-block;
-                    padding: 0.6rem 1.2rem;
-                    border-radius: 8px;
-                    border: 1px solid transparent;
-                    font-weight: 600;
-                    font-size: 0.9rem;
-                    text-decoration: none;
                     cursor: pointer;
-                    transition: background-color 0.2s, border-color 0.2s, color 0.2s, opacity 0.2s;
                     text-align: center;
+                    border: 1px solid #0000;
+                    border-radius: var(--radius);
+                    padding: 0.4rem 1rem;
+                    font-size: 12px;
+                    text-decoration: none;
+                    transition: background-color 0.2s, border-color 0.2s, color 0.2s, opacity 0.2s;
+                    display: inline-block;
                 }
 
                 .boton:disabled {
@@ -52,7 +51,7 @@ export default function Boton({ href, onClick, children, variante = 'primario', 
 
                 /* Variante Primaria */
                 .boton.primario {
-                    background-color: var(--color-primario);
+                    background-color: var(--blanco);
                     color: var(--color-texto-primario);
                 }
                 .boton.primario:hover:not(:disabled) {
@@ -61,9 +60,9 @@ export default function Boton({ href, onClick, children, variante = 'primario', 
 
                 /* Variante Secundaria */
                 .boton.secundario {
-                    background-color: transparent;
                     color: var(--color-texto);
-                    border-color: var(--color-borde);
+                    border: var(--borde);
+                    background-color: #0000;
                 }
                 .boton.secundario:hover:not(:disabled) {
                     background-color: var(--color-tarjeta-fondo-hover);
