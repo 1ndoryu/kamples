@@ -5,17 +5,10 @@ import { obtenerSamplePorSlug } from '@/services/swordApi';
 import DetalleSample from '@/components/DetalleSample';
 import type { Metadata } from 'next';
 
-// -----------------------------------------------------------------
-// 1. REMOVE the custom 'PageProps' type. It is not needed.
-// -----------------------------------------------------------------
-// type PageProps = {
-//     params: { slug: string };
-// };
+// NO debe haber ninguna definición o importación de 'PageProps' aquí.
 
-// 2. Type the props directly in the function signatures.
-// This allows TypeScript to correctly infer the types from Next.js.
 export async function generateMetadata(
-    { params }: { params: { slug: string } }
+    { params }: { params: { slug: string } } // <-- Fíjate en la sintaxis
 ): Promise<Metadata> {
     const sample = await obtenerSamplePorSlug(params.slug);
 
@@ -36,9 +29,8 @@ async function SampleLoader({ slug }: { slug: string }) {
     return <DetalleSample sample={sample} />;
 }
 
-// 3. Apply the same inline typing to your default page component.
 export default function PaginaDeSample(
-    { params }: { params: { slug: string } }
+    { params }: { params: { slug:string } } // <-- Fíjate en la sintaxis
 ) {
     return (
         <div>
