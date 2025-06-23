@@ -4,12 +4,11 @@ import {obtenerSamplePorSlug} from '@/services/swordApi';
 import DetalleSample from '@/components/DetalleSample';
 import type {Metadata} from 'next';
 
-interface PaginaSampleProps {
+interface GenerateMetadataProps {
     params: {slug: string};
-    searchParams: {[key: string]: string | string[] | undefined};
 }
 
-export async function generateMetadata({params}: PaginaSampleProps): Promise<Metadata> {
+export async function generateMetadata({params}: GenerateMetadataProps): Promise<Metadata> {
     const sample = await obtenerSamplePorSlug(params.slug);
     if (!sample) {
         return {title: 'Sample no encontrado'};
@@ -26,7 +25,7 @@ async function SampleLoader({slug}: {slug: string}) {
     return <DetalleSample sample={sample} />;
 }
 
-export default function PaginaDeSample({params, searchParams}: PaginaSampleProps) {
+export default function PaginaDeSample({params}: {params: {slug: string}}) {
     return (
         <div>
             <Suspense fallback={<div className="cargandoContenido">Cargando sample...</div>}>
