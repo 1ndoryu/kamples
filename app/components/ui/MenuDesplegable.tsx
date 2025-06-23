@@ -79,13 +79,13 @@ export function Menu({children, ancho = 200}: {children: ReactNode; ancho?: numb
                     padding-top: 0.5rem;
                 }
                 .menuLista {
-                    list-style: none;
+                    background-color: var(--fondo);
+                    border: var(--borde);
+                    border-radius: var(--radius);
                     margin: 0;
                     padding: 0.5rem;
-                    background-color: var(--color-fondo);
-                    border: 1px solid var(--color-borde);
-                    border-radius: var(--radius);
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                    list-style: none;
+                    box-shadow: 0 4px 12px #0000001a;
                 }
             `}</style>
         </div>
@@ -105,15 +105,15 @@ export function MenuItem({children, onClick, tipo = 'normal'}: {children: ReactN
             {children}
             <style jsx>{`
                 .itemMenu {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                    padding: 0.5rem 0.75rem;
                     border-radius: var(--radius);
                     cursor: pointer;
-                    font-size: 0.9rem;
-                    transition: background-color 0.2s;
                     white-space: nowrap;
+                    align-items: center;
+                    gap: 0.5rem;
+                    padding: 0.4rem 0.45rem;
+                    font-size: 0.75rem;
+                    transition: background-color 0.2s;
+                    display: flex;
                 }
                 .itemMenu:hover {
                     background-color: var(--color-tarjeta-fondo-hover);

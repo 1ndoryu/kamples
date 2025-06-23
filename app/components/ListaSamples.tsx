@@ -39,9 +39,8 @@ export default function ListaSamples({samples: samplesIniciales}: Props) {
 			<style jsx>{`
 				.rejillaSamples {
 					display: grid;
-					grid-template-columns: 1fr; /* Una sola columna por defecto */
-					gap: 1rem;
-					margin-top: 2rem;
+					grid-template-columns: 1fr;
+					gap: 0.6rem;
 				}
 			`}</style>
 		</>
