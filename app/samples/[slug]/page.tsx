@@ -1,15 +1,19 @@
+// app/samples/[slug]/page.tsx
 import {Suspense} from 'react';
 import {notFound} from 'next/navigation';
 import {obtenerSamplePorSlug} from '@/services/swordApi';
 import DetalleSample from '@/components/DetalleSample';
 import type {Metadata} from 'next';
 
-interface GenerateMetadataProps {
-    params: {slug: string};
-}
+// Tipo para las props, definido de forma más directa y simple.
+type PageProps = {
+    params: { slug: string };
+};
 
-export async function generateMetadata({params}: GenerateMetadataProps): Promise<Metadata> {
+// Usar el tipo directamente en las funciones
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const sample = await obtenerSamplePorSlug(params.slug);
+
     if (!sample) {
         return {title: 'Sample no encontrado'};
     }
@@ -21,11 +25,13 @@ export async function generateMetadata({params}: GenerateMetadataProps): Promise
 
 async function SampleLoader({slug}: {slug: string}) {
     const sample = await obtenerSamplePorSlug(slug);
-    if (!sample) notFound();
+    if (!sample) {
+        notFound();
+    }
     return <DetalleSample sample={sample} />;
 }
 
-export default function PaginaDeSample({params}: {params: {slug: string}}) {
+export default function PaginaDeSample({ params }: PageProps) {
     return (
         <div>
             <Suspense fallback={<div className="cargandoContenido">Cargando sample...</div>}>
