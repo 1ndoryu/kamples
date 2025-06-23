@@ -1,27 +1,26 @@
 // app/components/SubirSample.tsx
 'use client';
 
-import { useState } from 'react';
+import {useState} from 'react';
 import Boton from '@/components/ui/Boton';
 import Modal from '@/components/ui/Modal';
 import FormularioSubirSample from './forms/FormularioSubirSample';
 
 export default function SubirSample() {
-    const [modalAbierto, setModalAbierto] = useState(false);
+	const [modalAbierto, setModalAbierto] = useState(false);
 
-    return (
-        <>
-            <Boton onClick={() => setModalAbierto(true)} variante="secundario">
-                Subir Sample
-            </Boton>
+	return (
+		<>
+			<Boton onClick={() => setModalAbierto(true)} variante="secundario">
+				Subir Sample
+			</Boton>
 
-            <Modal
-                titulo=""
-                estaAbierto={modalAbierto}
-                alCerrar={() => setModalAbierto(false)}
-            >
-                <FormularioSubirSample alCerrar={() => setModalAbierto(false)} />
-            </Modal>
-        </>
-    );
+			<Modal
+				// CAMBIO: Se elimina la prop 'titulo'
+				estaAbierto={modalAbierto}
+				alCerrar={() => setModalAbierto(false)}>
+				<FormularioSubirSample alCerrar={() => setModalAbierto(false)} />
+			</Modal>
+		</>
+	);
 }

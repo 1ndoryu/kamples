@@ -4,13 +4,13 @@
 import {useEffect} from 'react';
 
 interface Props {
-    titulo: string;
+    // CAMBIO: Se elimina la prop 'titulo' que no se usaba.
     estaAbierto: boolean;
     alCerrar: () => void;
     children: React.ReactNode;
 }
 
-export default function Modal({titulo, estaAbierto, alCerrar, children}: Props) {
+export default function Modal({estaAbierto, alCerrar, children}: Props) {
     useEffect(() => {
         const manejarTeclaEsc = (evento: KeyboardEvent) => {
             if (evento.key === 'Escape') {
@@ -35,6 +35,7 @@ export default function Modal({titulo, estaAbierto, alCerrar, children}: Props) 
         <>
             <div className="modalTelon" onClick={alCerrar}>
                 <div className="modalContenedor" onClick={e => e.stopPropagation()}>
+                    {/* CAMBIO: El header del modal ha sido eliminado ya que no se usaba */}
                     <main className="modalCuerpo">{children}</main>
                 </div>
             </div>
