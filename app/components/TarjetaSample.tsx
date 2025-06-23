@@ -5,31 +5,65 @@ import type {Sample} from '@/types/sample';
 import Link from 'next/link';
 import ImagenSample from '@/components/ui/ImagenSample';
 import {ContenedorMenu, BotonMenu, Menu, MenuItem} from '@/components/ui/MenuDesplegable';
+import ReproductorSample from '@/components/audio/ReproductorSample';
 
 interface Props {
     sample: Sample;
 }
 
+// Función para procesar y construir la URL de la imagen
+function obtenerUrlImagen(sample: Sample): string | undefined {
+    const idImagen = sample.metadata._imagen_destacada_id;
+    if (!idImagen) return undefined;
+    // Asumimos una estructura de URL, esto puede necesitar ajuste
+    // Por ahora, lo dejamos como placeholder ya que no tengo la estructura de URL de imágenes
+    // return `${process.env.NEXT_PUBLIC_SWORD_BASE_URL}/path/to/image/${idImagen}.jpg`;
+    // **Temporalmente, usamos una imagen de ejemplo si hay ID, hasta tener la URL real**
+    return `https://picsum.photos/seed/${idImagen}/40/40`;
+}
+
+// Función para organizar los tags según las nuevas reglas
+function obtenerTagsFormateados(sample: Sample): string[] {
+    const {metadata} = sample;
+    const tagsFormateados: string[] = [];
+
+    // 1. Tipo
+    if (metadata.tipo) tagsFormateados.push(metadata.tipo as string);
+
+    // 2. Primer género
+    if (metadata.genero) tagsFormateados.push(metadata.genero.split(',')[0].trim());
+
+    // 3. Emoción
+    if (metadata.emocion) tagsFormateados.push(metadata.emocion.split(',')[0].trim());
+
+    // 4. Un tag adicional de la lista 'tags'
+    if (metadata.tags) {
+        const otrosTags = metadata.tags.split(',').map(t => t.trim());
+        const tagAdicional = otrosTags.find(t => !tagsFormateados.includes(t));
+        if (tagAdicional) tagsFormateados.push(tagAdicional);
+    }
+
+    return tagsFormateados.slice(0, 4); // Aseguramos un máximo de 4 tags
+}
+
 export default function TarjetaSample({sample}: Props) {
-    // Por ahora, no hay una URL de imagen, así que `ImagenSample` generará el gradiente.
-    const imageUrl = undefined;
-    const tags = sample.metadata.tags?.split(',').map(t => t.trim()) || [];
+    const imageUrl = obtenerUrlImagen(sample);
+    const tags = obtenerTagsFormateados(sample);
 
     return (
         <article className="tarjetaSample">
-            <div className="imagenContenedor">
-                <ImagenSample src={imageUrl} nombre={sample.titulo} alt={`Cover de ${sample.titulo}`} tamaño={40} radio={4} />
-                <button className="botonPlay" aria-label={`Reproducir ${sample.titulo}`}>
-                    ▶
-                </button>
+            {/* Contenedor del reproductor */}
+            <div className="reproductorContenedor">
+                <ReproductorSample sample={sample} />
             </div>
 
+            {/* Info y Tags */}
             <div className="infoPrincipal">
                 <Link href={`/samples/${sample.slug}`} className="enlaceTitulo">
                     <h3 className="tituloSample">{sample.titulo}</h3>
                 </Link>
                 <div className="tagsContenedor">
-                    {tags.slice(0, 5).map(tag => (
+                    {tags.map(tag => (
                         <span key={tag} className="tag">
                             {tag}
                         </span>
@@ -37,7 +71,14 @@ export default function TarjetaSample({sample}: Props) {
                 </div>
             </div>
 
+            {/* Contenedor de la imagen */}
+            <div className="imagenContenedor">
+                <ImagenSample src={imageUrl} nombre={sample.titulo} alt={`Cover de ${sample.titulo}`} tamaño={40} radio={4} />
+            </div>
+
+            {/* Acciones */}
             <div className="accionesSample">
+                <span className="infoBpm">{sample.metadata.bpm ? `${sample.metadata.bpm}bpm` : ''}</span>
                 <ContenedorMenu>
                     <BotonMenu className="botonAcciones">•••</BotonMenu>
                     <Menu ancho={150}>
@@ -66,38 +107,26 @@ export default function TarjetaSample({sample}: Props) {
                     background-color: var(--color-tarjeta-fondo-hover);
                     border-color: var(--color-borde-hover, var(--color-borde));
                 }
-                .imagenContenedor {
-                    position: relative;
-                    cursor: pointer;
-                }
-                .botonPlay {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background-color: rgba(0, 0, 0, 0.5);
-                    color: white;
-                    border: none;
-                    border-radius: 50%;
-                    width: 40px;
-                    height: 40px;
+
+                .reproductorContenedor {
                     display: flex;
                     align-items: center;
-                    justify-content: center;
-                    font-size: 1.2rem;
-                    opacity: 0;
-                    transition: opacity 0.2s;
+                    flex-grow: 1; /* El reproductor ocupa el espacio disponible */
+                    min-width: 0; /* Permite que el contenedor se encoja */
                 }
-                .imagenContenedor:hover .botonPlay {
-                    opacity: 1;
-                }
+
                 .infoPrincipal {
-                    flex-grow: 1;
                     display: flex;
                     flex-direction: column;
                     gap: 0.25rem;
                     overflow: hidden;
                 }
+
+                .imagenContenedor {
+                    margin-left: auto; /* Empuja la imagen hacia la derecha */
+                    flex-shrink: 0;
+                }
+
                 .enlaceTitulo {
                     text-decoration: none;
                     color: inherit;
@@ -121,7 +150,6 @@ export default function TarjetaSample({sample}: Props) {
                     opacity: 0.7;
                     cursor: pointer;
                 }
-
                 .accionesSample {
                     display: flex;
                     align-items: center;

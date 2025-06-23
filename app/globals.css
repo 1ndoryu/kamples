@@ -244,6 +244,7 @@ main.contenidoPrincipal {
     position: fixed;
     height: 100vh;
     z-index: 11;
+    align-items: center;
 }
 
 .contenedor {
