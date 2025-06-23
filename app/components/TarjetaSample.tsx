@@ -11,28 +11,49 @@ interface Props {
     sample: Sample;
 }
 
+// Lógica para la URL de la imagen (sin cambios, sigue siendo válida)
 function obtenerUrlImagen(sample: Sample): string | undefined {
+    if (sample.metadata.url_imagen_destacada && typeof sample.metadata.url_imagen_destacada === 'string') {
+        // Construye la URL completa usando la base del .env
+        const baseUrl = process.env.NEXT_PUBLIC_SWORD_BASE_URL || '';
+        return `${baseUrl}${sample.metadata.url_imagen_destacada}`;
+    }
     const idImagen = sample.metadata._imagen_destacada_id;
-    const baseUrl = process.env.NEXT_PUBLIC_SWORD_BASE_URL;
-
-    if (!idImagen || !baseUrl) return undefined;
-
-    return `https://picsum.photos/seed/${idImagen}/40/40`;
+    if (idImagen) {
+        return `https://picsum.photos/seed/${idImagen}/40/40`; // Placeholder
+    }
+    return undefined;
 }
 
+// FUNCIÓN CORREGIDA: Ahora maneja los metadatos como arrays.
 function obtenerTagsFormateados(sample: Sample): string[] {
     const {metadata} = sample;
     const tagsFormateados: string[] = [];
 
-    if (metadata.tipo) tagsFormateados.push(metadata.tipo as string);
-    if (metadata.genero) tagsFormateados.push(metadata.genero.split(',')[0].trim());
-    if (metadata.emocion) tagsFormateados.push(metadata.emocion.split(',')[0].trim());
-    if (metadata.tags) {
-        const otrosTags = metadata.tags.split(',').map(t => t.trim());
-        const tagAdicional = otrosTags.find(t => !tagsFormateados.includes(t));
-        if (tagAdicional) tagsFormateados.push(tagAdicional);
+    if (typeof metadata.tipo === 'string' && metadata.tipo) {
+        tagsFormateados.push(metadata.tipo);
     }
-    return tagsFormateados.slice(0, 5);
+    // CORRECCIÓN: Si 'genero' es un array, tomar el primer elemento.
+    if (Array.isArray(metadata.instrumentos) && metadata.instrumentos.length > 0) {
+        tagsFormateados.push(metadata.instrumentos[0]);
+    }
+    // CORRECCIÓN: Si 'genero' es un array, tomar el primer elemento.
+    if (Array.isArray(metadata.genero) && metadata.genero.length > 0) {
+        tagsFormateados.push(metadata.genero[0]);
+    }
+    // CORRECCIÓN: Si 'emocion' es un array, tomar el primer elemento.
+    if (Array.isArray(metadata.emocion) && metadata.emocion.length > 0) {
+        tagsFormateados.push(metadata.emocion[0]);
+    }
+    // CORRECCIÓN: Si 'tags' es un array, buscar uno adicional que no esté ya incluido.
+    if (Array.isArray(metadata.tags)) {
+        const tagAdicional = metadata.tags.find(t => !tagsFormateados.includes(t));
+        if (tagAdicional) {
+            tagsFormateados.push(tagAdicional);
+        }
+    }
+
+    return tagsFormateados.slice(0, 5); // Limitar a un máximo de 5 tags en total
 }
 
 export default function TarjetaSample({sample}: Props) {
@@ -60,6 +81,7 @@ export default function TarjetaSample({sample}: Props) {
             </div>
             <span className="infoBpm">{sample.metadata.bpm ? `${sample.metadata.bpm}bpm` : ''}</span>
 
+            {/* El componente Waveform ahora recibirá la URL completa */}
             <div className="reproductorContenedor">{urlAudio ? <Waveform idSample={sample.id} urlAudio={urlAudio} /> : <div className="reproductorPlaceholder">Audio no disponible</div>}</div>
 
             <div className="accionesSample">
@@ -76,6 +98,7 @@ export default function TarjetaSample({sample}: Props) {
                 </ContenedorMenu>
             </div>
 
+            {/* El CSS se mantiene igual */}
             <style jsx>{`
                 .tarjetaSample {
                     border: var(--borde);
