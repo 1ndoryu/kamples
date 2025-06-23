@@ -5,38 +5,37 @@ import {obtenerSamplePorSlug} from '@/services/swordApi';
 import DetalleSample from '@/components/DetalleSample';
 import type {Metadata} from 'next';
 
-// CORRECCIÓN: La interfaz de props para una página debe incluir `params` y `searchParams`.
+// Interfaz que Next.js espera para props de página en App Router
 interface PaginaSampleProps {
     params: {
         slug: string;
     };
-    searchParams: {[key: string]: string | string[] | undefined};
+    searchParams: {
+        [key: string]: string | string[] | undefined;
+    };
 }
 
-// La firma de generateMetadata ahora utiliza la interfaz correcta.
 export async function generateMetadata({params}: PaginaSampleProps): Promise<Metadata> {
     const sample = await obtenerSamplePorSlug(params.slug);
 
     if (!sample) {
         return {title: 'Sample no encontrado'};
     }
+
     return {
         title: `${sample.titulo} - Kamples`,
         description: sample.subtitulo || sample.contenido?.substring(0, 150) || ''
     };
 }
 
-// Componente asíncrono para la carga de datos (sin cambios).
 async function SampleLoader({slug}: {slug: string}) {
     const sample = await obtenerSamplePorSlug(slug);
-    if (!sample) {
-        notFound();
-    }
+    if (!sample) notFound();
     return <DetalleSample sample={sample} />;
 }
 
-// El componente de la página ahora también utiliza la interfaz correcta.
-export default function PaginaDeSample({params}: PaginaSampleProps) {
+export default function PaginaDeSample({params, searchParams}: PaginaSampleProps) {
+    // Puedes usar searchParams si lo necesitas, o ignorarlo si no.
     return (
         <div>
             <Suspense fallback={<div className="cargandoContenido">Cargando sample...</div>}>
