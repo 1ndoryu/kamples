@@ -51,6 +51,7 @@ export default function Modal({titulo, estaAbierto, alCerrar, children}: Props) 
                     justify-content: center;
                     align-items: center;
                     z-index: 1000;
+                    height: 100vh;
                 }
                 .modalContenedor {
                     background-color: var(--fondo);

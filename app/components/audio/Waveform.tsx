@@ -8,8 +8,6 @@ import {useAudioPlayerStore} from '@/hooks/useAudioPlayer';
 interface Props {
     idSample: number;
     urlAudio: string;
-    onPlay: () => void;
-    onPause: () => void;
 }
 
 const opcionesWaveform = (container: HTMLElement) => ({
@@ -17,61 +15,52 @@ const opcionesWaveform = (container: HTMLElement) => ({
     waveColor: 'rgba(132, 132, 132, 0.5)',
     progressColor: '#d43333',
     height: 40,
-    barWidth: 2,
+    barWidth: 2.5,
     barGap: 1.5,
-    barRadius: 2,
+    barRadius: 0,
     cursorWidth: 0,
     interact: true,
     autoScroll: false
 });
 
-export default function Waveform({idSample, urlAudio, onPlay, onPause}: Props) {
+export default function Waveform({idSample, urlAudio}: Props) {
     const contenedorRef = useRef<HTMLDivElement>(null);
     const wavesurferRef = useRef<WaveSurfer | null>(null);
-    const [cargando, setCargando] = useState(true);
+    const [cargandoOnda, setCargandoOnda] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const {reproducir, detener, idSampleActual} = useAudioPlayerStore();
+    const {alternarReproduccion, detenerPorCompleto, idSampleActual, instanciaActual, transicionando} = useAudioPlayerStore();
+
+    const esEsteSampleElActual = idSampleActual === idSample;
+    const estaSonando = esEsteSampleElActual && instanciaActual?.isPlaying();
+    const estaEnTransicion = esEsteSampleElActual && transicionando;
 
     const inicializarWaveSurfer = useCallback(async () => {
-        if (!contenedorRef.current || !urlAudio) return;
+        if (!contenedorRef.current || !urlAudio || wavesurferRef.current) return;
 
-        // Obtener la URL segura del backend
         try {
-            const res = await fetch(`/api/audio/secure-url?mediaUrl=${encodeURIComponent(urlAudio)}`);
-            if (!res.ok) throw new Error('No se pudo obtener la URL segura.');
-            const {secureUrl} = await res.json();
+            const secureUrlRes = await fetch(`/api/auth/audio/secure-url?mediaUrl=${encodeURIComponent(urlAudio)}`);
+            if (!secureUrlRes.ok) throw new Error('No se pudo obtener la URL segura del audio.');
+            const {secureUrl} = await secureUrlRes.json();
 
             const ws = WaveSurfer.create(opcionesWaveform(contenedorRef.current));
             wavesurferRef.current = ws;
 
-            ws.on('ready', () => {
-                setCargando(false);
-            });
-
-            ws.on('play', onPlay);
-
-            ws.on('pause', onPause);
-
-            ws.on('finish', () => {
-                detener(); // Aseguramos que se marque como detenido globalmente
-                onPause();
-            });
-
+            ws.on('finish', detenerPorCompleto);
             ws.on('error', err => {
-                console.error('WaveSurfer error:', err);
-                setError('Error al cargar audio.');
-                setCargando(false);
+                console.error('WaveSurfer runtime error:', err);
+                setError(`Error: ${err.message}`);
             });
+            ws.on('ready', () => setCargandoOnda(false));
 
-            // La carga se hace con el stream de la API segura
-            ws.load(secureUrl);
+            await ws.load(secureUrl);
         } catch (err) {
-            console.error(err);
-            setError('Error de red.');
-            setCargando(false);
+            const mensajeError = err instanceof Error ? err.message : 'Ocurrió un error al cargar el audio.';
+            console.error('Error durante la inicialización de WaveSurfer:', err);
+            setError(mensajeError);
+            setCargandoOnda(false);
         }
-    }, [urlAudio, onPlay, onPause, detener]);
+    }, [urlAudio, detenerPorCompleto]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -84,55 +73,106 @@ export default function Waveform({idSample, urlAudio, onPlay, onPause}: Props) {
             {threshold: 0.1}
         );
 
-        if (contenedorRef.current) {
-            observer.observe(contenedorRef.current);
-        }
+        if (contenedorRef.current) observer.observe(contenedorRef.current);
 
         return () => {
             observer.disconnect();
             wavesurferRef.current?.destroy();
+            wavesurferRef.current = null;
         };
     }, [inicializarWaveSurfer]);
 
-    const togglePlay = () => {
-        if (!wavesurferRef.current) return;
-        if (wavesurferRef.current.isPlaying()) {
-            detener();
-        } else {
-            reproducir(wavesurferRef.current, idSample);
-        }
+    const manejarClick = () => {
+        if (!wavesurferRef.current || error || cargandoOnda || transicionando) return;
+        alternarReproduccion(wavesurferRef.current, idSample);
     };
 
-    // Detener si otro sample empieza a sonar
-    useEffect(() => {
-        if (idSampleActual !== idSample && wavesurferRef.current?.isPlaying()) {
-            wavesurferRef.current.pause();
-        }
-    }, [idSampleActual, idSample]);
-
     return (
-        <div className="waveformContenedor" onClick={togglePlay}>
-            {cargando && !error && <div className="estadoCarga">Cargando onda...</div>}
-            {error && <div className="estadoError">{error}</div>}
-            <div ref={contenedorRef} className="wave"></div>
+        <div className="contenedorWaveform" onClick={manejarClick}>
+            <button className="botonPlayPause" disabled={cargandoOnda || estaEnTransicion}>
+                {cargandoOnda || estaEnTransicion ? <div className="loader"></div> : estaSonando ? '❚❚' : '▶'}
+            </button>
+            <div className="waveArea">
+                {cargandoOnda && !error && <div className="estadoCarga">Cargando...</div>}
+                {error && <div className="estadoError">{error}</div>}
+                <div ref={contenedorRef} className="wave" style={{opacity: cargandoOnda ? 0 : 1}} />
+            </div>
             <style jsx>{`
-                .waveformContenedor {
-                    flex-grow: 1;
-                    cursor: pointer;
-                    position: relative;
-                    min-height: 40px; /* Altura fija para evitar saltos de layout */
+                .contenedorWaveform {
                     display: flex;
                     align-items: center;
+                    gap: 8px;
+                    flex-grow: 1;
+                    cursor: pointer;
+                    min-width: 0;
+                    border-radius: var(--radius);
+                    transition: background-color 0.2s;
+                    padding-right: 8px;
+                }
+                .contenedorWaveform:hover {
+                    background-color: var(--color-tarjeta-fondo-hover);
+                }
+                .waveArea {
+                    flex-grow: 1;
+                    align-items: center;
+                    height: 40px;
+                    display: flex;
+                    position: relative;
+                    max-width: 250px;
+                    margin-left: auto;
                 }
                 .wave {
                     width: 100%;
                 }
+                .botonPlayPause {
+                    background: transparent;
+                    border: none;
+                    color: var(--color-texto);
+                    font-size: 1.2rem;
+                    cursor: pointer;
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                    opacity: 0.8;
+                    transition: opacity 0.2s;
+                    padding: unset;
+                }
+                .botonPlayPause:disabled {
+                    cursor: not-allowed;
+                    opacity: 0.5;
+                }
+                .botonPlayPause:hover:not(:disabled) {
+                    opacity: 1;
+                }
                 .estadoCarga,
                 .estadoError {
-                    position: absolute;
-                    left: 10px;
                     font-size: 0.75rem;
-                    opacity: 0.5;
+                    opacity: 0.7;
+                    color: var(--color-texto);
+                    padding-left: 10px;
+                    pointer-events: none;
+                }
+                .estadoError {
+                    color: #e53e3e;
+                }
+                .loader {
+                    border: 2px solid #f3f3f333;
+                    border-top: 2px solid var(--color-texto);
+                    border-radius: 50%;
+                    width: 16px;
+                    height: 16px;
+                    animation: spin 1s linear infinite;
+                }
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
                 }
             `}</style>
         </div>

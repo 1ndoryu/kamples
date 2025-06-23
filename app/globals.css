@@ -222,7 +222,7 @@ main.contenidoPrincipal {
     align-items: center;
     gap: 1rem;
     width: 100%;
-    height: 58px;
+    height: 54px;
     padding: 1rem 2rem;
     backdrop-filter: blur(10px);
     transition: background-color 0.3s, border-color 0.3s;
@@ -237,7 +237,7 @@ main.contenidoPrincipal {
     border-right: var(--borde);
     background: #53535314;
     flex-direction: column;
-    width: 58px;
+    width: 54px;
     padding: 1rem;
     transition: background-color 0.3s, border-color 0.3s;
     display: flex;

@@ -5,59 +5,47 @@ import type {Sample} from '@/types/sample';
 import Link from 'next/link';
 import ImagenSample from '@/components/ui/ImagenSample';
 import {ContenedorMenu, BotonMenu, Menu, MenuItem} from '@/components/ui/MenuDesplegable';
-import ReproductorSample from '@/components/audio/ReproductorSample';
+import Waveform from '@/components/audio/Waveform';
 
 interface Props {
     sample: Sample;
 }
 
-// Función para procesar y construir la URL de la imagen
 function obtenerUrlImagen(sample: Sample): string | undefined {
     const idImagen = sample.metadata._imagen_destacada_id;
-    if (!idImagen) return undefined;
-    // Asumimos una estructura de URL, esto puede necesitar ajuste
-    // Por ahora, lo dejamos como placeholder ya que no tengo la estructura de URL de imágenes
-    // return `${process.env.NEXT_PUBLIC_SWORD_BASE_URL}/path/to/image/${idImagen}.jpg`;
-    // **Temporalmente, usamos una imagen de ejemplo si hay ID, hasta tener la URL real**
+    const baseUrl = process.env.NEXT_PUBLIC_SWORD_BASE_URL;
+
+    if (!idImagen || !baseUrl) return undefined;
+
     return `https://picsum.photos/seed/${idImagen}/40/40`;
 }
 
-// Función para organizar los tags según las nuevas reglas
 function obtenerTagsFormateados(sample: Sample): string[] {
     const {metadata} = sample;
     const tagsFormateados: string[] = [];
 
-    // 1. Tipo
     if (metadata.tipo) tagsFormateados.push(metadata.tipo as string);
-
-    // 2. Primer género
     if (metadata.genero) tagsFormateados.push(metadata.genero.split(',')[0].trim());
-
-    // 3. Emoción
     if (metadata.emocion) tagsFormateados.push(metadata.emocion.split(',')[0].trim());
-
-    // 4. Un tag adicional de la lista 'tags'
     if (metadata.tags) {
         const otrosTags = metadata.tags.split(',').map(t => t.trim());
         const tagAdicional = otrosTags.find(t => !tagsFormateados.includes(t));
         if (tagAdicional) tagsFormateados.push(tagAdicional);
     }
-
-    return tagsFormateados.slice(0, 4); // Aseguramos un máximo de 4 tags
+    return tagsFormateados.slice(0, 5);
 }
 
 export default function TarjetaSample({sample}: Props) {
     const imageUrl = obtenerUrlImagen(sample);
     const tags = obtenerTagsFormateados(sample);
+    const urlAudio = sample.metadata.url_archivo;
 
     return (
         <article className="tarjetaSample">
-            {/* Contenedor del reproductor */}
-            <div className="reproductorContenedor">
-                <ReproductorSample sample={sample} />
+            <div className="imagenContenedor">
+                <ImagenSample src={imageUrl} nombre={sample.titulo} alt={`Cover de ${sample.titulo}`} tamaño={40} radio={4} />
             </div>
 
-            {/* Info y Tags */}
             <div className="infoPrincipal">
                 <Link href={`/samples/${sample.slug}`} className="enlaceTitulo">
                     <h3 className="tituloSample">{sample.titulo}</h3>
@@ -70,17 +58,13 @@ export default function TarjetaSample({sample}: Props) {
                     ))}
                 </div>
             </div>
+            <span className="infoBpm">{sample.metadata.bpm ? `${sample.metadata.bpm}bpm` : ''}</span>
 
-            {/* Contenedor de la imagen */}
-            <div className="imagenContenedor">
-                <ImagenSample src={imageUrl} nombre={sample.titulo} alt={`Cover de ${sample.titulo}`} tamaño={40} radio={4} />
-            </div>
+            <div className="reproductorContenedor">{urlAudio ? <Waveform idSample={sample.id} urlAudio={urlAudio} /> : <div className="reproductorPlaceholder">Audio no disponible</div>}</div>
 
-            {/* Acciones */}
             <div className="accionesSample">
-                <span className="infoBpm">{sample.metadata.bpm ? `${sample.metadata.bpm}bpm` : ''}</span>
                 <ContenedorMenu>
-                    <BotonMenu className="botonAcciones">•••</BotonMenu>
+                    <BotonMenu className="botonAcciones">• • •</BotonMenu>
                     <Menu ancho={150}>
                         <MenuItem onClick={() => alert('Descargando...')}>Descargar</MenuItem>
                         <MenuItem onClick={() => alert('Añadiendo a colección...')}>Añadir a Colección</MenuItem>
@@ -97,36 +81,37 @@ export default function TarjetaSample({sample}: Props) {
                     border: var(--borde);
                     border-radius: var(--radius);
                     background: var(--fondo);
-                    padding: 0.70rem;
-                    display: flex;
                     align-items: center;
                     gap: 1rem;
+                    padding: 0.63rem;
                     transition: background-color 0.2s, border-color 0.2s;
+                    display: flex;
                 }
                 .tarjetaSample:hover {
                     background-color: var(--color-tarjeta-fondo-hover);
                     border-color: var(--color-borde-hover, var(--color-borde));
                 }
-
                 .reproductorContenedor {
                     display: flex;
                     align-items: center;
-                    flex-grow: 1; /* El reproductor ocupa el espacio disponible */
-                    min-width: 0; /* Permite que el contenedor se encoja */
+                    min-width: 250px;
                 }
-
+                .reproductorPlaceholder {
+                    font-size: 0.75rem;
+                    opacity: 0.5;
+                    flex-grow: 1;
+                    padding-left: 1rem;
+                }
                 .infoPrincipal {
                     display: flex;
                     flex-direction: column;
                     gap: 0.25rem;
                     overflow: hidden;
+                    margin-right: auto;
                 }
-
                 .imagenContenedor {
-                    margin-left: auto; /* Empuja la imagen hacia la derecha */
                     flex-shrink: 0;
                 }
-
                 .enlaceTitulo {
                     text-decoration: none;
                     color: inherit;
@@ -154,6 +139,7 @@ export default function TarjetaSample({sample}: Props) {
                     display: flex;
                     align-items: center;
                     gap: 0.75rem;
+                    padding: 0rem 1rem;
                 }
                 .infoBpm {
                     font-size: 0.8rem;

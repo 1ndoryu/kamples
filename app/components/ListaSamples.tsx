@@ -1,4 +1,5 @@
 // app/components/ListaSamples.tsx
+
 'use client';
 
 import {useState, useEffect} from 'react';
@@ -10,17 +11,14 @@ interface Props {
 }
 
 export default function ListaSamples({samples: samplesIniciales}: Props) {
+	// El estado se inicializa directamente con los samples recibidos.
+	// El useEffect anterior era redundante y causaba un re-render innecesario.
 	const [samples, setSamples] = useState<Sample[]>(samplesIniciales);
 
+	// Este efecto ahora solo sirve para actualizar la lista si los props cambian
+	// (por ejemplo, al aplicar filtros en el futuro), no para la carga inicial.
 	useEffect(() => {
-		// Como solicitaste, si la API devuelve un solo sample, lo duplicamos 10 veces para el desarrollo.
-		if (samplesIniciales && samplesIniciales.length === 1) {
-			const sampleBase = samplesIniciales[0];
-			const samplesDuplicados = Array.from({length: 10}, () => sampleBase);
-			setSamples(samplesDuplicados);
-		} else {
-			setSamples(samplesIniciales);
-		}
+		setSamples(samplesIniciales);
 	}, [samplesIniciales]);
 
 	return (
