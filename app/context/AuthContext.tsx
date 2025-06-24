@@ -1,17 +1,9 @@
-// app/context/AuthContext.tsx
 'use client';
 
 import {createContext, useState, useContext, ReactNode, useEffect} from 'react';
 import {useRouter} from 'next/navigation';
-
-interface Usuario {
-    id: number;
-    nombreusuario: string;
-    nombremostrado: string;
-    correoelectronico: string;
-    rol: string;
-    imagen_perfil?: string; // CAMBIO: Se añade la imagen de perfil opcional.
-}
+import { Usuario } from '@/domain/entities/Usuario';
+import { useFetch } from '@/hooks/useFetch';
 
 interface AuthContextType {
     usuario: Usuario | null;
@@ -29,16 +21,14 @@ export function AuthProvider({children}: {children: ReactNode}) {
 
     useEffect(() => {
         const verificarSesion = async () => {
-            try {
-                const respuesta = await fetch('/api/auth/sesion');
-                if (respuesta.ok) {
-                    const {usuario} = await respuesta.json();
-                    setUsuario(usuario);
-                }
-            } catch (error) {
-                console.error('No hay sesión activa', error);
-            } finally {
-                setCargando(false);
+            const { data: usuario, error } = await useFetch('/api/auth/sesion', {method: 'GET'}, setCargando);
+            if (error) {
+                console.error('Error al verificar la sesión:', error);
+                return;
+            }
+
+            if (usuario) {
+                setUsuario(usuario);
             }
         };
         verificarSesion();
@@ -60,7 +50,7 @@ export function AuthProvider({children}: {children: ReactNode}) {
             }
 
             setUsuario(datos.usuario);
-            router.push('/'); // Redirige a la página principal tras el login
+            router.push('/');
             return {exito: true};
         } catch (error) {
             console.error('Función login:', error);
@@ -77,7 +67,7 @@ export function AuthProvider({children}: {children: ReactNode}) {
             console.error('Error al cerrar sesión:', error);
         } finally {
             setUsuario(null);
-            router.push('/'); // Llevamos al usuario a la página principal
+            router.push('/');
         }
     };
 
