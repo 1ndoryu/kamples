@@ -1,7 +1,5 @@
-// app/login/page.tsx
 'use client';
-
-import { useState, useEffect } from 'react'; // 1. Importar useEffect
+import { useState, useEffect } from 'react';
 import Boton from '@/components/ui/Boton';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -9,36 +7,34 @@ import { useRouter } from 'next/navigation';
 export default function PaginaLogin() {
     const { login, usuario, cargando: cargandoAuth } = useAuth();
     const router = useRouter();
-    const [nombreUsuario, setNombreUsuario] = useState('');
-    const [clave, setClave] = useState('');
+    const [credenciales, setCredenciales] = useState({
+        nombreUsuario: '',
+        clave: ''
+    })
     const [error, setError] = useState('');
     const [cargandoSubmit, setCargandoSubmit] = useState(false);
 
-    // 2. Usar useEffect para el efecto secundario de la redirección
     useEffect(() => {
-        // Si el usuario ya está autenticado y la carga inicial del contexto ha terminado, redirigir
         if (usuario && !cargandoAuth) {
             router.push('/');
         }
-    }, [usuario, cargandoAuth, router]); // Se ejecuta cuando estos valores cambian
+    }, [usuario, cargandoAuth, router]);
 
     const manejarSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setCargandoSubmit(true);
 
-        const resultado = await login(nombreUsuario, clave);
+        const resultado = await login(credenciales.nombreUsuario, credenciales.clave);
 
         if (!resultado.exito) {
             setError(resultado.error || 'Ocurrió un error inesperado.');
             setCargandoSubmit(false);
         }
-        // La redirección después de un login exitoso ya es manejada por el AuthContext
     };
 
-    // 3. Mientras se determina el estado de autenticación, no mostrar nada para evitar un parpadeo
     if (cargandoAuth || usuario) {
-        return null; // O un componente de carga si lo prefieres
+        return null;
     }
 
     return (
@@ -50,11 +46,20 @@ export default function PaginaLogin() {
                     <form onSubmit={manejarSubmit}>
                         <div className="campoFormulario">
                             <label htmlFor="nombreUsuario">Nombre de Usuario</label>
-                            <input id="nombreUsuario" type="text" value={nombreUsuario} onChange={e => setNombreUsuario(e.target.value)} required disabled={cargandoSubmit}/>
+                            <input id="nombreUsuario" 
+                            type="text" 
+                            value={credenciales.nombreUsuario} 
+                            onChange={e => setCredenciales({...credenciales, nombreUsuario: e.target.value})} 
+                            required disabled={cargandoSubmit}
+                            />
                         </div>
                         <div className="campoFormulario">
                             <label htmlFor="clave">Contraseña</label>
-                            <input id="clave" type="password" value={clave} onChange={e => setClave(e.target.value)} required disabled={cargandoSubmit}/>
+                            <input id="clave" type="password" 
+                            value={credenciales.clave} 
+                            onChange={e => setCredenciales({...credenciales, clave: e.target.value})} 
+                            required disabled={cargandoSubmit}
+                            />
                         </div>
                         {error && <p className="mensajeError">{error}</p>}
 
@@ -65,7 +70,6 @@ export default function PaginaLogin() {
                 </div>
             </section>
 
-            {/* El CSS se mantiene sin cambios */}
             <style jsx>{`
                 .contenedorLogin {
                     display: flex;

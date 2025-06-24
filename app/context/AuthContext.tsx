@@ -1,17 +1,9 @@
-// app/context/AuthContext.tsx
 'use client';
 
 import {createContext, useState, useContext, ReactNode, useEffect} from 'react';
 import {useRouter} from 'next/navigation';
-
-interface Usuario {
-    id: number;
-    nombreusuario: string;
-    nombremostrado: string;
-    correoelectronico: string;
-    rol: string;
-    imagen_perfil?: string; // CAMBIO: Se añade la imagen de perfil opcional.
-}
+import { Usuario } from '@/domain/entities/Usuario';
+import { useFetch } from '@/hooks/useFetch';
 
 interface AuthContextType {
     usuario: Usuario | null;
@@ -29,16 +21,14 @@ export function AuthProvider({children}: {children: ReactNode}) {
 
     useEffect(() => {
         const verificarSesion = async () => {
-            try {
-                const respuesta = await fetch('/api/auth/sesion');
-                if (respuesta.ok) {
-                    const {usuario} = await respuesta.json();
-                    setUsuario(usuario);
-                }
-            } catch (error) {
-                console.error('No hay sesión activa', error);
-            } finally {
-                setCargando(false);
+            const { data: usuario, error } = await useFetch('/api/auth/sesion', { method: 'GET' }, setCargando);
+            if (error) {
+                console.error('Error al verificar la sesión:', error);
+                return;
+            }
+
+            if (usuario) {
+                setUsuario(usuario);
             }
         };
         verificarSesion();
@@ -46,39 +36,28 @@ export function AuthProvider({children}: {children: ReactNode}) {
 
     const login = async (nombreUsuario: string, clave: string) => {
         setCargando(true);
-        try {
-            const respuesta = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({nombreUsuario, clave})
-            });
+        const { data, error } = await useFetch('/api/auth/login', { 
+            method: 'POST', 
+            body: JSON.stringify({nombreUsuario, clave}) }, setCargando);
 
-            const datos = await respuesta.json();
-
-            if (!respuesta.ok) {
-                return {exito: false, error: datos.error};
+            if (error) {
+                return { exito: false, error: 'Error al iniciar sesión' };
             }
 
-            setUsuario(datos.usuario);
-            router.push('/'); // Redirige a la página principal tras el login
-            return {exito: true};
-        } catch (error) {
-            console.error('Función login:', error);
-            return {exito: false, error: 'Error de conexión con el servidor.'};
-        } finally {
-            setCargando(false);
-        }
+            setUsuario(data.usuario);
+            router.push('/');
+            return { exito: true };
     };
 
     const logout = async () => {
-        try {
-            await fetch('/api/auth/logout', {method: 'POST'});
-        } catch (error) {
+        const { error } = await useFetch('/api/auth/logout', { method: 'POST' }, setCargando);
+        if (error) {
             console.error('Error al cerrar sesión:', error);
-        } finally {
-            setUsuario(null);
-            router.push('/'); // Llevamos al usuario a la página principal
+            return
         }
+
+        setUsuario(null);
+        router.push('/');
     };
 
     return <AuthContext.Provider value={{usuario, login, logout, cargando}}>{children}</AuthContext.Provider>;
