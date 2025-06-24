@@ -6,18 +6,25 @@ import {useRouter} from 'next/navigation';
 import InfoUsuario from '@/components/ui/InfoUsuario';
 import ZonaArrastre from './previews/ZonaArrastre';
 import Boton from '../ui/Boton';
+import { useAppStore } from '@/store/useAppStore'; // Importar el store
+
 interface Props {
     alCerrar: () => void;
 }
 
 export default function FormularioSubirSample({alCerrar}: Props) {
-    const [contenido, setContenido] = useState('');
-    const [archivoAudio, setArchivoAudio] = useState<File | null>(null);
-    const [archivoImagen, setArchivoImagen] = useState<File | null>(null);
+    const [contenido, setContenido] = useState(''); // Mantener para el textarea
+    const [archivoAudio, setArchivoAudio] = useState<File | null>(null); // Mantener para los archivos
+    const [archivoImagen, setArchivoImagen] = useState<File | null>(null); // Mantener para los archivos
 
-    const [error, setError] = useState('');
-    const [cargando, setCargando] = useState(false);
-    const [estaArrastrando, setEstaArrastrando] = useState(false);
+    // const [error, setError] = useState(''); // Reemplazado por errorSamples del store
+    // const [cargando, setCargando] = useState(false); // Reemplazado por isLoadingSamples del store
+    const isLoadingSamples = useAppStore((state) => state.isLoadingSamples); // Estado de carga del store
+    const errorSamples = useAppStore((state) => state.errorSamples); // Errores del store
+    const uploadSampleStore = useAppStore((state) => state.uploadSampleStore);
+    const setErrorSamples = useAppStore((state) => state.setSamplesError); // Para limpiar errores manualmente si es necesario
+
+    const [estaArrastrando, setEstaArrastrando] = useState(false); // UI local
     const router = useRouter();
 
     const inputAudioRef = useRef<HTMLInputElement>(null);
@@ -26,12 +33,12 @@ export default function FormularioSubirSample({alCerrar}: Props) {
     const manejarSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!archivoAudio) {
-            setError('El archivo de audio es obligatorio.');
+            // Usar el setter de error del store o un estado local si se prefiere para errores de validación de form
+            setErrorSamples('El archivo de audio es obligatorio.');
             return;
         }
 
-        setError('');
-        setCargando(true);
+        setErrorSamples(null); // Limpiar errores previos del store
 
         const formData = new FormData();
         const tags = contenido.match(/#(\w+)/g)?.map(tag => tag.substring(1)) || [];
@@ -40,30 +47,24 @@ export default function FormularioSubirSample({alCerrar}: Props) {
         if (archivoImagen) {
             formData.append('archivoImagen', archivoImagen);
         }
+        // El título se extrae del 'contenido' o del nombre del archivo si 'contenido' está vacío.
+        // El campo 'contenido' aquí es el que se usa para el título y la descripción/tags.
+        const tituloSample = contenido.trim().split('\n')[0] || archivoAudio.name.replace(/\.[^/.]+$/, '');
+        formData.append('titulo', tituloSample);
+        formData.append('tipocontenido', 'sample'); // Podría ser configurable
+        formData.append('estado', 'publicado'); // Podría ser configurable
+        formData.append('post_tags', JSON.stringify(tags)); // Los tags se envían como un string JSON
+        // formData.append('descripcion', contenido.trim()); // Si 'contenido' es más que solo tags/título
 
-        formData.append('titulo', contenido.trim() || archivoAudio.name.replace(/\.[^/.]+$/, ''));
-        formData.append('tipocontenido', 'sample');
-        formData.append('estado', 'publicado');
-        formData.append('post_tags', JSON.stringify(tags));
+        const resultado = await uploadSampleStore(formData);
 
-        try {
-            const respuesta = await fetch('/api/auth/samples/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            const datos = await respuesta.json();
-
-            if (!respuesta.ok) {
-                throw new Error(datos.error?.message || 'Error al subir el sample.');
-            }
-
-            alCerrar();
-            router.refresh();
-        } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : 'Ocurrió un error inesperado.');
-        } finally {
-            setCargando(false);
+        if (resultado.success) {
+            alCerrar(); // Cierra el modal/formulario
+            router.refresh(); // Refresca la página para ver el nuevo sample (si es necesario, el store ya se actualizó)
+            // Opcionalmente, podrías redirigir o mostrar un mensaje de éxito.
+        } else {
+            // El error ya está en errorSamples del store, se mostrará automáticamente.
+            // Si setErrorSamples no fue usado para el error de validación, no es necesario limpiarlo aquí.
         }
     };
 
@@ -77,7 +78,7 @@ export default function FormularioSubirSample({alCerrar}: Props) {
         e.preventDefault();
         e.stopPropagation();
         setEstaArrastrando(false);
-        setError('');
+        setErrorSamples(null); // Limpiar error al intentar una nueva acción
 
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             const archivosSoltados = Array.from(e.dataTransfer.files);
@@ -119,27 +120,27 @@ export default function FormularioSubirSample({alCerrar}: Props) {
             <input type="file" ref={inputAudioRef} onChange={e => manejarSeleccionArchivo(e, 'audio')} accept="audio/*" style={{display: 'none'}} />
             <input type="file" ref={inputImagenRef} onChange={e => manejarSeleccionArchivo(e, 'imagen')} accept="image/*" style={{display: 'none'}} />
 
-            {error && <p className="mensajeError">{error}</p>}
+            {errorSamples && <p className="mensajeError">{errorSamples}</p>} {/* Mostrar error del store */}
 
             {/* AJUSTE: Contenedor para TODOS los botones de acción */}
             <div className="accionesFormulario">
                 {/* Botones para adjuntar archivos */}
                 <div className="botonesAdjuntar">
-                    <Boton type="button" onClick={() => inputAudioRef.current?.click()} variante="secundario">
+                    <Boton type="button" onClick={() => inputAudioRef.current?.click()} variante="secundario" disabled={isLoadingSamples}>
                         {archivoAudio ? 'Cambiar Audio' : 'Adjuntar Audio'}
                     </Boton>
-                    <Boton type="button" onClick={() => inputImagenRef.current?.click()} variante="secundario">
+                    <Boton type="button" onClick={() => inputImagenRef.current?.click()} variante="secundario" disabled={isLoadingSamples}>
                         {archivoImagen ? 'Cambiar Imagen' : 'Adjuntar Imagen'}
                     </Boton>
                 </div>
 
                 {/* Botones para enviar o cancelar */}
                 <div className="botonesPublicar">
-                    <Boton type="button" variante="secundario" onClick={alCerrar} disabled={cargando}>
+                    <Boton type="button" variante="secundario" onClick={alCerrar} disabled={isLoadingSamples}>
                         Cancelar
                     </Boton>
-                    <Boton type="submit" variante="secundario" disabled={!archivoAudio || cargando}>
-                        {cargando ? 'Publicando...' : 'Publicar'}
+                    <Boton type="submit" variante="secundario" disabled={!archivoAudio || isLoadingSamples}>
+                        {isLoadingSamples ? 'Publicando...' : 'Publicar'}
                     </Boton>
                 </div>
             </div>

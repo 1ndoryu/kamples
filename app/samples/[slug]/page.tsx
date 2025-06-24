@@ -1,20 +1,18 @@
 // app/samples/[slug]/page.tsx
-// TEST: Aplicando la solución de Stack Overflow para params como Promise.
-
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { obtenerSamplePorSlug } from '@/services/swordApi';
-import DetalleSample from '@/components/DetalleSample';
+import DetalleSample from '@/components/DetalleSample'; // Client component que mostrará el detalle
 import type { Metadata } from 'next';
 
-// 1. Modificamos el tipado para que acepte una Promise, como sugiere el post.
+// Tipado para los parámetros de la página
 type PageProps = {
-    params: Promise<{ slug: string }>;
+    params: { slug: string }; // El slug ya viene resuelto por Next.js
 };
 
-// 2. generateMetadata ahora debe esperar (await) a que se resuelvan los params.
+// generateMetadata para SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const { slug } = await params; // Se resuelve la Promise
+    const { slug } = params; // Acceso directo al slug
     const sample = await obtenerSamplePorSlug(slug);
 
     if (!sample) {
@@ -26,23 +24,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
 }
 
-// El SampleLoader no necesita cambios, ya que le pasaremos el slug resuelto.
-async function SampleLoader({ slug }: { slug: string }) {
+// El componente de página sigue siendo un Server Component
+export default async function PaginaDeSample({ params }: PageProps) {
+    const { slug } = params; // Acceso directo al slug
     const sample = await obtenerSamplePorSlug(slug);
+
+    // Si el sample no se encuentra, mostrar notFound (página 404)
     if (!sample) {
         notFound();
     }
-    return <DetalleSample sample={sample} />;
-}
 
-// 3. El componente principal también debe ser async y esperar (await) los params.
-export default async function PaginaDeSample({ params }: PageProps) {
-    const { slug } = await params; // Se resuelve la Promise
-
+    // Pasamos el sample cargado en el servidor al componente cliente DetalleSample
+    // Suspense podría usarse si DetalleSample tuviera alguna carga de datos adicional o componentes lazy-loaded.
+    // Por ahora, si DetalleSample es síncrono con los datos del sample, Suspense es menos crítico aquí.
     return (
         <div>
             <Suspense fallback={<div className="cargandoContenido">Cargando sample...</div>}>
-                <SampleLoader slug={slug} />
+                <DetalleSample sample={sample} />
             </Suspense>
         </div>
     );

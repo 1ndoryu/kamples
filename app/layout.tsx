@@ -5,8 +5,9 @@ import './globals.css';
 
 import Header from '@/components/layout/Header';
 import MenuLateral from '@/components/layout/MenuLateral';
-import {TemaProvider} from '@/context/TemaContext';
-import {AuthProvider} from '@/context/AuthContext';
+// import {TemaProvider} from '@/context/TemaContext'; // Eliminado
+import { StoreAuthInitializer } from '@/components/utils/StoreAuthInitializer';
+import { ThemeApplicator } from '@/components/utils/ThemeApplicator'; // Nuevo aplicador de tema
 import LayoutStyles from '@/components/layout/LayoutStyles';
 
 const sourceSans = Source_Sans_3({
@@ -26,20 +27,19 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="es" data-tema="oscuro" suppressHydrationWarning>
+		<html lang="es" data-tema="oscuro" suppressHydrationWarning> {/* `data-tema` aquí es el valor inicial del lado del servidor, ThemeApplicator lo sincronizará en el cliente */}
 			<body className={sourceSans.className}>
-				<TemaProvider>
-					<AuthProvider>
-						<LayoutStyles />
-						<div className="layoutPrincipal">
-							<MenuLateral />
-							<div className="contenidoPagina">
-								<Header />
-								<main className="contenidoPrincipal">{children}</main>
-							</div>
-						</div>
-					</AuthProvider>
-				</TemaProvider>
+				{/* TemaProvider eliminado */}
+				<StoreAuthInitializer />
+				<ThemeApplicator /> {/* Añadido el aplicador de tema */}
+				<LayoutStyles />
+				<div className="layoutPrincipal">
+					<MenuLateral />
+					<div className="contenidoPagina">
+						<Header />
+						<main className="contenidoPrincipal">{children}</main>
+					</div>
+				</div>
 			</body>
 		</html>
 	);

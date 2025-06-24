@@ -1,15 +1,23 @@
 // app/components/layout/InterruptorTema.tsx
 'use client';
 
-import {useTema} from '@/context/TemaContext';
+// import {useTema} from '@/context/TemaContext'; // Eliminado
+import { useAppStore } from '@/store/useAppStore'; // Importar el store de Zustand
 
 export default function InterruptorTema() {
-    const {tema, cambiarTema} = useTema();
+    // const {tema, cambiarTema} = useTema(); // Eliminado
+    const tema = useAppStore((state) => state.theme);
+    const toggleTheme = useAppStore((state) => state.toggleTheme);
+    // O usar el selector:
+    // import { useCurrentTheme, useThemeActions } from '@/store/useAppStore';
+    // const tema = useCurrentTheme();
+    // const { toggleTheme } = useThemeActions();
+
 
     return (
         <>
-            <button onClick={cambiarTema} className="interruptorTema">
-                {tema === 'claro' ? '🌙' : '☀️'}
+            <button onClick={toggleTheme} className="interruptorTema"> {/* Usar toggleTheme del store */}
+                {tema === 'claro' ? '🌙' : '☀️'} {/* La lógica del ícono sigue siendo la misma */}
             </button>
             <style jsx>{`
                 .interruptorTema {

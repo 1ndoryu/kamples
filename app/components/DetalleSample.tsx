@@ -1,14 +1,34 @@
 // app/components/DetalleSample.tsx
-'use client'; // Regla #7: Componentes con hooks o interactividad deben ser Client Components.
+'use client';
 
+import { useEffect } from 'react';
 import type {Sample} from '@/types/sample';
 import Tabs, {type Pestaña} from '@/components/ui/Tabs';
+import { useAppStore } from '@/store/useAppStore';
 
 interface Props {
-    sample: Sample;
+    sample: Sample; // Recibe el sample cargado desde el servidor
 }
 
-export default function DetalleSample({sample}: Props) {
+export default function DetalleSample({sample: sampleProp}: Props) { // Renombrado a sampleProp para claridad
+    const setSelectedSample = useAppStore((state) => state.setSelectedSample);
+
+    useEffect(() => {
+        // Actualizar el selectedSample en el store cuando el componente se monta o el sampleProp cambia.
+        // Esto hace que el sample actual esté disponible globalmente si es necesario.
+        if (sampleProp) {
+            setSelectedSample(sampleProp);
+        }
+        // Limpiar el selectedSample cuando el componente se desmonte podría ser una opción,
+        // dependiendo del comportamiento deseado.
+        // return () => setSelectedSample(null);
+    }, [sampleProp, setSelectedSample]);
+
+    // El resto del componente usa sampleProp para el renderizado inicial rápido.
+    // Si se quisiera que siempre muestre el estado del store (selectedSample),
+    // se podría hacer, pero entonces se perdería el beneficio del SSR para este componente.
+    const sample = sampleProp; // Usamos el sample de los props para el renderizado
+
     // Preparar el contenido para las pestañas
     const pestañasDelSample: Pestaña[] = [
         {

@@ -1,44 +1,55 @@
 // app/login/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react'; // 1. Importar useEffect
+import { useState, useEffect } from 'react';
 import Boton from '@/components/ui/Boton';
-import { useAuth } from '@/context/AuthContext';
+// import { useAuth } from '@/context/AuthContext'; // Eliminado
+import { useAppStore } from '@/store/useAppStore'; // Importar el store de Zustand
 import { useRouter } from 'next/navigation';
 
 export default function PaginaLogin() {
-    const { login, usuario, cargando: cargandoAuth } = useAuth();
+    // const { login, usuario, cargando: cargandoAuth } = useAuth(); // Eliminado
+    const loginStore = useAppStore((state) => state.loginStore);
+    const isAuthenticated = useAppStore((state) => state.isAuthenticated);
+    const isLoadingAuth = useAppStore((state) => state.isLoading); // Estado de carga del store
+    const authError = useAppStore((state) => state.error); // Errores del store
+    const clearAuthError = useAppStore((state) => state.setAuthError); // Para limpiar errores
+
     const router = useRouter();
     const [nombreUsuario, setNombreUsuario] = useState('');
     const [clave, setClave] = useState('');
-    const [error, setError] = useState('');
+    // El error local se puede reemplazar o complementar con authError del store
+    const [localError, setLocalError] = useState('');
     const [cargandoSubmit, setCargandoSubmit] = useState(false);
 
-    // 2. Usar useEffect para el efecto secundario de la redirección
     useEffect(() => {
-        // Si el usuario ya está autenticado y la carga inicial del contexto ha terminado, redirigir
-        if (usuario && !cargandoAuth) {
+        // Si el usuario está autenticado, redirigir
+        if (isAuthenticated && !isLoadingAuth) {
             router.push('/');
         }
-    }, [usuario, cargandoAuth, router]); // Se ejecuta cuando estos valores cambian
+    }, [isAuthenticated, isLoadingAuth, router]);
 
     const manejarSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError('');
+        setLocalError('');
+        clearAuthError(null); // Limpiar errores previos del store
         setCargandoSubmit(true);
 
-        const resultado = await login(nombreUsuario, clave);
+        const resultado = await loginStore(nombreUsuario, clave);
 
         if (!resultado.exito) {
-            setError(resultado.error || 'Ocurrió un error inesperado.');
-            setCargandoSubmit(false);
+            setLocalError(resultado.error || 'Ocurrió un error inesperado.');
+        } else {
+            // La redirección se maneja en el useEffect al cambiar isAuthenticated
+            // o podrías forzarla aquí si es necesario: router.push('/');
         }
-        // La redirección después de un login exitoso ya es manejada por el AuthContext
+        setCargandoSubmit(false);
     };
 
-    // 3. Mientras se determina el estado de autenticación, no mostrar nada para evitar un parpadeo
-    if (cargandoAuth || usuario) {
-        return null; // O un componente de carga si lo prefieres
+    // Mientras se determina el estado de autenticación (isLoadingAuth) o si ya está autenticado, no mostrar el form.
+    // Esto previene parpadeos y mostrar el login a usuarios ya logueados.
+    if (isLoadingAuth || isAuthenticated) {
+        return null; // O un componente de carga global/esqueleto
     }
 
     return (
@@ -56,10 +67,11 @@ export default function PaginaLogin() {
                             <label htmlFor="clave">Contraseña</label>
                             <input id="clave" type="password" value={clave} onChange={e => setClave(e.target.value)} required disabled={cargandoSubmit}/>
                         </div>
-                        {error && <p className="mensajeError">{error}</p>}
+                        {/* Mostrar error local o del store */}
+                        {(localError || authError) && <p className="mensajeError">{localError || authError}</p>}
 
-                        <Boton type="submit" className="anchoCompleto" disabled={cargandoSubmit}>
-                            {cargandoSubmit ? 'Iniciando...' : 'Iniciar Sesión'}
+                        <Boton type="submit" className="anchoCompleto" disabled={cargandoSubmit || isLoadingAuth}>
+                            {cargandoSubmit || isLoadingAuth ? 'Iniciando...' : 'Iniciar Sesión'}
                         </Boton>
                     </form>
                 </div>
