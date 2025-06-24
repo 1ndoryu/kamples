@@ -15,8 +15,12 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}, timeout 
     const controller = new AbortController();
     const idTimeout = setTimeout(() => controller.abort(), timeout);
 
-    const url = `${process.env.NEXT_PUBLIC_SWORD_API_URL}${endpoint}`;
-    const apiKey = process.env.SWORD_API_KEY;
+    const apiUrlBase = process.env.NEXT_PUBLIC_SWORD_API_URL;
+    // Asegurarse de que la URL base y el endpoint se unan correctamente
+    const url = (apiUrlBase?.endsWith('/') ? apiUrlBase.slice(0, -1) : apiUrlBase) +
+                (endpoint?.startsWith('/') ? endpoint : `/${endpoint}`);
+
+    const apiKey = process.env.NEXT_PUBLIC_SWORD_API_KEY; // CORRECCIÓN: Usar NEXT_PUBLIC_ para acceso en cliente
 
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',

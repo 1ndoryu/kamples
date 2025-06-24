@@ -26,12 +26,13 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	// Aseguramos que no haya espacios extraños antes o después de las etiquetas principales
 	return (
-		<html lang="es" data-tema="oscuro" suppressHydrationWarning> {/* `data-tema` aquí es el valor inicial del lado del servidor, ThemeApplicator lo sincronizará en el cliente */}
+		<html lang="es" data-tema="oscuro" suppressHydrationWarning>
+			{/* Next.js maneja <head /> aquí. No añadir <head> manualmente a menos que sea necesario con contenido específico. */}
 			<body className={sourceSans.className}>
-				{/* TemaProvider eliminado */}
 				<StoreAuthInitializer />
-				<ThemeApplicator /> {/* Añadido el aplicador de tema */}
+				<ThemeApplicator />
 				<LayoutStyles />
 				<div className="layoutPrincipal">
 					<MenuLateral />
