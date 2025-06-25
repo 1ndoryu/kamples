@@ -1,5 +1,3 @@
-// app/components/ListaSamples.tsx
-
 'use client';
 
 import {useState, useEffect} from 'react';

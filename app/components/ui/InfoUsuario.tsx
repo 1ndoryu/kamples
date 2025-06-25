@@ -1,14 +1,13 @@
-// app/components/ui/InfoUsuario.tsx
 'use client';
 
-import {useAuth} from '@/context/AuthContext';
-import ImagenSample from './ImagenSample'; // CAMBIO: Importamos el componente reutilizable
+import { useAuthStore } from '@/store/auth';
+import ImagenSample from './ImagenSample';
 
 export default function InfoUsuario() {
-	const {usuario} = useAuth();
+	const {usuario} = useAuthStore();
 
 	if (!usuario) {
-		return null; // O un esqueleto de carga
+		return null;
 	}
 
 	const nombreMostrado = usuario.nombremostrado || usuario.nombreusuario;
@@ -27,7 +26,6 @@ export default function InfoUsuario() {
 					gap: 10px;
 				}
 				.infoUsuario :global(.imagenSample) {
-					// Apuntamos al componente ImagenSample dentro de este scope
 					width: 35px;
 					height: 35px;
 					border-radius: 50%;

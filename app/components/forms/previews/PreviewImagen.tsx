@@ -1,12 +1,12 @@
-// app/components/forms/previews/PreviewImagen.tsx
 'use client';
 
 import {useEffect, useState} from 'react';
+import Image from 'next/image';
 
 interface Props {
     archivo: File;
     onEliminar: () => void;
-    onClick: () => void; // Para reemplazar el archivo
+    onClick: () => void;
 }
 
 export default function PreviewImagen({archivo, onEliminar, onClick}: Props) {
@@ -21,7 +21,7 @@ export default function PreviewImagen({archivo, onEliminar, onClick}: Props) {
 
     return (
         <div className="previewItem imagen" onClick={onClick}>
-            {urlPreview && <img src={urlPreview} alt={archivo.name} />}
+            {urlPreview && <Image src={urlPreview} alt={archivo.name} fill style={{ objectFit: 'cover' }}/>}
             <button
                 className="botonEliminar"
                 onClick={e => {
@@ -37,6 +37,7 @@ export default function PreviewImagen({archivo, onEliminar, onClick}: Props) {
                     border: 1px solid var(--borde);
                     border-radius: var(--radius);
                     overflow: hidden; /* Para que el radio se aplique a la imagen */
+                    height: 300px;
                 }
                 .previewItem.imagen:hover::after {
                     content: 'Reemplazar';
@@ -48,13 +49,6 @@ export default function PreviewImagen({archivo, onEliminar, onClick}: Props) {
                     align-items: center;
                     justify-content: center;
                     font-size: 0.9rem;
-                }
-                .previewItem img {
-                    object-fit: cover;
-                    width: 100%;
-                    height: 100%;
-                    display: block;
-                    border-radius: var(--radius);
                 }
                 .botonEliminar {
                     color: #fff;
@@ -76,6 +70,7 @@ export default function PreviewImagen({archivo, onEliminar, onClick}: Props) {
                     right: 4px;
                     padding: 7px;
                     margin: 5px;
+                    z-index: 1;
                 }
                 .botonEliminar:hover {
                     opacity: 1;
