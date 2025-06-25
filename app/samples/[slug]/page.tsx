@@ -1,20 +1,15 @@
-// app/samples/[slug]/page.tsx
-// TEST: Aplicando la solución de Stack Overflow para params como Promise.
-
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { obtenerSamplePorSlug } from '@/services/swordApi';
 import DetalleSample from '@/components/DetalleSample';
 import type { Metadata } from 'next';
+import SkeletonSample from '../loaders/skeletonSample';
 
-// 1. Modificamos el tipado para que acepte una Promise, como sugiere el post.
 type PageProps = {
     params: Promise<{ slug: string }>;
 };
-
-// 2. generateMetadata ahora debe esperar (await) a que se resuelvan los params.
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const { slug } = await params; // Se resuelve la Promise
+    const { slug } = await params;
     const sample = await obtenerSamplePorSlug(slug);
 
     if (!sample) {
@@ -26,7 +21,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
 }
 
-// El SampleLoader no necesita cambios, ya que le pasaremos el slug resuelto.
 async function SampleLoader({ slug }: { slug: string }) {
     const sample = await obtenerSamplePorSlug(slug);
     if (!sample) {
@@ -35,13 +29,12 @@ async function SampleLoader({ slug }: { slug: string }) {
     return <DetalleSample sample={sample} />;
 }
 
-// 3. El componente principal también debe ser async y esperar (await) los params.
 export default async function PaginaDeSample({ params }: PageProps) {
-    const { slug } = await params; // Se resuelve la Promise
+    const { slug } = await params;
 
     return (
         <div>
-            <Suspense fallback={<div className="cargandoContenido">Cargando sample...</div>}>
+            <Suspense fallback={<SkeletonSample />}>
                 <SampleLoader slug={slug} />
             </Suspense>
         </div>

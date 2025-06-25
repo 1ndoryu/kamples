@@ -1,5 +1,4 @@
-// app/components/DetalleSample.tsx
-'use client'; // Regla #7: Componentes con hooks o interactividad deben ser Client Components.
+'use client';
 
 import type {Sample} from '@/types/sample';
 import Tabs, {type Pestaña} from '@/components/ui/Tabs';
@@ -9,7 +8,6 @@ interface Props {
 }
 
 export default function DetalleSample({sample}: Props) {
-    // Preparar el contenido para las pestañas
     const pestañasDelSample: Pestaña[] = [
         {
             etiqueta: 'Detalles',
@@ -56,11 +54,9 @@ export default function DetalleSample({sample}: Props) {
                     <p>[Aquí irá el reproductor de audio del sample]</p>
                 </div>
 
-                {/* Renderizamos el componente de Tabs que ya es un client component */}
                 <Tabs pestañas={pestañasDelSample} />
             </article>
 
-            {/* El styled-jsx ahora vive de forma segura dentro de un Client Component */}
             <style jsx>{`
                 .vistaSample {
                     max-width: 800px;

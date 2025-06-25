@@ -1,4 +1,3 @@
-// app/components/ui/ImagenSample.tsx
 'use client';
 
 import {useEffect, useState} from 'react';
@@ -18,7 +17,6 @@ export default function ImagenSample({nombre, src, alt, tamaño = 40, radio = 8}
 
 	useEffect(() => {
 		if (!src) {
-			// FIX: Se pasa un string vacío a `text` para generar el gradiente sin iniciales.
 			getAvatar({name: nombre, text: '', size: tamaño, rounded: radio})
 				.then(setFuenteAvatar)
 				.catch(console.error);
