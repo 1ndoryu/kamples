@@ -2,6 +2,12 @@
 
 import type { RespuestaApiSamples, Sample } from '@/types/sample';
 
+export interface Comentario {
+    id: number;
+    texto: string;
+    autor: string;
+}
+
 // Se mantiene el manejador de errores personalizado
 class ApiError extends Error {
     constructor(message: string) {
@@ -99,5 +105,41 @@ export async function obtenerSamplePorSlug(slug: string): Promise<Sample | null>
     } catch (error) {
         console.error(`Error al obtener el sample con slug "${slug}":`, error instanceof Error ? error.message : String(error));
         return null;
+    }
+}
+
+/**
+ * Obtiene los comentarios de un sample.
+ * @param sampleId El ID del sample para el que se quieren obtener los comentarios.
+ * @returns Una promesa que resuelve a los comentarios encontrados o un array vacío si no hay comentarios.
+ * Esta función esta siendo creada para su uso futuro cuando se implementen los comentarios.
+*/
+export async function obtenerComentarios(sampleId: number): Promise<Comentario[]> {
+    const endpoint = `/content?type=comentarios&sampleId=${sampleId}`;
+    try {
+        return await fetchApi<Comentario[]>(endpoint);
+    } catch (error) {
+        console.error(`Error al obtener comentarios para el sample ${sampleId}:`, error);
+        return [];
+    }
+}
+
+/**
+ * Crea un nuevo comentario para un sample.
+ * @param sampleId El ID del sample al que se quiere agregar el comentario.
+ * @param texto El texto del comentario.
+ * @returns Una promesa que resuelve al comentario creado.
+ * Esta función esta siendo creada para su uso futuro cuando se implementen los comentarios.
+*/
+export async function crearComentario(sampleId: number, texto: string): Promise<Comentario> {
+    const endpoint = `/content?type=comentarios`;
+    try {
+        return await fetchApi<Comentario>(endpoint, {
+            method: 'POST',
+            body: JSON.stringify({ sampleId, texto, autor: 'Usuario Actual' }),
+        });
+    } catch (error) {
+        console.error(`Error al crear comentario para el sample ${sampleId}:`, error);
+        throw error;
     }
 }

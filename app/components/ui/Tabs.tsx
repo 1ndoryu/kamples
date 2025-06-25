@@ -1,6 +1,6 @@
-// app/components/ui/Tabs.tsx
 'use client';
 
+// app/components/ui/Tabs.tsx
 import {useState, type ReactNode} from 'react';
 
 // Define la estructura de cada pestaña que recibirá el componente
