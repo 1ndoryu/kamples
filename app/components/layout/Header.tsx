@@ -1,13 +1,12 @@
-// app/components/layout/Header.tsx
 'use client';
 
 import InterruptorTema from './InterruptorTema';
 import Boton from '@/components/ui/Boton';
-import {useAuth} from '@/context/AuthContext';
+import { useAuthStore } from '@/store/auth';
 import SubirSample from '@/components/SubirSample';
 
 export default function Header() {
-	const {usuario, logout, cargando} = useAuth();
+	const {usuario, logout, cargando} = useAuthStore();
 
 	return (
 		<header className="cabeceraPrincipal">

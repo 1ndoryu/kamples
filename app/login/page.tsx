@@ -1,11 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Boton from '@/components/ui/Boton';
-import { useAuth } from '@/context/AuthContext';
+import { useAuthStore } from '@/store/auth';
 import { useRouter } from 'next/navigation';
 
 export default function PaginaLogin() {
-    const { login, usuario, cargando: cargandoAuth } = useAuth();
+    const { login, usuario, cargando: cargandoAuth } = useAuthStore();
     const router = useRouter();
     const [credenciales, setCredenciales] = useState({
         nombreUsuario: '',
@@ -27,7 +27,9 @@ export default function PaginaLogin() {
 
         const resultado = await login(credenciales.nombreUsuario, credenciales.clave);
 
-        if (!resultado.exito) {
+        if (resultado.exito) {
+            router.push('/');
+        } else {
             setError(resultado.error || 'Ocurrió un error inesperado.');
             setCargandoSubmit(false);
         }

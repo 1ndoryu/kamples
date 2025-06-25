@@ -1,12 +1,15 @@
-// app/layout.tsx
-import type {Metadata} from 'next';
+'use client';
+
+import { useEffect } from 'react';
+import { useAuthStore } from '@/store/auth';
+
+
 import {Source_Sans_3} from 'next/font/google';
 import './globals.css';
 
 import Header from '@/components/layout/Header';
 import MenuLateral from '@/components/layout/MenuLateral';
 import {TemaProvider} from '@/context/TemaContext';
-import {AuthProvider} from '@/context/AuthContext';
 import LayoutStyles from '@/components/layout/LayoutStyles';
 
 const sourceSans = Source_Sans_3({
@@ -15,21 +18,23 @@ const sourceSans = Source_Sans_3({
 	display: 'swap'
 });
 
-export const metadata: Metadata = {
-	title: 'Kamples - Tu biblioteca de samples',
-	description: 'Encuentra, comparte y colabora con miles de samples de alta calidad.'
-};
+
 
 export default function RootLayout({
 	children
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+    const { verificarSesion } = useAuthStore();
+
+    useEffect(() => {
+        verificarSesion();
+    }, [verificarSesion]);
+
 	return (
 		<html lang="es" data-tema="oscuro" suppressHydrationWarning>
 			<body className={sourceSans.className}>
 				<TemaProvider>
-					<AuthProvider>
 						<LayoutStyles />
 						<div className="layoutPrincipal">
 							<MenuLateral />
@@ -38,7 +43,6 @@ export default function RootLayout({
 								<main className="contenidoPrincipal">{children}</main>
 							</div>
 						</div>
-					</AuthProvider>
 				</TemaProvider>
 			</body>
 		</html>

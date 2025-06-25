@@ -1,4 +1,4 @@
-export const useFetch = async <T>(url: string, options?: RequestInit, setCargando?: (cargando: boolean) => void): 
+export const secureFetch = async <T>(url: string, options?: RequestInit, setCargando?: (cargando: boolean) => void): 
     Promise<{ data: T | null; error: string | null }> => {
     try {
         setCargando?.(true);
