@@ -7,13 +7,7 @@ export default function SidebarMenu() {
     <aside className={`${styles.menuLateral} bloque`}>
       <ul>
         <li>
-          <Link href="/">Todos los samples</Link>
-        </li>
-        <li>
-          <Link href="/?tipo=audio_sample">Audio Samples</Link>
-        </li>
-        <li>
-          <Link href="/?tipo=loop">Loops</Link>
+          <Link href="/">Inicio</Link>
         </li>
       </ul>
     </aside>
