@@ -8,6 +8,10 @@ interface ApiResponse<T> {
     data: T;
 }
 
+// Mapa simple que almacena respuestas ya resueltas para cada URL de peticiones GET.
+// Es sólo para el ciclo de vida del navegador / pestaña actual.
+const responseCache = new Map<string, any>();
+
 /**
  * Helper para realizar peticiones a la API de Sword v2.
  * Se encarga de añadir el encabezado Authorization cuando existe un token en localStorage.
@@ -28,6 +32,21 @@ export async function apiFetch<T>(path: string, options: RequestInit & {skipAuth
                 (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
             }
         }
+    }
+
+    // -------- 1. Cache rápida para GET ----------
+    const method = (options.method ?? "GET").toUpperCase();
+    const shouldUseCache = method === "GET" && !options.body;
+    const cacheKey = url;
+
+    if (shouldUseCache && responseCache.has(cacheKey)) {
+        const cached = responseCache.get(cacheKey) as ApiResponse<T>;
+        if (isDebug) {
+            console.groupCollapsed(`apiFetch (cache) → ${method} ${url}`);
+            console.log("Response", cached);
+            console.groupEnd();
+        }
+        return cached;
     }
 
     const response = await fetch(url, {
@@ -87,5 +106,12 @@ export async function apiFetch<T>(path: string, options: RequestInit & {skipAuth
         console.groupEnd();
     }
 
-    return parsed as ApiResponse<T>;
+    const finalResponse = parsed as ApiResponse<T>;
+
+    // Guardamos en cache sólo si es GET exitoso.
+    if (shouldUseCache && response.ok) {
+        responseCache.set(cacheKey, finalResponse);
+    }
+
+    return finalResponse;
 }
