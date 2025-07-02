@@ -1,0 +1,25 @@
+.menuSuperior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.navLinks a,
+.navAuth a,
+.navAuth button {
+  margin-right: 16px;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.navAuth button:hover,
+.navLinks a:hover,
+.navAuth a:hover {
+  text-decoration: underline;
+} 

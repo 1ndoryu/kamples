@@ -1,0 +1,15 @@
+.tarjetaSample {
+  border: 1px solid var(--gray-alpha-200, #333);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.tarjetaSample h3 {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.tarjetaSample p {
+  font-size: 12px;
+  opacity: 0.8;
+} 

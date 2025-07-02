@@ -1,0 +1,20 @@
+.menuLateral {
+  width: 200px;
+  padding: 16px;
+  background: var(--gray-alpha-200, #1f1f1f);
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+
+.menuLateral ul {
+  list-style: none;
+}
+
+.menuLateral li {
+  margin-bottom: 8px;
+}
+
+.menuLateral a {
+  color: var(--foreground);
+  font-size: 14px;
+} 
