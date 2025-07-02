@@ -5,6 +5,8 @@ import { isDebug } from "../lib/debug";
 import { useState, useEffect } from "react";
 import { apiFetch } from "../lib/api";
 import { useInView } from "../hooks/useInView";
+import LikeButton from "./LikeButton";
+import CommentsSection from "./CommentsSection";
 
 interface Props {
   sample: any;
@@ -12,6 +14,7 @@ interface Props {
 
 export default function SampleCard({ sample }: Props) {
   const [expandido, setExpandido] = useState(false);
+  const [mostrarComentarios, setMostrarComentarios] = useState(false);
 
   // Detectamos visibilidad en viewport
   const [cardRef, inView] = useInView<HTMLElement>({ threshold: 0.25 });
@@ -127,6 +130,17 @@ export default function SampleCard({ sample }: Props) {
           </audio>
         </div>
       )}
+
+      {/* Botones de interacción */}
+      <div style={{ marginTop: 8, display: "flex", alignItems: "center", gap: 8 }}>
+        <LikeButton contentId={sample.id} enabled={inView} />
+        <details onToggle={(e) => setMostrarComentarios(e.currentTarget.open)}>
+          <summary>Comentarios</summary>
+          {mostrarComentarios && inView && (
+            <CommentsSection contentId={sample.id} />
+          )}
+        </details>
+      </div>
 
       {renderDebugInfo()}
     </article>

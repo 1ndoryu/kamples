@@ -1,0 +1,15 @@
+.botonLike {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #ff6a6a;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.botonLike:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+} 
