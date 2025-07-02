@@ -12,4 +12,29 @@
 .tarjetaSample p {
   font-size: 12px;
   opacity: 0.8;
+}
+
+.debugInfo {
+  font-size: 10px;
+  opacity: 0.8;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+.debugInfo ul {
+  padding-left: 16px;
+  margin: 0 0 4px 0;
+}
+
+.debugInfo li {
+  list-style: disc;
+}
+
+.botonExpandir {
+  background: transparent;
+  border: none;
+  color: #6aa0ff;
+  cursor: pointer;
+  font-size: 10px;
+  text-decoration: underline;
 } 

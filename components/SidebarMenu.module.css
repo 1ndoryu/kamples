@@ -1,5 +1,4 @@
 .menuLateral {
-  width: 200px;
   padding: 16px;
   background: var(--gray-alpha-200, #1f1f1f);
   height: calc(100vh - 60px);
