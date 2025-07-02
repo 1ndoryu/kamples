@@ -1,9 +1,9 @@
 'use client';
 import { useEffect, useState } from "react";
-import { apiFetch } from "../lib/api";
-import { isDebug } from "../lib/debug";
-import { useAuthStore } from "../store/authStore";
-import SampleCard from "./SampleCard";
+import { apiFetch } from "@/lib/api";
+import { isDebug } from "@/lib/debug";
+import { useAuthStore } from "@/store/authStore";
+import SampleCard from "@/components/SampleCard";
 
 export default function SamplesFeed() {
   const { token, hydrate } = useAuthStore();

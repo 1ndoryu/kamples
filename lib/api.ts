@@ -1,4 +1,4 @@
-import { isDebug } from "./debug";
+import { isDebug } from "@/lib/debug";
 
 export const API_URL = process.env.NEXT_PUBLIC_SWORD_API_URL ?? '/api';
 

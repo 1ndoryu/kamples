@@ -1,6 +1,6 @@
 'use client';
 import Link from "next/link";
-import { useAuthStore } from "../store/authStore";
+import { useAuthStore } from "@/store/authStore";
 import { useEffect } from "react";
 import styles from "./TopMenu.module.css";
 

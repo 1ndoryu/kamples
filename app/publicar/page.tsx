@@ -1,8 +1,8 @@
 'use client';
 import {useState} from 'react';
 import {useRouter} from 'next/navigation';
-import {apiFetch} from '../../lib/api';
-import {useAuthStore} from '../../store/authStore';
+import {apiFetch} from '@/lib/api';
+import {useAuthStore} from '@/store/authStore';
 
 export default function PublicarPage() {
     const {token} = useAuthStore();

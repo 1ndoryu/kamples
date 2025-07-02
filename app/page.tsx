@@ -1,6 +1,6 @@
-import TopMenu from "../components/TopMenu";
-import SidebarMenu from "../components/SidebarMenu";
-import SamplesFeed from "../components/SamplesFeed";
+import TopMenu from "@/components/TopMenu";
+import SidebarMenu from "@/components/SidebarMenu";
+import SamplesFeed from "@/components/SamplesFeed";
 
 export default function Home() {
   return (
