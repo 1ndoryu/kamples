@@ -6,12 +6,24 @@ import { useAuthStore } from "../store/authStore";
 import SampleCard from "./SampleCard";
 
 export default function SamplesFeed() {
-  const { token } = useAuthStore();
+  const { token, hydrate } = useAuthStore();
+  const [isHydrated, setIsHydrated] = useState(false);
   const [samples, setSamples] = useState<any[]>([]);
   const [debugInfo, setDebugInfo] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Hidratamos el estado de autenticación una sola vez en el cliente
   useEffect(() => {
+    if (typeof window === "undefined") return; // Evitamos SSR
+    hydrate();
+    setIsHydrated(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Cargamos los samples únicamente cuando ya sabemos si existe token en localStorage
+  useEffect(() => {
+    if (!isHydrated) return;
+
     async function load() {
       try {
         const endpoint = token ? "/feed" : "/contents";
@@ -26,8 +38,9 @@ export default function SamplesFeed() {
         setError(e.message);
       }
     }
+
     load();
-  }, [token]);
+  }, [token, isHydrated]);
 
   if (error) return <p>Error: {error}</p>;
 
