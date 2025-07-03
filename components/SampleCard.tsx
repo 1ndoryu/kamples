@@ -10,6 +10,7 @@ import CommentsSection from './CommentsSection';
 import {useAuthStore} from '../store/authStore';
 import Waveform from '@/app/components/audio/Waveform';
 import { MenuContainer, MenuButton, Menu, MenuItem } from './Menu';
+import CommentsModal from './CommentsModal';
 
 interface Props {
     sample: any;
@@ -18,7 +19,7 @@ interface Props {
 
 export default function SampleCard({sample, onDeleted}: Props) {
     const [expandido, setExpandido] = useState(false);
-    const [mostrarComentarios, setMostrarComentarios] = useState(false);
+    const [verComentarios, setVerComentarios] = useState(false);
     const [cardRef, inView] = useInView<HTMLElement>({threshold: 0.25});
     const lightMediaId: string | number | null = sample?.content_data?.light_media_id ?? null;
     const fallbackMediaId: string | number | null = sample?.content_data?.media_id ?? null;
@@ -183,13 +184,36 @@ export default function SampleCard({sample, onDeleted}: Props) {
                 </div>
             )}
 
-            <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+            <div style={{display: 'flex', alignItems: 'center', gap: 20}}>
                 <LikeButton contentId={sample.id} enabled={inView} />
-                <details onToggle={e => setMostrarComentarios(e.currentTarget.open)}>
-                    <summary>Comentarios</summary>
-                    {mostrarComentarios && inView && <CommentsSection contentId={sample.id} />}
-                </details>
+                <button
+                    className={styles.botonComentarios}
+                    onClick={() => setVerComentarios(true)}
+                    title="Ver comentarios"
+                >
+                    <svg
+                        data-testid="geist-icon"
+                        height="16"
+                        strokeLinejoin="round"
+                        viewBox="0 0 16 16"
+                        width="16"
+                        style={{ color: 'currentcolor' }}
+                    >
+                        <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M2.8914 10.4028L2.98327 10.6318C3.22909 11.2445 3.5 12.1045 3.5 13C3.5 13.3588 3.4564 13.7131 3.38773 14.0495C3.69637 13.9446 4.01409 13.8159 4.32918 13.6584C4.87888 13.3835 5.33961 13.0611 5.70994 12.7521L6.22471 12.3226L6.88809 12.4196C7.24851 12.4724 7.61994 12.5 8 12.5C11.7843 12.5 14.5 9.85569 14.5 7C14.5 4.14431 11.7843 1.5 8 1.5C4.21574 1.5 1.5 4.14431 1.5 7C1.5 8.18175 1.94229 9.29322 2.73103 10.2153L2.8914 10.4028ZM2.8135 15.7653C1.76096 16 1 16 1 16C1 16 1.43322 15.3097 1.72937 14.4367C1.88317 13.9834 2 13.4808 2 13C2 12.3826 1.80733 11.7292 1.59114 11.1903C0.591845 10.0221 0 8.57152 0 7C0 3.13401 3.58172 0 8 0C12.4183 0 16 3.13401 16 7C16 10.866 12.4183 14 8 14C7.54721 14 7.10321 13.9671 6.67094 13.9038C6.22579 14.2753 5.66881 14.6656 5 15C4.23366 15.3832 3.46733 15.6195 2.8135 15.7653Z"
+                            fill="currentColor"
+                        />
+                    </svg>
+                </button>
+                {verComentarios && (
+                    <CommentsModal onClose={() => setVerComentarios(false)}>
+                        <CommentsSection contentId={sample.id} />
+                    </CommentsModal>
+                )}
                 {puedeBorrar && (
+                    <div style={{paddingLeft: 0, paddingRight: 10, display: 'flex', alignItems: 'center'}}>
                     <MenuContainer>
                         <MenuButton>
                             <svg 
@@ -212,6 +236,7 @@ export default function SampleCard({sample, onDeleted}: Props) {
                             <MenuItem onClick={handleDelete} type="error">Eliminar</MenuItem>
                         </Menu>
                     </MenuContainer>
+                    </div>
                 )}
             </div>
 

@@ -1,23 +1,24 @@
 .botonLike {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #ff6a6a;
-  font-size: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #ff6a6a;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0px;
 }
 
 .botonLike:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .liked {
-  color: #ff6a6a !important;
+    color: #ff6a6a !important;
 }
 
 .notLiked {
-  color: #ffffff !important;
-} 
+    color: #ffffff !important;
+}

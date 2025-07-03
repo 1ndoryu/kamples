@@ -87,3 +87,15 @@
     align-items: center;
     justify-content: center;
 }
+
+.botonComentarios {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0px;
+}

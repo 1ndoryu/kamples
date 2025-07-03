@@ -42,7 +42,7 @@ export function MenuButton({ children }: { children: ReactNode }) {
     <button
       type="button"
       onClick={() => ctx.setOpen(!ctx.open)}
-      style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'inherit' }}
+      style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0, margin: 0}}
     >
       {children}
     </button>
