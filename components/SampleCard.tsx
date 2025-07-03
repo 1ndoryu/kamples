@@ -32,6 +32,33 @@ export default function SampleCard({sample, onDeleted}: Props) {
     const currentUser = useAuthStore(s => s.user);
     const puedeBorrar = currentUser && currentUser.id === sample.user_id;
 
+    // --- Metadatos a mostrar (máx. 5) -------------------------------------
+    const metaItems: string[] = [];
+    if (sample?.content_data) {
+        const cd = sample.content_data;
+
+        // 1) Tipo
+        if (cd.tipo) metaItems.push(String(cd.tipo));
+
+        // 2) Primer género
+        const generoSource = cd.genero;
+        const generoFirst = Array.isArray(generoSource) ? generoSource[0] : generoSource;
+        if (generoFirst && !metaItems.includes(generoFirst)) metaItems.push(String(generoFirst));
+
+        // 3) Primer instrumento
+        const instrumentoSource = cd.instrumentos;
+        const instrumentoFirst = Array.isArray(instrumentoSource) ? instrumentoSource[0] : instrumentoSource;
+        if (instrumentoFirst && !metaItems.includes(instrumentoFirst)) metaItems.push(String(instrumentoFirst));
+
+        // 4) Tags (evitar duplicados y el género ya mostrado)
+        const tagsList: string[] = Array.isArray(cd.tags) ? cd.tags : [];
+        for (const tag of tagsList) {
+            if (metaItems.length >= 5) break;
+            if (!metaItems.includes(tag) && tag !== generoFirst) metaItems.push(String(tag));
+        }
+    }
+    // ----------------------------------------------------------------------
+
     const handleDelete = async () => {
         if (!confirm('¿Seguro que deseas borrar este sample? Esta acción es irreversible.')) return;
 
@@ -126,7 +153,16 @@ export default function SampleCard({sample, onDeleted}: Props) {
     return (
         <article ref={cardRef} className={`${styles.tarjetaSample}`}>
             {coverImageUrl && <img className="img-sample" src={coverImageUrl} alt="Imagen de portada" style={{maxWidth: '40px', aspectRatio: '1 / 1', objectFit: 'cover', borderRadius: '5px'}} />}
-            <h3>{sample.content_data?.title ?? sample.slug}</h3>
+            <div style={{display: 'flex', flexDirection: 'column', gap: 0}}>
+                <h3>{sample.content_data?.title ?? sample.slug}</h3>
+                <div className={styles.metaContainer}>
+                    {metaItems.map(item => (
+                        <span key={item} className={styles.metaBadge}>
+                            {item}
+                        </span>
+                    ))}
+                </div>
+            </div>
             <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
                 {/* <Avatar userId={sample.user_id} size={32} /> */}
                 {/*<span style={{fontSize: 14}}>Publicado por usuario #{sample.user_id}</span>*/}

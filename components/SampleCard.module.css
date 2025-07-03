@@ -7,6 +7,7 @@
     padding: 6px 10px;
     display: flex;
     max-height: 62px;
+    height: 62px;
     align-content: center;
     background: #070707;
 }
@@ -44,4 +45,17 @@
     cursor: pointer;
     font-size: 10px;
     text-decoration: underline;
+}
+
+/* --- Metadatos ---------------------------------------------------------- */
+.metaContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.metaBadge {
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0.6;
 }
