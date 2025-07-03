@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useUiStore } from "../store/uiStore";
 import styles from "./TopMenu.module.css";
 import Avatar from "./Avatar";
+import { MenuContainer, MenuButton, Menu, MenuItem } from './Menu';
 
 export default function TopMenu() {
   const { token, user, logout, hydrate } = useAuthStore();
@@ -25,12 +26,14 @@ export default function TopMenu() {
       </nav>
       <nav className={styles.navAuth}>
         {token ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {user && (
-              <Avatar avatarUrl={user.profile_data?.avatar_url ?? null} size={32} />
-            )}
-            <button onClick={logout}>Cerrar sesión</button>
-          </div>
+          <MenuContainer>
+            <MenuButton>
+              {user && <Avatar avatarUrl={user.profile_data?.avatar_url ?? null} size={32} />}
+            </MenuButton>
+            <Menu width={160}>
+              <MenuItem onClick={logout} type="error">Cerrar sesión</MenuItem>
+            </Menu>
+          </MenuContainer>
         ) : (
           <>
             <button onClick={() => openModal('login')} className="bloque" style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer' }}>Entrar</button>

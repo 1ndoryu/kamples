@@ -83,4 +83,16 @@
     100% {
         transform: rotate(360deg);
     }
+}
+
+/* --- Modo solo botón (overlay) ---------------------------------------- */
+.soloBoton {
+    gap: 0;
+    padding: 0;
+    background: transparent;
+    flex-grow: 0;
+}
+
+.soloBoton:hover {
+    background: transparent;
 } 
