@@ -1,7 +1,7 @@
 'use client';
 import { create } from 'zustand';
 
-export type ModalType = 'login' | 'publicar' | null;
+export type ModalType = 'login' | 'publicar' | 'perfil' | null;
 
 interface UiState {
   modalOpen: ModalType;

@@ -32,10 +32,15 @@ export default function SampleCard({ sample, onDeleted }: Props) {
   const originalMediaId: string | number | null =
     sample?.content_data?.original_media_id ?? fallbackMediaId;
 
+  // NUEVO: Imagen de portada
+  const coverImageId: string | number | null = sample?.content_data?.cover_image_id ?? null;
+
   // Previsualización (ligera)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   // Original solo en debug
   const [originalUrl, setOriginalUrl] = useState<string | null>(null);
+  // URL de la imagen de portada
+  const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null);
 
   // Estado para ocultar la tarjeta al eliminar
   const [eliminado, setEliminado] = useState(false);
@@ -92,6 +97,21 @@ export default function SampleCard({ sample, onDeleted }: Props) {
     })();
   }, [originalMediaId, inView]);
 
+  // NUEVO: Efecto para obtener la imagen de portada
+  useEffect(() => {
+    if (!coverImageId || !inView) return;
+
+    (async () => {
+      try {
+        const res = await apiFetch<any>(`/media/${coverImageId}`);
+        const path = res?.data?.path;
+        if (path) setCoverImageUrl(`/api/${path}`);
+      } catch (e) {
+        if (isDebug) console.error("Error obteniendo cover image", e);
+      }
+    })();
+  }, [coverImageId, inView]);
+
   const renderDebugInfo = () => {
     // Si no hay datos o no estamos en modo debug, no renderizar nada
     if (!isDebug || !sample.content_data) return null;
@@ -140,6 +160,13 @@ export default function SampleCard({ sample, onDeleted }: Props) {
   return (
     <article ref={cardRef} className={`${styles.tarjetaSample} bloque`}>
       <h3>{sample.content_data?.title ?? sample.slug}</h3>
+      {coverImageUrl && (
+        <img
+          src={coverImageUrl}
+          alt="Imagen de portada"
+          style={{ width: "100%", maxHeight: 300, objectFit: "cover" }}
+        />
+      )}
       <p>Tipo: {sample.type}</p>
       <p>Publicado por usuario #{sample.user_id}</p>
       {/* Reproductor principal (ligero) */}
