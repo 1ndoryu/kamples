@@ -124,10 +124,10 @@ export default function SampleCard({sample, onDeleted}: Props) {
 
     return (
         <article ref={cardRef} className={`${styles.tarjetaSample}`}>
+            {coverImageUrl && <img className="img-sample" src={coverImageUrl} alt="Imagen de portada" style={{maxWidth: '40px', aspectRatio: '1 / 1', objectFit: 'cover', borderRadius: '5px'}} />}
             <h3>{sample.content_data?.title ?? sample.slug}</h3>
-            {coverImageUrl && <img src={coverImageUrl} alt="Imagen de portada" style={{width: '100%', maxHeight: 300, objectFit: 'cover'}} />}
             <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
-                <Avatar userId={sample.user_id} size={32} />
+                {/* <Avatar userId={sample.user_id} size={32} /> */}
                 <span style={{fontSize: 14}}>Publicado por usuario #{sample.user_id}</span>
             </div>
             {previewUrl && (

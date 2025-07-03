@@ -118,7 +118,7 @@ export default function SamplesFeed() {
       {samples.length === 0 ? (
         <p>No hay samples disponibles.</p>
       ) : (
-        <div style={{ display: "grid", gap: "16px" }}>
+        <div style={{ display: "grid", gap: "10px" }}>
           {samples.map((s) => (
             <SampleCard
               key={s.id}

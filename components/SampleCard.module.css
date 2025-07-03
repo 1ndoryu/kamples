@@ -1,40 +1,47 @@
 .tarjetaSample {
-  border: 1px solid var(--gray-alpha-200, #333);
-  padding: 12px;
-  border-radius: 8px;
+    border: var(--borde);
+    border-radius: var(--radius);
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    padding: 6px 10px;
+    display: flex;
+    max-height: 62px;
+    align-content: center;
+    background: #070707;
 }
 
 .tarjetaSample h3 {
-  margin-bottom: 8px;
-  font-size: 16px;
+    margin-bottom: 8px;
+    font-size: 16px;
 }
 
 .tarjetaSample p {
-  font-size: 12px;
-  opacity: 0.8;
+    font-size: 12px;
+    opacity: 0.8;
 }
 
 .debugInfo {
-  font-size: 10px;
-  opacity: 0.8;
-  margin-top: 8px;
-  line-height: 1.4;
+    font-size: 10px;
+    opacity: 0.8;
+    margin-top: 8px;
+    line-height: 1.4;
 }
 
 .debugInfo ul {
-  padding-left: 16px;
-  margin: 0 0 4px 0;
+    padding-left: 16px;
+    margin: 0 0 4px 0;
 }
 
 .debugInfo li {
-  list-style: disc;
+    list-style: disc;
 }
 
 .botonExpandir {
-  background: transparent;
-  border: none;
-  color: #6aa0ff;
-  cursor: pointer;
-  font-size: 10px;
-  text-decoration: underline;
-} 
+    background: transparent;
+    border: none;
+    color: #6aa0ff;
+    cursor: pointer;
+    font-size: 10px;
+    text-decoration: underline;
+}
