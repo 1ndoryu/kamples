@@ -9,6 +9,7 @@ import LikeButton from './LikeButton';
 import CommentsSection from './CommentsSection';
 import {useAuthStore} from '../store/authStore';
 import Avatar from './Avatar';
+import Waveform from '@/app/components/audio/Waveform';
 
 interface Props {
     sample: any;
@@ -128,13 +129,9 @@ export default function SampleCard({sample, onDeleted}: Props) {
             <h3>{sample.content_data?.title ?? sample.slug}</h3>
             <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
                 {/* <Avatar userId={sample.user_id} size={32} /> */}
-                <span style={{fontSize: 14}}>Publicado por usuario #{sample.user_id}</span>
+                {/*<span style={{fontSize: 14}}>Publicado por usuario #{sample.user_id}</span>*/}
             </div>
-            {previewUrl && (
-                <audio controls src={previewUrl}>
-                    Tu navegador no soporta la reproducción de audio.
-                </audio>
-            )}
+            {previewUrl && <Waveform idSample={sample.id} urlAudio={previewUrl} />}
 
             {isDebug && originalUrl && (
                 <div style={{marginTop: 8}}>
