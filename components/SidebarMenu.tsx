@@ -7,7 +7,7 @@ export default function SidebarMenu() {
   const openModal = useUiStore((s) => s.openModal);
 
   return (
-    <aside className={`${styles.menuLateral} bloque`}>
+    <aside className={`${styles.menuLateral}`}>
       <ul>
         <li>
           <Link href="/">Inicio</Link>

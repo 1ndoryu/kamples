@@ -1,19 +1,31 @@
 .menuLateral {
-  padding: 16px;
-  background: var(--gray-alpha-200, #1f1f1f);
-  height: calc(100vh - 60px);
-  overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background: #53535314;
+    width: auto;
+    border-right: var(--borde);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    padding: 10px 0px;
+    margin: 0;
+    align-items: center;
+    width: 68px;
 }
 
 .menuLateral ul {
-  list-style: none;
+    list-style: none;
 }
 
 .menuLateral li {
-  margin-bottom: 8px;
+    margin-bottom: 8px;
 }
 
 .menuLateral a {
-  color: var(--foreground);
-  font-size: 14px;
-} 
+    color: var(--foreground);
+    font-size: 14px;
+}

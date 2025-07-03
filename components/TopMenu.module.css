@@ -1,25 +1,37 @@
 .menuSuperior {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 24px;
-  background: var(--foreground);
-  color: var(--background);
+    z-index: 999;
+    display: flex;
+    flex-direction: row;
+    height: 64px;
+    width: 100%;
+    padding: 7px 10px;
+    padding-left: 68px;
+    border-bottom: var(--borde);
+    align-content: center;
+    align-items: center;
+    justify-content: flex-start;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #53535314;
+    border-right: var(--borde);
+    backdrop-filter: blur(10px);
+    margin: 0;
 }
 
 .navLinks a,
 .navAuth a,
 .navAuth button {
-  margin-right: 16px;
-  color: inherit;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
+    margin-right: 16px;
+    color: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .navAuth button:hover,
 .navLinks a:hover,
 .navAuth a:hover {
-  text-decoration: underline;
-} 
+    text-decoration: underline;
+}

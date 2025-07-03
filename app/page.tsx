@@ -4,11 +4,11 @@ import SamplesFeed from "../components/SamplesFeed";
 
 export default function Home() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+    <div style={{ display: "flex", flexDirection: "column", }}>
       <TopMenu />
       <div style={{ display: "flex", flex: 1 }}>
         <SidebarMenu />
-        <main style={{ flex: 1, padding: "16px", overflowY: "auto" }}>
+        <main style={{ flex: 1, padding: "86px", overflowY: "auto" }}>
           <SamplesFeed />
         </main>
       </div>
