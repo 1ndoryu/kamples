@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { apiFetch } from "../lib/api";
 import { isDebug } from "../lib/debug";
 import { useAuthStore } from "../store/authStore";
@@ -12,6 +12,14 @@ export default function SamplesFeed() {
   const [debugInfo, setDebugInfo] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Ref para el sentinel de scroll infinito
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+
   // Hidratamos el estado de autenticación una sola vez en el cliente
   useEffect(() => {
     if (typeof window === "undefined") return; // Evitamos SSR
@@ -20,27 +28,88 @@ export default function SamplesFeed() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Cargamos los samples únicamente cuando ya sabemos si existe token en localStorage
-  useEffect(() => {
-    if (!isHydrated) return;
+  // ----- Función auxiliar para parsear la paginación de la API -----
+  const parsePagination = (resData: any) => {
+    // Caso /feed -> data.pagination
+    if (resData?.pagination) {
+      return {
+        current: resData.pagination.current_page ?? 1,
+        last: resData.pagination.last_page ?? 1,
+      };
+    }
+    // Caso /contents -> current_page / last_page en raiz
+    if (typeof resData?.current_page !== "undefined") {
+      return {
+        current: resData.current_page ?? 1,
+        last: resData.last_page ?? 1,
+      };
+    }
+    // Si no hay info de paginación, asumimos una sola página
+    return { current: 1, last: 1 };
+  };
 
-    async function load() {
+  const fetchPage = useCallback(
+    async (pageToLoad: number) => {
       try {
-        const endpoint = token ? "/feed" : "/contents";
-        const res = await apiFetch<{ data: any[] }>(endpoint, {
-          method: "GET",
+        setIsLoading(true);
+        const endpointBase = token ? "/feed" : "/contents";
+        const endpoint = `${endpointBase}?page=${pageToLoad}&per_page=15`;
+        const res = await apiFetch<any>(endpoint, { method: "GET" });
+
+        // Extraemos lista y paginación
+        const list = Array.isArray(res.data)
+          ? res.data
+          : res.data?.data ?? [];
+
+        const { current, last } = parsePagination(res.data);
+
+        // Añadimos sin duplicar
+        setSamples((prev) => {
+          const existingIds = new Set(prev.map((s) => s.id));
+          const merged = [...prev];
+          list.forEach((item: any) => {
+            if (!existingIds.has(item.id)) merged.push(item);
+          });
+          return merged;
         });
-        // La API devuelve data directamente cuando es listado paginado.
-        const list = Array.isArray(res.data) ? res.data : res.data?.data ?? [];
-        setSamples(list);
+
+        setCurrentPage(current);
+        setLastPage(last);
+
         if (isDebug) setDebugInfo(res);
       } catch (e: any) {
         setError(e.message);
+      } finally {
+        setIsLoading(false);
       }
-    }
+    },
+    [token]
+  );
 
-    load();
-  }, [token, isHydrated]);
+  // Primera carga una vez hidratados los stores
+  useEffect(() => {
+    if (!isHydrated) return;
+    fetchPage(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isHydrated, token]);
+
+  // Observador para el scroll infinito
+  useEffect(() => {
+    if (!loaderRef.current) return;
+    const options = { root: null, rootMargin: "0px", threshold: 0.1 };
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.isIntersecting && !isLoading) {
+        const nextPage = currentPage + 1;
+        if (lastPage === null || nextPage <= lastPage) {
+          fetchPage(nextPage);
+        }
+      }
+    }, options);
+
+    observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [currentPage, lastPage, isLoading, fetchPage]);
 
   if (error) return <p>Error: {error}</p>;
 
@@ -55,6 +124,9 @@ export default function SamplesFeed() {
           ))}
         </div>
       )}
+      {/* Loader / sentinel para scroll infinito */}
+      <div ref={loaderRef} style={{ height: "1px" }} />
+
       {isDebug && debugInfo && (
         <details style={{ marginTop: "16px" }} open>
           <summary>Debug API response</summary>
