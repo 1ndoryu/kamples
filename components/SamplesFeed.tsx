@@ -120,7 +120,11 @@ export default function SamplesFeed() {
       ) : (
         <div style={{ display: "grid", gap: "16px" }}>
           {samples.map((s) => (
-            <SampleCard key={s.id} sample={s} />
+            <SampleCard
+              key={s.id}
+              sample={s}
+              onDeleted={(id) => setSamples((prev) => prev.filter((item) => item.id !== id))}
+            />
           ))}
         </div>
       )}

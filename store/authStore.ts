@@ -8,12 +8,31 @@ interface AuthState {
   register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   hydrate: () => void;
+  loadProfile: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   // Evitamos leer localStorage durante el SSR para prevenir hydration mismatch.
   token: null,
   user: null,
+  async loadProfile() {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (!token) return; // No hay token -> nada que hacer
+
+    try {
+      const res = await apiFetch<any>("/user/profile");
+      // La API podría devolver el usuario en res.data o en res.user según versión
+      const user = (res as any).user ?? (res as any).data ?? null;
+      if (user) {
+        set({ user });
+      }
+    } catch (e) {
+      // Si algo falla (token expirado, etc.) limpiamos sesión
+      console.error("Error cargando perfil de usuario", e);
+      localStorage.removeItem("token");
+      set({ token: null, user: null });
+    }
+  },
   async login(identifier, password) {
     const res = await apiFetch<{
       token_type: string;
@@ -28,6 +47,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (res.success) {
       localStorage.setItem("token", res.data.access_token);
       set({ token: res.data.access_token });
+      // Una vez guardado el token, obtenemos el perfil
+      await (useAuthStore.getState().loadProfile as any)();
     }
   },
   async register(username, email, password) {
@@ -47,6 +68,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     const savedToken = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (savedToken) {
       set({ token: savedToken });
+      // Cargamos el perfil si no está aún
+      (useAuthStore.getState().loadProfile as any)();
     }
   }
 })); 

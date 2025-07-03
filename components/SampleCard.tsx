@@ -7,12 +7,14 @@ import { apiFetch } from "../lib/api";
 import { useInView } from "../hooks/useInView";
 import LikeButton from "./LikeButton";
 import CommentsSection from "./CommentsSection";
+import { useAuthStore } from "../store/authStore";
 
 interface Props {
   sample: any;
+  onDeleted?: (id: number) => void;
 }
 
-export default function SampleCard({ sample }: Props) {
+export default function SampleCard({ sample, onDeleted }: Props) {
   const [expandido, setExpandido] = useState(false);
   const [mostrarComentarios, setMostrarComentarios] = useState(false);
 
@@ -34,6 +36,30 @@ export default function SampleCard({ sample }: Props) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   // Original solo en debug
   const [originalUrl, setOriginalUrl] = useState<string | null>(null);
+
+  // Estado para ocultar la tarjeta al eliminar
+  const [eliminado, setEliminado] = useState(false);
+
+  // Usuario actual desde el store
+  const currentUser = useAuthStore((s) => s.user);
+
+  const puedeBorrar = currentUser && currentUser.id === sample.user_id;
+
+  const handleDelete = async () => {
+    if (!confirm("¿Seguro que deseas borrar este sample? Esta acción es irreversible.")) return;
+
+    try {
+      await apiFetch<null>(`/contents/${sample.id}`, { method: "DELETE" });
+      // Notificamos al padre si pasaron onDeleted via props, o simplemente ocultamos
+      if (typeof onDeleted === "function") {
+        onDeleted(sample.id);
+      } else {
+        setEliminado(true);
+      }
+    } catch (e: any) {
+      alert(e.message || "Error eliminando el sample");
+    }
+  };
 
   // Efecto para obtener la URL de la versión ligera / fallback
   useEffect(() => {
@@ -109,6 +135,8 @@ export default function SampleCard({ sample }: Props) {
     );
   };
 
+  if (eliminado) return null;
+
   return (
     <article ref={cardRef} className={`${styles.tarjetaSample} bloque`}>
       <h3>{sample.content_data?.title ?? sample.slug}</h3>
@@ -140,6 +168,16 @@ export default function SampleCard({ sample }: Props) {
             <CommentsSection contentId={sample.id} />
           )}
         </details>
+        {puedeBorrar && (
+          <button
+            type="button"
+            onClick={handleDelete}
+            style={{ background: "transparent", border: "none", color: "red", cursor: "pointer" }}
+            title="Eliminar sample"
+          >
+            🗑️
+          </button>
+        )}
       </div>
 
       {renderDebugInfo()}
