@@ -12,4 +12,12 @@
 .botonLike:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.liked {
+  color: #ff6a6a !important;
+}
+
+.notLiked {
+  color: #ffffff !important;
 } 
