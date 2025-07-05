@@ -1,8 +1,10 @@
 'use client';
 import Link from 'next/link';
 import {useAuthStore} from '../store/authStore';
-import {useEffect} from 'react';
+import {useEffect, useState, useRef} from 'react';
 import {useUiStore} from '../store/uiStore';
+import { useSearchStore } from '../store/searchStore';
+import { apiFetch } from '../lib/api';
 import styles from './TopMenu.module.css';
 import Avatar from './Avatar';
 import {MenuContainer, MenuButton, Menu, MenuItem} from './Menu';
@@ -11,16 +13,118 @@ export default function TopMenu() {
     const {token, user, logout, hydrate} = useAuthStore();
     const openModal = useUiStore(s => s.openModal);
 
-    // Sincronizamos el token almacenado después de que el componente se monte en el cliente
+    const { searchTerm, setSearchTerm } = useSearchStore();
+    const [inputValue, setInputValue] = useState('');
+    const [previewResults, setPreviewResults] = useState<any[]>([]);
+    const [showPreview, setShowPreview] = useState(false);
+    const debounceRef = useRef<number>();
+
     useEffect(() => {
         hydrate();
-        // solo ejecutar una vez
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // ---------- búsqueda en tiempo real ----------
+    useEffect(() => {
+        // limpiamos debounce anterior
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
+
+        // si input vacío, limpiamos resultados
+        if (inputValue.trim() === '') {
+            setPreviewResults([]);
+            setShowPreview(false);
+            return;
+        }
+
+        debounceRef.current = window.setTimeout(async () => {
+            try {
+                const res = await apiFetch<any>(`/search?q=${encodeURIComponent(inputValue)}&user_id=${user?.id ?? 0}&page=1&per_page=5`, { method: 'GET' });
+                const ids: number[] = res.data?.sample_ids ?? res.data?.data ?? [];
+                if (!Array.isArray(ids) || ids.length === 0) {
+                    setPreviewResults([]);
+                    setShowPreview(false);
+                    return;
+                }
+
+                // Cargamos detalles de cada sample (máx 5) usando /admin/contents/{id}
+                const detailsPromises = ids.slice(0, 5).map((id: number) => apiFetch<any>(`/admin/contents/${id}`, { method: 'GET' }).then(r => r.data));
+                const details = await Promise.all(detailsPromises);
+                setPreviewResults(details);
+                setShowPreview(true);
+            } catch (e) {
+                console.error('Error buscando', e);
+            }
+        }, 400); // debounce 400ms
+
+        // cleanup
+        return () => {
+            if (debounceRef.current) clearTimeout(debounceRef.current);
+        };
+    }, [inputValue, user]);
+
+    // Cerrar preview al hacer click fuera
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            if (!(e.target as HTMLElement).closest('#inputBusqueda')) {
+                setShowPreview(false);
+            }
+        };
+        document.addEventListener('click', handler);
+        return () => document.removeEventListener('click', handler);
+    }, []);
+
+    const confirmarBusqueda = () => {
+        setSearchTerm(inputValue.trim());
+        setShowPreview(false);
+    };
 
     return (
         <header className={`${styles.menuSuperior}`}>
-            <nav className={styles.navLinks}></nav>
+            <nav className={styles.navLinks} style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+                {/* Input de búsqueda */}
+                <input
+                    id="inputBusqueda"
+                    type="text"
+                    placeholder="Buscar..."
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            confirmarBusqueda();
+                        }
+                    }}
+                    className="bloque"
+                    style={{ padding: '4px 8px' }}
+                />
+
+                {/* Vista previa resultados */}
+                {showPreview && previewResults.length > 0 && (
+                    <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#222', border: '1px solid #444', zIndex: 20 }}>
+                        {previewResults.map((item: any) => (
+                            <div
+                                key={item.id}
+                                onClick={() => {
+                                    setInputValue(item.content_data?.title ?? '');
+                                    confirmarBusqueda();
+                                }}
+                                style={{ padding: '6px 8px', cursor: 'pointer' }}
+                                className="bloque"
+                            >
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    {item.content_data?.cover_url && (
+                                        <img src={item.content_data.cover_url} alt={item.content_data.title} style={{ width: '32px', height: '32px', objectFit: 'cover' }} />
+                                    )}
+                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                        <span>{item.content_data?.title ?? 'Sin título'}</span>
+                                        <small style={{ opacity: 0.7 }}>sample</small>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </nav>
             <nav className={styles.navAuth}>
                 {token ? (
                     <>

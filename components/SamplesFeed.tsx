@@ -3,10 +3,12 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { apiFetch } from "../lib/api";
 import { isDebug } from "../lib/debug";
 import { useAuthStore } from "../store/authStore";
+import { useSearchStore } from "../store/searchStore";
 import SampleCard from "./SampleCard";
 
 export default function SamplesFeed() {
   const { token, hydrate } = useAuthStore();
+  const { searchTerm } = useSearchStore();
   const [isHydrated, setIsHydrated] = useState(false);
   const [samples, setSamples] = useState<any[]>([]);
   const [debugInfo, setDebugInfo] = useState<any>(null);
@@ -52,16 +54,40 @@ export default function SamplesFeed() {
     async (pageToLoad: number) => {
       try {
         setIsLoading(true);
-        const endpointBase = token ? "/feed" : "/contents";
-        const endpoint = `${endpointBase}?page=${pageToLoad}&per_page=15`;
+        let endpoint = "";
+        if (searchTerm.trim() !== "") {
+          const userId = (useAuthStore.getState().user as any)?.id ?? 0;
+          endpoint = `/search?q=${encodeURIComponent(searchTerm)}&user_id=${userId}&page=${pageToLoad}&per_page=15`;
+        } else {
+          const endpointBase = token ? "/feed" : "/contents";
+          endpoint = `${endpointBase}?page=${pageToLoad}&per_page=15`;
+        }
         const res = await apiFetch<any>(endpoint, { method: "GET" });
 
-        // Extraemos lista y paginación
-        const list = Array.isArray(res.data)
-          ? res.data
-          : res.data?.data ?? [];
+        let list: any[] = [];
+        let current = 1;
+        let last = 1;
 
-        const { current, last } = parsePagination(res.data);
+        if (searchTerm.trim() !== "") {
+          // Respuesta con sample_ids + pagination
+          const ids: number[] = res.data?.sample_ids ?? [];
+          const paginationInfo = res.data?.pagination ?? {};
+          current = paginationInfo.current_page ?? pageToLoad;
+          last = paginationInfo.last_page ?? pageToLoad;
+
+          // Cargamos detalles de cada id en paralelo
+          const detailPromises = ids.map((id: number) => apiFetch<any>(`/admin/contents/${id}`, { method: "GET" }).then(r => r.data));
+          list = await Promise.all(detailPromises);
+        } else {
+          // Extraemos lista y paginación como antes
+          list = Array.isArray(res.data)
+            ? res.data
+            : res.data?.data ?? [];
+
+          const parsed = parsePagination(res.data);
+          current = parsed.current;
+          last = parsed.last;
+        }
 
         // Añadimos sin duplicar
         setSamples((prev) => {
@@ -83,15 +109,19 @@ export default function SamplesFeed() {
         setIsLoading(false);
       }
     },
-    [token]
+    [token, searchTerm]
   );
 
-  // Primera carga una vez hidratados los stores
+  // Primera carga & cuando cambia la búsqueda
   useEffect(() => {
     if (!isHydrated) return;
+    // Reiniciamos lista cuando cambia búsqueda
+    setSamples([]);
+    setCurrentPage(1);
+    setLastPage(null);
     fetchPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isHydrated, token]);
+  }, [isHydrated, token, searchTerm]);
 
   // Observador para el scroll infinito
   useEffect(() => {
