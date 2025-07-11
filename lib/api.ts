@@ -8,15 +8,23 @@ interface ApiResponse<T> {
     data: T;
 }
 
-// Mapa simple que almacena respuestas ya resueltas para cada URL de peticiones GET.
-// Es sólo para el ciclo de vida del navegador / pestaña actual.
+export interface ApiError {
+    message: string;
+    status?: number;
+    data?: any;
+}
+
 const responseCache = new Map<string, any>();
 
 /**
- * Helper para realizar peticiones a la API de Sword v2.
- * Se encarga de añadir el encabezado Authorization cuando existe un token en localStorage.
+ * Helper mejorado para realizar peticiones a la API.
+ * Nunca lanza excepciones por errores HTTP, en su lugar devuelve una tupla [data, error].
+ *
+ * @returns Una promesa que resuelve a una tupla: [ApiResponse<T> | null, ApiError | null]
+ * - En caso de éxito: [data, null]
+ * - En caso de error: [null, error]
  */
-export async function apiFetch<T>(path: string, options: RequestInit & {skipAuth?: boolean} = {}): Promise<ApiResponse<T>> {
+export async function apiFetch<T>(path: string, options: RequestInit & { skipAuth?: boolean } = {}): Promise<[ApiResponse<T> | null, ApiError | null]> {
     const url = `${API_URL}${path}`;
 
     const headers: HeadersInit = {
@@ -24,17 +32,13 @@ export async function apiFetch<T>(path: string, options: RequestInit & {skipAuth
         ...(options.headers ?? {})
     };
 
-    if (!options.skipAuth) {
-        // Intentamos recuperar el token del localStorage en entorno de navegador.
-        if (typeof window !== 'undefined') {
-            const token = localStorage.getItem('token');
-            if (token) {
-                (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
-            }
+    if (!options.skipAuth && typeof window !== 'undefined') {
+        const token = localStorage.getItem('token');
+        if (token) {
+            (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
         }
     }
 
-    // -------- 1. Cache rápida para GET ----------
     const method = (options.method ?? "GET").toUpperCase();
     const shouldUseCache = method === "GET" && !options.body;
     const cacheKey = url;
@@ -46,72 +50,81 @@ export async function apiFetch<T>(path: string, options: RequestInit & {skipAuth
             console.log("Response", cached);
             console.groupEnd();
         }
-        return cached;
+        return [cached, null];
     }
 
-    const response = await fetch(url, {
-        ...options,
-        headers
-    });
+    // Es bueno envolver la lógica de este fetch en un try/catch para capturar errores de red o problemas irrecuperables.
+    // Así wando, podemos dejar más limpia la parte del store.
+    try {
+        const response = await fetch(url, { ...options, headers });
 
-    if (isDebug) {
-        console.groupCollapsed(`apiFetch → ${options.method ?? "GET"} ${url}`);
-        console.log("Headers", headers);
-        if (options.body) console.log("Body", options.body);
-    }
-
-    // Leemos el cuerpo como texto para poder manejar tanto JSON como texto plano o vacío.
-    const rawText = await response.text();
-
-    let parsed: any = null;
-    if (rawText.trim() !== "") {
-        try {
-            parsed = JSON.parse(rawText);
-        } catch {
-            // No es JSON válido; lo dejamos como texto.
-            parsed = rawText;
-        }
-    }
-
-    if (!response.ok) {
         if (isDebug) {
-            console.log("Status", response.status, response.statusText);
-            console.log("Response", parsed);
+            console.groupCollapsed(`apiFetch → ${method} ${url}`);
+            console.log("Headers", headers);
+            if (options.body) console.log("Body", JSON.parse(options.body as string));
+        }
+
+        const rawText = await response.text();
+        let parsed: any = null;
+        if (rawText.trim() !== "") {
+            try {
+                parsed = JSON.parse(rawText);
+            } catch {
+                parsed = rawText;
+            }
+        }
+
+        if (!response.ok) {
+            if (isDebug) {
+                console.log(`[Status] ${response.status} ${response.statusText}`);
+                console.log(`[Response] ${parsed}`);
+                console.groupEnd();
+            }
+            
+            const errorMessage = typeof parsed === "object" && parsed?.message
+                ? parsed.message
+                : (typeof parsed === "string" && parsed.trim() !== "") || response.statusText || "Error en la petición";
+
+            const error: ApiError = {
+                message: errorMessage,
+                status: response.status,
+                data: parsed,
+            };
+            return [null, error];
+        }
+
+        if (isDebug) {
+            console.log(`[Status] ${response.status} ${response.statusText}`);
+            console.log(`[Response] ${parsed}`);
             console.groupEnd();
         }
-        // Si el cuerpo traía un objeto con mensaje, lo usamos. Si es texto, usamos el texto, si no, usamos statusText.
-        const errorMessage = typeof parsed === "object" && parsed?.message
-            ? parsed.message
-            : (typeof parsed === "string" && parsed) || response.statusText || "Error en la petición";
-        throw new Error(errorMessage);
-    }
+        
+        // Si la respuesta no es un objeto JSON (p. ej. un 204 No Content),
+        // construimos una ApiResponse compatible.
+        const finalResponse = (parsed !== null && typeof parsed === 'object'
+            ? parsed
+            : { success: true, message: response.statusText, data: parsed as unknown as T }
+        ) as ApiResponse<T>;
 
-    // Si la respuesta no trae JSON (p.ej. 204) devolvemos un objeto ApiResponse vacío por conveniencia.
-    if (parsed === null || typeof parsed !== "object") {
+        if (shouldUseCache) {
+            responseCache.set(cacheKey, finalResponse);
+        }
+
+        return [finalResponse, null];
+
+    } catch (error: any) {
         if (isDebug) {
-            console.log("Status", response.status, response.statusText);
-            console.log("Response (texto)", parsed);
+            console.groupCollapsed(`apiFetch (FATAL) → ${method} ${url}`);
+            console.error("Error no controlado en fetch:", error);
             console.groupEnd();
         }
-        return {
-            success: true,
-            message: response.statusText || "",
-            data: parsed as unknown as T
-        } as ApiResponse<T>;
+        
+        // Aquí capturamos errores de red o de servidor.
+        // y se devuelve en el formato estándar de error.
+        // También usando la tupla [null, error].
+        const networkError: ApiError = {
+            message: error.message || "Error de red o conexión rechazada.",
+        };
+        return [null, networkError];
     }
-
-    if (isDebug) {
-        console.log("Status", response.status, response.statusText);
-        console.log("Response", parsed);
-        console.groupEnd();
-    }
-
-    const finalResponse = parsed as ApiResponse<T>;
-
-    // Guardamos en cache sólo si es GET exitoso.
-    if (shouldUseCache && response.ok) {
-        responseCache.set(cacheKey, finalResponse);
-    }
-
-    return finalResponse;
 }

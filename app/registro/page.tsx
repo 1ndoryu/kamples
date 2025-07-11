@@ -22,7 +22,7 @@ export default function RegistroPage() {
   }
 
   return (
-    <div style={{ padding: "32px" }}>
+    <section style={{ padding: "32px" }}>
       <h1>Registro</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleSubmit} className="bloque">
@@ -52,6 +52,6 @@ export default function RegistroPage() {
         </div>
         <button type="submit">Crear cuenta</button>
       </form>
-    </div>
+    </section>
   );
 } 
