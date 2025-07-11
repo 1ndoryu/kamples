@@ -5,6 +5,7 @@ import {useUiStore} from '../store/uiStore';
 
 interface ModalProps {
     children: ReactNode;
+    isCustomModal?: boolean;
 }
 
 const overlayStyle: React.CSSProperties = {
@@ -29,7 +30,13 @@ const modalStyle: React.CSSProperties = {
     overflowY: 'auto'
 };
 
-export default function Modal({children}: ModalProps) {
+const customModalStyle: React.CSSProperties = {
+    width: '90%',
+    maxHeight: '90vh',
+    overflowY: 'auto'
+};
+
+export default function Modal({ children, isCustomModal = false }: ModalProps) {
     const closeModal = useUiStore(s => s.closeModal);
 
     useEffect(() => {
@@ -45,7 +52,7 @@ export default function Modal({children}: ModalProps) {
 
     return createPortal(
         <div style={overlayStyle} onClick={closeModal}>
-            <div style={modalStyle} onClick={e => e.stopPropagation()} className="bloque">
+            <div style={isCustomModal ? customModalStyle : modalStyle} onClick={e => e.stopPropagation()} className="bloque">
                 {children}
             </div>
         </div>,
