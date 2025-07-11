@@ -1,0 +1,220 @@
+.loginForm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    gap: 1.5rem;
+    background-color: #070707;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.asideForm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 95%;
+    width: 48%;
+    position: relative; 
+    overflow: hidden;
+    background-color: #0c0c0c;
+    transition: all 0.3s ease-in-out;
+}
+
+.asideForm::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    animation: fineNoiseDrift 10s infinite linear;
+}
+
+.asideForm::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background: linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0) 40%,
+        rgba(70, 70, 70, 0.08) 50%,
+        rgba(255, 255, 255, 0) 60%
+    );
+    animation: mainShimmer 5s infinite linear;
+}
+
+.formBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 95%;
+    width: 48%;
+    padding: 2rem;
+    box-sizing: border-box;
+    transition: all 0.3s ease-in-out;
+}
+
+@keyframes fineNoiseDrift {
+    from { transform: translateX(0%); }
+    to { transform: translateX(-50%); }
+}
+
+@keyframes mainShimmer {
+    0%   { transform: translateX(-100%); }
+    30%  { transform: translateX(100%); }
+    100% { transform: translateX(100%); }
+}
+
+
+/* --- ESTILOS MODERNOS PARA EL FORMULARIO --- */
+
+/* Contenedor para cada par de input/label */
+.bloque {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 2rem;
+}
+
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.labelContainer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 2rem;
+    width: 50%;
+}
+
+.input {
+    width: 100%;
+    padding: .5rem;
+    background-color: #131313;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    color: #f0f0f0;
+    font-size: 1rem;
+    outline: none;
+    /* MODIFICACIÓN AQUÍ: Añadimos box-shadow a la transición */
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.btnSubmit {
+    width: 3rem;
+    align-items: center;
+    justify-content: center;
+    padding: .4rem 1rem;
+    background-color: #131313;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    color: #f0f0f0;
+    outline: none;
+    cursor: pointer; /* Añadido para mejor UX */
+    /* MODIFICACIÓN AQUÍ: Añadimos box-shadow y background-color a la transición */
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+/* --- ESTILOS DE FOCO Y HOVER --- */
+
+/* Efecto de foco para los inputs */
+.input:focus {
+    border-color: #4a4a4a; /* Un borde ligeramente más brillante */
+    /* El "shadow blanco" que pediste, usando rgba para un efecto de brillo sutil */
+    box-shadow: 0 0 10px 2px rgba(240, 240, 240, 0.15); 
+}
+
+/* Efectos para el botón para una experiencia consistente */
+.btnSubmit:hover {
+    background-color: #1a1a1a;
+    border-color: #555;
+}
+
+.btnSubmit:focus {
+    border-color: #4a4a4a;
+    /* Mismo efecto de brillo que en el input para consistencia */
+    box-shadow: 0 0 10px 2px rgba(240, 240, 240, 0.15);
+}
+
+@media (max-width: 900px) {
+    .loginForm {
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 0;
+        padding-top: 5rem;
+    }
+
+    .loginForm::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200%;
+        height: 100%;
+        z-index: 1;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cfilter id='noise' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+        opacity: 0.025;
+        animation: fineNoiseDrift 10s infinite linear;
+    }
+
+    .loginForm::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        background: linear-gradient(
+            120deg,
+            rgba(255, 255, 255, 0) 40%,
+            rgba(70, 70, 70, 0.08) 50%,
+            rgba(255, 255, 255, 0) 60%
+        );
+        animation: mainShimmer 5s infinite linear;
+    }
+
+    .asideForm {
+        width: 100%;
+        height: 150px;
+        background-color: transparent;
+        overflow: visible;
+        z-index: 3;
+    }
+
+    .asideForm::before, .asideForm::after {
+        display: none;
+    }
+    .formBody {
+        width: 90%;
+        max-width: 400px;
+        height: auto;
+        padding: 2rem 0;
+        z-index: 3;
+    }
+
+    .labelContainer {
+        width: 95%;
+    }
+}
