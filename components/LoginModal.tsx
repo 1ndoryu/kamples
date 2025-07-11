@@ -1,7 +1,7 @@
 'use client';
 import Modal from './Modal';
 import { useUiStore } from '../store/uiStore';
-import LoginForm from './LoginForm';
+import LoginForm from './shared/LoginForm';
 
 export default function LoginModal() {
   const modalOpen = useUiStore((s) => s.modalOpen);
@@ -9,7 +9,7 @@ export default function LoginModal() {
   if (modalOpen !== 'login') return null;
 
   return (
-    <Modal>
+    <Modal isCustomModal>
       <LoginForm />
     </Modal>
   );
