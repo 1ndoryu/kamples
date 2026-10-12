@@ -1,13 +1,13 @@
-use atomic_web_push::engine::general_purpose::URL_SAFE_NO_PAD as ATOMIC_URL_SAFE_NO_PAD;
-use atomic_web_push::{
-    ContentEncoding, PartialVapidSignatureBuilder, ReqwestWebPushClient, SubscriptionInfo, Urgency,
-    VapidSignatureBuilder, WebPushClient, WebPushError, WebPushMessageBuilder,
-};
+use base64::engine::general_purpose::URL_SAFE_NO_PAD;
 use base64::Engine as _;
+use p256::ecdsa::{signature::Signer, SigningKey};
+use reqwest::header::{HeaderValue, AUTHORIZATION};
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
-use std::time::Duration;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use utoipa::ToSchema;
+use web_push_native::{Auth, WebPushBuilder};
 
 use crate::config::AppConfig;
 use crate::errors::AppError;
@@ -17,6 +17,8 @@ use crate::repositories::{
 use crate::AppState;
 
 const DEFAULT_PUSH_TTL_SECONDS: u32 = 300;
+// RFC 8292: el JWT VAPID puede valer como máximo 24 h; usamos 12 h.
+const VAPID_JWT_TTL_SECONDS: u64 = 12 * 60 * 60;
 const FALLBACK_VAPID_SUBJECT: &str = "https://kamples.com";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, ToSchema, Default)]
@@ -57,8 +59,8 @@ pub struct PushSendSummary {
 
 #[derive(Clone)]
 pub struct PushDeliveryRuntime {
-    client: ReqwestWebPushClient,
-    vapid_builder: PartialVapidSignatureBuilder,
+    client: reqwest::Client,
+    signing_key: SigningKey,
     public_key: String,
     subject: String,
 }
@@ -75,6 +77,7 @@ pub enum PushDeliveryRuntimeError {
     ClientInitialization(String),
 }
 
+#[derive(Debug)]
 enum PushSendFailure {
     ExpiredEndpoint,
     Other(String),
@@ -102,11 +105,10 @@ impl PushDeliveryRuntime {
             return Ok(None);
         };
 
-        let vapid_builder =
-            VapidSignatureBuilder::from_base64_no_sub(private_key, ATOMIC_URL_SAFE_NO_PAD)
-                .map_err(|error| PushDeliveryRuntimeError::InvalidPrivateKey(error.to_string()))?;
+        let signing_key =
+            decode_vapid_private_key(private_key).map_err(PushDeliveryRuntimeError::InvalidPrivateKey)?;
         let derived_public_key =
-            base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(vapid_builder.get_public_key());
+            URL_SAFE_NO_PAD.encode(signing_key.verifying_key().to_encoded_point(false));
 
         if let Some(configured_public_key) = config.vapid_public_key.as_ref() {
             if configured_public_key.trim() != derived_public_key {
@@ -117,12 +119,11 @@ impl PushDeliveryRuntime {
         let client = reqwest::Client::builder()
             .timeout(Duration::from_secs(5))
             .build()
-            .map(ReqwestWebPushClient::from)
             .map_err(|error| PushDeliveryRuntimeError::ClientInitialization(error.to_string()))?;
 
         Ok(Some(Self {
             client,
-            vapid_builder,
+            signing_key,
             public_key: derived_public_key,
             subject: config
                 .vapid_subject
@@ -237,36 +238,49 @@ async fn send_to_subscription(
     subscription: &PushSubscriptionRecord,
     payload_bytes: &[u8],
 ) -> Result<(), PushSendFailure> {
-    let subscription_info = SubscriptionInfo::new(
-        subscription.endpoint.clone(),
-        subscription.p256dh.clone(),
-        subscription.auth.clone(),
-    );
+    let endpoint = url::Url::parse(&subscription.endpoint)
+        .map_err(|error| PushSendFailure::Other(format!("endpoint inválido: {error}")))?;
+    let endpoint_uri = endpoint
+        .as_str()
+        .parse::<http::Uri>()
+        .map_err(|error| PushSendFailure::Other(format!("endpoint inválido: {error}")))?;
+    let ua_public = decode_subscription_public_key(&subscription.p256dh)?;
+    let ua_auth = decode_subscription_auth(&subscription.auth)?;
 
-    let mut message_builder = WebPushMessageBuilder::new(&subscription_info);
-    message_builder.set_payload(ContentEncoding::Aes128Gcm, payload_bytes);
-    message_builder.set_ttl(DEFAULT_PUSH_TTL_SECONDS);
-    message_builder.set_urgency(Urgency::Normal);
-
-    let mut signature_builder = runtime
-        .vapid_builder
-        .clone()
-        .add_sub_info(&subscription_info);
-    signature_builder.add_claim("sub", runtime.subject().to_string());
-    let signature = signature_builder
-        .build()
-        .map_err(|error| PushSendFailure::Other(error.to_string()))?;
-    message_builder.set_vapid_signature(signature);
-
-    let message = message_builder
-        .build()
+    let mut request = WebPushBuilder::new(endpoint_uri, ua_public, ua_auth)
+        .with_valid_duration(Duration::from_secs(u64::from(DEFAULT_PUSH_TTL_SECONDS)))
+        .build(payload_bytes)
         .map_err(|error| PushSendFailure::Other(error.to_string()))?;
 
-    runtime
+    let jwt = build_vapid_jwt(
+        &runtime.signing_key,
+        &endpoint.origin().ascii_serialization(),
+        runtime.subject(),
+    )?;
+    let authorization = HeaderValue::from_str(&format!("vapid t={jwt}, k={}", runtime.public_key()))
+        .map_err(|error| PushSendFailure::Other(error.to_string()))?;
+    request.headers_mut().insert(AUTHORIZATION, authorization);
+    request
+        .headers_mut()
+        .insert("urgency", HeaderValue::from_static("normal"));
+
+    let reqwest_request = reqwest::Request::try_from(request)
+        .map_err(|error| PushSendFailure::Other(error.to_string()))?;
+    let response = runtime
         .client
-        .send(message)
+        .execute(reqwest_request)
         .await
-        .map_err(map_web_push_error)
+        .map_err(|error| PushSendFailure::Other(error.to_string()))?;
+
+    let status = response.status();
+    if status.is_success() {
+        Ok(())
+    } else if status == StatusCode::NOT_FOUND || status == StatusCode::GONE {
+        // 404/410: el servicio push dio de baja la suscripción (antes EndpointNotFound/NotValid).
+        Err(PushSendFailure::ExpiredEndpoint)
+    } else {
+        Err(PushSendFailure::Other(format!("HTTP {status}")))
+    }
 }
 
 fn build_delivery_payload(payload: PushNotificationPayload) -> serde_json::Value {
@@ -335,13 +349,64 @@ fn validate_endpoint(endpoint: &str) -> Result<(), AppError> {
     Ok(())
 }
 
-fn map_web_push_error(error: WebPushError) -> PushSendFailure {
-    match error {
-        WebPushError::EndpointNotFound(_) | WebPushError::EndpointNotValid(_) => {
-            PushSendFailure::ExpiredEndpoint
-        }
-        other => PushSendFailure::Other(other.to_string()),
+/// La clave privada VAPID es un escalar P-256 en base64url sin relleno (RFC 8292).
+fn decode_vapid_private_key(private_key: &str) -> Result<SigningKey, String> {
+    let bytes = URL_SAFE_NO_PAD
+        .decode(private_key.trim_end_matches('='))
+        .map_err(|error| error.to_string())?;
+    SigningKey::from_slice(&bytes).map_err(|error| error.to_string())
+}
+
+fn decode_subscription_public_key(value: &str) -> Result<p256::PublicKey, PushSendFailure> {
+    let bytes = decode_subscription_bytes(value, "p256dh")?;
+    p256::PublicKey::from_sec1_bytes(&bytes)
+        .map_err(|error| PushSendFailure::Other(format!("p256dh inválido: {error}")))
+}
+
+fn decode_subscription_auth(value: &str) -> Result<Auth, PushSendFailure> {
+    let bytes = decode_subscription_bytes(value, "auth")?;
+    // `clone_from_slice` entra en pánico con otra longitud: validar antes.
+    if bytes.len() != 16 {
+        return Err(PushSendFailure::Other(format!(
+            "auth debe medir 16 bytes, mide {}",
+            bytes.len()
+        )));
     }
+    Ok(Auth::clone_from_slice(&bytes))
+}
+
+fn decode_subscription_bytes(value: &str, field: &str) -> Result<Vec<u8>, PushSendFailure> {
+    URL_SAFE_NO_PAD
+        .decode(value.trim().trim_end_matches('='))
+        .map_err(|error| PushSendFailure::Other(format!("{field} inválido: {error}")))
+}
+
+/// JWT VAPID (RFC 8292): ES256 sobre `aud` (origen del endpoint), `exp` (≤ 24 h) y `sub`.
+fn build_vapid_jwt(
+    signing_key: &SigningKey,
+    audience: &str,
+    subject: &str,
+) -> Result<String, PushSendFailure> {
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_err(|error| PushSendFailure::Other(format!("reloj del sistema inválido: {error}")))?
+        .as_secs();
+    let header = URL_SAFE_NO_PAD.encode(r#"{"typ":"JWT","alg":"ES256"}"#);
+    let claims = URL_SAFE_NO_PAD.encode(
+        serde_json::json!({
+            "aud": audience,
+            "exp": now + VAPID_JWT_TTL_SECONDS,
+            "sub": subject,
+        })
+        .to_string(),
+    );
+    let signing_input = format!("{header}.{claims}");
+    // ECDSA P-256 con SHA-256; `to_bytes` da r||s de 64 bytes, el formato JWS ES256.
+    let signature: p256::ecdsa::Signature = signing_key.sign(signing_input.as_bytes());
+    Ok(format!(
+        "{signing_input}.{}",
+        URL_SAFE_NO_PAD.encode(signature.to_bytes())
+    ))
 }
 
 fn truncate_endpoint(endpoint: &str) -> String {
@@ -350,8 +415,45 @@ fn truncate_endpoint(endpoint: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{normalize_payload_data, validate_endpoint, PushDeliveryRuntime};
+    use super::{
+        build_vapid_jwt, decode_subscription_auth, decode_vapid_private_key,
+        normalize_payload_data, validate_endpoint, PushDeliveryRuntime, PushDeliveryRuntimeError,
+    };
     use crate::config::AppConfig;
+    use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
+    use p256::ecdsa::{signature::Verifier, Signature};
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    const TEST_PRIVATE_KEY: &str = "IQ9Ur0ykXoHS9gzfYX0aBjy9lvdrjx_PFUXmie9YRcY";
+
+    fn test_config(public_key: Option<&str>) -> AppConfig {
+        AppConfig {
+            database_url: "postgres://unused".into(),
+            redis_url: None,
+            jwt_secret: "secret".into(),
+            host: "127.0.0.1".into(),
+            port: 3000,
+            db_max_connections: 10,
+            db_min_connections: 2,
+            google_client_ids: Vec::new(),
+            storage_root: "./uploads".into(),
+            storage_backend: "local".into(),
+            s3_bucket: None,
+            s3_endpoint_url: None,
+            public_base_url: Some("https://kamples.com".into()),
+            ws_secret: "secret".into(),
+            ws_public_url: None,
+            ws_ticket_ttl_secs: 60,
+            vapid_public_key: public_key.map(str::to_string),
+            vapid_private_key: Some(TEST_PRIVATE_KEY.into()),
+            vapid_subject: None,
+            fcm_service_account_json: None,
+            smtp: None,
+            scraper_secret: None,
+            stripe: crate::config::StripeConfig::default(),
+            allow_duplicate_uploads: false,
+        }
+    }
 
     #[test]
     fn null_payload_becomes_object() {
@@ -370,38 +472,72 @@ mod tests {
 
     #[test]
     fn runtime_derives_public_key_from_private_key() {
-        let config = AppConfig {
-            database_url: "postgres://unused".into(),
-            redis_url: None,
-            jwt_secret: "secret".into(),
-            host: "127.0.0.1".into(),
-            port: 3000,
-            db_max_connections: 10,
-            db_min_connections: 2,
-            google_client_ids: Vec::new(),
-            storage_root: "./uploads".into(),
-            storage_backend: "local".into(),
-            s3_bucket: None,
-            s3_endpoint_url: None,
-            public_base_url: Some("https://kamples.com".into()),
-            ws_secret: "secret".into(),
-            ws_public_url: None,
-            ws_ticket_ttl_secs: 60,
-            vapid_public_key: None,
-            vapid_private_key: Some("IQ9Ur0ykXoHS9gzfYX0aBjy9lvdrjx_PFUXmie9YRcY".into()),
-            vapid_subject: None,
-            fcm_service_account_json: None,
-            smtp: None,
-            scraper_secret: None,
-            stripe: crate::config::StripeConfig::default(),
-            allow_duplicate_uploads: false,
-        };
-
-        let runtime = PushDeliveryRuntime::from_config(&config)
+        let runtime = PushDeliveryRuntime::from_config(&test_config(None))
             .expect("runtime válido")
             .expect("runtime habilitado");
 
-        assert!(!runtime.public_key().is_empty());
+        // Clave pública P-256 sin comprimir: 0x04 || X || Y (65 bytes).
+        let public_key = URL_SAFE_NO_PAD
+            .decode(runtime.public_key())
+            .expect("clave pública base64url");
+        assert_eq!(public_key.len(), 65);
+        assert_eq!(public_key[0], 0x04);
         assert_eq!(runtime.subject(), "https://kamples.com");
+    }
+
+    #[test]
+    fn runtime_rejects_public_key_that_does_not_match_private_key() {
+        assert!(matches!(
+            PushDeliveryRuntime::from_config(&test_config(Some("AAAA"))),
+            Err(PushDeliveryRuntimeError::PublicKeyMismatch)
+        ));
+    }
+
+    #[test]
+    fn vapid_jwt_is_es256_and_verifies_with_derived_key() {
+        let signing_key = decode_vapid_private_key(TEST_PRIVATE_KEY).expect("clave válida");
+        let jwt = build_vapid_jwt(
+            &signing_key,
+            "https://push.example.test",
+            "https://kamples.com",
+        )
+        .expect("jwt");
+        let parts: Vec<&str> = jwt.split('.').collect();
+        assert_eq!(parts.len(), 3);
+
+        let header: serde_json::Value = serde_json::from_slice(
+            &URL_SAFE_NO_PAD.decode(parts[0]).expect("header base64url"),
+        )
+        .expect("header json");
+        assert_eq!(header, serde_json::json!({"typ": "JWT", "alg": "ES256"}));
+
+        let claims: serde_json::Value = serde_json::from_slice(
+            &URL_SAFE_NO_PAD.decode(parts[1]).expect("claims base64url"),
+        )
+        .expect("claims json");
+        assert_eq!(claims["aud"], "https://push.example.test");
+        assert_eq!(claims["sub"], "https://kamples.com");
+        let now = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("reloj")
+            .as_secs();
+        let exp = claims["exp"].as_u64().expect("exp numérico");
+        assert!(exp > now && exp <= now + 24 * 60 * 60);
+
+        let signature = Signature::from_slice(
+            &URL_SAFE_NO_PAD.decode(parts[2]).expect("firma base64url"),
+        )
+        .expect("firma r||s de 64 bytes");
+        let signing_input = format!("{}.{}", parts[0], parts[1]);
+        signing_key
+            .verifying_key()
+            .verify(signing_input.as_bytes(), &signature)
+            .expect("firma ES256 válida");
+    }
+
+    #[test]
+    fn subscription_auth_must_be_16_bytes() {
+        assert!(decode_subscription_auth(&URL_SAFE_NO_PAD.encode([0u8; 16])).is_ok());
+        assert!(decode_subscription_auth(&URL_SAFE_NO_PAD.encode([0u8; 15])).is_err());
     }
 }

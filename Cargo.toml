@@ -79,7 +79,11 @@ base64 = "0.22"
 rand = "0.8"
 nanoid = "0.4"
 slug = "0.1"
-atomic_web_push = "0.3"
+# Web Push (RFC 8291 cifrado aes128gcm). Sin feature `vapid`: la firma VAPID la hace push.rs con p256,
+# porque las variantes con vapid arrastran jwt-simple → rsa (RUSTSEC-2023-0071).
+web-push-native = { version = "0.5", default-features = false }
+http = "1"
+p256 = { version = "0.13", features = ["ecdsa"] }
 
 # Time
 chrono = { version = "0.4", features = ["serde"] }

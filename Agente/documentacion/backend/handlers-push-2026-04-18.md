@@ -28,7 +28,7 @@
 - `src/services/push.rs`
   - validacion de endpoint y llaves
   - runtime VAPID con derivacion de clave publica
-  - envio via `atomic_web_push::ReqwestWebPushClient`
+  - envio via `web-push-native` (cifrado aes128gcm, RFC 8291) con firma VAPID ES256 propia (`p256`, RFC 8292) y cliente `reqwest`
   - desactivacion automatica cuando el proveedor devuelve endpoint expirado
 - `src/handlers/push.rs`
   - endpoints HTTP y DTOs OpenAPI
@@ -38,6 +38,7 @@
 ## Decision tecnica importante
 - Se descarto el crate `web-push` porque arrastra `ece -> openssl-sys`, lo que bloqueo la compilacion local en Windows sin OpenSSL instalado.
 - Se sustituyo por `atomic_web_push`, que mantiene primitives equivalentes para VAPID y cliente reqwest sin ese bloqueo.
+- **Actualizacion 2026-10-12:** `atomic_web_push` arrastra `rsa` 0.9.10 (RUSTSEC-2023-0071, sin parche). Se retiro: `web-push-native` (sin feature `vapid`) cifra el payload y `src/services/push.rs` firma el JWT VAPID con `p256`. Las variantes con feature `vapid` tambien arrastran `rsa`, por eso no se usan.
 
 ## Diferido explicito
 - Este corte deja el canal listo para enviar, pero todavia no conecta productores concretos al fanout comun. Esa orquestacion queda para `174A-78`.
