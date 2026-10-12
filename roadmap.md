@@ -64,6 +64,7 @@
 ## Pendiente
 
 - admin/panel/ al recargar debería abrir la tab que estaba abierta no regresar al principio
+- Revisar excepción cargo-audit RUSTSEC-2023-0071 (rsa): **vence 2026-11-12**. Ver `.cargo/audit.toml`. Quitarla si hay parche o sqlx-mysql sale del lock; si no, renovar con fecha nueva.
 
 ### ~~256A-2 — Reporte de verificación sync + documentación~~ ✅
 
