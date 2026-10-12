@@ -35,7 +35,7 @@ utoipa = { version = "4", features = ["axum_extras", "uuid", "chrono"] }
 utoipa-swagger-ui = { version = "7", features = ["axum"] }
 
 # Validation
-validator = { version = "0.18", features = ["derive"] }
+validator = { version = "0.21", features = ["derive"] }
 
 # Glory reusable framework
 glory-rs = { path = "glory-rs/backend" }
