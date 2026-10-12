@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
-import { colorsPlaceholderPlugin } from './vite-plugins/colors-placeholder';
+import { colorsPlaceholderPlugin } from './vite-plugins/colors-placeholder.ts';
 
 export default defineConfig({
   plugins: [react(), colorsPlaceholderPlugin()],
