@@ -109,7 +109,7 @@ rustls = { version = "0.23", default-features = false, features = ["aws-lc-rs"] 
 
 # Storage S3 (feature-gated, 174A-27)
 aws-config = { version = "1", default-features = false, features = ["rustls", "rt-tokio", "behavior-version-latest"], optional = true }
-aws-sdk-s3 = { version = "1", default-features = false, features = ["rustls", "rt-tokio", "behavior-version-latest"], optional = true }
+aws-sdk-s3 = { version = "1", default-features = false, features = ["default-https-client", "rt-tokio", "behavior-version-latest"], optional = true }
 aws-credential-types = { version = "1", optional = true }
 aws-smithy-types = { version = "1", features = ["byte-stream-poll-next"], optional = true }
 
