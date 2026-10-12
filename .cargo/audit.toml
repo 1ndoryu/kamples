@@ -1,0 +1,13 @@
+# Excepciones de cargo-audit. Cada una lleva su motivo y la decisión que la aprobó.
+
+[advisories]
+ignore = [
+    # RUSTSEC-2023-0071 (rsa 0.9.10, Marvin Attack, sin parche).
+    # Motivo: `rsa` solo entra por `sqlx-mysql`, dependencia opcional de sqlx que nunca se compila
+    # (KAMPLES usa solo Postgres). Cargo la incluye en Cargo.lock aunque no esté activa, así que
+    # cargo-audit la ve; cambiar features o subir sqlx a 0.9 no la elimina (rsa 0.10.0-rc.18 también
+    # está sin parche). El backend no hace operaciones RSA.
+    # Revisar al publicar parche upstream o al retirar sqlx-mysql del lock.
+    # Decidido: excepción documentada, 2026-10-12.
+    "RUSTSEC-2023-0071",
+]
