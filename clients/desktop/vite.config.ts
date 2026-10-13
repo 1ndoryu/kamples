@@ -10,10 +10,10 @@ import { resolve } from 'path';
  * @app → frontend/src/legacy
  *
  * El proxy de dev redirige /api a KAMPLES_API_TARGET (env) o
- * http://localhost:3000 por defecto (backend Rust local).
+ * http://localhost:3001 por defecto (backend Rust local; 3000 es de glory-pulse).
  */
 
-const apiTarget = process.env.KAMPLES_API_TARGET || 'http://localhost:3000';
+const apiTarget = process.env.KAMPLES_API_TARGET || 'http://localhost:3001';
 
 /*
  * Cargar variables del .env del proyecto raiz (../) para reutilizar

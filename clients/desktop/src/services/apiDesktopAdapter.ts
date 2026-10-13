@@ -64,7 +64,7 @@ export function configurarApiDesktop(): void {
     if (!esDesktop()) return;
 
     /* [256A-1c] Instalar adaptador Rust siempre en desktop.
-     * El desktop siempre apunta al backend Rust (localhost:3000 en dev).
+     * El desktop siempre apunta al backend Rust (localhost:3001 en dev).
      * El adaptador reescribe /wp-json/kamples/v1/* → /api/* y adapta
      * los contratos (camelCase↔snake_case, email↔identifier).
      * VITE_KAMPLES_BACKEND permite forzar 'wp' si alguien necesita el

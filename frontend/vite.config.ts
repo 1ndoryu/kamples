@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
 import { colorsPlaceholderPlugin } from './vite-plugins/colors-placeholder.ts';
 
+const apiTarget = process.env.KAMPLES_API_TARGET || 'http://localhost:3001';
+
 export default defineConfig({
   plugins: [react(), colorsPlaceholderPlugin()],
   /* [204A-1] Aliases que replican exactamente los del frontend WordPress legacy.
@@ -39,10 +41,12 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    /* Proxy API requests al backend Rust en desarrollo */
+    /* Proxy API requests al backend Rust en desarrollo.
+     * [por que] 3001 y no 3000: el 3000 lo reclama glory-pulse en el registro
+     * de workspace-manager. Override con KAMPLES_API_TARGET si hace falta. */
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: apiTarget,
         changeOrigin: true,
         /* Sin timeout para permitir uploads grandes (audio ~50MB puede tardar en procesarse) */
         proxyTimeout: 0,
@@ -50,15 +54,15 @@ export default defineConfig({
       },
       /* Proxy para archivos de audio/assets servidos por el backend Rust vía ServeDir */
       '/uploads': {
-        target: 'http://localhost:3000',
+        target: apiTarget,
         changeOrigin: true,
       },
       '/swagger-ui': {
-        target: 'http://localhost:3000',
+        target: apiTarget,
         changeOrigin: true,
       },
       '/api-docs': {
-        target: 'http://localhost:3000',
+        target: apiTarget,
         changeOrigin: true,
       },
     },

@@ -354,7 +354,7 @@ fn main() -> Result<()> {
 
     // ─── 10. Resultado final ────────────────────────────────────────────────
     let public_base =
-        env::var("PUBLIC_BASE_URL").unwrap_or_else(|_| "http://127.0.0.1:3000".to_string());
+        env::var("PUBLIC_BASE_URL").unwrap_or_else(|_| "http://127.0.0.1:3001".to_string());
     let upload_url = format!(
         "{}/uploads/{}",
         public_base.trim_end_matches('/'),
@@ -371,7 +371,7 @@ fn main() -> Result<()> {
     println!("   URL pública:   {upload_url}");
     println!();
     println!("   Para verlo:  cargo run --bin glory-backend");
-    println!("   Y luego:     curl http://127.0.0.1:3000/api/samples/{sample_id}");
+    println!("   Y luego:     curl http://127.0.0.1:3001/api/samples/{sample_id}");
 
     Ok(())
 }

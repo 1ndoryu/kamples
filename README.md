@@ -46,8 +46,8 @@ psql -U postgres -c "CREATE DATABASE glory_db;"
 
 # 3. Backend
 cargo run
-# El servidor inicia en http://localhost:3000
-# Swagger UI en http://localhost:3000/swagger-ui/
+# El servidor inicia en http://localhost:3001
+# Swagger UI en http://localhost:3001/swagger-ui/
 
 # 4. Frontend (en otra terminal)
 cd frontend

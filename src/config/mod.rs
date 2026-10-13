@@ -104,7 +104,7 @@ impl AppConfig {
             jwt_secret: jwt_secret.clone(),
             host: std::env::var("HOST").unwrap_or_else(|_| "127.0.0.1".to_string()),
             port: std::env::var("PORT")
-                .unwrap_or_else(|_| "3000".to_string())
+                .unwrap_or_else(|_| "3001".to_string())
                 .parse()?,
             db_max_connections: std::env::var("DB_MAX_CONNECTIONS")
                 .unwrap_or_else(|_| "10".to_string())
