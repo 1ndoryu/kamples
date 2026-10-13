@@ -5,7 +5,7 @@
  */
 
 import { Folder } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
 interface TarjetaCarpetaProps {
     nombre: string;

@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useAuthStore } from '../stores';
 import '../styles/variables.css';
 import '../styles/bienvenida.css';
-import { BotonBase } from '../components/ui/BotonBase';
+import { BotonBase } from '../components/ui/boton/BotonBase';
 import { irAUrl } from '@/platform/ventana';
 
 interface PasoOnboarding {

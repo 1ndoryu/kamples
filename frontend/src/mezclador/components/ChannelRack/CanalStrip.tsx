@@ -6,10 +6,10 @@
 import { useCallback } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import type { CanalRack } from '../../types/mezclador';
-import { KnobControl } from '../KnobControl';
+import { KnobControl } from '../varios-1/KnobControl';
 import { StepGrid } from './StepGrid';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { CampoTexto } from '@app/components/ui/CampoTexto';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { CampoTexto } from '@app/components/ui/varios-1/CampoTexto';
 
 interface CanalStripProps {
     canal: CanalRack;

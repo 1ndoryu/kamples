@@ -5,18 +5,18 @@
  */
 
 import { Heart, Download, PanelRightClose, MessageCircle } from 'lucide-react';
-import EnlaceCreador from '@app/components/social/EnlaceCreador';
-import { Badge } from '@app/components/ui/Badge';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { WaveformPlayer } from '@app/components/ui/WaveformPlayer';
-import { TarjetaSample } from '@app/components/ui/TarjetaSample';
+import EnlaceCreador from '@app/components/social/varios-1/EnlaceCreador';
+import { Badge } from '@app/components/ui/badge/Badge';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { WaveformPlayer } from '@app/components/ui/varios-3/WaveformPlayer';
+import { TarjetaSample } from '@app/components/ui/tarjeta/TarjetaSample';
 import { TarjetaCancionMini } from '@app/components/canciones/TarjetaCancionMini';
-import { ListaComentarios } from '@app/components/social/ListaComentarios';
-import { useComentarios } from '@app/hooks/useComentarios';
-import { usePanelDetalleSample } from '@app/hooks/usePanelDetalleSample';
-import { useRelacionDiscovery } from '@app/hooks/useRelacionDiscovery';
-import { obtenerImagenColorPorTexto } from '@app/services/imagenesColor';
-import { ImgOptimizada } from '@app/components/ui/ImgOptimizada';
+import { ListaComentarios } from '@app/components/social/varios-2/ListaComentarios';
+import { useComentarios } from '@app/hooks/varios-3/useComentarios';
+import { usePanelDetalleSample } from '@app/hooks/panel/usePanelDetalleSample';
+import { useRelacionDiscovery } from '@app/hooks/relacion/useRelacionDiscovery';
+import { obtenerImagenColorPorTexto } from '@app/services/varios-1/imagenesColor';
+import { ImgOptimizada } from '@app/components/ui/varios-2/ImgOptimizada';
 import type { SampleResumen } from '@app/types';
 import { useT } from '@app/utils/i18n';
 /* [183A-111] PanelDetalleSample migrado a i18n: headings, labels y etiquetas via t() */

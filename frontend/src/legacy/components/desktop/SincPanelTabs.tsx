@@ -11,10 +11,10 @@ import {
     Pause, Loader2, HardDrive, Clock, Download, Trash2,
     RotateCcw, FolderClosed, ArrowRightLeft,
 } from 'lucide-react';
-import { BotonBase } from '../ui/BotonBase';
+import { BotonBase } from '../ui/boton/BotonBase';
 import { useT } from '@app/utils/i18n/useT';
 import { getT } from '@app/utils/i18n';
-import type { EntradaHistorial, ColeccionSyncInfo } from '@app/stores/syncStore';
+import type { EntradaHistorial, ColeccionSyncInfo } from '@app/stores/varios-4/syncStore';
 
 /* Tipos */
 

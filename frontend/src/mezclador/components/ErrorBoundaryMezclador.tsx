@@ -5,8 +5,8 @@
 
 import { Component } from 'react';
 import type { ReactNode, ErrorInfo } from 'react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { crearLogger } from '../../legacy/services/logger';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { crearLogger } from '../../legacy/services/varios-1/logger';
 const log = crearLogger('Mezclador');
 
 interface Props {

@@ -4,12 +4,12 @@
  */
 
 import { Heart, MessageCircle, MoreHorizontal, FileText } from 'lucide-react';
-import { EnlaceNavegacion } from '@app/components/ui/EnlaceNavegacion';
-import { ImgOptimizada } from '@app/components/ui/ImgOptimizada';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { formatearTiempoRelativo } from '@app/utils/tiempo';
+import { EnlaceNavegacion } from '@app/components/ui/varios-1/EnlaceNavegacion';
+import { ImgOptimizada } from '@app/components/ui/varios-2/ImgOptimizada';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { formatearTiempoRelativo } from '@app/utils/varios-2/tiempo';
 import type { ArticuloResumen } from '@app/types';
-import '@app/styles/componentes/tarjetaArticulo.css';
+import '@app/styles/componentes/tarjeta/tarjetaArticulo.css';
 
 /* [183A-109] Mapa de categoría slug → etiqueta legible */
 const etiquetasCategoria: Record<string, string> = {

@@ -9,9 +9,9 @@
 import { useEffect } from 'react';
 import { BlogIsland } from './BlogIsland';
 import { ArticuloDetalleIsland } from './ArticuloDetalleIsland';
-import { useAuthStore } from '@app/stores/authStore';
+import { useAuthStore } from '@app/stores/auth/authStore';
 import { useNavigationStore } from '@/core/router';
-import { useTabsTopBarStore } from '@app/stores/tabsTopBarStore';
+import { useTabsTopBarStore } from '@app/stores/varios-4/tabsTopBarStore';
 
 interface BlogPageIslandProps {
     slug?: string;

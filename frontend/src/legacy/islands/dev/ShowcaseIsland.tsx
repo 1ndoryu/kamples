@@ -14,7 +14,7 @@ import {
     ShowcaseFormularios,
     ShowcaseOverlays,
 } from './secciones';
-import '../../styles/componentes/showcase.css';
+import '../../styles/componentes/varios-6/showcase.css';
 
 export const ShowcaseIsland = (): JSX.Element => {
     const [toasts, setToasts] = useState<DatosToast[]>([]);

@@ -5,11 +5,11 @@
  */
 
 import { useCallback, useRef, useEffect } from 'react';
-import { VentanaFlotante } from '../VentanaFlotante';
+import { VentanaFlotante } from '../varios-2/VentanaFlotante';
 import { InsertStrip } from './InsertStrip';
 import { PanelDetalleInsert } from './PanelDetalleInsert';
-import { useMixerStore } from '../../stores/mixerStore';
-import { useMixer } from '../../hooks/useMixer';
+import { useMixerStore } from '../../stores/varios-1/mixerStore';
+import { useMixer } from '../../hooks/varios-2/useMixer';
 import type { BandaEQ } from '../../types/mezclador';
 
 export const MixerConsola = (): JSX.Element => {

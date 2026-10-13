@@ -6,15 +6,15 @@
  */
 
 import { MessageCircle, BadgeCheck } from 'lucide-react';
-import { Badge } from '@app/components/ui/Badge';
-import { Avatar } from '@app/components/ui/Avatar';
-import { InputBusqueda } from '@app/components/ui/InputBusqueda';
+import { Badge } from '@app/components/ui/badge/Badge';
+import { Avatar } from '@app/components/ui/varios-1/Avatar';
+import { InputBusqueda } from '@app/components/ui/input/InputBusqueda';
 import { conAutenticacion } from '@app/components/auth/ConAutenticacion';
-import { useMensajesIsland } from '@app/hooks/useMensajesIsland';
-import '../../styles/componentes/mensajes.css';
-import { BotonBase } from '../../components/ui/BotonBase';
+import { useMensajesIsland } from '@app/hooks/varios-5/useMensajesIsland';
+import '../../styles/componentes/varios-4/mensajes.css';
+import { BotonBase } from '../../components/ui/boton/BotonBase';
 import { SkeletonFeed } from '@app/components/skeletons';
-import { EstadoVacio } from '@app/components/ui/EstadoVacio';
+import { EstadoVacio } from '@app/components/ui/varios-1/EstadoVacio';
 
 /* Formatear tiempo relativo */
 const formatearTiempo = (fecha: string): string => {

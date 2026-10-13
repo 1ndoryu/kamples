@@ -9,13 +9,13 @@
 import { useState, useEffect, useCallback, type FormEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
-import { BotonBase } from '../ui/BotonBase';
-import { CampoTexto } from '../ui/CampoTexto';
-import { IconoGoogle } from '../ui/IconoGoogle';
-import { useAuth } from '../../hooks/useAuth';
-import { useModalAuth } from '../../hooks/useModalAuth';
-import '../../styles/componentes/authModal.css';
-import { resolverRutaAsset } from '@app/utils/resolverRutaAsset';
+import { BotonBase } from '../ui/boton/BotonBase';
+import { CampoTexto } from '../ui/varios-1/CampoTexto';
+import { IconoGoogle } from '../ui/varios-2/IconoGoogle';
+import { useAuth } from '../../hooks/varios-1/useAuth';
+import { useModalAuth } from '../../hooks/modal/varios-1/useModalAuth';
+import '../../styles/componentes/varios-1/authModal.css';
+import { resolverRutaAsset } from '@app/utils/varios-1/resolverRutaAsset';
 import { useT } from '@app/utils/i18n';
 import { cuerpoDocumento } from '@/platform/documento';
 /* [183A-111] ModalAuth migrado a i18n: FormularioLogin, FormularioRegistro y ModalAuth via t() */

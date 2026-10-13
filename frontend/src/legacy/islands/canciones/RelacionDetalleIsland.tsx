@@ -8,21 +8,21 @@
  */
 
 import { AlertCircle, MoreVertical, ArrowLeft } from 'lucide-react';
-import { Badge } from '@app/components/ui/Badge';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { BotonLike } from '@app/components/social/BotonLike';
-import { MenuContextual } from '@app/components/ui/MenuContextual';
-import { ListaComentarios } from '@app/components/social/ListaComentarios';
-import { TablaRelaciones } from '@app/components/samples/TablaRelaciones';
-import { SeccionRelaciones } from '@app/components/ui/SeccionRelaciones';
+import { Badge } from '@app/components/ui/badge/Badge';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { BotonLike } from '@app/components/social/boton/BotonLike';
+import { MenuContextual } from '@app/components/ui/varios-2/MenuContextual';
+import { ListaComentarios } from '@app/components/social/varios-2/ListaComentarios';
+import { TablaRelaciones } from '@app/components/samples/varios-1/TablaRelaciones';
+import { SeccionRelaciones } from '@app/components/ui/seccion/SeccionRelaciones';
 import { LadoCancionRelacion } from '@app/components/canciones/LadoCancionRelacion';
 import { FeedSamples } from '@app/components/feed/FeedSamples';
-import { ModalVincularSampleExistente } from '@app/components/samples/ModalVincularSampleExistente';
+import { ModalVincularSampleExistente } from '@app/components/samples/modal/ModalVincularSampleExistente';
 import { Skeleton } from '@app/components/skeletons';
-import { useRelacionDetalleIsland } from '@app/hooks/useRelacionDetalleIsland';
-import { ETIQUETAS_TIPO_RELACION, ETIQUETAS_TIPO_ELEMENTO } from '@app/types/cancion';
-import '../../styles/componentes/relacionDetalle.css';
-import '../../styles/componentes/seccionRelaciones.css';
+import { useRelacionDetalleIsland } from '@app/hooks/relacion/useRelacionDetalleIsland';
+import { ETIQUETAS_TIPO_RELACION, ETIQUETAS_TIPO_ELEMENTO } from '@app/types/varios-1/cancion';
+import '../../styles/componentes/varios-6/relacionDetalle.css';
+import '../../styles/componentes/seccion/seccionRelaciones.css';
 import { volverAtras } from '@/platform/ventana';
 
 interface RelacionDetalleProps {

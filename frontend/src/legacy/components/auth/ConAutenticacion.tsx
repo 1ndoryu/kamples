@@ -5,9 +5,9 @@
  */
 
 import { useEffect, type ComponentType, type JSX } from 'react';
-import { useAuthStore } from '@app/stores/authStore';
-import { useAuthModalStore } from '@app/stores/authModalStore';
-import '../../styles/componentes/conAutenticacion.css';
+import { useAuthStore } from '@app/stores/auth/authStore';
+import { useAuthModalStore } from '@app/stores/auth/authModalStore';
+import '../../styles/componentes/varios-2/conAutenticacion.css';
 
 interface OpcionesGuard {
     mensajeCarga?: string;

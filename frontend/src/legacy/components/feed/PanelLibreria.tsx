@@ -6,10 +6,10 @@
  */
 
 import { FolderOpen, Globe, Plus, X, Music } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { TarjetaColeccion } from '@app/components/social/TarjetaColeccion';
-import { ModalColeccion } from '@app/components/social/ModalColeccion';
-import { usePanelLibreria } from '@app/hooks/usePanelLibreria';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { TarjetaColeccion } from '@app/components/social/tarjeta/TarjetaColeccion';
+import { ModalColeccion } from '@app/components/social/modal/varios-1/ModalColeccion';
+import { usePanelLibreria } from '@app/hooks/panel/usePanelLibreria';
 import { useT } from '@app/utils/i18n/useT';
 
 const TABS = [

@@ -13,7 +13,7 @@ import {
     guardarConfigAvanzada,
     type SyncConfigAvanzada,
     CONFIG_AVANZADA_DEFAULT,
-} from '../services/syncState';
+} from '../services/sync/varios-2/syncState';
 
 interface UseConfiguracionSyncReturn {
     config: SyncConfigAvanzada;

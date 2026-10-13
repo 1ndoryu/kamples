@@ -7,14 +7,14 @@
 
 import { useCallback } from 'react';
 import { X, Sparkles } from 'lucide-react';
-import { TarjetaSample } from '@app/components/ui/TarjetaSample';
-import { Modal } from '@app/components/ui/Modal';
-import { useSugerenciasLikeStore } from '@app/stores/sugerenciasLikeStore';
+import { TarjetaSample } from '@app/components/ui/tarjeta/TarjetaSample';
+import { Modal } from '@app/components/ui/modal/Modal';
+import { useSugerenciasLikeStore } from '@app/stores/varios-3/sugerenciasLikeStore';
 import { useNavigationStore } from '@/core/router';
-import { darLike } from '@app/services/apiSocial';
+import { darLike } from '@app/services/api/varios-3/apiSocial';
 import type { TipoReaccion } from '@app/types';
-import '../../styles/componentes/modalSugerenciasLike.css';
-import { BotonBase } from '../ui/BotonBase';
+import '../../styles/componentes/modal/varios-3/modalSugerenciasLike.css';
+import { BotonBase } from '../ui/boton/BotonBase';
 import { useT } from '@app/utils/i18n/useT';
 
 export const ModalSugerenciasLike = (): JSX.Element | null => {

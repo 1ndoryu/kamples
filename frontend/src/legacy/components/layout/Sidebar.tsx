@@ -21,23 +21,23 @@ import {
     Dice5,
 } from 'lucide-react';
 import { useNavigationStore } from '@/core/router';
-import { useConfiguracionModalStore } from '@app/stores/configuracionModalStore';
-import { useReportarStore } from '@app/stores/reportarStore';
-import { useAuthStore } from '@app/stores/authStore';
-import { useNotificacionesStore } from '@app/stores/notificacionesStore';
-import { useMensajesStore } from '@app/stores/mensajesStore';
-import { marcarTodasLeidas } from '@app/services/apiNotificaciones';
-import { useEsMovil } from '@app/hooks/useEsMovil';
-import { useRegistrarCapa } from '@app/hooks/useRegistrarCapa';
-import { BotonBase } from '../ui/BotonBase';
-import { LogoKamples } from '../ui/LogoKamples';
-import { Avatar } from '../ui/Avatar';
-import { DropdownNotificaciones } from '../ui/DropdownNotificaciones';
-import { DropdownMensajes } from '../ui/DropdownMensajes';
+import { useConfiguracionModalStore } from '@app/stores/varios-1/configuracionModalStore';
+import { useReportarStore } from '@app/stores/varios-3/reportarStore';
+import { useAuthStore } from '@app/stores/auth/authStore';
+import { useNotificacionesStore } from '@app/stores/varios-2/notificacionesStore';
+import { useMensajesStore } from '@app/stores/varios-2/mensajesStore';
+import { marcarTodasLeidas } from '@app/services/api/varios-2/apiNotificaciones';
+import { useEsMovil } from '@app/hooks/varios-4/useEsMovil';
+import { useRegistrarCapa } from '@app/hooks/varios-7/useRegistrarCapa';
+import { BotonBase } from '../ui/boton/BotonBase';
+import { LogoKamples } from '../ui/varios-2/LogoKamples';
+import { Avatar } from '../ui/varios-1/Avatar';
+import { DropdownNotificaciones } from '../ui/dropdown/DropdownNotificaciones';
+import { DropdownMensajes } from '../ui/dropdown/DropdownMensajes';
 import { useT } from '@app/utils/i18n';
-import { useCancionAleatoria } from '@app/hooks/useCancionAleatoria';
-import { ModalCancionAleatoria } from '@app/components/samples/ModalCancionAleatoria';
-import '../../styles/componentes/sidebar.css';
+import { useCancionAleatoria } from '@app/hooks/cancion/useCancionAleatoria';
+import { ModalCancionAleatoria } from '@app/components/samples/modal/ModalCancionAleatoria';
+import '../../styles/componentes/varios-6/sidebar.css';
 
 export interface SidebarItemDef {
     id: string;

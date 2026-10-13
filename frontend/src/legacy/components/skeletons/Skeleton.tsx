@@ -4,7 +4,7 @@
  * Props: variante (rectangulo, circulo, texto), ancho, alto, className.
  */
 
-import '../../styles/componentes/skeleton.css';
+import '../../styles/componentes/varios-6/skeleton.css';
 
 interface SkeletonProps {
     ancho?: string | number;

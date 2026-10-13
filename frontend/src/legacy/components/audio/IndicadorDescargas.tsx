@@ -5,10 +5,10 @@
  */
 
 import { Download, Crown } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import type { LimitesDescarga } from '@app/services/apiDescargas';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import type { LimitesDescarga } from '@app/services/api/varios-2/apiDescargas';
 import { useT } from '@app/utils/i18n/useT';
-import '../../styles/componentes/indicadorDescargas.css';
+import '../../styles/componentes/varios-4/indicadorDescargas.css';
 
 interface IndicadorDescargasProps {
     limites: LimitesDescarga;

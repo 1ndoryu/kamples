@@ -6,25 +6,25 @@
  */
 
 import { Users, TrendingUp, Clock, Plus, RefreshCw } from 'lucide-react';
-import { TarjetaPublicacion } from '@app/components/social/TarjetaPublicacion';
-import { MenuContextual } from '@app/components/ui/MenuContextual';
-import { ListaComentarios } from '@app/components/social/ListaComentarios';
-import { SeccionPublicar } from '@app/components/social/SeccionPublicar';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { TarjetaPublicacion } from '@app/components/social/tarjeta/TarjetaPublicacion';
+import { MenuContextual } from '@app/components/ui/varios-2/MenuContextual';
+import { ListaComentarios } from '@app/components/social/varios-2/ListaComentarios';
+import { SeccionPublicar } from '@app/components/social/seccion/SeccionPublicar';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { SkeletonTarjetaPublicacion } from '@app/components/skeletons';
-import { EstadoVacio } from '@app/components/ui/EstadoVacio';
-import { useTabsIsla } from '@app/hooks/useTabsIsla';
-import { useAuthStore } from '@app/stores/authStore';
-import { LandingPublica } from '@app/components/social/LandingPublica';
-import { useComentarios } from '@app/hooks/useComentarios';
-import { useComunidadIsland, type FiltroComunidad } from '@app/hooks/useComunidadIsland';
-import { usePullToRefresh } from '@app/hooks/usePullToRefresh';
-import { useEsMovil } from '@app/hooks/useEsMovil';
+import { EstadoVacio } from '@app/components/ui/varios-1/EstadoVacio';
+import { useTabsIsla } from '@app/hooks/varios-8/useTabsIsla';
+import { useAuthStore } from '@app/stores/auth/authStore';
+import { LandingPublica } from '@app/components/social/varios-1/LandingPublica';
+import { useComentarios } from '@app/hooks/varios-3/useComentarios';
+import { useComunidadIsland, type FiltroComunidad } from '@app/hooks/varios-3/useComunidadIsland';
+import { usePullToRefresh } from '@app/hooks/varios-6/usePullToRefresh';
+import { useEsMovil } from '@app/hooks/varios-4/useEsMovil';
 import { useT } from '@app/utils/i18n';
-import { useTooltipPerfilStore } from '@app/stores/tooltipPerfilStore';
-import type { UsuarioResumen } from '@app/types/usuario';
-import '../../styles/componentes/comunidad.css';
-import '../../styles/componentes/comunidadIsland.css';
+import { useTooltipPerfilStore } from '@app/stores/varios-4/tooltipPerfilStore';
+import type { UsuarioResumen } from '@app/types/varios-1/usuario';
+import '../../styles/componentes/comunidad/comunidad.css';
+import '../../styles/componentes/comunidad/comunidadIsland.css';
 
 /* [193A-65] Tabs se construyen dentro del componente para acceder a t() */
 

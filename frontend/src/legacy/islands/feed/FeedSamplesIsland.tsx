@@ -6,9 +6,9 @@
  * Reutiliza FeedUnificado de InicioIsland para evitar duplicacion.
  */
 
-import { useAuthStore } from '@app/stores/authStore';
+import { useAuthStore } from '@app/stores/auth/authStore';
 import { SkeletonFeed } from '@app/components/skeletons';
-import { LandingPublica } from '@app/components/social/LandingPublica';
+import { LandingPublica } from '@app/components/social/varios-1/LandingPublica';
 import { FeedUnificado } from './InicioIsland';
 
 export const FeedSamplesIsland = (): JSX.Element => {

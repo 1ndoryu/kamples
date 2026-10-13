@@ -5,15 +5,15 @@
  */
 
 import { Camera } from 'lucide-react';
-import { Avatar } from '../../components/ui/Avatar';
-import { BotonBase } from '../../components/ui/BotonBase';
-import { CampoTexto } from '../../components/ui/CampoTexto';
-import { Input } from '../../components/ui/Input';
+import { Avatar } from '../../components/ui/varios-1/Avatar';
+import { BotonBase } from '../../components/ui/boton/BotonBase';
+import { CampoTexto } from '../../components/ui/varios-1/CampoTexto';
+import { Input } from '../../components/ui/input/Input';
 import { conAutenticacion } from '../../components/auth/ConAutenticacion';
-import { useEditarPerfil } from '@app/hooks/useEditarPerfil';
+import { useEditarPerfil } from '@app/hooks/editar/useEditarPerfil';
 import { SkeletonPerfil } from '@app/components/skeletons';
-import '../../styles/componentes/editarPerfil.css';
-import '../../styles/componentes/editarPerfilIsland.css';
+import '../../styles/componentes/editar/editarPerfil.css';
+import '../../styles/componentes/editar/editarPerfilIsland.css';
 import { volverAtras } from '@/platform/ventana';
 
 export const EditarPerfilIsland = (): JSX.Element => {

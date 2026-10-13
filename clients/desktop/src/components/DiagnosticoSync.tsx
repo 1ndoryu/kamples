@@ -10,11 +10,11 @@
 
 import { useCallback, useState } from 'react';
 import { useDiagnosticoSync, type DatosDiagnostico } from '../hooks/useDiagnosticoSync';
-import { circuitoSync } from '../services/syncGuards';
-import { reintentarErroresOffline } from '../services/offlineQueueService';
-import type { EntradaLog } from '../services/syncLogger';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import '@app/styles/componentes/diagnosticoSync.css';
+import { circuitoSync } from '../services/sync/varios-1/syncGuards';
+import { reintentarErroresOffline } from '../services/varios-1/offlineQueueService';
+import type { EntradaLog } from '../services/sync/varios-1/syncLogger';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import '@app/styles/componentes/varios-3/diagnosticoSync.css';
 
 function formatearMs(ms: number): string {
     if (ms < 1000) return `${ms}ms`;

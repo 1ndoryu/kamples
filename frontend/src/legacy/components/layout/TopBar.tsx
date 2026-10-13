@@ -12,28 +12,28 @@
 
 import { useState } from 'react';
 import { Bell, Mail, User, Settings, LogOut, Plus, Crown, Sparkles, Search, Download, Music, Music2, Trash2, Trash, Menu, MessageCircle, Heart, ShieldCheck, Box, Activity, Monitor, Smartphone } from 'lucide-react';
-import { InputBusqueda } from '../ui/InputBusqueda';
-import { ResultadosBusquedaRapidaDropdown } from '../ui/ResultadosBusquedaRapida';
-import { Badge } from '../ui/Badge';
-import { BotonBase } from '../ui/BotonBase';
-import { Avatar } from '../ui/Avatar';
-import { MenuContextual, type MenuItemDef } from '../ui/MenuContextual';
-import { DropdownNotificaciones } from '../ui/DropdownNotificaciones';
-import { DropdownMensajes } from '../ui/DropdownMensajes';
-import { LogoKamples } from '../ui/LogoKamples';
-import { cerrarSesion as apiCerrarSesion } from '@app/services/apiAuth';
-import { useAuthStore } from '@app/stores/authStore';
-import { limpiarSesionNativa, limpiarStoresUsuario } from '@app/hooks/useAuth';
+import { InputBusqueda } from '../ui/input/InputBusqueda';
+import { ResultadosBusquedaRapidaDropdown } from '../ui/varios-2/ResultadosBusquedaRapida';
+import { Badge } from '../ui/badge/Badge';
+import { BotonBase } from '../ui/boton/BotonBase';
+import { Avatar } from '../ui/varios-1/Avatar';
+import { MenuContextual, type MenuItemDef } from '../ui/varios-2/MenuContextual';
+import { DropdownNotificaciones } from '../ui/dropdown/DropdownNotificaciones';
+import { DropdownMensajes } from '../ui/dropdown/DropdownMensajes';
+import { LogoKamples } from '../ui/varios-2/LogoKamples';
+import { cerrarSesion as apiCerrarSesion } from '@app/services/api/varios-1/apiAuth';
+import { useAuthStore } from '@app/stores/auth/authStore';
+import { limpiarSesionNativa, limpiarStoresUsuario } from '@app/hooks/varios-1/useAuth';
 import { useNavigationStore } from '@/core/router/navigationStore';
-import { Modal } from '../ui/Modal';
-import { useTopBar } from '@app/hooks/useTopBar';
-import { useBusquedaRapida } from '@app/hooks/useBusquedaRapida';
-import { useEliminarSamples } from '@app/hooks/useEliminarSamples';
-import { useSolicitudWhatsappStore } from '@app/stores/solicitudWhatsappStore';
-import { useAlgoTimingStore } from '@app/stores/algoTimingStore';
-import { useVersionStore } from '@app/stores/versionStore';
+import { Modal } from '../ui/modal/Modal';
+import { useTopBar } from '@app/hooks/varios-8/useTopBar';
+import { useBusquedaRapida } from '@app/hooks/varios-2/useBusquedaRapida';
+import { useEliminarSamples } from '@app/hooks/varios-4/useEliminarSamples';
+import { useSolicitudWhatsappStore } from '@app/stores/varios-3/solicitudWhatsappStore';
+import { useAlgoTimingStore } from '@app/stores/varios-1/algoTimingStore';
+import { useVersionStore } from '@app/stores/varios-4/versionStore';
 import { useT } from '@app/utils/i18n';
-import '../../styles/componentes/topbar.css';
+import '../../styles/componentes/varios-7/topbar.css';
 import { irAUrl } from '@/platform/ventana';
 /* [183A-111] TopBar migrado a i18n: hamburguesaItems, menuItems, aria-labels via t() */
 

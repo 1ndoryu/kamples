@@ -14,7 +14,7 @@ export type {
     EscalaMusical,
     ExtraccionSample,
     ScoreDebug,
-} from './sample';
+} from './varios-1/sample';
 
 export type {
     Usuario,
@@ -23,7 +23,7 @@ export type {
     DatosSuspension,
     TipoPlan,
     RolUsuario,
-} from './usuario';
+} from './varios-1/usuario';
 
 export type {
     Publicacion,
@@ -31,7 +31,7 @@ export type {
     ComentarioDestacado,
     TipoPublicacion,
     RepostOriginal,
-} from './publicacion';
+} from './varios-1/publicacion';
 
 export type {
     Conversacion,
@@ -41,12 +41,12 @@ export type {
     MediaMetadataImagen,
     MediaMetadataAudio,
     MediaMetadataSample,
-} from './mensaje';
+} from './varios-1/mensaje';
 
 export type {
     Notificacion,
     TipoNotificacion,
-} from './notificacion';
+} from './varios-1/notificacion';
 
 export type {
     Plan,
@@ -56,12 +56,12 @@ export type {
     EstadoSuscripcion,
     TipoTransaccion,
     EstadoTransaccion,
-} from './plan';
+} from './varios-1/plan';
 
 export type {
     Coleccion,
     ColeccionResumen,
-} from './coleccion';
+} from './varios-1/coleccion';
 
 export type {
     Articulo,
@@ -70,7 +70,7 @@ export type {
     ModeracionEstadoArticulo,
     EmbedArticulo,
     AdjuntoArticulo,
-} from './articulo';
+} from './varios-1/articulo';
 
 export type {
     Cancion,
@@ -86,13 +86,13 @@ export type {
     TipoElemento,
     FuenteRelacion,
     RolCancionArtista,
-} from './cancion';
+} from './varios-1/cancion';
 
 export {
     ETIQUETAS_TIPO_RELACION,
     ETIQUETAS_TIPO_ELEMENTO,
     ETIQUETAS_ROL,
-} from './cancion';
+} from './varios-1/cancion';
 
 /* Schema generado — interfaces DB crudas y constantes de columna */
 export type {

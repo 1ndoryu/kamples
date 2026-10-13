@@ -8,22 +8,22 @@
 
 import { useCallback } from 'react';
 import { FolderOpen, GripVertical } from 'lucide-react';
-import { TarjetaSample } from '@app/components/ui/TarjetaSample';
-import { TarjetaSampleCuadricula } from '@app/components/ui/TarjetaSampleCuadricula';
-import { MenuContextual } from '@app/components/ui/MenuContextual';
-import { SyncBadge } from '@app/components/ui/SyncBadge';
-import { CampoTexto } from '@app/components/ui/CampoTexto';
+import { TarjetaSample } from '@app/components/ui/tarjeta/TarjetaSample';
+import { TarjetaSampleCuadricula } from '@app/components/ui/tarjeta/TarjetaSampleCuadricula';
+import { MenuContextual } from '@app/components/ui/varios-2/MenuContextual';
+import { SyncBadge } from '@app/components/ui/varios-3/SyncBadge';
+import { CampoTexto } from '@app/components/ui/varios-1/CampoTexto';
 import { SkeletonFeed } from '@app/components/skeletons';
 import { conAutenticacion } from '@app/components/auth/ConAutenticacion';
-import { useExploradorIsland } from '@app/hooks/useExploradorIsland';
+import { useExploradorIsland } from '@app/hooks/explorador/useExploradorIsland';
 import { ArbolCarpetas } from '@app/components/explorador/ArbolCarpetas';
 import { TarjetaCarpeta } from '@app/components/explorador/TarjetaCarpeta';
 import { BarraHerramientasExplorador } from '@app/components/explorador/BarraHerramientasExplorador';
 import { ModalMoverCarpeta } from '@app/components/explorador/ModalMoverCarpeta';
-import { EstadoVacio } from '@app/components/ui/EstadoVacio';
-import { useFiltrosStore } from '@app/stores/filtrosStore';
-import '../../styles/componentes/explorador.css';
-import '../../styles/componentes/exploradorDragModal.css';
+import { EstadoVacio } from '@app/components/ui/varios-1/EstadoVacio';
+import { useFiltrosStore } from '@app/stores/varios-2/filtrosStore';
+import '../../styles/componentes/explorador/explorador.css';
+import '../../styles/componentes/explorador/exploradorDragModal.css';
 
 const ExploradorBase = (): JSX.Element => {
     const {

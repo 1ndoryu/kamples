@@ -11,13 +11,13 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import type { SyncConfigAvanzada } from '@desktop/services/syncConstants';
+import type { SyncConfigAvanzada } from '@desktop/services/sync/varios-1/syncConstants';
 import {
     STORE_FILE,
     STORE_KEY_CONFIG_AVANZADA,
     CONFIG_AVANZADA_DEFAULT,
-} from '@desktop/services/syncConstants';
-import { logSync } from '../services/syncLogger';
+} from '@desktop/services/sync/varios-1/syncConstants';
+import { logSync } from '../services/sync/varios-1/syncLogger';
 
 interface UseConfiguracionSyncVentanaReturn {
     config: SyncConfigAvanzada;

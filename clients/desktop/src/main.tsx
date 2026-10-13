@@ -37,12 +37,12 @@ import { escucharVentana } from '@/platform/ventana';
 import appIslands, { AppProvider } from '@app/appIslands';
 
 /* Servicios desktop: configuración API, auth, storage */
-import { inicializarDesktop } from '@desktop/services/desktopService';
-import { guardarToken, guardarUsuario, cerrarSesionDesktop } from '@desktop/services/authDesktopService';
+import { inicializarDesktop } from '@desktop/services/varios-1/desktopService';
+import { guardarToken, guardarUsuario, cerrarSesionDesktop } from '@desktop/services/auth/authDesktopService';
 /* Google OAuth PKCE para desktop — inyectado en window para evitar imports cross-project */
-import { iniciarGoogleOAuthDesktop } from '@desktop/services/googleAuthDesktopService';
-import { iniciarGoogleOAuthMobile } from '@desktop/services/googleAuthMobileService';
-import { procesarOAuthGooglePendienteAlArrancar } from '@desktop/services/googleAuthResumeService';
+import { iniciarGoogleOAuthDesktop } from '@desktop/services/google/googleAuthDesktopService';
+import { iniciarGoogleOAuthMobile } from '@desktop/services/google/googleAuthMobileService';
+import { procesarOAuthGooglePendienteAlArrancar } from '@desktop/services/google/googleAuthResumeService';
 
 /* Sync service — expuesto en window para que el hook en App/React lo consuma sin dynamic imports */
 import {
@@ -69,7 +69,7 @@ import {
     recargarHistorialDesdeStore,
     rehidratarImagenesPendientesSync,
     generarReporteSync,
-} from '@desktop/services/syncService';
+} from '@desktop/services/sync/varios-2/syncService';
 
 /* C341: Upload queue — estado de subidas automáticas */
 import {
@@ -77,11 +77,11 @@ import {
     onProgresoUpload,
     reintentarItem,
     eliminarItemCola,
-} from '@desktop/services/uploadQueueService';
+} from '@desktop/services/varios-2/uploadQueueService';
 
 /* Drag service — expuesto en window para drag-to-DAW/desktop nativo */
-import { iniciarDragNativo, descargarYArrastrar, prepararDragNativo, preCachearIconoDrag, estaListoParaDrag, generarPreviewDrag } from '@desktop/services/audioLocalService';
-import { logSync } from './services/syncLogger';
+import { iniciarDragNativo, descargarYArrastrar, prepararDragNativo, preCachearIconoDrag, estaListoParaDrag, generarPreviewDrag } from '@desktop/services/varios-1/audioLocalService';
+import { logSync } from './services/sync/varios-1/syncLogger';
 
 /* Registrar todas las islas */
 islandRegistry.registerAll(appIslands);

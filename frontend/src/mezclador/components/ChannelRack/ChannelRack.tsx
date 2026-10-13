@@ -9,12 +9,12 @@
 
 import { useState, useCallback } from 'react';
 import { Plus } from 'lucide-react';
-import { usePatronesStore } from '../../stores/patronesStore';
-import { VentanaFlotante } from '../VentanaFlotante';
+import { usePatronesStore } from '../../stores/varios-1/patronesStore';
+import { VentanaFlotante } from '../varios-2/VentanaFlotante';
 import { CabeceraChannelRack } from './CabeceraChannelRack';
 import { CanalStrip } from './CanalStrip';
 import { GraphEditor } from './GraphEditor';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
 export const ChannelRack = (): JSX.Element | null => {
     const patrones = usePatronesStore(s => s.patrones);

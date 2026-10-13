@@ -10,9 +10,9 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
-import { circuitoSync } from '../services/syncGuards';
-import { obtenerPendientes, obtenerCola, type OperacionPendiente } from '../services/offlineQueueService';
-import { operacionesPendientesCount, estaInicializado as journalInicializado } from '../services/syncJournal';
+import { circuitoSync } from '../services/sync/varios-1/syncGuards';
+import { obtenerPendientes, obtenerCola, type OperacionPendiente } from '../services/varios-1/offlineQueueService';
+import { operacionesPendientesCount, estaInicializado as journalInicializado } from '../services/sync/varios-1/syncJournal';
 import {
     obtenerNivelLog,
     obtenerSesionLogger,
@@ -20,10 +20,10 @@ import {
     exportarLogs,
     generarReporteDiagnosticoSync,
     type EntradaLog,
-} from '../services/syncLogger';
-import { estado as syncEstado } from '../services/syncState';
-import { obtenerResumenDebugUploadQueue, type ResumenDebugUploadQueue } from '../services/uploadQueueService';
-import { obtenerResumenDebugTracking, type ResumenDebugTracking } from '../services/syncTrackingService';
+} from '../services/sync/varios-1/syncLogger';
+import { estado as syncEstado } from '../services/sync/varios-2/syncState';
+import { obtenerResumenDebugUploadQueue, type ResumenDebugUploadQueue } from '../services/varios-2/uploadQueueService';
+import { obtenerResumenDebugTracking, type ResumenDebugTracking } from '../services/sync/varios-2/syncTrackingService';
 
 export interface DatosDiagnostico {
     /* Circuit breakers */

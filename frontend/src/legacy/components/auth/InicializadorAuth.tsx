@@ -10,11 +10,11 @@
  */
 
 import { type ReactNode } from 'react';
-import { useInicializadorAuth } from '@app/hooks/useInicializadorAuth';
-import { useWebSocket } from '@app/hooks/useWebSocket';
-import { useNotificacionesNativas } from '@app/hooks/useNotificacionesNativas';
-import { useBackHandler } from '@app/hooks/useBackHandler';
-import { useVerificadorVersion } from '@app/hooks/useVerificadorVersion';
+import { useInicializadorAuth } from '@app/hooks/varios-5/useInicializadorAuth';
+import { useWebSocket } from '@app/hooks/varios-9/useWebSocket';
+import { useNotificacionesNativas } from '@app/hooks/notificaciones/useNotificacionesNativas';
+import { useBackHandler } from '@app/hooks/varios-2/useBackHandler';
+import { useVerificadorVersion } from '@app/hooks/varios-9/useVerificadorVersion';
 
 interface Props {
     children: ReactNode;

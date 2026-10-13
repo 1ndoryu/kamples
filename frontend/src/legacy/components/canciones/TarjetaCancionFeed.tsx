@@ -8,9 +8,9 @@
 
 import { type MouseEvent } from 'react';
 import { Music, Heart, MoreHorizontal, Play, Pause } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { Badge } from '@app/components/ui/Badge';
-import type { Cancion } from '@app/types/cancion';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { Badge } from '@app/components/ui/badge/Badge';
+import type { Cancion } from '@app/types/varios-1/cancion';
 import { useT } from '@app/utils/i18n/useT';
 
 export interface TarjetaCancionFeedProps {

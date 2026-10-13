@@ -3,7 +3,7 @@
  * Funciones puras de carpeta/metadata extraídas para cumplir SRP y limite-lineas.
  */
 
-import type { CarpetaInfo } from '@app/services/apiExplorador';
+import type { CarpetaInfo } from '@app/services/api/varios-2/apiExplorador';
 import type { SampleResumen } from '@app/types';
 
 /* Carpeta vacía: el sample está suelto en raíz (sin carpeta asignada) */

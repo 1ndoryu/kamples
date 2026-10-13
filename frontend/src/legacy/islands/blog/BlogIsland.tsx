@@ -10,20 +10,20 @@
 import { origenActual } from '@/platform/ventana';
 import { useState, useCallback } from 'react';
 import { BookOpen, User } from 'lucide-react';
-import { useBlog } from '@app/hooks/useBlog';
+import { useBlog } from '@app/hooks/varios-2/useBlog';
 import { TarjetaArticulo, obtenerEtiquetaCategoria } from '@app/components/blog/TarjetaArticulo';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { MenuContextual } from '@app/components/ui';
 import type { MenuItemDef } from '@app/components/ui';
 import { useNavigationStore } from '@/core/router';
-import { toast } from '@app/stores/toastStore';
-import { useArrastrarScroll } from '@app/hooks/useArrastrarScroll';
-import { useAuthStore } from '@app/stores/authStore';
-import { useArticuloEditorStore } from '@app/stores/articuloEditorStore';
-import { eliminarArticulo } from '@app/services/apiArticulos';
+import { toast } from '@app/stores/varios-4/toastStore';
+import { useArrastrarScroll } from '@app/hooks/varios-1/useArrastrarScroll';
+import { useAuthStore } from '@app/stores/auth/authStore';
+import { useArticuloEditorStore } from '@app/stores/varios-1/articuloEditorStore';
+import { eliminarArticulo } from '@app/services/api/varios-1/apiArticulos';
 import type { CategoriaArticulo } from '@app/types';
 import { useT } from '@app/utils/i18n/useT';
-import '@app/styles/componentes/blog.css';
+import '@app/styles/componentes/varios-1/blog.css';
 
 /* [183A-109] Grupos de categorías para navegación rápida */
 const gruposCategorias: { grupo: string; categorias: CategoriaArticulo[] }[] = [

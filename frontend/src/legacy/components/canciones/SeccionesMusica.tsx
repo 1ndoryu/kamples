@@ -6,17 +6,17 @@
  */
 
 import { useCallback } from 'react';
-import { useSeccionesCanciones } from '@app/hooks/useSeccionesCanciones';
-import { useReproductorStore } from '@app/stores/reproductorStore';
+import { useSeccionesCanciones } from '@app/hooks/varios-7/useSeccionesCanciones';
+import { useReproductorStore } from '@app/stores/varios-3/reproductorStore';
 import { useNavigationStore } from '@/core/router';
-import { construirSampleDesdeCancion } from '@app/utils/construirSampleDesdeCancion';
+import { construirSampleDesdeCancion } from '@app/utils/construir/construirSampleDesdeCancion';
 import { SeccionHorizontal } from './SeccionHorizontal';
 import { TarjetaCancionGrande } from './TarjetaCancionGrande';
 import { TarjetaArtista } from './TarjetaArtista';
 import { SkeletonFeed } from '@app/components/skeletons';
-import type { Cancion } from '@app/types/cancion';
-import '../../styles/componentes/musicaExplorar.css';
-import '../../styles/componentes/tarjetaCancionGrande.css';
+import type { Cancion } from '@app/types/varios-1/cancion';
+import '../../styles/componentes/varios-5/musicaExplorar.css';
+import '../../styles/componentes/tarjeta/tarjetaCancionGrande.css';
 
 export const SeccionesMusica = (): JSX.Element => {
     const { secciones, cargando, manejarLike } = useSeccionesCanciones();

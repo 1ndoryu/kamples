@@ -12,8 +12,8 @@
 
 /* Variables + estilos de UI reutilizados */
 import '@app/styles/variables.css';
-import '@app/styles/componentes/botonBase.css';
-import '@app/styles/componentes/sincronizacion.css';
+import '@app/styles/componentes/boton/botonBase.css';
+import '@app/styles/componentes/varios-6/sincronizacion.css';
 
 /* CSS shell de la ventana sync */
 import './sync.css';
@@ -22,16 +22,16 @@ import './sync.css';
 import { VentanaSincPanel } from './components/VentanaSincPanel';
 
 /* Store sync */
-import { useSyncStore } from '@app/stores/syncStore';
+import { useSyncStore } from '@app/stores/varios-4/syncStore';
 import { elementoPorId } from '@/platform/documento';
 
 /* syncService — se inicializa por separado, no via desktopService completo */
-import { inicializarSyncService } from '@desktop/services/syncService';
+import { inicializarSyncService } from '@desktop/services/sync/varios-2/syncService';
 
 /* Auth: restaurar token JWT del store ANTES de configurar API.
  * Sin esto, configurarApiDesktop() no encuentra token y fetch va sin Authorization → 401. */
-import { inicializarAuthDesktop } from '@desktop/services/authDesktopService';
-import { escucharCambiosAuth } from '@desktop/services/authDesktopEventos';
+import { inicializarAuthDesktop } from '@desktop/services/auth/authDesktopService';
+import { escucharCambiosAuth } from '@desktop/services/auth/authDesktopEventos';
 
 /* Exponer syncService en window para que usePanelSincronizacion funcione */
 import {
@@ -56,7 +56,7 @@ import {
     recargarHistorialDesdeStore,
     rehidratarImagenesPendientesSync,
     generarReporteSync,
-} from '@desktop/services/syncService';
+} from '@desktop/services/sync/varios-2/syncService';
 
 /* Cola de subidas — expuesto en window para feedback de uploads */
 import {
@@ -64,13 +64,13 @@ import {
     onProgresoUpload,
     reintentarItem,
     eliminarItemCola,
-} from '@desktop/services/uploadQueueService';
+} from '@desktop/services/varios-2/uploadQueueService';
 
 /* Configurar API base para que las requests apunten al servidor correcto */
-import { configurarApiDesktop } from '@desktop/services/apiDesktopAdapter';
+import { configurarApiDesktop } from '@desktop/services/varios-1/apiDesktopAdapter';
 
 import { createRoot } from 'react-dom/client';
-import { logSync } from './services/syncLogger';
+import { logSync } from './services/sync/varios-1/syncLogger';
 
 /* Marcar entorno desktop y exponer syncService */
 function configurarEntorno(): void {
@@ -122,10 +122,10 @@ async function inicializar(): Promise<void> {
      * inicializarAuthDesktop() confía ciegamente en el Tauri Store. La ventana principal
      * hace esta verificación en useInicializadorAuth, pero el sync panel no monta ese hook. */
     try {
-        const { obtenerUsuarioActual } = await import('@app/services/apiAuth');
+        const { obtenerUsuarioActual } = await import('@app/services/api/varios-1/apiAuth');
         const resp = await obtenerUsuarioActual();
         if (!resp.ok || !resp.data) {
-            const { cerrarSesionDesktop } = await import('@desktop/services/authDesktopService');
+            const { cerrarSesionDesktop } = await import('@desktop/services/auth/authDesktopService');
             await cerrarSesionDesktop();
             logSync.info('sync', '[Sync] Token inválido — sesión cerrada');
         }

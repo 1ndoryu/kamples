@@ -8,20 +8,20 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { FolderOpen, Plus, Globe, ArrowDownWideNarrow, ChevronDown, Bookmark, LayoutGrid, List, ListTree } from 'lucide-react';
 import { BotonBase } from '@app/components/ui';
-import { Badge } from '@app/components/ui/Badge';
-import { TarjetaColeccion } from '@app/components/social/TarjetaColeccion';
-import { ModalColeccion } from '@app/components/social/ModalColeccion';
-import { ModalCombinarColeccion } from '@app/components/social/ModalCombinarColeccion';
+import { Badge } from '@app/components/ui/badge/Badge';
+import { TarjetaColeccion } from '@app/components/social/tarjeta/TarjetaColeccion';
+import { ModalColeccion } from '@app/components/social/modal/varios-1/ModalColeccion';
+import { ModalCombinarColeccion } from '@app/components/social/modal/varios-1/ModalCombinarColeccion';
 import { SkeletonTarjetaColeccion } from '@app/components/skeletons';
-import { useTabsIsla } from '@app/hooks/useTabsIsla';
+import { useTabsIsla } from '@app/hooks/varios-8/useTabsIsla';
 import { conAutenticacion } from '@app/components/auth/ConAutenticacion';
-import { useLibreriaIsland } from '@app/hooks/useLibreriaIsland';
-import type { OrdenColecciones } from '@app/hooks/useLibreriaIsland';
-import { useAuthStore } from '@app/stores/authStore';
-import { EstadoVacio } from '@app/components/ui/EstadoVacio';
+import { useLibreriaIsland } from '@app/hooks/varios-5/useLibreriaIsland';
+import type { OrdenColecciones } from '@app/hooks/varios-5/useLibreriaIsland';
+import { useAuthStore } from '@app/stores/auth/authStore';
+import { EstadoVacio } from '@app/components/ui/varios-1/EstadoVacio';
 import { useT } from '@app/utils/i18n';
-import '../../styles/componentes/libreria.css';
-import '../../styles/componentes/libreriaIsland.css';
+import '../../styles/componentes/libreria/libreria.css';
+import '../../styles/componentes/libreria/libreriaIsland.css';
 
 const TABS_LIBRERIA = [
     { id: 'explorar', etiqueta: 'panel.libreria.explorar' },

@@ -9,19 +9,19 @@
 
 import { Music, WifiOff, RefreshCw } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import '../../styles/componentes/feedSamples.css';
-import { TarjetaSample } from '@app/components/ui/TarjetaSample';
+import '../../styles/componentes/varios-3/feedSamples.css';
+import { TarjetaSample } from '@app/components/ui/tarjeta/TarjetaSample';
 import { useT } from '@app/utils/i18n/useT';
 
-import { MenuContextual } from '@app/components/ui/MenuContextual';
-import { ModalInspectorSample } from '@app/components/ui/ModalInspectorSample';
+import { MenuContextual } from '@app/components/ui/varios-2/MenuContextual';
+import { ModalInspectorSample } from '@app/components/ui/modal/ModalInspectorSample';
 import { FiltroTags } from '@app/components/feed/FiltroTags';
 import { SkeletonTarjetaSample } from '@app/components/skeletons';
-import { useFeedSamples } from '@app/hooks/useFeedSamples';
-import { useConectividad } from '@app/hooks/useConectividad';
-import { usePullToRefresh } from '@app/hooks/usePullToRefresh';
-import { useEsMovil } from '@app/hooks/useEsMovil';
-import { useSeleccionSamplesStore } from '@app/stores/seleccionSamplesStore';
+import { useFeedSamples } from '@app/hooks/feed/useFeedSamples';
+import { useConectividad } from '@app/hooks/varios-3/useConectividad';
+import { usePullToRefresh } from '@app/hooks/varios-6/usePullToRefresh';
+import { useEsMovil } from '@app/hooks/varios-4/useEsMovil';
+import { useSeleccionSamplesStore } from '@app/stores/varios-3/seleccionSamplesStore';
 import type { SampleResumen } from '@app/types';
 
 /* QL35: Resultado del proveedor — distingue exito de error para que el hook

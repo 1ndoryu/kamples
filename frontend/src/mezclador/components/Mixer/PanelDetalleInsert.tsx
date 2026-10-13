@@ -7,8 +7,8 @@ import { useCallback } from 'react';
 import type { InsertMixer, BandaEQ } from '../../types/mezclador';
 import { EQVisualizer } from './EQVisualizer';
 import { SlotEfectoUI } from './SlotEfectoUI';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { CampoTexto } from '@app/components/ui/CampoTexto';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { CampoTexto } from '@app/components/ui/varios-1/CampoTexto';
 
 interface PanelDetalleInsertProps {
     insert: InsertMixer | null;

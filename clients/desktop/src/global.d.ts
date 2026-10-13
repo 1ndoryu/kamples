@@ -64,13 +64,13 @@ interface Window {
     };
     /* Google OAuth PKCE — inyectada por main.tsx, consumida por useAuth.ts.
      * Mismo patrón de inyección que AUTH_PERSIST para evitar imports cross-project. */
-    __KAMPLES_GOOGLE_OAUTH__?: () => Promise<{ token: string; usuario: import('@app/types/usuario').UsuarioAutenticado }>;
+    __KAMPLES_GOOGLE_OAUTH__?: () => Promise<{ token: string; usuario: import('@app/types/varios-1/usuario').UsuarioAutenticado }>;
     /* Configuración del servidor para apiDesktopAdapter */
     __KAMPLES_CONFIG__?: {
         serverUrl?: string;
     };
     /** Informe estructurado de verificación de sync para el agente */
-    __KAMPLES_SYNC_REPORT__?: (ventana?: string) => Promise<import('./services/syncService').SyncReport>;
+    __KAMPLES_SYNC_REPORT__?: (ventana?: string) => Promise<import('./services/sync/varios-2/syncService').SyncReport>;
 }
 
 /* Declaraciones para @crabnebula/tauri-plugin-drag */

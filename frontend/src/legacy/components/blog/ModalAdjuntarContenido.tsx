@@ -6,12 +6,12 @@
  */
 
 import { Disc3, FolderOpen, Check, Loader2 } from 'lucide-react';
-import { Modal } from '@app/components/ui/Modal';
-import { Input } from '@app/components/ui/Input';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { useModalAdjuntarContenido } from '@app/hooks/useModalAdjuntarContenido';
+import { Modal } from '@app/components/ui/modal/Modal';
+import { Input } from '@app/components/ui/input/Input';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { useModalAdjuntarContenido } from '@app/hooks/modal/varios-1/useModalAdjuntarContenido';
 import type { AdjuntoArticulo } from '@app/types';
-import '@app/styles/componentes/modalArticulo.css';
+import '@app/styles/componentes/modal/varios-1/modalArticulo.css';
 
 interface ModalAdjuntarContenidoProps {
     abierto: boolean;

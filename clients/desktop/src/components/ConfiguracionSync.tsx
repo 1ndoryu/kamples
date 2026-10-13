@@ -12,11 +12,11 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { X, RotateCcw, Save, Loader2 } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { Checkbox } from '@app/components/ui/Checkbox';
-import { Input } from '@app/components/ui/Input';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { Checkbox } from '@app/components/ui/varios-1/Checkbox';
+import { Input } from '@app/components/ui/input/Input';
 import { useConfiguracionSync } from '../hooks/useConfiguracionSync';
-import '@app/styles/componentes/configuracionSync.css';
+import '@app/styles/componentes/configuracion/configuracionSync.css';
 
 interface ConfiguracionSyncProps {
     abierto: boolean;

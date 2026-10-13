@@ -4,12 +4,12 @@
  */
 
 import { Check, X, Loader2, Settings, PartyPopper, ArrowRight, ExternalLink } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { Badge } from '@app/components/ui/Badge';
-import { Modal } from '@app/components/ui/Modal';
-import { usePlanesIsland, PLANES } from '@app/hooks/usePlanesIsland';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { Badge } from '@app/components/ui/badge/Badge';
+import { Modal } from '@app/components/ui/modal/Modal';
+import { usePlanesIsland, PLANES } from '@app/hooks/varios-6/usePlanesIsland';
 import { useT } from '@app/utils/i18n';
-import '../../styles/componentes/planes.css';
+import '../../styles/componentes/varios-5/planes.css';
 
 export const PlanesIsland = (): JSX.Element => {
     const { t } = useT();

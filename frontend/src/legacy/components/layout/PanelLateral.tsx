@@ -12,8 +12,8 @@ import { PanelColeccionSamples } from '@app/components/feed/PanelColeccionSample
 /* PanelLibreria: sin uso temporal, pendiente reutilizacion en Explorador (C281) */
 import { ErrorBoundaryMezclador } from '@mezclador/components/ErrorBoundaryMezclador';
 import { MezcladorPanel } from '@mezclador/components/MezcladorPanel';
-import { usePanelLateral } from '@app/hooks/usePanelLateral';
-import '@app/styles/componentes/panelLateral.css';
+import { usePanelLateral } from '@app/hooks/panel/usePanelLateral';
+import '@app/styles/componentes/varios-5/panelLateral.css';
 
 export const PanelLateral = (): JSX.Element | null => {
     const {

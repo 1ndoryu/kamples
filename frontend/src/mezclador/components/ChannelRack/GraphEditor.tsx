@@ -5,7 +5,7 @@
 
 import { useCallback, useRef, useState } from 'react';
 import type { CanalRack, Paso } from '../../types/mezclador';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
 type ModoEditor = 'velocity' | 'pan' | 'pitch';
 

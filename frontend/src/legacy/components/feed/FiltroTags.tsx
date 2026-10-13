@@ -12,13 +12,13 @@
 
 import { useCallback, useMemo } from 'react';
 import { Plus, Minus } from 'lucide-react';
-import { SelectFiltro } from '@app/components/ui/SelectFiltro';
-import { SelectorBPM } from '@app/components/ui/SelectorBPM';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { useFeedArrastreTags } from '@app/hooks/useFeedArrastreTags';
-import { ETIQUETAS_CATEGORIA, CATEGORIAS_SELECT } from '@app/hooks/useFeedSamples';
+import { SelectFiltro } from '@app/components/ui/varios-3/SelectFiltro';
+import { SelectorBPM } from '@app/components/ui/selector/SelectorBPM';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { useFeedArrastreTags } from '@app/hooks/feed/useFeedArrastreTags';
+import { ETIQUETAS_CATEGORIA, CATEGORIAS_SELECT } from '@app/hooks/feed/useFeedSamples';
 import { useT } from '@app/utils/i18n/useT';
-import type { CategoriaTag } from '@app/services/tagUtils';
+import type { CategoriaTag } from '@app/services/varios-2/tagUtils';
 
 export interface FiltroTagsProps {
     tagsAgrupados: Record<CategoriaTag, string[]>;

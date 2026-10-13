@@ -8,7 +8,7 @@ import { useCallback, type ChangeEvent } from 'react';
 import { Music, X, Upload } from 'lucide-react';
 import { CampoTexto, BotonBase, Badge } from '@app/components/ui';
 import type { TipoSample } from '@app/types';
-import { SelectorBase } from '../SelectorBase';
+import { SelectorBase } from '../selector/SelectorBase';
 import { useT } from '@app/utils/i18n/useT';
 
 interface ArchivoSubida {

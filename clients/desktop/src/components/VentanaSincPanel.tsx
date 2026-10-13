@@ -23,19 +23,19 @@ import {
     Trash2,
     Settings,
 } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { ContenedorToasts } from '@app/components/ui/ContenedorToasts';
-import { MenuContextual, type MenuItemDef } from '@app/components/ui/MenuContextual';
-import { usePanelSincronizacion } from '@app/hooks/usePanelSincronizacion';
-import { obtenerImagenColor } from '@app/services/imagenesColor';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { ContenedorToasts } from '@app/components/ui/varios-1/ContenedorToasts';
+import { MenuContextual, type MenuItemDef } from '@app/components/ui/varios-2/MenuContextual';
+import { usePanelSincronizacion } from '@app/hooks/panel/usePanelSincronizacion';
+import { obtenerImagenColor } from '@app/services/varios-1/imagenesColor';
 import { protocoloActual, ubicacionActual } from '@/platform/ventana';
-import { useSyncStore } from '@app/stores/syncStore';
-import { useAuthStore } from '@app/stores/authStore';
-import { toast } from '@app/stores/toastStore';
-import type { EntradaHistorialSample, EstadoSampleHistorial } from '@app/stores/syncStore';
-import '@app/styles/componentes/sincronizacion.css';
+import { useSyncStore } from '@app/stores/varios-4/syncStore';
+import { useAuthStore } from '@app/stores/auth/authStore';
+import { toast } from '@app/stores/varios-4/toastStore';
+import type { EntradaHistorialSample, EstadoSampleHistorial } from '@app/stores/varios-4/syncStore';
+import '@app/styles/componentes/varios-6/sincronizacion.css';
 import DiagnosticoSync from './DiagnosticoSync';
-import { logSync } from '../services/syncLogger';
+import { logSync } from '../services/sync/varios-1/syncLogger';
 
 const VERSION_PORTADA_INTERVALO_MS = 15_000;
 

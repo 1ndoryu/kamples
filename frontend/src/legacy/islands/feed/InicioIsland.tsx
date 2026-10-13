@@ -11,27 +11,27 @@ import { SlidersHorizontal, ChevronDown, ArrowDownWideNarrow, Heart, Dices, Refr
 import { BotonBase } from '@app/components/ui';
 import { SkeletonFeed } from '@app/components/skeletons';
 import { FeedSamples } from '@app/components/feed/FeedSamples';
-import { LandingPublica } from '@app/components/social/LandingPublica';
+import { LandingPublica } from '@app/components/social/varios-1/LandingPublica';
 import { BlogIsland } from '../blog/BlogIsland';
-import { obtenerFeed, recargarCacheFeed, type FiltrosFeedBackend } from '@app/services/apiSamples';
-import { useCrearModalStore } from '@app/stores/crearModalStore';
-import { useReproductorAleatorio } from '@app/hooks/useReproductorAleatorio';
-import { useAuthStore } from '@app/stores/authStore';
-import { useFiltrosStore } from '@app/stores/filtrosStore';
-import { useTabsIsla } from '@app/hooks/useTabsIsla';
-import { useTabsTopBarStore } from '@app/stores/tabsTopBarStore';
+import { obtenerFeed, recargarCacheFeed, type FiltrosFeedBackend } from '@app/services/api/varios-3/apiSamples';
+import { useCrearModalStore } from '@app/stores/varios-1/crearModalStore';
+import { useReproductorAleatorio } from '@app/hooks/reproductor/useReproductorAleatorio';
+import { useAuthStore } from '@app/stores/auth/authStore';
+import { useFiltrosStore } from '@app/stores/varios-2/filtrosStore';
+import { useTabsIsla } from '@app/hooks/varios-8/useTabsIsla';
+import { useTabsTopBarStore } from '@app/stores/varios-4/tabsTopBarStore';
 import { useNavigationStore } from '@/core/router';
-import { usePanelLateralStore } from '@app/stores/panelLateralStore';
-import { useHistorialIds } from '@app/hooks/useHistorialIds';
-import { useFiltroIds } from '@app/hooks/useFiltroIds';
-import { useUrlFiltros } from '@app/hooks/useUrlFiltros';
-import { ModalFiltros } from '@app/components/ui/ModalFiltros';
-import { useFiltrosContenido } from '@app/hooks/useFiltrosContenido';
-import { FilaColecciones } from '@app/components/social/FilaColecciones';
+import { usePanelLateralStore } from '@app/stores/varios-2/panelLateralStore';
+import { useHistorialIds } from '@app/hooks/historial/useHistorialIds';
+import { useFiltroIds } from '@app/hooks/varios-4/useFiltroIds';
+import { useUrlFiltros } from '@app/hooks/varios-8/useUrlFiltros';
+import { ModalFiltros } from '@app/components/ui/modal/ModalFiltros';
+import { useFiltrosContenido } from '@app/hooks/filtros/useFiltrosContenido';
+import { FilaColecciones } from '@app/components/social/varios-1/FilaColecciones';
 import { ComunidadIsland } from '../comunidad/ComunidadIsland';
-import { useEsMovil } from '@app/hooks/useEsMovil';
+import { useEsMovil } from '@app/hooks/varios-4/useEsMovil';
 import { useT } from '@app/utils/i18n';
-import '../../styles/componentes/inicio.css';
+import '../../styles/componentes/varios-4/inicio.css';
 
 /* [183A-110-D] Blog como tab del inicio en vez de página separada */
 const TABS_INICIO = [

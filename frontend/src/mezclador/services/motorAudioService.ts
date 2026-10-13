@@ -8,7 +8,7 @@ import { CONSTANTES_MEZCLADOR, DECLIC_DURACIONES } from '../types/mezclador';
 import type { MixerInsertNodes, Patron } from '../types/mezclador';
 import { decodificarAudio } from '../utils/audioBufferUtils';
 import { obtenerBufferProcesado, limpiarCachePitch, obtenerBufferInvertido, limpiarCacheInvertidos } from './pitchShiftService';
-import { crearLogger } from '../../legacy/services/logger';
+import { crearLogger } from '../../legacy/services/varios-1/logger';
 const log = crearLogger('MotorAudio');
 
 class MotorAudio {

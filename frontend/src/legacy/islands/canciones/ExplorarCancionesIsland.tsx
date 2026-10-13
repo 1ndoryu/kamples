@@ -6,8 +6,8 @@
  */
 
 import { useEffect } from 'react';
-import { useFiltrosStore } from '@app/stores/filtrosStore';
-import { useTabsTopBarStore } from '@app/stores/tabsTopBarStore';
+import { useFiltrosStore } from '@app/stores/varios-2/filtrosStore';
+import { useTabsTopBarStore } from '@app/stores/varios-4/tabsTopBarStore';
 import { SeccionesMusica } from '@app/components/canciones/SeccionesMusica';
 import { BusquedaCanciones } from '@app/components/canciones/BusquedaCanciones';
 

@@ -5,8 +5,8 @@
  * Complementa a WaveformPlayer (estático) con un visualizador dinámico.
  */
 
-import { useVisualizadorOnda } from '../../hooks/useVisualizadorOnda';
-import '../../styles/componentes/visualizadorOnda.css';
+import { useVisualizadorOnda } from '../../hooks/varios-9/useVisualizadorOnda';
+import '../../styles/componentes/varios-7/visualizadorOnda.css';
 
 interface VisualizadorOndaProps {
     /* Elemento <audio> o MediaStream a visualizar */

@@ -4,7 +4,7 @@
  */
 
 import { ChevronRight, LayoutGrid, List, FolderPlus, PanelLeft, RotateCcw } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
 interface BreadcrumbSegmento {
     label: string;

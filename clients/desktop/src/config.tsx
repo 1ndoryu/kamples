@@ -9,9 +9,9 @@
 
 /* Variables + estilos reutilizados */
 import '@app/styles/variables.css';
-import '@app/styles/componentes/botonBase.css';
-import '@app/styles/componentes/configuracionSync.css';
-import '@app/styles/componentes/campoTexto.css';
+import '@app/styles/componentes/boton/botonBase.css';
+import '@app/styles/componentes/configuracion/configuracionSync.css';
+import '@app/styles/componentes/varios-1/campoTexto.css';
 
 /* CSS shell de la ventana config */
 import './config.css';

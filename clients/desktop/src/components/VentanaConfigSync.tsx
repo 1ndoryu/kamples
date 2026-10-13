@@ -11,11 +11,11 @@
 
 import { useCallback } from 'react';
 import { X, Minus, RotateCcw, Save, Loader2 } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { Checkbox } from '@app/components/ui/Checkbox';
-import { Input } from '@app/components/ui/Input';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { Checkbox } from '@app/components/ui/varios-1/Checkbox';
+import { Input } from '@app/components/ui/input/Input';
 import { useConfiguracionSyncVentana } from '../hooks/useConfiguracionSyncVentana';
-import { logSync } from '../services/syncLogger';
+import { logSync } from '../services/sync/varios-1/syncLogger';
 
 async function minimizarVentana(): Promise<void> {
     try {

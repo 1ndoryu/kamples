@@ -3,10 +3,10 @@
  * Se sitúa arriba del grid de canales.
  */
 
-import { KnobControl } from '../KnobControl';
+import { KnobControl } from '../varios-1/KnobControl';
 import { SelectorPatron } from './SelectorPatron';
 import type { Patron } from '../../types/mezclador';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
 interface CabeceraChannelRackProps {
     patrones: Patron[];

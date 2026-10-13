@@ -7,13 +7,13 @@
 
 import { useEffect, useState } from 'react';
 import { X, Sparkles } from 'lucide-react';
-import { TarjetaSample } from '@app/components/ui/TarjetaSample';
-import { obtenerSimilares } from '@app/services/apiReproduciones';
+import { TarjetaSample } from '@app/components/ui/tarjeta/TarjetaSample';
+import { obtenerSimilares } from '@app/services/api/varios-3/apiReproduciones';
 import { useNavigationStore } from '@/core/router';
-import { usePanelLateralStore } from '@app/stores/panelLateralStore';
+import { usePanelLateralStore } from '@app/stores/varios-2/panelLateralStore';
 import type { SampleResumen } from '@app/types';
-import { BotonBase } from '../ui/BotonBase';
-import { ImgOptimizada } from '../ui/ImgOptimizada';
+import { BotonBase } from '../ui/boton/BotonBase';
+import { ImgOptimizada } from '../ui/varios-2/ImgOptimizada';
 import { useT } from '@app/utils/i18n/useT';
 
 interface PanelSugerenciasProps {

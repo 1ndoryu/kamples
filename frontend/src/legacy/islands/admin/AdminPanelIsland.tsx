@@ -10,23 +10,23 @@
  */
 
 import { Loader2, ShieldAlert, Users, Shield, BrainCircuit, Copy, Cog, HandHeart, Globe, Headphones, Music, Clock } from 'lucide-react';
-import { EstadoVacio } from '@app/components/ui/EstadoVacio';
-import { TabUsuariosAdmin } from '@app/components/admin/TabUsuariosAdmin';
-import { TabModeracionAdmin } from '@app/components/admin/TabModeracionAdmin';
-import { TabColaIaAdmin } from '@app/components/admin/TabColaIaAdmin';
-import { TabDuplicadosAdmin } from '@app/components/admin/TabDuplicadosAdmin';
-import { TabProcesosAdmin } from '@app/components/admin/TabProcesosAdmin';
-import { TabContribucionesAdmin } from '@app/components/admin/TabContribucionesAdmin';
-import { TabScrapersAdmin } from '@app/components/admin/TabScrapersAdmin';
-import { TabColaExtraccionAdmin } from '@app/components/admin/TabColaExtraccionAdmin';
-import { TabCancionesAdmin } from '@app/components/admin/TabCancionesAdmin';
-import { TabHistorialLotesAdmin } from '@app/components/admin/TabHistorialLotesAdmin';
-import { useAdminPanel } from '@app/hooks/useAdminPanel';
-import { useTabsIsla } from '@app/hooks/useTabsIsla';
-import { useAuthStore } from '@app/stores/authStore';
+import { EstadoVacio } from '@app/components/ui/varios-1/EstadoVacio';
+import { TabUsuariosAdmin } from '@app/components/admin/tab/varios-1/TabUsuariosAdmin';
+import { TabModeracionAdmin } from '@app/components/admin/tab/varios-1/TabModeracionAdmin';
+import { TabColaIaAdmin } from '@app/components/admin/tab/cola/TabColaIaAdmin';
+import { TabDuplicadosAdmin } from '@app/components/admin/tab/varios-1/TabDuplicadosAdmin';
+import { TabProcesosAdmin } from '@app/components/admin/tab/varios-1/TabProcesosAdmin';
+import { TabContribucionesAdmin } from '@app/components/admin/tab/varios-1/TabContribucionesAdmin';
+import { TabScrapersAdmin } from '@app/components/admin/tab/varios-1/TabScrapersAdmin';
+import { TabColaExtraccionAdmin } from '@app/components/admin/tab/cola/TabColaExtraccionAdmin';
+import { TabCancionesAdmin } from '@app/components/admin/tab/varios-1/TabCancionesAdmin';
+import { TabHistorialLotesAdmin } from '@app/components/admin/tab/varios-1/TabHistorialLotesAdmin';
+import { useAdminPanel } from '@app/hooks/varios-1/useAdminPanel';
+import { useTabsIsla } from '@app/hooks/varios-8/useTabsIsla';
+import { useAuthStore } from '@app/stores/auth/authStore';
 import { conAutenticacion } from '@app/components/auth/ConAutenticacion';
-import type { TabTopBar } from '@app/stores/tabsTopBarStore';
-import '../../styles/componentes/adminPanel.css';
+import type { TabTopBar } from '@app/stores/varios-4/tabsTopBarStore';
+import '../../styles/componentes/admin/adminPanel.css';
 
 /* QL21: Tabs con iconos — tamaño 16px para consistencia en TopBar */
 const TAM_ICONO = 16;

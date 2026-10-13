@@ -10,19 +10,19 @@ import {
     Bold, Italic, Heading2, Heading3, Image, Link, Code, Quote,
     List, ListOrdered, X, Upload, Eye, FileText, Paperclip,
 } from 'lucide-react';
-import { Modal } from '@app/components/ui/Modal';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { Input } from '@app/components/ui/Input';
-import { SelectorMenu, type OpcionSelector } from '@app/components/ui/SelectorMenu';
-import { Textarea } from '@app/components/ui/Textarea';
+import { Modal } from '@app/components/ui/modal/Modal';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { Input } from '@app/components/ui/input/Input';
+import { SelectorMenu, type OpcionSelector } from '@app/components/ui/selector/SelectorMenu';
+import { Textarea } from '@app/components/ui/varios-3/Textarea';
 import { ModalAdjuntarContenido } from '@app/components/blog/ModalAdjuntarContenido';
 import { ListaAdjuntos } from '@app/components/blog/ListaAdjuntos';
-import { useArticuloEditorStore } from '@app/stores/articuloEditorStore';
-import { useAuthStore } from '@app/stores/authStore';
-import { useEditorArticulo } from '@app/hooks/useEditorArticulo';
+import { useArticuloEditorStore } from '@app/stores/varios-1/articuloEditorStore';
+import { useAuthStore } from '@app/stores/auth/authStore';
+import { useEditorArticulo } from '@app/hooks/varios-4/useEditorArticulo';
 import { obtenerEtiquetaCategoria } from '@app/components/blog/TarjetaArticulo';
 import type { CategoriaArticulo } from '@app/types';
-import '@app/styles/componentes/modalArticulo.css';
+import '@app/styles/componentes/modal/varios-1/modalArticulo.css';
 
 /* Opciones planas para SelectorMenu — mismas categorías que BlogIsland */
 const OPCIONES_CATEGORIA: OpcionSelector[] = [

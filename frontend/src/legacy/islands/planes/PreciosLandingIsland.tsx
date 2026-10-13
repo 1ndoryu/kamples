@@ -9,11 +9,11 @@
  */
 
 import { Check, X, Music2, Zap, ArrowRight } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { usePlanesModalStore } from '@app/stores/planesModalStore';
-import { useAuthModalStore } from '@app/stores/authModalStore';
-import { useAuthStore } from '@app/stores/authStore';
-import '../../styles/componentes/preciosLanding.css';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { usePlanesModalStore } from '@app/stores/varios-3/planesModalStore';
+import { useAuthModalStore } from '@app/stores/auth/authModalStore';
+import { useAuthStore } from '@app/stores/auth/authStore';
+import '../../styles/componentes/varios-5/preciosLanding.css';
 import '../../styles/variables.css';
 
 interface FeatureFila {

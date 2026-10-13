@@ -9,7 +9,7 @@
  * - SVG inline → el elemento <svg> es DOM real, se escala por viewBox sin object-fit.
  */
 
-import '../../../styles/componentes/landingCaracteristicas.css';
+import '../../../styles/componentes/landing/landingCaracteristicas.css';
 
 /* Imports ?raw — Vite incluye el texto SVG directamente en el bundle */
 import div1Raw from '../../../../Assets/images/svgs/div-1.svg?raw';

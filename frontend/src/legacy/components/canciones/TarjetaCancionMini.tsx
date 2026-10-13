@@ -7,7 +7,7 @@
 
 import { Music } from 'lucide-react';
 import { useNavigationStore } from '@/core/router';
-import '../../styles/componentes/tarjetaCancionMini.css';
+import '../../styles/componentes/tarjeta/tarjetaCancionMini.css';
 
 interface TarjetaCancionMiniProps {
     titulo: string | null;

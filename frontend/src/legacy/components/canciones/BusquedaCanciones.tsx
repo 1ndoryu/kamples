@@ -8,15 +8,15 @@
 import { useCallback } from 'react';
 import { Music } from 'lucide-react';
 import { SkeletonFeed } from '@app/components/skeletons';
-import { useFeedCanciones } from '@app/hooks/useFeedCanciones';
-import { useMenuContextualCancion } from '@app/hooks/useMenuContextualCancion';
-import { useReproductorStore } from '@app/stores/reproductorStore';
-import { construirSampleDesdeCancion } from '@app/utils/construirSampleDesdeCancion';
+import { useFeedCanciones } from '@app/hooks/feed/useFeedCanciones';
+import { useMenuContextualCancion } from '@app/hooks/menu/useMenuContextualCancion';
+import { useReproductorStore } from '@app/stores/varios-3/reproductorStore';
+import { construirSampleDesdeCancion } from '@app/utils/construir/construirSampleDesdeCancion';
 import { TarjetaCancionFeed } from '@app/components/canciones/TarjetaCancionFeed';
-import { MenuContextual } from '@app/components/ui/MenuContextual';
-import { EstadoVacio } from '@app/components/ui/EstadoVacio';
-import type { Cancion } from '@app/types/cancion';
-import '../../styles/componentes/explorarCanciones.css';
+import { MenuContextual } from '@app/components/ui/varios-2/MenuContextual';
+import { EstadoVacio } from '@app/components/ui/varios-1/EstadoVacio';
+import type { Cancion } from '@app/types/varios-1/cancion';
+import '../../styles/componentes/varios-3/explorarCanciones.css';
 
 interface Props {
     busqueda: string;

@@ -7,9 +7,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { ArrowDownWideNarrow, ChevronDown } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { useT } from '@app/utils/i18n';
-import '../../styles/componentes/barraControlFeed.css';
+import '../../styles/componentes/barra/barraControlFeed.css';
 
 export type TipoOrdenFeed = 'recientes' | 'nombre' | 'populares' | 'bpm' | 'posicion';
 

@@ -11,10 +11,10 @@
  *   onChange: (id | null) => void — callback al seleccionar/deseleccionar
  */
 
-import { Badge } from '@app/components/ui/Badge';
+import { Badge } from '@app/components/ui/badge/Badge';
 import type { ColeccionResumen } from '@app/types';
 import { useT } from '@app/utils/i18n/useT';
-import '../../styles/componentes/filtroSubcolecciones.css';
+import '../../styles/componentes/filtro/filtroSubcolecciones.css';
 
 export interface FiltroSubcoleccionesProps {
     subcolecciones: ColeccionResumen[];

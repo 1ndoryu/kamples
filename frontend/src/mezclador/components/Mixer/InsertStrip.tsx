@@ -6,10 +6,10 @@
 import { useCallback } from 'react';
 import { VolumeX } from 'lucide-react';
 import type { InsertMixer } from '../../types/mezclador';
-import { KnobControl } from '../KnobControl';
+import { KnobControl } from '../varios-1/KnobControl';
 import { FaderControl } from './FaderControl';
 import { PeakMeter } from './PeakMeter';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
 interface InsertStripProps {
     insert: InsertMixer;

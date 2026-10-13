@@ -5,29 +5,29 @@
  */
 
 import { Music, AlertCircle, MoreVertical, ArrowLeft, Heart } from 'lucide-react';
-import { Badge } from '@app/components/ui/Badge';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { MenuContextual } from '@app/components/ui/MenuContextual';
+import { Badge } from '@app/components/ui/badge/Badge';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { MenuContextual } from '@app/components/ui/varios-2/MenuContextual';
 import { Skeleton, SkeletonFeed } from '@app/components/skeletons';
-import { TablaRelaciones } from '@app/components/samples/TablaRelaciones';
-import { CadenaSamples } from '@app/components/samples/CadenaSamples';
-import { ModalContribucion } from '@app/components/samples/ModalContribucion';
-import { ModalEdicionRelacion } from '@app/components/samples/ModalEdicionRelacion';
-import { SeccionRelaciones } from '@app/components/ui/SeccionRelaciones';
+import { TablaRelaciones } from '@app/components/samples/varios-1/TablaRelaciones';
+import { CadenaSamples } from '@app/components/samples/varios-1/CadenaSamples';
+import { ModalContribucion } from '@app/components/samples/modal/ModalContribucion';
+import { ModalEdicionRelacion } from '@app/components/samples/modal/ModalEdicionRelacion';
+import { SeccionRelaciones } from '@app/components/ui/seccion/SeccionRelaciones';
 import { FeedSamples } from '@app/components/feed/FeedSamples';
-import { useTabsIsla } from '@app/hooks/useTabsIsla';
-import { useCancionDetalle } from '@app/hooks/useCancionDetalle';
-import { useMenuCancionDetalle } from '@app/hooks/useMenuCancionDetalle';
+import { useTabsIsla } from '@app/hooks/varios-8/useTabsIsla';
+import { useCancionDetalle } from '@app/hooks/cancion/useCancionDetalle';
+import { useMenuCancionDetalle } from '@app/hooks/menu/useMenuCancionDetalle';
 import { useCallback, useEffect, useState } from 'react';
-import { obtenerSamplesDeCancion } from '@app/services/apiSamples';
+import { obtenerSamplesDeCancion } from '@app/services/api/varios-3/apiSamples';
 import type { SampleResumen } from '@app/types';
-import { useAuthStore } from '@app/stores/authStore';
-import { darLike, quitarLike } from '@app/services/apiSocial';
-import { ETIQUETAS_ROL } from '@app/types/cancion';
-import { EstadoVacio } from '@app/components/ui/EstadoVacio';
-import '../../styles/componentes/cancionDetalle.css';
-import '../../styles/componentes/seccionRelaciones.css';
-import '../../styles/componentes/cancionDetalleIsland.css';
+import { useAuthStore } from '@app/stores/auth/authStore';
+import { darLike, quitarLike } from '@app/services/api/varios-3/apiSocial';
+import { ETIQUETAS_ROL } from '@app/types/varios-1/cancion';
+import { EstadoVacio } from '@app/components/ui/varios-1/EstadoVacio';
+import '../../styles/componentes/cancion/cancionDetalle.css';
+import '../../styles/componentes/seccion/seccionRelaciones.css';
+import '../../styles/componentes/cancion/cancionDetalleIsland.css';
 import { volverAtras } from '@/platform/ventana';
 
 const TABS_CANCION = [{ id: 'cancion', etiqueta: 'Canción' }];

@@ -5,7 +5,7 @@
  */
 
 import { User } from 'lucide-react';
-import type { ArtistaMusicale } from '@app/types/cancion';
+import type { ArtistaMusicale } from '@app/types/varios-1/cancion';
 
 interface Props {
     artista: ArtistaMusicale;

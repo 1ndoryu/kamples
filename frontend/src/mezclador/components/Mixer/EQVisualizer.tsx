@@ -3,9 +3,9 @@
  * Componente de vista. Lógica en useEQVisualizer.
  */
 
-import { useEQVisualizer, COLORES_BANDA, NOMBRES_BANDA } from '../../hooks/useEQVisualizer';
+import { useEQVisualizer, COLORES_BANDA, NOMBRES_BANDA } from '../../hooks/varios-1/useEQVisualizer';
 import type { BandaEQ } from '../../types/mezclador';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
 interface EQVisualizerProps {
     bandas: BandaEQ[];

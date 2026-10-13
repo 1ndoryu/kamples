@@ -6,24 +6,24 @@
 
 import {PanelRightClose, Download, Upload, FolderUp, Trash2, Loader, Maximize2, Minimize2, Settings, PanelLeftOpen, PanelLeftClose} from 'lucide-react';
 import {useEffect, useRef, useState} from 'react';
-import {useMezclador} from '../hooks/useMezclador';
-import {ControlesMezclador} from './ControlesMezclador';
-import {ModalConfigDaw} from './ModalConfigDaw';
-import {BarraVentanasMinimizadas} from './BarraVentanasMinimizadas';
-import {Timeline} from './Timeline';
+import {useMezclador} from '../hooks/varios-2/useMezclador';
+import {ControlesMezclador} from './varios-1/ControlesMezclador';
+import {ModalConfigDaw} from './modal/ModalConfigDaw';
+import {BarraVentanasMinimizadas} from './barra/BarraVentanasMinimizadas';
+import {Timeline} from './varios-2/Timeline';
 import {ChannelRack} from './ChannelRack/ChannelRack';
 import {MixerConsola} from './Mixer/MixerConsola';
-import {PanelBrowserDaw} from './PanelBrowserDaw';
-import {useMezcladorStore} from '../stores/mezcladorStore';
-import {usePanelLateralStore} from '@app/stores/panelLateralStore';
-import {useCrearModalStore} from '@app/stores/crearModalStore';
-import {useBrowserDaw} from '../hooks/useBrowserDaw';
+import {PanelBrowserDaw} from './varios-2/PanelBrowserDaw';
+import {useMezcladorStore} from '../stores/varios-1/mezcladorStore';
+import {usePanelLateralStore} from '@app/stores/varios-2/panelLateralStore';
+import {useCrearModalStore} from '@app/stores/varios-1/crearModalStore';
+import {useBrowserDaw} from '../hooks/varios-1/useBrowserDaw';
 import {FEATURE_FLAGS} from '../featureFlags';
 /* C293: CSS refactorizado en módulos */
 import '../styles/index.css';
-import '../../legacy/styles/componentes/mezcladorPanel.css';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { Input } from '@app/components/ui/Input';
+import '../../legacy/styles/componentes/varios-4/mezcladorPanel.css';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { Input } from '@app/components/ui/input/Input';
 
 export const MezcladorPanel = (): JSX.Element => {
     /*

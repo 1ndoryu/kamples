@@ -10,24 +10,24 @@ import { ColeccionCabecera } from '@app/components/colecciones/ColeccionCabecera
 import { FeedSamples } from '@app/components/feed/FeedSamples';
 import { BarraControlFeed, OPCIONES_ORDEN_COLECCION } from '@app/components/feed/BarraControlFeed';
 import type { TipoOrdenFeed } from '@app/components/feed/BarraControlFeed';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { MenuContextual } from '@app/components/ui/MenuContextual';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { MenuContextual } from '@app/components/ui/varios-2/MenuContextual';
 import { ColeccionDetalleModales } from '@app/components/colecciones/ColeccionDetalleModales';
 import { SkeletonColeccionDetalle } from '@app/components/skeletons';
 import { SkeletonFeed } from '@app/components/skeletons';
-import { obtenerColeccion, obtenerSugerencias } from '@app/services/apiColecciones';
-import { useReproductorAleatorio } from '@app/hooks/useReproductorAleatorio';
+import { obtenerColeccion, obtenerSugerencias } from '@app/services/api/varios-2/apiColecciones';
+import { useReproductorAleatorio } from '@app/hooks/reproductor/useReproductorAleatorio';
 
-import { useColeccionDetalle } from '@app/hooks/useColeccionDetalle';
-import { useColeccionPreview } from '@app/hooks/useColeccionPreview';
-import { useReproductorStore } from '@app/stores/reproductorStore';
+import { useColeccionDetalle } from '@app/hooks/coleccion/useColeccionDetalle';
+import { useColeccionPreview } from '@app/hooks/coleccion/useColeccionPreview';
+import { useReproductorStore } from '@app/stores/varios-3/reproductorStore';
 import { FiltroSubcolecciones } from '@app/components/colecciones/FiltroSubcolecciones';
-import { ModalFiltros } from '@app/components/ui/ModalFiltros';
-import { ModalCodigoExpirado } from '@app/components/ui/ModalCodigoExpirado';
-import { useFiltrosContenido } from '@app/hooks/useFiltrosContenido';
-import { useCodigosGratis } from '@app/hooks/useCodigosGratis';
+import { ModalFiltros } from '@app/components/ui/modal/ModalFiltros';
+import { ModalCodigoExpirado } from '@app/components/ui/modal/ModalCodigoExpirado';
+import { useFiltrosContenido } from '@app/hooks/filtros/useFiltrosContenido';
+import { useCodigosGratis } from '@app/hooks/varios-2/useCodigosGratis';
 import type { SampleResumen } from '@app/types';
-import '../../styles/componentes/coleccionDetalle.css';
+import '../../styles/componentes/varios-2/coleccionDetalle.css';
 
 interface ColeccionDetalleIslandProps {
     coleccionSlug?: string;

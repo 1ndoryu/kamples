@@ -6,7 +6,7 @@
 
 import { memo, useCallback } from 'react';
 import type { Paso } from '../../types/mezclador';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
 interface PasoBotonProps {
     paso: Paso;

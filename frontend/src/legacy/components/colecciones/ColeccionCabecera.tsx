@@ -2,13 +2,13 @@
  * Breadcrumbs + imagen + info + botones de acción (guardar, descargar, play/autoplay, menú, deshacer). */
 
 import { ArrowLeft, BookmarkPlus, BookmarkCheck, Lock, Globe, Download, Play, Pause, MoreHorizontal, Loader2, Undo2, ChevronRight } from 'lucide-react';
-import { ImgOptimizada } from '@app/components/ui/ImgOptimizada';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { Badge } from '@app/components/ui/Badge';
-import EnlaceCreador from '@app/components/social/EnlaceCreador';
-import { obtenerImagenColorPorTexto } from '@app/services/imagenesColor';
+import { ImgOptimizada } from '@app/components/ui/varios-2/ImgOptimizada';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { Badge } from '@app/components/ui/badge/Badge';
+import EnlaceCreador from '@app/components/social/varios-1/EnlaceCreador';
+import { obtenerImagenColorPorTexto } from '@app/services/varios-1/imagenesColor';
 import type { Coleccion, ColeccionResumen } from '@app/types';
-import type { CombinacionPendiente } from '@app/services/apiColecciones';
+import type { CombinacionPendiente } from '@app/services/api/varios-2/apiColecciones';
 
 interface ColeccionCabeceraProps {
     coleccion: Coleccion;

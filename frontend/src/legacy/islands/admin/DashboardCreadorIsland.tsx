@@ -17,16 +17,16 @@ import {
     ArrowUpRight,
     BarChart3,
 } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { Badge } from '@app/components/ui/Badge';
-import { TabBar } from '@app/components/ui/TabBar';
-import { SeccionConnect } from '@app/components/ui/SeccionConnect';
-import type { IngresosPorPeriodo } from '@app/services/apiPagos';
-import { useDashboardCreador } from '@app/hooks/useDashboardCreador';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { Badge } from '@app/components/ui/badge/Badge';
+import { TabBar } from '@app/components/ui/varios-3/TabBar';
+import { SeccionConnect } from '@app/components/ui/seccion/SeccionConnect';
+import type { IngresosPorPeriodo } from '@app/services/api/varios-2/apiPagos';
+import { useDashboardCreador } from '@app/hooks/varios-3/useDashboardCreador';
 import { conAutenticacion } from '@app/components/auth/ConAutenticacion';
 import { Skeleton } from '@app/components/skeletons';
 import { useT } from '@app/utils/i18n/useT';
-import '../../styles/componentes/dashboard.css';
+import '../../styles/componentes/varios-2/dashboard.css';
 
 /* Tabs del dashboard — claves i18n, se traducen en render */
 const TABS_DASHBOARD: { id: string; claveI18n: string }[] = [

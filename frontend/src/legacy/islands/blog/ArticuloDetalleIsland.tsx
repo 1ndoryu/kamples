@@ -8,22 +8,22 @@
 
 import { useState, useCallback } from 'react';
 import { ArrowLeft, Heart, MessageCircle, MoreHorizontal } from 'lucide-react';
-import { useArticuloDetalle } from '@app/hooks/useArticuloDetalle';
-import { useComentarios } from '@app/hooks/useComentarios';
+import { useArticuloDetalle } from '@app/hooks/varios-1/useArticuloDetalle';
+import { useComentarios } from '@app/hooks/varios-3/useComentarios';
 import { obtenerEtiquetaCategoria } from '@app/components/blog/TarjetaArticulo';
-import { ListaComentarios } from '@app/components/social/ListaComentarios';
-import { EnlaceNavegacion } from '@app/components/ui/EnlaceNavegacion';
-import { ImgOptimizada } from '@app/components/ui/ImgOptimizada';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { Avatar } from '@app/components/ui/Avatar';
+import { ListaComentarios } from '@app/components/social/varios-2/ListaComentarios';
+import { EnlaceNavegacion } from '@app/components/ui/varios-1/EnlaceNavegacion';
+import { ImgOptimizada } from '@app/components/ui/varios-2/ImgOptimizada';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { Avatar } from '@app/components/ui/varios-1/Avatar';
 import { MenuContextual } from '@app/components/ui';
 import { useNavigationStore } from '@/core/router';
-import { useAuthStore } from '@app/stores/authStore';
-import { useArticuloEditorStore } from '@app/stores/articuloEditorStore';
-import { eliminarArticulo } from '@app/services/apiArticulos';
-import { toast } from '@app/stores/toastStore';
+import { useAuthStore } from '@app/stores/auth/authStore';
+import { useArticuloEditorStore } from '@app/stores/varios-1/articuloEditorStore';
+import { eliminarArticulo } from '@app/services/api/varios-1/apiArticulos';
+import { toast } from '@app/stores/varios-4/toastStore';
 import { useT } from '@app/utils/i18n/useT';
-import '@app/styles/componentes/articuloDetalle.css';
+import '@app/styles/componentes/varios-1/articuloDetalle.css';
 import { origenActual, rutaActual } from '@/platform/ventana';
 
 interface ArticuloDetalleIslandProps {

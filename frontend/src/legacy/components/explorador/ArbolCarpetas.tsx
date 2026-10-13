@@ -7,8 +7,8 @@
 import { type RefObject } from 'react';
 import { FolderOpen, Folder, FolderClosed, ChevronDown, ChevronRight, FolderPlus } from 'lucide-react';
 import { useT } from '@app/utils/i18n/useT';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { CampoTexto } from '@app/components/ui/CampoTexto';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { CampoTexto } from '@app/components/ui/varios-1/CampoTexto';
 
 interface CarpetaInfo {
     primaria: string;

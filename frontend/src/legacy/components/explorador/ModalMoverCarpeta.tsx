@@ -4,8 +4,8 @@
  */
 
 import { Folder } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { Modal } from '@app/components/ui/Modal';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { Modal } from '@app/components/ui/modal/Modal';
 
 interface CarpetaInfo {
     primaria: string;

@@ -7,10 +7,10 @@
 
 import { type MouseEvent } from 'react';
 import { Music, Play, Pause, Heart } from 'lucide-react';
-import type { Cancion } from '@app/types/cancion';
+import type { Cancion } from '@app/types/varios-1/cancion';
 import { useT } from '@app/utils/i18n/useT';
-import { BotonBase } from '../ui/BotonBase';
-import { ImgOptimizada } from '../ui/ImgOptimizada';
+import { BotonBase } from '../ui/boton/BotonBase';
+import { ImgOptimizada } from '../ui/varios-2/ImgOptimizada';
 
 interface Props {
     cancion: Cancion;

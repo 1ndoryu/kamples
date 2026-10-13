@@ -6,11 +6,11 @@
  */
 
 import { FolderOpen } from 'lucide-react';
-import { TarjetaColeccion } from '@app/components/social/TarjetaColeccion';
+import { TarjetaColeccion } from '@app/components/social/tarjeta/TarjetaColeccion';
 import { SkeletonFeed } from '@app/components/skeletons';
-import { EstadoVacio } from '@app/components/ui/EstadoVacio';
-import { useColeccionesPublicas } from '@app/hooks/useColeccionesPublicas';
-import '../../styles/componentes/coleccionesPublicas.css';
+import { EstadoVacio } from '@app/components/ui/varios-1/EstadoVacio';
+import { useColeccionesPublicas } from '@app/hooks/varios-2/useColeccionesPublicas';
+import '../../styles/componentes/varios-2/coleccionesPublicas.css';
 
 export const ColeccionesIsland = (): JSX.Element => {
     const { colecciones, cargando } = useColeccionesPublicas();

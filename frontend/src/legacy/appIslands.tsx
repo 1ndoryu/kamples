@@ -7,7 +7,7 @@
 
 import {Component, type ReactNode, type ErrorInfo} from 'react';
 import {registerAppBlocks} from './blocks/index';
-import {registrarServiceWorker} from '@app/utils/registrarServiceWorker';
+import {registrarServiceWorker} from '@app/utils/varios-1/registrarServiceWorker';
 
 // Importar Islas
 import {BienvenidaIsland} from './islands/BienvenidaIsland';
@@ -45,8 +45,8 @@ import {TerminosIsland} from './islands/legal/TerminosIsland';
 import {BlogPageIsland} from './islands/blog/BlogPageIsland';
 import {LayoutPrincipal} from '@app/components/layout/LayoutPrincipal';
 import {InicializadorAuth} from '@app/components/auth/InicializadorAuth';
-import { crearLogger } from './services/logger';
-import './styles/componentes/appIslands.css';
+import { crearLogger } from './services/varios-1/logger';
+import './styles/componentes/varios-1/appIslands.css';
 const log = crearLogger('Kamples');
 
 // Register blocks

@@ -7,9 +7,9 @@
  */
 
 import { Disc3, FolderOpen, Check, Download, X } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import type { AdjuntoArticulo } from '@app/types';
-import '@app/styles/componentes/modalArticulo.css';
+import '@app/styles/componentes/modal/varios-1/modalArticulo.css';
 
 interface ListaAdjuntosProps {
     adjuntos: AdjuntoArticulo[];

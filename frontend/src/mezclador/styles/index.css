@@ -2,13 +2,13 @@
 
 
 
-@import './mezcladorBase.css';
-@import './mezcladorTimeline.css';
-@import './mezcladorBloques.css';
-@import './mezcladorModalesLegacy.css';
-@import './mezcladorVentanas.css';
-@import './mezcladorConfigBloque.css';
-@import './pianoRoll.css';
-@import './mezcladorChannelRack.css';
-@import './mezcladorMixer.css';
-@import './browserDaw.css';
+@import './mezclador/mezcladorBase.css';
+@import './mezclador/mezcladorTimeline.css';
+@import './mezclador/mezcladorBloques.css';
+@import './mezclador/mezcladorModalesLegacy.css';
+@import './mezclador/mezcladorVentanas.css';
+@import './mezclador/mezcladorConfigBloque.css';
+@import './varios-1/pianoRoll.css';
+@import './mezclador/mezcladorChannelRack.css';
+@import './mezclador/mezcladorMixer.css';
+@import './varios-1/browserDaw.css';

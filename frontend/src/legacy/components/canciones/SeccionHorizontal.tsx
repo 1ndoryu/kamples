@@ -6,9 +6,9 @@
 
 import type { ReactNode } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { useScrollHorizontal } from '@app/hooks/useScrollHorizontal';
-import '../../styles/componentes/seccionHorizontal.css';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { useScrollHorizontal } from '@app/hooks/varios-7/useScrollHorizontal';
+import '../../styles/componentes/seccion/seccionHorizontal.css';
 
 interface Props {
     titulo: string;

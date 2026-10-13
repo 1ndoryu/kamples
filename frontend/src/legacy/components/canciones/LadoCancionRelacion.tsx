@@ -6,8 +6,8 @@
  */
 
 import { Music, ArrowRight } from 'lucide-react';
-import { Badge } from '@app/components/ui/Badge';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { Badge } from '@app/components/ui/badge/Badge';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
 interface LadoCancionRelacionProps {
     etiqueta: string;

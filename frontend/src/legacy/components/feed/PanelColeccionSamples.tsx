@@ -6,12 +6,12 @@
 
 import { useEffect, useState } from 'react';
 import { X, FolderOpen } from 'lucide-react';
-import { TarjetaSample } from '@app/components/ui/TarjetaSample';
-import { obtenerColeccion } from '@app/services/apiColecciones';
+import { TarjetaSample } from '@app/components/ui/tarjeta/TarjetaSample';
+import { obtenerColeccion } from '@app/services/api/varios-2/apiColecciones';
 import { useNavigationStore } from '@/core/router';
-import { usePanelLateralStore } from '@app/stores/panelLateralStore';
+import { usePanelLateralStore } from '@app/stores/varios-2/panelLateralStore';
 import type { SampleResumen, Coleccion } from '@app/types';
-import { BotonBase } from '../ui/BotonBase';
+import { BotonBase } from '../ui/boton/BotonBase';
 import { useT } from '@app/utils/i18n/useT';
 
 interface PanelColeccionSamplesProps {

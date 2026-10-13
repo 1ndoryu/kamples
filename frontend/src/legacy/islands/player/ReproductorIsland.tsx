@@ -6,17 +6,17 @@
 
 import {useCallback} from 'react';
 import {Play, Pause, SkipBack, SkipForward, Repeat, Shuffle, Volume2, VolumeX, Music, ListMusic, Trash2, ChevronUp, ChevronDown, X} from 'lucide-react';
-import {useReproductorStore} from '@app/stores/reproductorStore';
-import {WaveformPlayer} from '@app/components/ui/WaveformPlayer';
-import {Badge} from '@app/components/ui/Badge';
+import {useReproductorStore} from '@app/stores/varios-3/reproductorStore';
+import {WaveformPlayer} from '@app/components/ui/varios-3/WaveformPlayer';
+import {Badge} from '@app/components/ui/badge/Badge';
 import {useNavigationStore} from '@/core/router';
 import type {SampleResumen} from '@app/types';
-import '../../styles/componentes/reproductorIsland.css';
-import { BotonBase } from '../../components/ui/BotonBase';
-import { ImgOptimizada } from '@app/components/ui/ImgOptimizada';
-import { resolverImagenSample } from '@app/services/imagenesColor';
-import { EstadoVacio } from '@app/components/ui/EstadoVacio';
-import { Input } from '../../components/ui/Input';
+import '../../styles/componentes/reproductor/reproductorIsland.css';
+import { BotonBase } from '../../components/ui/boton/BotonBase';
+import { ImgOptimizada } from '@app/components/ui/varios-2/ImgOptimizada';
+import { resolverImagenSample } from '@app/services/varios-1/imagenesColor';
+import { EstadoVacio } from '@app/components/ui/varios-1/EstadoVacio';
+import { Input } from '../../components/ui/input/Input';
 import { useT } from '@app/utils/i18n/useT';
 
 /* Formatear segundos a mm:ss */

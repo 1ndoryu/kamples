@@ -1,7 +1,7 @@
-import { ModalColeccion } from '@app/components/social/ModalColeccion';
-import { ModalCombinarColeccion } from '@app/components/social/ModalCombinarColeccion';
-import { ModalCrearVolumenColeccion } from '@app/components/social/ModalCrearVolumenColeccion';
-import { ModalEliminarColeccion } from '@app/components/social/ModalEliminarColeccion';
+import { ModalColeccion } from '@app/components/social/modal/varios-1/ModalColeccion';
+import { ModalCombinarColeccion } from '@app/components/social/modal/varios-1/ModalCombinarColeccion';
+import { ModalCrearVolumenColeccion } from '@app/components/social/modal/crear/ModalCrearVolumenColeccion';
+import { ModalEliminarColeccion } from '@app/components/social/modal/varios-1/ModalEliminarColeccion';
 import type { Coleccion } from '@app/types';
 
 interface ColeccionDetalleModalesProps {

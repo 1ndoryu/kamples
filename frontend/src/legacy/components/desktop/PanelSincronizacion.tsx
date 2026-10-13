@@ -6,12 +6,12 @@
  * Tabs extraidos a SincPanelTabs.tsx para cumplir limite 300 lineas.
  */
 
-import { BotonBase } from '../ui/BotonBase';
-import { Modal } from '../ui/Modal';
-import { usePanelSincronizacion } from '@app/hooks/usePanelSincronizacion';
-import type { TabSync } from '@app/stores/syncStore';
+import { BotonBase } from '../ui/boton/BotonBase';
+import { Modal } from '../ui/modal/Modal';
+import { usePanelSincronizacion } from '@app/hooks/panel/usePanelSincronizacion';
+import type { TabSync } from '@app/stores/varios-4/syncStore';
 import { TabEstadoSync, TabHistorialSync, TabColeccionesSync } from './SincPanelTabs';
-import '../../styles/componentes/sincronizacion.css';
+import '../../styles/componentes/varios-6/sincronizacion.css';
 
 /* Definición de tabs disponibles */
 const TABS: { id: TabSync; label: string }[] = [

@@ -5,7 +5,7 @@
 
 import { useCallback, memo } from 'react';
 import type { SlotEfecto } from '../../types/mezclador';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
 interface SlotEfectoItemProps {
     slot: SlotEfecto;

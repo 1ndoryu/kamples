@@ -5,17 +5,17 @@
  */
 
 import { ArrowLeft, Send, Circle, Paperclip, Loader2, BadgeCheck } from 'lucide-react';
-import { Avatar } from '@app/components/ui/Avatar';
-import { BurbujaMensaje } from '@app/components/social/BurbujaMensaje';
-import { useChatIsland } from '@app/hooks/useChatIsland';
+import { Avatar } from '@app/components/ui/varios-1/Avatar';
+import { BurbujaMensaje } from '@app/components/social/varios-1/BurbujaMensaje';
+import { useChatIsland } from '@app/hooks/varios-2/useChatIsland';
 import { conAutenticacion } from '@app/components/auth/ConAutenticacion';
-import '../../styles/componentes/chat.css';
-import '../../styles/componentes/chatIsland.css';
-import { BotonBase } from '../../components/ui/BotonBase';
-import { CampoTexto } from '../../components/ui/CampoTexto';
-import { Input } from '../../components/ui/Input';
+import '../../styles/componentes/chat/chat.css';
+import '../../styles/componentes/chat/chatIsland.css';
+import { BotonBase } from '../../components/ui/boton/BotonBase';
+import { CampoTexto } from '../../components/ui/varios-1/CampoTexto';
+import { Input } from '../../components/ui/input/Input';
 import { Skeleton } from '@app/components/skeletons';
-import { EstadoVacio } from '@app/components/ui/EstadoVacio';
+import { EstadoVacio } from '@app/components/ui/varios-1/EstadoVacio';
 
 interface ChatIslandProps {
     conversacionId?: string;

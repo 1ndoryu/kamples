@@ -37,13 +37,14 @@ const REPO_ROOT = path.resolve(__dirname, '..');
 const args = new Set(process.argv.slice(2));
 const FORMAT = args.has('--json') ? 'json' : args.has('--vscode') ? 'vscode' : 'human';
 
-function listServiceFiles() {
-    const dir = path.join(REPO_ROOT, 'frontend', 'src', 'legacy', 'services');
+// Recursivo: los servicios viven en subcarpetas (services/<grupo>/), un listado plano no vería ninguno.
+function listServiceFiles(dir = path.join(REPO_ROOT, 'frontend', 'src', 'legacy', 'services')) {
     if (!fs.existsSync(dir)) return [];
-    return fs
-        .readdirSync(dir)
-        .filter(f => f.endsWith('.ts') && f !== 'apiCliente.ts')
-        .map(f => path.join(dir, f));
+    return fs.readdirSync(dir, { withFileTypes: true }).flatMap(e => {
+        const ruta = path.join(dir, e.name);
+        if (e.isDirectory()) return listServiceFiles(ruta);
+        return e.name.endsWith('.ts') && e.name !== 'apiCliente.ts' ? [ruta] : [];
+    });
 }
 
 function relPath(absolute) {

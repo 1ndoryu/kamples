@@ -6,8 +6,8 @@
 import { useCallback, useState } from 'react';
 import { ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import type { Patron } from '../../types/mezclador';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { Input } from '@app/components/ui/Input';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { Input } from '@app/components/ui/input/Input';
 
 interface SelectorPatronProps {
     patrones: Patron[];

@@ -5,11 +5,11 @@
 
 import { useState, type FormEvent } from 'react';
 import { Music } from 'lucide-react';
-import { BotonBase } from '../../components/ui/BotonBase';
-import { CampoTexto } from '../../components/ui/CampoTexto';
+import { BotonBase } from '../../components/ui/boton/BotonBase';
+import { CampoTexto } from '../../components/ui/varios-1/CampoTexto';
 import { GloryLink } from '@/core/router';
-import { useAuth } from '../../hooks/useAuth';
-import '../../styles/componentes/login.css';
+import { useAuth } from '../../hooks/varios-1/useAuth';
+import '../../styles/componentes/varios-4/login.css';
 
 export const LoginIsland = (): JSX.Element => {
     /* Estado controlado — useRef falla en Android porque el IME no confirma el valor

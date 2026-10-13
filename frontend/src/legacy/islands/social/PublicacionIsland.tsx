@@ -7,15 +7,15 @@
 
 import { useState, useCallback } from 'react';
 import { ArrowLeft, AlertCircle } from 'lucide-react';
-import { TarjetaPublicacion } from '@app/components/social/TarjetaPublicacion';
-import { ListaComentarios } from '@app/components/social/ListaComentarios';
-import { MenuContextual } from '@app/components/ui/MenuContextual';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { TarjetaPublicacion } from '@app/components/social/tarjeta/TarjetaPublicacion';
+import { ListaComentarios } from '@app/components/social/varios-2/ListaComentarios';
+import { MenuContextual } from '@app/components/ui/varios-2/MenuContextual';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { SkeletonTarjetaPublicacion } from '@app/components/skeletons';
-import { useComentarios } from '@app/hooks/useComentarios';
-import { usePublicacionDetalle } from '@app/hooks/usePublicacionDetalle';
+import { useComentarios } from '@app/hooks/varios-3/useComentarios';
+import { usePublicacionDetalle } from '@app/hooks/varios-6/usePublicacionDetalle';
 import { conAutenticacion } from '@app/components/auth/ConAutenticacion';
-import '../../styles/componentes/publicacionDetalle.css';
+import '../../styles/componentes/varios-6/publicacionDetalle.css';
 import { volverAtras } from '@/platform/ventana';
 
 interface PublicacionIslandProps {

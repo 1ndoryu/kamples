@@ -3,12 +3,12 @@
  * estimada y poder disparar un lote manual sin salir del panel. */
 
 import { AlertTriangle, CheckCircle, Loader2, PauseCircle, Play, RotateCcw, Save } from 'lucide-react';
-import { Badge } from '../../ui/Badge';
-import { BotonBase } from '../../ui/BotonBase';
-import { Input } from '../../ui/Input';
-import type { AutomatizacionConfigProceso, LoteResumen, TipoProceso } from '../../../services/apiAutomatizacion';
-import type { EstadoProceso } from '../../../services/apiProcesos';
-import { useAutomationProcessCard } from '../../../hooks/useAutomationProcessCard';
+import { Badge } from '../../ui/badge/Badge';
+import { BotonBase } from '../../ui/boton/BotonBase';
+import { Input } from '../../ui/input/Input';
+import type { AutomatizacionConfigProceso, LoteResumen, TipoProceso } from '../../../services/api/varios-1/apiAutomatizacion';
+import type { EstadoProceso } from '../../../services/api/varios-2/apiProcesos';
+import { useAutomationProcessCard } from '../../../hooks/varios-1/useAutomationProcessCard';
 
 interface AutomationProcessCardProps {
     titulo: string;

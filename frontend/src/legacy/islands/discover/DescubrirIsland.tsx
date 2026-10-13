@@ -10,13 +10,13 @@ import { useState, useCallback } from 'react';
 import { SlidersHorizontal, ChevronDown, ArrowDownWideNarrow, Dices } from 'lucide-react';
 import { BotonBase } from '@app/components/ui';
 import { FeedSamples } from '@app/components/feed/FeedSamples';
-import { ModalFiltros } from '@app/components/ui/ModalFiltros';
-import { FilaColecciones } from '@app/components/social/FilaColecciones';
-import { useDescubrirIsland } from '@app/hooks/useDescubrirIsland';
-import { useReproductorStore } from '@app/stores/reproductorStore';
-import { obtenerSampleAleatorio } from '@app/services/apiSamples';
+import { ModalFiltros } from '@app/components/ui/modal/ModalFiltros';
+import { FilaColecciones } from '@app/components/social/varios-1/FilaColecciones';
+import { useDescubrirIsland } from '@app/hooks/varios-3/useDescubrirIsland';
+import { useReproductorStore } from '@app/stores/varios-3/reproductorStore';
+import { obtenerSampleAleatorio } from '@app/services/api/varios-3/apiSamples';
 import { useT } from '@app/utils/i18n';
-import '../../styles/componentes/inicio.css';
+import '../../styles/componentes/varios-4/inicio.css';
 
 export const DescubrirIsland = (): JSX.Element => {
     const { t } = useT();

@@ -5,19 +5,19 @@
  */
 
 import { AlertCircle, Music, User, ArrowLeft } from 'lucide-react';
-import { Badge } from '@app/components/ui/Badge';
-import { BotonBase } from '@app/components/ui/BotonBase';
+import { Badge } from '@app/components/ui/badge/Badge';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { Skeleton, SkeletonFeed } from '@app/components/skeletons';
-import { TablaRelaciones } from '@app/components/samples/TablaRelaciones';
-import { SeccionRelaciones } from '@app/components/ui/SeccionRelaciones';
-import { useTabsIsla } from '@app/hooks/useTabsIsla';
-import { useTabsTopBarStore } from '@app/stores/tabsTopBarStore';
-import { useArtistaDetalle } from '@app/hooks/useArtistaDetalle';
-import type { Cancion } from '@app/types/cancion';
-import '../../styles/componentes/artistaDetalle.css';
-import '../../styles/componentes/tablaRelaciones.css';
-import '../../styles/componentes/seccionRelaciones.css';
-import '../../styles/componentes/artistaDetalleIsland.css';
+import { TablaRelaciones } from '@app/components/samples/varios-1/TablaRelaciones';
+import { SeccionRelaciones } from '@app/components/ui/seccion/SeccionRelaciones';
+import { useTabsIsla } from '@app/hooks/varios-8/useTabsIsla';
+import { useTabsTopBarStore } from '@app/stores/varios-4/tabsTopBarStore';
+import { useArtistaDetalle } from '@app/hooks/varios-1/useArtistaDetalle';
+import type { Cancion } from '@app/types/varios-1/cancion';
+import '../../styles/componentes/artista/artistaDetalle.css';
+import '../../styles/componentes/varios-6/tablaRelaciones.css';
+import '../../styles/componentes/seccion/seccionRelaciones.css';
+import '../../styles/componentes/artista/artistaDetalleIsland.css';
 import { volverAtras } from '@/platform/ventana';
 
 const TABS_ARTISTA = [

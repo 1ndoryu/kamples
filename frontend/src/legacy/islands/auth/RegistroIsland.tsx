@@ -4,11 +4,11 @@
  */
 
 import { Music } from 'lucide-react';
-import { BotonBase } from '../../components/ui/BotonBase';
-import { CampoTexto } from '../../components/ui/CampoTexto';
+import { BotonBase } from '../../components/ui/boton/BotonBase';
+import { CampoTexto } from '../../components/ui/varios-1/CampoTexto';
 import { GloryLink } from '@/core/router';
-import { useRegistroIsland } from '../../hooks/useRegistroIsland';
-import '../../styles/componentes/login.css';
+import { useRegistroIsland } from '../../hooks/varios-7/useRegistroIsland';
+import '../../styles/componentes/varios-4/login.css';
 
 export const RegistroIsland = (): JSX.Element => {
     const {

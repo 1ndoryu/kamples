@@ -9,16 +9,16 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Search, X } from 'lucide-react';
-import { BotonBase } from '@app/components/ui/BotonBase';
-import { Input } from '@app/components/ui/Input';
-import { LogoKamples } from '@app/components/ui/LogoKamples';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
+import { Input } from '@app/components/ui/input/Input';
+import { LogoKamples } from '@app/components/ui/varios-2/LogoKamples';
 import { GloryLink } from '@/core/router';
-import { useAuthModalStore } from '@app/stores/authModalStore';
+import { useAuthModalStore } from '@app/stores/auth/authModalStore';
 import { useNavigationStore } from '@/core/router';
-import { useFiltrosStore } from '@app/stores/filtrosStore';
+import { useFiltrosStore } from '@app/stores/varios-2/filtrosStore';
 import { useT } from '@app/utils/i18n';
-import { SelectorIdioma } from '@app/components/ui/SelectorIdioma';
-import '../../styles/componentes/navPublico.css';
+import { SelectorIdioma } from '@app/components/ui/selector/SelectorIdioma';
+import '../../styles/componentes/varios-5/navPublico.css';
 
 /* [193A-37] Rutas donde se muestra el buscador inline */
 const RUTAS_CON_BUSCADOR = ['/colecciones/', '/musica/', '/descubrir/'];
