@@ -7,8 +7,8 @@
 :root {
     --fondoBase: #070707;
     --fondoElevado1: #070707;
-    --fondoElevado2: #070707;
-    --fondoElevado3: #070707;
+    --fondoElevado2: var(--fondoElevado1);
+    --fondoElevado3: var(--fondoElevado1);
     --bordeSutil: #161616;
     --bordeActivo: #4a665b;
     --textoPrimario: #e8e1c9;
@@ -55,12 +55,11 @@
     --fuenteXl: 24px;
     --fuente2xl: 32px;
     --fuente3xl: 40px;
-    --fuente4xl: 58px;
     --fuentePrincipal: 'Source Sans Variable', system-ui, -apple-system, sans-serif;
     --fuenteMono: 'Fira Code', 'JetBrains Mono', monospace;
     --pesoNormal: 400;
     --pesoMedio: 400;
-    --pesoMedium: 400;
+    --pesoMedium: var(--pesoMedio);
     --pesoSemibold: 500;
     --pesoBold: 500;
     --radioSm: 4px;
@@ -69,15 +68,12 @@
     --radioFull: 9999px;
     --sombraElevada: unset;
     --sombraModal: unset;
-    --sombraSutil: unset;
     --overlayFuerte: rgba(0, 0, 0, 0.85);
     --overlayOscuro: rgba(0, 0, 0, 0.7);
     --overlaySuave: rgba(0, 0, 0, 0.4);
     --sombraFlotante: 0 4px 24px rgba(0, 0, 0, 0.5);
     --transicionRapida: 150ms ease;
     --transicionNormal: 250ms ease;
-    --transicionLenta: 400ms ease;
-    --zBase: 1;
     --zElevado: 10;
     --zMenu: 100;
     --zMenuPortal: 1100;
@@ -85,7 +81,6 @@
     --zNotificacion: 2000;
     --zReproductor: 500;
     --anchoSidebar: 56px;
-    --anchoSidebarExpandido: 220px;
     --altoTopbar: 52px;
     --altoReproductor: 56px;
     --altoNavMobile: 56px;
@@ -104,7 +99,6 @@
     --landingPaddingSuperior: 3rem;
     --landingPaddingHorizontal: 2rem;
     --landingPaddingHorizontalCompacto: 1.25rem;
-    --landingPaddingInferior: 4rem;
     --landingPaddingInferiorCompacto: 3rem;
     --landingPaddingHeroSuperior: 4rem;
     --landingFuenteTitulo: 'Junicode Landing', 'Times New Roman', serif;
