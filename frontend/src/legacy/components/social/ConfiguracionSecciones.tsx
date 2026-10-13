@@ -78,7 +78,7 @@ interface NavItemConfig {
     etiqueta: string;
     icono: JSX.Element;
 }
-export const SECCIONES_NAV: NavItemConfig[] = [
+export const SECCIONES_NAV: readonly NavItemConfig[] = [
     {id: 'perfil', etiqueta: 'Perfil', icono: <User size={16} />},
     {id: 'cuenta', etiqueta: 'Cuenta', icono: <Shield size={16} />},
     {id: 'notificaciones', etiqueta: 'Notificaciones', icono: <Bell size={16} />},

@@ -10,7 +10,7 @@ import type { ItemColaIa, EstadisticasColaIa, CuotaGroq, EstadoKeysGroq } from '
 import { useT } from '@app/utils/i18n/useT';
 
 /* Mapa de colores para badges de estado */
-export const COLORES_ESTADO: Record<string, 'exito' | 'advertencia' | 'error' | 'info' | 'neutro'> = {
+export const COLORES_ESTADO: Readonly<Record<string, 'exito' | 'advertencia' | 'error' | 'info' | 'neutro'>> = {
     pendiente: 'info',
     procesando: 'advertencia',
     completado: 'exito',
@@ -18,7 +18,7 @@ export const COLORES_ESTADO: Record<string, 'exito' | 'advertencia' | 'error' | 
     error_final: 'error',
 };
 
-export const ETIQUETAS_ESTADO: Record<string, string> = {
+export const ETIQUETAS_ESTADO: Readonly<Record<string, string>> = {
     pendiente: 'Pendiente',
     procesando: 'Procesando',
     completado: 'Completado',

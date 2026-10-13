@@ -10,7 +10,6 @@
 
 import { IMAGENES_COLOR } from './datos/imagenesColorLista';
 import { resolverRutaAsset } from '@app/utils/resolverRutaAsset';
-import { optimizedUrl } from '@app/utils/imageUtils';
 
 const RUTA_RELATIVA = '/wp-content/themes/glorytemplate/colors/';
 const TOTAL = IMAGENES_COLOR.length;

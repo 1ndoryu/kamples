@@ -1,9 +1,6 @@
-/* ==============================================
-   SETTINGS PANEL - Estilos del Panel de Configuracion
-   ==============================================
+/* SETTINGS PANEL - Estilos del Panel de Configuracion
    Estilos independientes para el panel de opciones React.
-   Usa variables CSS del tema para mantener consistencia.
-   ============================================== */
+   Usa variables CSS del tema para mantener consistencia. */
 
 /* --- LAYOUT PRINCIPAL --- */
 .settings-page {

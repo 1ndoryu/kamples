@@ -9,9 +9,7 @@
  * se ejecutan en desktop real a menos que se llamen explícitamente.
  */
 
-/* ==============================================
-   GloryContext — tipo global usado por TopBar.tsx
-   ============================================== */
+/* GloryContext — tipo global usado por TopBar.tsx */
 declare interface GloryContext {
     rutaActual: string;
     autenticado: boolean;
@@ -19,10 +17,8 @@ declare interface GloryContext {
     [key: string]: unknown;
 }
 
-/* ==============================================
-   Capacitor — solo aplica en mobile (Android APK)
-   Estos stubs evitan errores TS sin instalar los paquetes.
-   ============================================== */
+/* Capacitor — solo aplica en mobile (Android APK)
+   Estos stubs evitan errores TS sin instalar los paquetes. */
 declare module '@capacitor/app' {
     export const App: {
         addListener(event: string, callback: (data: { url: string }) => void): Promise<{ remove: () => Promise<void> }>;
@@ -72,9 +68,7 @@ declare module '@capacitor/filesystem' {
     };
 }
 
-/* ==============================================
-   Mezclador (DAW) — no disponible en desktop
-   ============================================== */
+/* Mezclador (DAW) — no disponible en desktop */
 declare module '@mezclador/components/ErrorBoundaryMezclador' {
     export const ErrorBoundaryMezclador: React.ComponentType<{ children?: React.ReactNode }>;
 }
@@ -83,9 +77,7 @@ declare module '@mezclador/components/MezcladorPanel' {
     export const MezcladorPanel: React.ComponentType<{ isOpen?: boolean; onClose?: () => void }>;
 }
 
-/* ==============================================
-   Tauri APIs — stubs para plugins Tauri que TS no resuelve
-   ============================================== */
+/* Tauri APIs — stubs para plugins Tauri que TS no resuelve */
 declare module '@tauri-apps/api/app' {
     export function getVersion(): Promise<string>;
     export function getName(): Promise<string>;
@@ -117,11 +109,9 @@ declare module '@tauri-apps/plugin-shell' {
     export function open(path: string): Promise<void>;
 }
 
-/* ==============================================
-   Window augmentations — propiedades específicas del proyecto
+/* Window augmentations — propiedades específicas del proyecto
    NO declarar GLORY_CONTEXT ni __GLORY_ROUTES__ aquí;
-   ya están tipados en frontend/src/glory-core/types/glory.ts
-   ============================================== */
+   ya están tipados en frontend/src/glory-core/types/glory.ts */
 interface Window {
     Capacitor?: {
         isNativePlatform?: () => boolean;
