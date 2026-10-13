@@ -120,7 +120,7 @@ export const PreciosLandingIsland = (): JSX.Element => {
 
                 {/* Filas de features */}
                 {FEATURES.map((f, i) => (
-                    <div key={i} className={`preciosFila${f.destacada ? ' preciosFilaDestacada' : ''}`}>
+                    <div key={f.texto} className={`preciosFila${f.destacada ? ' preciosFilaDestacada' : ''}`}>
                         <div className="preciosColFeature">{f.texto}</div>
                         <div className="preciosColPlan preciosIconoCol">
                             {f.freeIncluido ? <IconoCheck /> : <IconoX />}

@@ -5,8 +5,8 @@
  * Se muestra automáticamente al autenticarse si había un código pendiente expirado.
  *
  * Gotcha: sin título/cabecera intencionalmente (per spec 183A-110).
- * TODO: Un humano debe testear como se ve este modal en produccion antes de
- *   considerarlo finalizado — especialmente el botón de recomendaciones y el texto.
+ * Pendiente de revisión visual humana en producción antes de darlo por cerrado
+ *   (especialmente el botón de recomendaciones y el texto).
  * Gotcha: usa useNavigationStore para navegar sin recargar la página.
  */
 

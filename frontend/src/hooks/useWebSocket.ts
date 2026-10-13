@@ -47,8 +47,7 @@ async function fetchTicket(): Promise<string> {
   });
   /* `customInstance` devuelve `{ data, status, headers }` o el body crudo
    * según implementación; cubrimos ambos para no asumir. */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const payload: any = res;
+  const payload = res as { data?: { ticket?: string }; ticket?: string } | undefined;
   const ticket: string | undefined = payload?.data?.ticket ?? payload?.ticket;
   if (!ticket) throw new Error('Respuesta sin ticket');
   return ticket;

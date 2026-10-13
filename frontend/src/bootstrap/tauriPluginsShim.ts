@@ -14,7 +14,11 @@ export const remove = noop;
 export const BaseDirectory = { Document: 0, Download: 1, Cache: 2 } as const;
 
 export const open = noop;
-export const Command = class { static create() { return new Command(); } async execute() { return { stdout: '', stderr: '', code: 0 }; } } as any;
+class CommandStub {
+  static create(): CommandStub { return new CommandStub(); }
+  async execute() { return { stdout: '', stderr: '', code: 0 }; }
+}
+export const Command = CommandStub;
 
 export const isPermissionGranted = async () => false;
 export const requestPermission = async () => 'denied' as const;

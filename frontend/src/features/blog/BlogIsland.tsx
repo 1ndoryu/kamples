@@ -242,7 +242,7 @@ export const BlogIsland: React.FC = () => {
             ) : cargando && articulos.length === 0 ? (
                 <div className="blogSkeleton">
                     {Array.from({ length: 8 }).map((_, i) => (
-                        <div key={i} className="blogSkeletonItem" />
+                        <div key={`skeleton-item-${i}`} className="blogSkeletonItem" />
                     ))}
                 </div>
             ) : articulos.length === 0 ? (

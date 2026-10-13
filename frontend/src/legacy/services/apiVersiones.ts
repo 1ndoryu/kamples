@@ -1,7 +1,7 @@
 /*
  * [2003A-16] apiVersiones — Servicio para gestión de versiones de app desde el VPS.
  * Las versiones se almacenan en WP options y se actualizan via el endpoint admin.
- * Sin dependencia de GitHub — todo gestionado desde el propio servidor.
+ * Sin dependencia de GitHub — todo lo gestiona el propio servidor el propio servidor.
  */
 
 import { apiPeticion } from './apiCliente';

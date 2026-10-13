@@ -1,6 +1,6 @@
 /*
  * useMenuContextualPR — Lógica del menú contextual del Piano Roll.
- * Acciones: copiar, cortar, pegar, eliminar, seleccionar todo, color, velocity.
+ * Acciones: copiar, cortar, pegar, eliminar, seleccionar todos, color, velocity.
  * Keyboard: Escape cierra. Click fuera cierra.
  */
 

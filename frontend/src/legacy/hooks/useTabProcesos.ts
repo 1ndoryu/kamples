@@ -1,7 +1,7 @@
 /*
  * Hook: useTabProcesos
  * Logica para el tab de procesos de fondo en el panel admin.
- * Polling cada 5s cuando hay procesos running, 30s cuando todo esta stopped.
+ * Polling cada 5s cuando hay procesos running, 30s cuando los procesos estan stopped.
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';

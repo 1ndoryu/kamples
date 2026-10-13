@@ -23,7 +23,7 @@ export const useEditorArticulo = () => {
      * [193A-99] Sanitizar HTML restaurado de localStorage para prevenir XSS persistido. */
     useEffect(() => {
         if (editorRef.current && store.abierto) {
-            /* sentinel-disable-next-line innerHTML — sanitizado con sanitizarHtml() antes de asignar */
+            /* sentinel-disable-next-line innerhtml-variable — sanitizado con sanitizarHtml() antes de asignar */
             editorRef.current.innerHTML = sanitizarHtml(store.contenido);
         }
     }, [store.abierto]);

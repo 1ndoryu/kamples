@@ -4,7 +4,7 @@
  *
  * Expone:
  *   - eliminarSampleActual(sample): Elimina el sample indicado (el que está cargado en el reproductor).
- *   - pedirConfirmacionBorrarTodos(): Muestra toast de confirmación antes de borrar todo.
+ *   - pedirConfirmacionBorrarTodos(): Muestra toast de confirmación antes de borrar todas las muestras.
  *   - cargando: true mientras hay una operación en curso.
  *
  * SRP: solo gestión de eliminación. No maneja UI propia (usa toastStore).

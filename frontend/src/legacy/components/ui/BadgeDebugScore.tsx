@@ -30,7 +30,7 @@ export const BadgeDebugScore = ({ debug }: BadgeDebugScoreProps): JSX.Element =>
             {visible && (
                 <div className="badgeDebugScoreTooltip">
                     {lineas.map((linea, i) => (
-                        <div key={i} className="badgeDebugScoreLinea">{linea}</div>
+                        <div key={`${i}-${linea}`} className="badgeDebugScoreLinea">{linea}</div>
                     ))}
                 </div>
             )}

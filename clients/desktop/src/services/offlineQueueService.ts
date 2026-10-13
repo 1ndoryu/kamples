@@ -194,7 +194,7 @@ export async function sincronizarCola(): Promise<void> {
                 if (response.ok) {
                     exitosas.add(op.id);
                 } else if (response.status === 409) {
-                    /* TA2: No todo 409 es conflicto de versión benigno.
+                    /* TA2: No cada 409 es conflicto de versión benigno.
                      * Solo marcar como éxito si el body confirma conflicto_version.
                      * Otros 409 (auth disfrazada, permisos) deben re-encolarse. */
                     let esConflictoVersion = false;

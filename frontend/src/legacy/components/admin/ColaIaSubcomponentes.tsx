@@ -10,21 +10,21 @@ import type { ItemColaIa, EstadisticasColaIa, CuotaGroq, EstadoKeysGroq } from '
 import { useT } from '@app/utils/i18n/useT';
 
 /* Mapa de colores para badges de estado */
-export const COLORES_ESTADO: Readonly<Record<string, 'exito' | 'advertencia' | 'error' | 'info' | 'neutro'>> = {
+export const COLORES_ESTADO: Readonly<Record<string, 'exito' | 'advertencia' | 'error' | 'info' | 'neutro'>> = Object.freeze({
     pendiente: 'info',
     procesando: 'advertencia',
     completado: 'exito',
     error_reintento: 'advertencia',
     error_final: 'error',
-};
+});
 
-export const ETIQUETAS_ESTADO: Readonly<Record<string, string>> = {
+export const ETIQUETAS_ESTADO: Readonly<Record<string, string>> = Object.freeze({
     pendiente: 'Pendiente',
     procesando: 'Procesando',
     completado: 'Completado',
     error_reintento: 'Reintento',
     error_final: 'Error final',
-};
+});
 
 /* Formateador de fecha compacto */
 const formatearFecha = (fecha: string | null): string => {

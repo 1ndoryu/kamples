@@ -51,7 +51,7 @@ export const DesgloseExplain = ({ explain }: { explain: NonNullable<RegistroTimi
                             {ctes.map((nodo: NodoExplain, i: number) => {
                                 const pctTotal = ejecucionMs > 0 ? (nodo.totalMs / ejecucionMs) * 100 : 0;
                                 return (
-                                    <tr key={i} className={`algoTimingFila ${claseMs(nodo.totalMs)}`}>
+                                    <tr key={`${nodo.etiqueta}-${i}`} className={`algoTimingFila ${claseMs(nodo.totalMs)}`}>
                                         <td className="algoTimingCeldaNombre">{nodo.etiqueta}</td>
                                         <td className="algoTimingCeldaMs">{formatMs(nodo.totalMs)}</td>
                                         <td className="algoTimingCeldaMs algoTimingCeldaSecundaria">{formatMs(nodo.exclusivoMs)}</td>
@@ -86,7 +86,7 @@ export const DesgloseExplain = ({ explain }: { explain: NonNullable<RegistroTimi
                         </thead>
                         <tbody>
                             {operaciones.slice(0, 15).map((nodo: NodoExplain, i: number) => (
-                                <tr key={i} className={`algoTimingFila ${claseMs(nodo.exclusivoMs)}`}>
+                                <tr key={`${nodo.etiqueta}-${i}`} className={`algoTimingFila ${claseMs(nodo.exclusivoMs)}`}>
                                     <td className="algoTimingCeldaNombre" style={{ paddingLeft: `${nodo.profundidad * 12 + 8}px` }}>
                                         {nodo.etiqueta}
                                     </td>

@@ -46,8 +46,7 @@ function clearTokens() {
 }
 
 function unwrap<T>(response: unknown): T | undefined {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const payload: any = response;
+  const payload = response as { data?: unknown } | undefined;
   return (payload?.data ?? payload) as T | undefined;
 }
 

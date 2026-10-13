@@ -83,7 +83,7 @@ export const ArticuloDetalleIsland: React.FC<ArticuloDetalleIslandProps> = ({ sl
                     <div className="articuloDetalleSkeletonPortada" />
                     <div className="articuloDetalleSkeletonContenido">
                         {Array.from({ length: 5 }).map((_, i) => (
-                            <div key={i} className="articuloDetalleSkeletonLinea" />
+                            <div key={`skeleton-linea-${i}`} className="articuloDetalleSkeletonLinea" />
                         ))}
                     </div>
                 </div>

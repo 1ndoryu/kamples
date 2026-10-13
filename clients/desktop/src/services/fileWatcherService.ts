@@ -89,7 +89,7 @@ const PATRONES_TEMPORALES = [
 
 /*
  * P1+P7: Carpetas internas excluidas del watcher.
- * CARPETAS_EXCLUIDAS_TOTAL: se ignora TODO evento (create, delete, modify).
+ * CARPETAS_EXCLUIDAS_TOTAL: se ignora cualquier evento (create, delete, modify).
  * CARPETAS_SISTEMA_NO_COLECCION: carpetas que permiten subida de archivos de audio
  *   pero NO deben generar colecciones en el servidor. El watcher procesa CREATEs
  *   de archivos pero bloquea eventos de creacion de carpeta para estos nombres.
@@ -645,7 +645,7 @@ async function procesarEvento(
 
         const segmentosRuta = relativa.split('/');
 
-        /* Exclusión total: ignorar TODO evento dentro de .papelera/ */
+        /* Exclusión total: ignorar cualquier evento dentro de .papelera/ */
         if (segmentosRuta.some(s => CARPETAS_EXCLUIDAS_TOTAL.has(s))) continue;
 
         /*

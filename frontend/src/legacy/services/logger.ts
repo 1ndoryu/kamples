@@ -2,7 +2,7 @@
  * Logger — Kamples
  * Sistema de depuración por niveles.
  * En producción solo muestra errores.
- * En desarrollo muestra todo segun el nivel configurado.
+ * En desarrollo muestra todos los mensajes segun el nivel configurado.
  */
 
 export enum NivelLog {

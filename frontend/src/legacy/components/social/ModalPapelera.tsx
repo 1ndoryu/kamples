@@ -28,7 +28,7 @@ const iconoTipo = (tipo: ItemPapelera['tipo']): JSX.Element => {
 const SkeletonPapelera = (): JSX.Element => (
     <div className="papeleraLista">
         {[1, 2, 3].map(i => (
-            <div key={i} className="papeleraSkeletonItem">
+            <div key={`papelera-skeleton-${i}`} className="papeleraSkeletonItem">
                 <div className="papeleraSkeletonThumb" />
                 <div className="papeleraSkeletonInfo">
                     <div className="papeleraSkeletonLinea papeleraSkeletonLineaCorta" />

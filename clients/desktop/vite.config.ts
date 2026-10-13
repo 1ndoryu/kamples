@@ -72,7 +72,7 @@ export default defineConfig({
          * Para WP local: set KAMPLES_API_TARGET=http://glory.local
          */
         proxy: {
-            /* [174A-111b] Backend Rust principal — todo /api/* va al servidor Axum. */
+            /* [174A-111b] Backend Rust principal — las rutas /api/* va al servidor Axum. */
             '/api': {
                 target: apiTarget,
                 changeOrigin: true,

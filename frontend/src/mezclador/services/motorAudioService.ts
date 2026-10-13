@@ -411,7 +411,7 @@ class MotorAudio {
         return offlineCtx.startRendering();
     }
 
-    /* Limpiar todo al cerrar el mezclador — libera AudioContext */
+    /* Limpiar por completo al cerrar el mezclador — libera AudioContext */
     async destruir(): Promise<void> {
         this.detenerTodo();
         for (const gain of this.gainsCanales.values()) {

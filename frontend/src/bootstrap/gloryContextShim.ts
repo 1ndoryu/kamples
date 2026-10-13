@@ -41,7 +41,7 @@ w.__KAMPLES_DESKTOP__ = true;
             localStorage.removeItem(LS_AUTH);
         }
     } catch {
-        /* JSON inválido — limpiar todo para evitar estado indeterminado */
+        /* JSON inválido — limpiar por completo para evitar estado indeterminado */
         localStorage.removeItem(LS_AUTH);
     }
 }());
