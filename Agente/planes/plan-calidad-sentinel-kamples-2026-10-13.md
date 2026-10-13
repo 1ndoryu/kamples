@@ -235,3 +235,11 @@ Decidido: arquitectura por adaptadores, no comentarios ni `sentinel-disable`. To
 - `css-especificacion-diseno-local` (103) y `css-adhoc-button-style` (41): cambian render; requieren verificación visual antes y después.
 - `directorio-abarrotado` (16): reorganizar carpetas con reescritura de imports (riesgo de disparar la regla en la carpeta nueva; precedente `Agente/completados/tareas-2026-10-07.md:350`).
 - Estructurales: `limite-lineas` (7) y `limite-lineas-nivel-2` (3).
+
+## Sesión 13AF-cont: cliente desktop window/document (commit `887f061`)
+
+- Migrados 8 archivos de `clients/desktop/src` a `@/platform/ventana` y `@/platform/documento` (17 sustituciones, sin cambio de comportamiento). Type-check desktop: 0 errores.
+- Gate `--cierre`: 0 nuevos, 2014 resueltos (base 2797, ahora 783).
+- Tablero KAMPLES tras el análisis: `window-reference-outside-platform` 5 y `dom-access-outside-platform` 0. Los 5 restantes son comentarios (falsos positivos ya anotados: `LandingPublica.tsx:45`, `useAuth.ts:183,196`, `usePlanesIsland.tsx:170`, `photonUrl.ts:8`).
+- Pendiente, en este orden: `directorio-abarrotado` (16 carpetas, reorganizar por dominio con reescritura de imports; no usar `directoryExceptions` para ocultarlo), `limite-lineas` (7) y `limite-lineas-nivel-2` (3), `css-especificacion-diseno-local` (103) y `css-adhoc-button-style` (41) con verificación visual en `kamples_verif`.
+- Pendiente de anotar en el backlog de falsos positivos: `claseHuerfana` (140), `cssInlineReact` (81), `cssInlineScript` (40), `inline-style-prohibido` (69) cuando el origen sea estilo dinámico.
