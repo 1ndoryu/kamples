@@ -6,7 +6,7 @@
  * Nomenclatura: español + camelCase
  */
 
-/* ===== BlockRenderer ===== */
+/* BlockRenderer */
 
 .bloqueError {
     padding: 20px;
@@ -93,7 +93,7 @@
     color: #666;
 }
 
-/* ===== BlockEditorModal ===== */
+/* BlockEditorModal */
 
 .campoEntradaBase {
     width: 100%;

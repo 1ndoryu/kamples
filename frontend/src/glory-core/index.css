@@ -9,13 +9,11 @@
 /* Panel de configuracion del tema */
 @import '../glory-css/settings-panel.css';
 
-/* ==============================================
-   ESTILOS DE PROSA (CONTENIDO DE ARTICULOS)
-   ==============================================
+/* Estilos de prosa (contenido de artículos).
    Estilos para contenido HTML generado por IA
    y articulos de blog. Proporciona espaciado
    adecuado entre elementos de texto.
-   ============================================== */
+*/
 
 .prose {
     line-height: 1.75;

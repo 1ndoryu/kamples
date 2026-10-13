@@ -108,7 +108,7 @@ function extraerParamsDeUrl(patron: string, segmentoDinamico: string): Record<st
  * En coincidencia exacta retorna los props estáticos del mapa.
  * En coincidencia por prefijo:
  *   - Si la ruta tiene patrón de params, extrae params nombrados.
- *   - Si no, inyecta todo como slug (retrocompatibilidad).
+ *   - Si no, inyecta el valor completo como slug (retrocompatibilidad).
  */
 function resolverPropsParaRuta(rutas: GloryRoutesMap, rutaNormalizada: string): Record<string, unknown> {
     if (rutas[rutaNormalizada]) return rutas[rutaNormalizada].props;
