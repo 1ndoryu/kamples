@@ -219,11 +219,12 @@ fn require_stripe_runtime(state: &AppState) -> Result<&StripeRuntime, AppError> 
         .ok_or_else(|| AppError::Conflict("Stripe no esta configurado en este entorno".to_string()))
 }
 
+/* [13AA-1] Fallback = sitio público (frontend Vite en 5183), no el backend (3001). */
 fn site_base_url(public_base_url: Option<&str>) -> String {
     public_base_url
         .map(|value| value.trim_end_matches('/').to_string())
         .filter(|value| !value.is_empty())
-        .unwrap_or_else(|| "http://127.0.0.1:3000".to_string())
+        .unwrap_or_else(|| "http://127.0.0.1:5183".to_string())
 }
 
 fn connect_onboarding_urls(public_base_url: Option<&str>) -> (String, String) {

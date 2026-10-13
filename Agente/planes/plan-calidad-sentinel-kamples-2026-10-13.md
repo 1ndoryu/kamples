@@ -81,6 +81,14 @@ Línea base: `Arranque gate "KAMPLES" --inicio` (hallazgos guardados en `workspa
   - Lote F4 colores (`040c55c`): 33 declaraciones hex (`#2a2a4a`, `#1e1e38`, `#16162a`, `#ef4444`…) → tokens `--colorFondoAzulNoche`…`--colorVerdeTerminal`.
   - Pendiente tras F4: `border:` shorthand con hex (`pianoRoll.css`, no lo cubre la regla), rgba() de fondos, `border-radius` 4–28px, `font-size` 12px/14px/11px/`0.92rem` restantes, y `var(--error, #e55353)` (fallback literal).
 - F4 (Rust, 194 errores): pendiente; el cambio de config vive en `rescate/sentinel-rs-kamples`, no en `main`.
+- **Sesión 13AA-1 (cierre parcial):**
+  - Puertos Rust (arquitectura, pedido de la usuaria): `src/services/admin_processes.rs` fallback `PORT` 3000 → 3001; `src/handlers/payments.rs` y `connect.rs` `site_base_url` fallback 3000 → 5183 (sitio público de dev = frontend Vite, no backend); test `sample_urls_fall_back_to_sample_id_when_slug_is_missing` actualizado a 5183.
+  - Verificación: `cargo check --tests` OK; `cargo test --lib sample_urls` 1/1 OK (`CARGO_TARGET_DIR=C:/tmp/glory-target/kamples-13aa`).
+  - CSS: `--colorRojoSuave` eliminado de `tokens.css` (token-unused, sin usos en el repo; sin cambio visual).
+  - Gate `Arranque gate "KAMPLES" --cierre`: 0 nuevos, 827 resueltos, **1970 abiertos** (base 2797).
+  - Tablero (`escaneadoEn` 2026-10-13T14:00Z, KAMPLES total 1971) por regla: claseHuerfana 453, css-hardcoded-value 245, valorHardcoded 226, cssInlineReact 193, inline-style-prohibido 178, window-reference-outside-platform 141, css-especificacion-diseno-local 128, dom-access-outside-platform 109, css-adhoc-button-style 58, cssInlineScript 58, css-elemento-html-directo 48, modal-* 50, console-production 23 (todas en `glory-core`, vendorizado), directorio-abarrotado 21, limite-lineas 9+3, modal-con-titulo 8, componente-artesanal 4, otras ≤3.
+  - **No resuelto en esta sesión y por qué:** F3 (≈1.9k) requiere decisión por caso y verificación visual (p. ej. `border-radius` 6–14px no tiene token exacto: cambiarlo sí altera el render). `limite-lineas` y `directorio-abarrotado` exigen dividir o mover archivos (refactor estructural). `usestate-excesivo`, `componente-sin-hook-glory` y `mixed-barrel-logic` son refactors de comportamiento. `console-production` (glory-core) es vendorizado: no se edita.
+  - **Bloqueo de verificación funcional:** navegador y backend (cuenta admin, subida de audio/imágenes) siguen sin credenciales de PostgreSQL de prueba. Propuesta: base `kamples_verif` (no `glory_db`), credenciales que aporte la usuaria.
 
 ## Backlog anotado (no olvidar)
 

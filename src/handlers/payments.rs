@@ -275,11 +275,13 @@ fn require_stripe_runtime(state: &AppState) -> Result<&StripeRuntime, AppError> 
         .ok_or_else(|| AppError::Conflict("Stripe no esta configurado en este entorno".to_string()))
 }
 
+/* [13AA-1] Fallback = sitio público (frontend Vite en 5183), no el backend: en dev el backend
+ * (3001) no sirve /planes ni /descargas. */
 fn site_base_url(public_base_url: Option<&str>) -> String {
     public_base_url
         .map(|value| value.trim_end_matches('/').to_string())
         .filter(|value| !value.is_empty())
-        .unwrap_or_else(|| "http://127.0.0.1:3000".to_string())
+        .unwrap_or_else(|| "http://127.0.0.1:5183".to_string())
 }
 
 fn subscription_checkout_urls(public_base_url: Option<&str>) -> (String, String) {
@@ -379,11 +381,11 @@ mod tests {
 
         assert_eq!(
             success_url,
-            "http://127.0.0.1:3000/descargas/?compra=exito&sample=42"
+            "http://127.0.0.1:5183/descargas/?compra=exito&sample=42"
         );
         assert_eq!(
             cancel_url,
-            "http://127.0.0.1:3000/sample/42/?compra=cancelado"
+            "http://127.0.0.1:5183/sample/42/?compra=cancelado"
         );
     }
 

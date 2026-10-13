@@ -838,7 +838,8 @@ impl AdminProcessService {
             "" | "0.0.0.0" | "::" => "127.0.0.1",
             value => value,
         };
-        let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string());
+        /* [13AA-1] 3001 = puerto del backend en registry y .env.example; 3000 es de glory-pulse. */
+        let port = env::var("PORT").unwrap_or_else(|_| "3001".to_string());
         format!("http://{host}:{port}")
     }
 
