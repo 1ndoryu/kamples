@@ -12,6 +12,7 @@
 import { esDesktop, estaOnline } from './desktopService';
 import { clasificarError, obtenerEstrategia, extraerRetryAfterMs, esErrorDeRed } from './errorSync';
 import { logSync } from './syncLogger';
+import { escucharVentana } from '@/platform/ventana';
 
 /* Tipos extensibles de operacion. Agregar aqui nuevos tipos sin modificar logica base. */
 type TipoOperacion = 'reproduccion' | 'like' | 'follow' | 'descarga' | 'mover_carpeta' | 'soft_delete' | 'crear_coleccion' | 'agregar_sample_coleccion' | 'renombrar_coleccion';
@@ -67,7 +68,7 @@ export async function inicializarOfflineQueue(): Promise<void> {
     }
 
     /* Escuchar cambios de conectividad para sincronizar */
-    window.addEventListener('online', () => { sincronizarCola(); });
+    escucharVentana('online', () => { sincronizarCola(); });
 
     /* Listener cross-ventana: el sync panel actualiza el Store directamente
      * y emite este evento. La ventana principal recarga la cola desde Store. */

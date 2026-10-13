@@ -28,6 +28,7 @@ import { extraerMetadataDeRuta, registrarSubidaLocal, registrarAccionHistorial, 
 import { obtenerBaseUrlSync } from './syncGuards';
 import { Semaforo } from './semaforo';
 import { persistirConDebounce, flushPersistencia } from './persistenciaDebounce';
+import { escucharVentana } from '@/platform/ventana';
 import { estado } from './syncState';
 import { esRutaPapelera, normalizarNombreParaDedup } from './normalizarNombreArchivo';
 import { clasificarError, obtenerEstrategia, esErrorDeRed } from './errorSync';
@@ -394,7 +395,7 @@ export async function inicializarUploadQueue(): Promise<void> {
     }
 
     /* Escuchar reconexión para reanudar subidas */
-    window.addEventListener('online', () => { procesarCola(); });
+    escucharVentana('online', () => { procesarCola(); });
 
     /* Listener cross-ventana: el sync panel (sync.html) actualiza el Tauri Store
      * directamente y emite este evento. La ventana principal recarga la cola

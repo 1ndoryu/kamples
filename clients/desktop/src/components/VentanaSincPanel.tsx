@@ -28,6 +28,7 @@ import { ContenedorToasts } from '@app/components/ui/ContenedorToasts';
 import { MenuContextual, type MenuItemDef } from '@app/components/ui/MenuContextual';
 import { usePanelSincronizacion } from '@app/hooks/usePanelSincronizacion';
 import { obtenerImagenColor } from '@app/services/imagenesColor';
+import { protocoloActual, ubicacionActual } from '@/platform/ventana';
 import { useSyncStore } from '@app/stores/syncStore';
 import { useAuthStore } from '@app/stores/authStore';
 import { toast } from '@app/stores/toastStore';
@@ -114,7 +115,7 @@ function obtenerOrigenServidorSync(): string | null {
 
 function anexarVersionPortada(url: string, version: number): string {
     try {
-        const urlNormalizada = new URL(url, window.location.href);
+        const urlNormalizada = new URL(url, ubicacionActual().href);
         urlNormalizada.searchParams.set('_sv', String(version));
         return urlNormalizada.toString();
     } catch {
@@ -135,7 +136,7 @@ function resolverUrlPortada(
     );
 
     if (/^https?:\/\//i.test(url)) return anexarVersionPortada(url, versionPortada);
-    if (url.startsWith('//')) return anexarVersionPortada(`${window.location.protocol}${url}`, versionPortada);
+    if (url.startsWith('//')) return anexarVersionPortada(`${protocoloActual()}${url}`, versionPortada);
 
     const origen = obtenerOrigenServidorSync();
 

@@ -12,6 +12,7 @@ import { esDesktop } from './desktopService';
 import { obtenerRutaLocal } from './syncService';
 import { encolarOperacion } from './offlineQueueService';
 import { logSync } from './syncLogger';
+import { crearElemento } from '@/platform/documento';
 
 /*
  * Verifica si un sample tiene copia local y retorna la URL apropiada.
@@ -286,7 +287,7 @@ export async function generarPreviewDrag(nombre: string): Promise<string> {
     if (cached) return cached;
 
     const textoMostrar = nombre.length > 25 ? nombre.slice(0, 25) + '...' : nombre;
-    const canvas = document.createElement('canvas');
+    const canvas = crearElemento('canvas');
     const ctx = canvas.getContext('2d')!;
     const fontSize = 13;
     const paddingH = 12;

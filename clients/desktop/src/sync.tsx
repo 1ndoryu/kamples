@@ -23,6 +23,7 @@ import { VentanaSincPanel } from './components/VentanaSincPanel';
 
 /* Store sync */
 import { useSyncStore } from '@app/stores/syncStore';
+import { elementoPorId } from '@/platform/documento';
 
 /* syncService — se inicializa por separado, no via desktopService completo */
 import { inicializarSyncService } from '@desktop/services/syncService';
@@ -195,7 +196,7 @@ async function inicializar(): Promise<void> {
     useSyncStore.getState().abrirPanel();
 
     /* Montar React */
-    const contenedor = document.getElementById('sync-root');
+    const contenedor = elementoPorId('sync-root');
     if (!contenedor) return;
 
     const root = createRoot(contenedor);

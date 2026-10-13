@@ -7,18 +7,18 @@
  */
 
 /* QL98: Capturar errores globales no manejados para diagnostico en pantalla negra */
-window.addEventListener('error', (e) => {
+escucharVentana('error', (e) => {
     /* QL129: ResizeObserver loop es warning benigno del browser, no un error real */
     if (e.message?.includes('ResizeObserver loop')) return;
     logSync.error('main', '[Kamples Desktop] Error global:', e.error ?? e.message);
-    const appEl = document.getElementById('app');
+    const appEl = elementoPorId('app');
     if (appEl && !appEl.children.length) {
         appEl.innerHTML = `<div style="padding:32px;color:#ef4444;font-family:monospace;white-space:pre-wrap;background:#1a1a1a;height:100vh;overflow:auto"><h2>Error no capturado</h2><pre>${e.error?.stack ?? e.message}</pre></div>`;
     }
 });
-window.addEventListener('unhandledrejection', (e) => {
+escucharVentana('unhandledrejection', (e) => {
     logSync.error('main', '[Kamples Desktop] Promesa rechazada:', e.reason);
-    const appEl = document.getElementById('app');
+    const appEl = elementoPorId('app');
     if (appEl && !appEl.children.length) {
         appEl.innerHTML = `<div style="padding:32px;color:#ef4444;font-family:monospace;white-space:pre-wrap;background:#1a1a1a;height:100vh;overflow:auto"><h2>Promesa rechazada</h2><pre>${e.reason?.stack ?? String(e.reason)}</pre></div>`;
     }
@@ -30,6 +30,8 @@ import '@/index.css';
 /* Core de Glory: registry, hydration */
 import { islandRegistry } from '@/core';
 import { initializeIslands } from '@/core/hydration';
+import { cuerpoDocumento, elementoPorId } from '@/platform/documento';
+import { escucharVentana } from '@/platform/ventana';
 
 /* Islas del proyecto Kamples */
 import appIslands, { AppProvider } from '@app/appIslands';
@@ -162,11 +164,11 @@ async function marcarEntornoDesktop(): Promise<void> {    window.__KAMPLES_DESKT
      * - plataformaEscritorio: solo desktop (Windows/Mac/Linux)
      * Uso en CSS: body.plataformaAndroid .miClase { ... }
      */
-    document.body.classList.add('plataformaTauri');
+    cuerpoDocumento().classList.add('plataformaTauri');
     if (esAndroidTauri) {
-        document.body.classList.add('plataformaAndroid');
+        cuerpoDocumento().classList.add('plataformaAndroid');
     } else {
-        document.body.classList.add('plataformaEscritorio');
+        cuerpoDocumento().classList.add('plataformaEscritorio');
     }
 
     const toggleVentanaSync = async (): Promise<void> => {
@@ -256,7 +258,7 @@ async function init(): Promise<void> {
         inyectarRutas();
 
         /* F12 → abrir/cerrar DevTools en la app instalada para diagnostico */
-        window.addEventListener('keydown', async (e) => {
+        escucharVentana('keydown', async (e) => {
             if (e.key === 'F12') {
                 try {
                     const { invoke } = await import('@tauri-apps/api/core');
@@ -283,7 +285,7 @@ async function init(): Promise<void> {
     } catch (err) {
         logSync.error('main', '[Kamples Desktop] ERROR FATAL en init():', err);
         /* Mostrar error visible en el DOM para diagnostico */
-        const container = document.getElementById('app');
+        const container = elementoPorId('app');
         if (container) {
             container.innerHTML = `<div style="padding:32px;color:#ef4444;font-family:monospace;white-space:pre-wrap;background:#1a1a1a;height:100vh;overflow:auto"><h2 style="color:#ef4444">Error de inicializacion Desktop</h2><pre>${err instanceof Error ? `${err.message}\n\n${err.stack}` : String(err)}</pre></div>`;
         }

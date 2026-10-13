@@ -10,6 +10,7 @@
 
 import { esDesktop } from './desktopService';
 import { logSync } from './syncLogger';
+import { escucharVentana } from '@/platform/ventana';
 
 const DEBOUNCE_MS_DEFAULT = 2000;
 
@@ -95,7 +96,7 @@ export async function flushTodo(): Promise<void> {
 
 /* Registrar flush global en beforeunload para no perder datos en cierre */
 if (typeof window !== 'undefined') {
-    window.addEventListener('beforeunload', () => {
+    escucharVentana('beforeunload', () => {
         /* Flush sincrónico best-effort: no podemos await en beforeunload.
          * Los stores Tauri son persistidos de forma síncrona internamente. */
         for (const [, tarea] of tareasPendientes) {

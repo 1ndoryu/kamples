@@ -20,9 +20,10 @@ import './config.css';
 import { VentanaConfigSync } from './components/VentanaConfigSync';
 
 import { createRoot } from 'react-dom/client';
+import { elementoPorId } from '@/platform/documento';
 
 function inicializar(): void {
-    const contenedor = document.getElementById('config-root');
+    const contenedor = elementoPorId('config-root');
     if (!contenedor) return;
 
     const root = createRoot(contenedor);
