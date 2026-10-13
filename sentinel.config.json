@@ -29,6 +29,12 @@
       ]
     }
   },
+  "portableBoundaries": {
+    "dom": ["/platform/", "/adapters/", "/dom."],
+    "window": ["/platform/", "/adapters/", "/navigation/"],
+    "services": ["/services/", "/adapters/", "/api/", "/repositories/"],
+    "loggerModules": ["/logger.", "/logging/"]
+  },
   "analyzers": {
     "sentinel": {
       "enabled": true,
