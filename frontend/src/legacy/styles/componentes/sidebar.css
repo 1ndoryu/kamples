@@ -181,10 +181,6 @@
     }
 
     /* QL16: Avatar en barra inferior — ajustar tamano */
-    .sidebarItem .avatarContenedor {
-        width: 24px;
-        height: 24px;
-    }
 
     /* Ocultar tooltips en mobile */
     .sidebarItem::after {

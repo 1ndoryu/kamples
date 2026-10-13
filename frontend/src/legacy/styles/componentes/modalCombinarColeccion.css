@@ -67,21 +67,3 @@
 }
 
 /* Botón de deshacer combinación en vista de colección */
-.botonDeshacerCombinacion {
-    display: flex;
-    align-items: center;
-    gap: var(--espacioXs);
-    padding: var(--espacioXs) var(--espacioMd);
-    font-size: var(--fuenteXs);
-    color: var(--textoSecundario);
-    background-color: var(--fondoElevado2);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioSm);
-    cursor: pointer;
-    transition: background-color var(--transicionRapida), border-color var(--transicionRapida);
-}
-
-.botonDeshacerCombinacion:hover {
-    background-color: var(--fondoElevado3);
-    border-color: var(--bordeActivo);
-}

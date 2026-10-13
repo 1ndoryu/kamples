@@ -87,29 +87,6 @@ nav.configNavLista button {
     position: relative;
 }
 
-.configCerrarBtn {
-    position: absolute;
-    top: var(--espacioMd);
-    right: var(--espacioMd);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: var(--radioSm);
-    background: none;
-    color: var(--textoTerciario);
-    cursor: pointer;
-    transition: all var(--transicionRapida);
-    z-index: 1;
-}
-
-.configCerrarBtn:hover {
-    color: var(--textoPrimario);
-    background-color: var(--fondoElevado2);
-}
-
 .configSeccionContenido {
     flex: 1;
     overflow-y: auto;
@@ -117,13 +94,6 @@ nav.configNavLista button {
     display: flex;
     flex-direction: column;
     gap: 0;
-}
-
-.configSeccionTitulo {
-    font-size: var(--fuenteLg);
-    font-weight: var(--pesoBold);
-    color: var(--textoPrimario);
-    margin: 0;
 }
 
 /* Secciones — con separador y padding para jerarquía visual */

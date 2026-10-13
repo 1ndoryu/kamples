@@ -102,11 +102,3 @@
 }
 
 /* Mensaje de éxito */
-.editarPerfilExito {
-    padding: var(--espacioSm) var(--espacioMd);
-    border-radius: var(--radioSm);
-    background-color: var(--exitoMuted);
-    color: var(--exito);
-    font-size: var(--fuenteSm);
-    text-align: center;
-}

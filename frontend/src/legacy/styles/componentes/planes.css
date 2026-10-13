@@ -45,25 +45,6 @@
     display: block;
 }
 
-.planesPanelImagenOverlay {
-    position: absolute;
-    inset: auto 0 0 0;
-    padding: var(--espacioLg);
-    background: linear-gradient(to top, var(--overlayOscuro), transparent);
-}
-
-.planesPanelImagenOverlay h3 {
-    font-size: var(--fuenteLg);
-    color: var(--textoPrimario);
-    margin: 0 0 calc(var(--espacioXs) * 1.5);
-}
-
-.planesPanelImagenOverlay p {
-    font-size: var(--fuenteMd);
-    color: var(--textoSecundario);
-    margin: 0;
-}
-
 .planesPanelContenido {
     min-width: 0;
     padding: var(--espacioLg);
@@ -82,23 +63,6 @@
 }
 
 /* Header */
-.planesHeader {
-    text-align: center;
-    margin-bottom: calc(var(--espacioXs) * 3.5);
-}
-
-.planesHeader h1 {
-    font-size: var(--fuenteXl);
-    font-weight: var(--pesoBold);
-    color: var(--textoPrimario);
-    margin-bottom: var(--espacioSm);
-}
-
-.planesHeader p {
-    color: var(--textoSecundario);
-    font-size: var(--fuenteMd);
-    margin-bottom: calc(var(--espacioXs) * 3.5);
-}
 
 /* Toggle mensual/anual */
 .planesToggle {
@@ -178,28 +142,8 @@
 }
 
 /* Icono */
-.planIcono {
-    color: var(--textoSecundario);
-    margin-bottom: calc(var(--espacioXs) * 1.5);
-}
-
-.planTarjetaDestacada .planIcono {
-    color: var(--textoPrimario);
-}
 
 /* Nombre */
-.planNombre {
-    font-size: var(--fuenteMd);
-    font-weight: var(--pesoBold);
-    color: var(--textoPrimario);
-    margin-bottom: var(--espacioXs);
-}
-
-.planDescripcion {
-    font-size: var(--fuenteSm);
-    color: var(--textoSecundario);
-    margin-bottom: var(--espacioSm);
-}
 
 /* Precio */
 .planPrecio {
@@ -273,51 +217,6 @@
 }
 
 /* FAQ */
-.planesFaq {
-    border-top: 1px solid var(--bordeSutil);
-    padding-top: var(--espacio3xl);
-}
-
-.planesIslandModal .planesFaq {
-    padding-top: var(--espacioXl);
-}
-
-.planesFaq h2 {
-    font-size: var(--fuenteLg);
-    font-weight: var(--pesoBold);
-    color: var(--textoPrimario);
-    margin-bottom: calc(var(--espacioXs) * 6);
-    text-align: center;
-}
-
-.planesFaqGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--espacioLg);
-}
-
-.planesFaqItem {
-    background: var(--fondoElevado1);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
-    padding: var(--espacioXl);
-}
-
-.planesFaqItem h3 {
-    font-size: var(--fuenteMd);
-    font-weight: var(--pesoBold);
-    color: var(--textoPrimario);
-    margin-bottom: var(--espacioSm);
-    display: flex;
-    align-items: center;
-    gap: calc(var(--espacioXs) * 1.5);
-}
-
-.planesFaqItem p {
-    font-size: var(--fuenteMd);
-    color: var(--textoSecundario);
-    line-height: 1.5;
-}
 
 /* Alertas post-checkout */
 .planesAlertaExito {
@@ -398,10 +297,6 @@
         max-width: 400px;
         margin-left: auto;
         margin-right: auto;
-    }
-
-    .planesFaqGrid {
-        grid-template-columns: 1fr;
     }
 }
 

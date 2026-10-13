@@ -18,40 +18,6 @@
 }
 
 /* Cabecera */
-.sincPanelCabecera {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--espacioMd) var(--espacioLg);
-    border-bottom: 1px solid var(--bordeSutil);
-}
-
-.sincPanelTitulo {
-    display: flex;
-    align-items: center;
-    gap: var(--espacioSm);
-    font-size: var(--fuenteMd);
-    font-weight: var(--pesoSemibold);
-    color: var(--textoPrimario);
-}
-
-.sincPanelCerrar {
-    background: none;
-    border: none;
-    color: var(--textoTerciario);
-    cursor: pointer;
-    padding: var(--espacioXs);
-    border-radius: var(--radioSm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transicionRapida);
-}
-
-.sincPanelCerrar:hover {
-    color: var(--textoPrimario);
-    background-color: var(--fondoElevado2);
-}
 
 /* Tabs */
 .sincPanelTabs {
@@ -484,22 +450,8 @@
 }
 
 /* Barra superior draggable (reemplaza titlebar del OS) */
-.ventanaSincPanelBarra {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--espacioSm) var(--espacioLg);
-    border-bottom: 1px solid var(--bordeSutil);
-    user-select: none;
-    -webkit-app-region: drag;
-    cursor: grab;
-}
 
 /* Boton cerrar NO debe ser draggable */
-.ventanaSincPanelBarra .sincPanelCerrar {
-    -webkit-app-region: no-drag;
-    cursor: pointer;
-}
 
 /* Contenido scrollable del panel standalone */
 .ventanaSincPanelContenido {
@@ -565,39 +517,6 @@
     min-width: 24px;
     height: 24px;
     padding: 0;
-}
-
-.sincPanelMinimalMenuLista {
-    position: absolute;
-    top: calc(100% + var(--espacio2xs));
-    right: var(--espacioXs);
-    min-width: 170px;
-    z-index: var(--zMenu);
-    display: flex;
-    flex-direction: column;
-    gap: var(--espacio2xs);
-    padding: var(--espacio2xs);
-    background: var(--fondoElevado1);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
-    -webkit-app-region: no-drag;
-}
-
-.sincPanelMinimalMenuItem {
-    justify-content: flex-start;
-    width: 100%;
-    min-width: 100%;
-    height: 30px;
-    padding: 0 var(--espacioSm);
-    font-size: var(--fuenteXs);
-}
-
-.sincPanelMinimalMenuItemPeligro {
-    color: var(--error);
-}
-
-.sincPanelMinimalMenuItemPeligro:hover {
-    background-color: color-mix(in srgb, var(--error) 12%, transparent);
 }
 
 .sincPanelMinimalContenido {
@@ -695,12 +614,6 @@
     white-space: nowrap;
 }
 
-.sincPanelHistorialTiempoMinimal {
-    color: var(--textoTerciario);
-    font-size: var(--fuenteXs);
-    flex-shrink: 0;
-}
-
 /* Etiqueta de estado debajo del nombre del archivo */
 .sincPanelHistorialEstadoLabel {
     color: var(--textoTerciario);
@@ -723,20 +636,6 @@
 }
 
 /* Flecha de navegacion: visible solo en hover del item clickable */
-.sincPanelHistorialNavegar {
-    width: 14px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--textoTerciario);
-    flex-shrink: 0;
-    opacity: 0;
-    transition: opacity var(--transicionRapida);
-}
-
-.sincPanelHistorialClickable:hover .sincPanelHistorialNavegar {
-    opacity: 1;
-}
 
 .sincPanelHistorialEstadoFinal {
     width: 18px;

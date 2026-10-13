@@ -135,18 +135,6 @@
     margin-left: var(--espacio2xs);
 }
 
-.tarjetaCreador {
-    font-size: var(--fuenteSm);
-    color: var(--textoSecundario);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.tarjetaCreador:hover {
-    color: var(--acentoTexto);
-}
-
 /* Fila de metadata (BPM, key, tags, etc) */
 .tarjetaMeta {
     display: flex;
@@ -184,12 +172,6 @@
 
 .tarjetaMeta .badge:hover {
     color: var(--blanco);
-}
-
-.tarjetaMetaItem {
-    font-size: var(--fuenteXs);
-    color: var(--textoTerciario);
-    white-space: nowrap;
 }
 
 /* Waveform mini */
@@ -236,14 +218,6 @@
     min-width: unset;
 }
 
-.tarjetaAccionContador {
-    display: inline-block;
-    width: 24px;
-    font-size: var(--fuenteXs);
-    font-variant-numeric: tabular-nums;
-    text-align: right;
-}
-
 .tarjetaAccionBtn:hover {
     color: var(--textoPrimario);
     background-color: var(--fondoElevado3);
@@ -259,9 +233,6 @@
 }
 
 /* C157: Botones de accion completada en rojo para indicar estado previo */
-.tarjetaAccionDescargado {
-    color: var(--error);
-}
 
 /* QQ16: Boton Solo Pro (Crown) para samples premium sin precio */
 .tarjetaAcciones .botonBase.tarjetaAccionBtn.tarjetaAccionPro {
@@ -273,47 +244,7 @@
     background: var(--advertencia);
 }
 
-.tarjetaAccionDescargado:hover {
-    color: var(--blanco);
-}
-
-.tarjetaAccionGuardado {
-    color: var(--error);
-}
-
-.tarjetaAccionGuardado:hover {
-    color: var(--blanco);
-}
-
-.tarjetaAccionComentado {
-    color: var(--error);
-}
-
-.tarjetaAccionComentado:hover {
-    color: var(--blanco);
-}
-
 /* Duración y stats */
-.tarjetaDuracion {
-    font-size: var(--fuenteXs);
-    color: var(--textoTerciario);
-    min-width: 36px;
-    text-align: right;
-}
-
-.tarjetaStats {
-    display: flex;
-    align-items: center;
-    gap: var(--espacioXs);
-    font-size: var(--fuenteXs);
-    color: var(--textoTerciario);
-}
-
-.tarjetaStatItem {
-    display: flex;
-    align-items: center;
-    gap: calc(var(--espacioXs) / 2);
-}
 
 /* Badge premium */
 .tarjetaPremium {

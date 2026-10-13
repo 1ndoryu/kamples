@@ -169,10 +169,6 @@
     background: var(--fondoElevado2);
 }
 
-.tablaRelacionesAccionBtnPeligro:hover {
-    color: var(--error);
-}
-
 @media (max-width: 540px) {
     .tablaRelacionesColAnio,
     .tablaRelacionesColElemento {

@@ -64,12 +64,6 @@
     color: var(--textoPrimario);
 }
 
-.algoTimingTabActiva {
-    color: var(--acento);
-    border-bottom-color: var(--acento);
-    font-weight: 500;
-}
-
 .algoTimingContenido {
     flex: 1;
     overflow: auto;

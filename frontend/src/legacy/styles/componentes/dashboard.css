@@ -239,14 +239,6 @@
 }
 
 /* Empty state */
-.dashboardVacio {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--espacio3xl);
-    color: var(--textoTerciario);
-    font-size: var(--fuenteMd);
-}
 
 /* Stripe Connect */
 

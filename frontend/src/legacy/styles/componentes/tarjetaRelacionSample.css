@@ -79,13 +79,6 @@
     color: var(--textoTerciario);
 }
 
-.tarjetaRelacionBadges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: calc(var(--espacioXs) / 2);
-    align-items: center;
-}
-
 .tarjetaRelacionTiming {
     font-size: var(--fuenteXs);
     color: var(--textoTerciario);
@@ -130,22 +123,3 @@
 }
 
 /* L6.2d: Botones de edicion comunitaria */
-.tarjetaRelacionAccionEditar,
-.tarjetaRelacionAccionReportar {
-    font-size: var(--fuenteXs);
-    opacity: 0;
-    transition: opacity var(--transicionNormal);
-}
-
-.tarjetaRelacion:hover .tarjetaRelacionAccionEditar,
-.tarjetaRelacion:hover .tarjetaRelacionAccionReportar {
-    opacity: 1;
-}
-
-.tarjetaRelacionAccionReportar {
-    color: var(--textoTerciario);
-}
-
-.tarjetaRelacionAccionEditar {
-    color: var(--acento);
-}

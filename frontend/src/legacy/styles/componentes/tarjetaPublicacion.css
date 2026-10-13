@@ -145,17 +145,9 @@
     grid-template-rows: 1fr 1fr;
 }
 
-.tarjetaPubImagenes3 .tarjetaPubImagenItem:first-child {
-    grid-row: span 2;
-}
-
 .tarjetaPubImagenes4 {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-}
-
-.tarjetaPubImagenItem:hover img {
-    transform: scale(1.02);
 }
 
 /* Samples adjuntos */
@@ -172,41 +164,6 @@
     gap: var(--espacioXl);
     padding-top: var(--espacioSm);
     border-top: 1px solid var(--bordeSutil);
-}
-
-.tarjetaPubAccionBtn {
-    display: flex;
-    align-items: center;
-    gap: var(--espacioXs);
-    padding: var(--espacioXs) var(--espacioSm);
-    color: var(--textoTerciario);
-    background: none;
-    border: none;
-    border-radius: var(--radioSm);
-    cursor: pointer;
-    font-size: var(--fuenteSm);
-    transition: all var(--transicionRapida);
-}
-
-.tarjetaPubAccionBtn:hover {
-    color: var(--textoSecundario);
-    background-color: var(--fondoElevado2);
-}
-
-.tarjetaPubAccionLiked {
-    color: var(--error);
-}
-
-.tarjetaPubAccionLiked:hover {
-    color: var(--blanco);
-}
-
-.tarjetaPubAccionReposteado {
-    color: var(--exito);
-}
-
-.tarjetaPubAccionReposteado:hover {
-    color: var(--exito);
 }
 
 /* Bloque de repost: indicador superior y contenido embebido del original */

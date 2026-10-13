@@ -209,11 +209,6 @@
     background: color-mix(in srgb, var(--advertencia) 12%, transparent);
 }
 
-.exploradorSyncSubiendo {
-    color: var(--acento);
-    background: color-mix(in srgb, var(--acento) 12%, transparent);
-}
-
 /* Posición del badge en vista cuadrícula: esquina superior derecha */
 .cuadriculaDeSamples .exploradorSyncBadge {
     position: absolute;

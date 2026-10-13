@@ -3,11 +3,6 @@
  * Tooltip posicionado con portal. Soporta top, bottom, left, right.
  */
 
-.tooltipWrapper {
-    display: inline-flex;
-    position: relative;
-}
-
 .tooltipContenido {
     position: fixed;
     z-index: 9999;

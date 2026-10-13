@@ -142,14 +142,6 @@
     word-break: break-word;
 }
 
-.chatBurbujaHora {
-    display: block;
-    font-size: var(--fuenteXs);
-    color: var(--textoTerciario);
-    margin-top: calc(var(--espacioXs) / 2);
-    text-align: right;
-}
-
 /* Input de mensaje */
 .chatInputArea {
     display: flex;

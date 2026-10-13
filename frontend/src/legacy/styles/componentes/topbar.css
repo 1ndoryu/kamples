@@ -125,9 +125,6 @@
 }
 
 /* Hamburguesa móvil — oculta en escritorio (ahora en topbarMovilIzquierda) */
-.topbarHamburguesa {
-    display: none;
-}
 
 /* QL10: Contenedores movil — ocultos en escritorio */
 .topbarMovilIzquierda,

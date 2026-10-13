@@ -222,14 +222,6 @@
 /* Reemplazado por EstadoVacio centralizado (C359) */
 
 /* Estado de carga */
-.exploradorCargando {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--espacioXl);
-    color: var(--textoSecundario);
-    flex: 1;
-}
 
 /* C291: Toggle de vista lista/cuadricula */
 .exploradorVistaToggle {

@@ -84,11 +84,6 @@
 }
 
 /* Botón manual de "Cargar más" para throttle de paginación */
-.comunidadBotonManual {
-    display: flex;
-    justify-content: center;
-    padding: var(--espacioLg) 0;
-}
 
 /* Movil */
 

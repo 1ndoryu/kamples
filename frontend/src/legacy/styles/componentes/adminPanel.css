@@ -512,34 +512,6 @@
     gap: var(--espacioSm);
 }
 
-.adminModeracionBotonAprobar {
-    padding: 0.4rem 0.75rem;
-    border-radius: var(--radioMd);
-    border: none;
-    background: var(--exito);
-    color: var(--blanco);
-    cursor: pointer;
-    font-size: var(--fuenteSm);
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: var(--espacioXs);
-}
-
-.adminModeracionBotonRechazar {
-    padding: 0.4rem 0.75rem;
-    border-radius: var(--radioMd);
-    border: none;
-    background: var(--error);
-    color: var(--blanco);
-    cursor: pointer;
-    font-size: var(--fuenteSm);
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: var(--espacioXs);
-}
-
 .adminModeracionBotonDescartar {
     padding: 0.4rem 0.75rem;
     border-radius: var(--radioMd);
@@ -616,10 +588,6 @@
 }
 
 /* Historial IA: estilo más sutil */
-.adminModeracionHistorial {
-    opacity: 0.85;
-    border-left: 3px solid var(--bordeSutil);
-}
 
 /* Badges de estado */
 .adminBadge {
@@ -895,10 +863,6 @@
 }
 
 /* Menu de 3 puntos */
-.historialMenuContenedor {
-    position: relative;
-    margin-left: auto;
-}
 
 .historialMenuBoton {
     background: transparent;
@@ -919,117 +883,7 @@
     color: var(--textoPrimario);
 }
 
-.historialMenuDropdown {
-    position: absolute;
-    right: 0;
-    top: calc(100% + 4px);
-    min-width: 210px;
-    z-index: var(--zMenu, 200);
-    background: var(--fondoElevado2);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
-    padding: var(--espacioXs);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-}
-
-.historialMenuItem {
-    width: 100%;
-    text-align: left;
-    padding: var(--espacioSm) var(--espacioMd);
-    cursor: pointer;
-    font-size: var(--fuenteSm);
-    background: transparent;
-    border: none;
-    color: var(--textoSecundario);
-    border-radius: var(--radioSm);
-    transition:
-        background-color 0.1s,
-        color 0.1s;
-}
-
-.historialMenuItem:hover {
-    background: var(--fondoElevado3, var(--fondoBase));
-    color: var(--textoPrimario);
-}
-
-.historialMenuItemPeligro {
-    color: var(--error);
-}
-
-.historialMenuItemPeligro:hover {
-    background: color-mix(in srgb, var(--error) 12%, transparent);
-    color: var(--error);
-}
-
 /* Panel de baneo inline (dentro del dropdown) */
-.historialBanPanel {
-    padding: var(--espacioSm);
-    display: flex;
-    flex-direction: column;
-    gap: var(--espacioSm);
-}
-
-.historialBanTitulo {
-    font-size: var(--fuenteSm);
-    font-weight: 600;
-    color: var(--textoPrimario);
-    padding: 0 var(--espacioXs);
-}
-
-.historialBanSelect,
-.historialBanInput {
-    width: 100%;
-    padding: var(--espacioXs) var(--espacioSm);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioSm);
-    background: var(--fondoBase);
-    color: var(--textoPrimario);
-    font-size: var(--fuenteSm);
-    box-sizing: border-box;
-}
-
-.historialBanSelect:focus,
-.historialBanInput:focus {
-    outline: none;
-    border-color: var(--acento);
-}
-
-.historialBanAcciones {
-    display: flex;
-    gap: var(--espacioSm);
-    justify-content: flex-end;
-}
-
-.historialBanCancelar {
-    background: transparent;
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioSm);
-    padding: var(--espacioXs) var(--espacioSm);
-    cursor: pointer;
-    font-size: var(--fuenteSm);
-    color: var(--textoSecundario);
-    transition: background-color 0.15s;
-}
-
-.historialBanCancelar:hover {
-    background: var(--fondoBase);
-}
-
-.historialBanAplicar {
-    background: var(--error);
-    border: none;
-    border-radius: var(--radioSm);
-    padding: var(--espacioXs) var(--espacioSm);
-    cursor: pointer;
-    font-size: var(--fuenteSm);
-    color: var(--blanco);
-    font-weight: 600;
-    transition: opacity 0.15s;
-}
-
-.historialBanAplicar:hover {
-    opacity: 0.85;
-}
 
 /* QK14: Lista compacta de historial — cola de procesamiento en tab Resumen */
 .adminHistorialContenedor {

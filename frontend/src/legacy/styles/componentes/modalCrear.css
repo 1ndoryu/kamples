@@ -387,33 +387,6 @@
     flex-direction: column;
 }
 
-.crearPrecioLabel {
-    font-size: var(--fuenteXs);
-    color: var(--textoSecundario);
-    white-space: nowrap;
-}
-
-.crearPrecioInput {
-    width: 100px;
-    padding: var(--espacioXs) var(--espacioSm);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioSm);
-    background: var(--fondoElevado2);
-    color: var(--textoPrimario);
-    font-size: var(--fuenteSm);
-    font-family: inherit;
-    outline: none;
-    transition: border-color var(--transicionRapida);
-}
-
-.crearPrecioInput:focus {
-    border-color: var(--acento);
-}
-
-.crearPrecioInput::placeholder {
-    color: var(--textoTerciario);
-}
-
 /* Grid de imágenes */
 .crearImagenes {
     display: grid;

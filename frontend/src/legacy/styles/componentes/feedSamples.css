@@ -65,27 +65,6 @@
 }
 
 /* Botón manual de "Cargar más" cuando el throttle de paginación lo requiere */
-.feedSamplesBotonManual {
-    display: flex;
-    justify-content: center;
-    padding: var(--espacioLg) 0;
-}
-
-.feedSamplesCargarMas {
-    background: var(--fondoElevado2);
-    color: var(--textoSecundario);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
-    padding: var(--espacioSm) var(--espacioXl);
-    font-size: var(--fuenteSm);
-    cursor: pointer;
-    transition: background var(--transicionRapida), color var(--transicionRapida);
-}
-
-.feedSamplesCargarMas:hover {
-    background: var(--fondoElevado3);
-    color: var(--textoPrimario);
-}
 
 /* Tags dinámicos */
 .feedTags {

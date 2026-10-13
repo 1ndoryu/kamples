@@ -45,19 +45,6 @@
     color: var(--textoPrimario);
 }
 
-.dropdownPanelEnlace {
-    font-size: var(--fuenteXs);
-    color: var(--acento);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-}
-
-.dropdownPanelEnlace:hover {
-    text-decoration: underline;
-}
-
 /* QL17: Botón cerrar para bottom-sheet móvil */
 .dropdownPanelCerrar {
     display: flex;

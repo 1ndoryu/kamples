@@ -188,13 +188,6 @@
     line-height: 1.4;
 }
 
-.configSyncCheckbox {
-    margin-top: var(--espacio2xs);
-    accent-color: var(--acento);
-    cursor: pointer;
-    flex-shrink: 0;
-}
-
 /* Footer */
 .configSyncFooter {
     display: flex;

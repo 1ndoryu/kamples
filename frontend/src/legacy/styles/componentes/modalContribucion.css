@@ -21,17 +21,6 @@
     padding: 0;
 }
 
-.modalContribucionLeyenda {
-    font-size: calc(var(--fuenteMd) + 1px);
-    color: var(--textoSecundario);
-    margin-bottom: var(--espacioSm);
-    display: block;
-}
-
-.modalContribucionLeyenda strong {
-    color: var(--textoPrimario);
-}
-
 .modalContribucionModos {
     display: flex;
     flex-direction: row;
@@ -123,22 +112,6 @@
 
 .modalContribucionOpcion input[type="radio"] {
     display: none;
-}
-
-.modalContribucionSelect {
-    background: var(--fondoElevado3);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
-    color: var(--textoPrimario);
-    font-size: calc(var(--fuenteMd) + 1px);
-    padding: var(--espacioSm) var(--espacioMd);
-    width: 100%;
-    cursor: pointer;
-}
-
-.modalContribucionSelect:focus {
-    outline: none;
-    border-color: var(--bordeActivo);
 }
 
 .modalContribucionError {

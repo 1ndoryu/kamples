@@ -130,45 +130,8 @@
 }
 
 /* Sentinela de infinite scroll */
-.feedCancionesSentinela {
-    min-height: 1px;
-    text-align: center;
-}
-
-.feedCancionesCargandoMas {
-    padding: var(--espacioMd);
-    color: var(--textoTerciario);
-    font-size: var(--fuenteSm);
-}
-
-.feedCancionesFin {
-    padding: var(--espacioMd);
-    color: var(--textoTerciario);
-    font-size: var(--fuenteSm);
-}
 
 /* Botón manual de "Cargar más" para throttle de paginación */
-.feedCancionesBotonManual {
-    display: flex;
-    justify-content: center;
-    padding: var(--espacioLg) 0;
-}
-
-.feedCancionesCargarMas {
-    background: var(--fondoElevado2);
-    color: var(--textoSecundario);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
-    padding: var(--espacioSm) var(--espacioXl);
-    font-size: var(--fuenteSm);
-    cursor: pointer;
-    transition: background var(--transicionRapida), color var(--transicionRapida);
-}
-
-.feedCancionesCargarMas:hover {
-    background: var(--fondoElevado3);
-    color: var(--textoPrimario);
-}
 
 /* Contador de resultados */
 .feedCancionesContador {
