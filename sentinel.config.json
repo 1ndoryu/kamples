@@ -45,7 +45,8 @@
           "**/*.tsx",
           "**/*.js",
           "**/*.jsx",
-          "**/*.css"
+          "**/*.css",
+          "**/*.rs"
         ],
         "excludePatterns": [
           "**/node_modules/**",
