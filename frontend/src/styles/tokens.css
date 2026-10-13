@@ -47,10 +47,14 @@
   --espacio4xl: 64px;
   --espacio5xl: 80px;
   --espacio6xl: 96px;
+  --fuenteNano: 7px;
+  --fuenteMicro: 8px;
+  --fuenteMini: 9px;
   --fuente2xs: 10px;
   --fuenteXs: 11px;
   --fuenteSm: 12px;
   --fuenteMd: 13px;
+  --fuenteBase: 14px;
   --fuenteLg: 18px;
   --fuenteXl: 24px;
   --fuente2xl: 32px;

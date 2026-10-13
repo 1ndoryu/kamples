@@ -89,7 +89,7 @@
 }
 
 .mezcladorBloqueTitulo {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoPrimario);
     white-space: nowrap;
     overflow: hidden;
@@ -172,7 +172,7 @@
 }
 
 .mezcladorBloqueTag {
-    font-size: 7px;
+    font-size: var(--fuenteNano);
     font-weight: 700;
     letter-spacing: 0.5px;
     padding: 0 2px;
@@ -260,7 +260,7 @@
     border: none;
     border-top: 1px dashed var(--bordeSutil);
     color: var(--textoTerciario);
-    font-size: 11px;
+    font-size: var(--fuenteXs);
     cursor: pointer;
     transition: color var(--transicionRapida);
 }
@@ -270,7 +270,7 @@
     height: auto;
     padding: var(--espacioSm);
     min-width: unset;
-    font-size: 11px;
+    font-size: var(--fuenteXs);
 }
 
 .mezcladorAgregarPista:hover {

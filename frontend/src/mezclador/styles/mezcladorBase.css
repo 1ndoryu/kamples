@@ -184,7 +184,7 @@
 }
 
 .songPositionEtiqueta {
-    font-size: 9px;
+    font-size: var(--fuenteMini);
     color: var(--textoTerciario);
     text-transform: uppercase;
 }
@@ -231,7 +231,7 @@
 }
 
 .inputTempoEtiqueta {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
     text-transform: uppercase;
 }
@@ -296,7 +296,7 @@
 
 /* C216: Label y select de snap */
 .mezcladorSnapLabel {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
     text-transform: uppercase;
     letter-spacing: 0.3px;
@@ -309,7 +309,7 @@
     border-radius: var(--radiusMezclador);
     background: var(--fondoElevado1);
     color: var(--textoPrimario);
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     outline: none;
     cursor: pointer;
     min-width: 44px;
@@ -321,7 +321,7 @@
 
 /* C217: Label de nivel de zoom */
 .mezcladorZoomLabel {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
     min-width: 32px;
     text-align: center;

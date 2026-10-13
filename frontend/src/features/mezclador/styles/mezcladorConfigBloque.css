@@ -30,7 +30,7 @@
     display: flex;
     align-items: center;
     gap: 3px;
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
     background: var(--fondoElevado2);
     padding: 2px 6px;
@@ -56,7 +56,7 @@
 }
 
 .configBloqueControlEtiqueta {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
     min-width: 24px;
     text-transform: uppercase;
@@ -65,7 +65,7 @@
 }
 
 .configBloqueControlValor {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoSecundario);
     min-width: 32px;
     text-align: right;
@@ -158,7 +158,7 @@
 }
 
 .configBloqueSeccionTitulo {
-    font-size: 11px;
+    font-size: var(--fuenteXs);
     font-weight: 600;
     color: var(--textoSecundario);
     margin: 0 0 8px 0;
@@ -178,14 +178,14 @@
 }
 
 .configBloqueLabel {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
     min-width: 54px;
     flex-shrink: 0;
 }
 
 .configBloqueValor {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoSecundario);
     min-width: 36px;
     text-align: right;
@@ -206,7 +206,7 @@
 .configBloqueModoBtn {
     flex: 1;
     padding: 3px 6px;
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     font-weight: 500;
     color: var(--textoSecundario);
     background: none;
@@ -239,7 +239,7 @@
     align-items: center;
     gap: 4px;
     padding: 4px 8px;
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoSecundario);
     background: var(--fondoElevado2);
     border: 1px solid var(--bordeSutil);
@@ -267,7 +267,7 @@
 }
 
 .configBloquePendienteLabel {
-    font-size: 9px;
+    font-size: var(--fuenteMini);
     color: var(--textoTerciario);
     opacity: 0.6;
     font-style: italic;
@@ -287,12 +287,12 @@
 }
 
 .configBloqueInfoKey {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
 }
 
 .configBloqueInfoVal {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoSecundario);
     font-variant-numeric: tabular-nums;
     max-width: 160px;
@@ -309,7 +309,7 @@
     gap: 4px;
     width: 100%;
     padding: 6px;
-    font-size: 11px;
+    font-size: var(--fuenteXs);
     color: var(--textoSecundario);
     background: none;
     border: 1px dashed var(--bordeSutil);

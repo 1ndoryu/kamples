@@ -20,7 +20,7 @@
 }
 
 .browserDawTitulo {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     font-weight: 600;
     color: var(--textoSecundario);
     text-transform: uppercase;
@@ -35,7 +35,7 @@
 
 .browserDawVacio {
     padding: var(--espacioMd);
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
     text-align: center;
 }
@@ -54,7 +54,7 @@
     background: none;
     border: none;
     color: var(--textoSecundario);
-    font-size: 11px;
+    font-size: var(--fuenteXs);
     cursor: pointer;
     text-align: left;
     transition: background var(--transicionRapida);
@@ -73,7 +73,7 @@
 }
 
 .browserDawCarpetaConteo {
-    font-size: 9px;
+    font-size: var(--fuenteMini);
     color: var(--textoTerciario);
     flex-shrink: 0;
 }
@@ -88,7 +88,7 @@
     align-items: center;
     gap: 4px;
     padding: 2px var(--espacioSm);
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
     cursor: grab;
     transition: background var(--transicionRapida), color var(--transicionRapida);
@@ -117,7 +117,7 @@
 }
 
 .browserDawSampleVacio {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
     padding: 2px var(--espacioSm);
 }
@@ -128,6 +128,6 @@
     align-items: center;
     gap: 4px;
     padding: 2px var(--espacioSm) 2px 20px;
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
 }

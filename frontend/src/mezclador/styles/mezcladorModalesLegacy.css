@@ -33,7 +33,7 @@
 }
 
 .modalConfigTitulo {
-    font-size: 13px;
+    font-size: var(--fuenteMd);
     font-weight: 600;
     color: var(--textoPrimario);
     white-space: nowrap;
@@ -70,7 +70,7 @@
     gap: 8px;
     flex-wrap: wrap;
     margin-bottom: 12px;
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
 }
 
@@ -93,7 +93,7 @@
 }
 
 .modalConfigLabel {
-    font-size: 11px;
+    font-size: var(--fuenteXs);
     color: var(--textoSecundario);
     min-width: 60px;
     flex-shrink: 0;
@@ -130,7 +130,7 @@
 }
 
 .modalConfigValor {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoTerciario);
     min-width: 36px;
     text-align: right;
@@ -148,7 +148,7 @@
     align-items: center;
     gap: 4px;
     padding: 4px 8px;
-    font-size: 11px;
+    font-size: var(--fuenteXs);
     color: var(--textoSecundario);
     background: var(--fondoElevado2);
     border: 1px solid var(--bordeSutil);
@@ -180,7 +180,7 @@
     width: 100%;
     padding: 6px;
     margin-top: 8px;
-    font-size: 11px;
+    font-size: var(--fuenteXs);
     color: var(--textoSecundario);
     background: none;
     border: 1px dashed var(--bordeSutil);
@@ -207,7 +207,7 @@
 .modalConfigModoBtn {
     flex: 1;
     padding: 3px 8px;
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     font-weight: 500;
     color: var(--textoSecundario);
     background: none;
@@ -236,7 +236,7 @@
 
 .modalConfigSnapBtn {
     padding: 4px 10px;
-    font-size: 11px;
+    font-size: var(--fuenteXs);
     background: var(--fondoElevado2);
     border: 1px solid var(--bordeSutil);
     border-radius: var(--radiusMezclador);

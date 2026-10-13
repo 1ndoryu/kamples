@@ -37,7 +37,7 @@
 }
 
 .ventanaFlotanteTituloTexto {
-    font-size: 12px;
+    font-size: var(--fuenteSm);
     font-weight: 600;
     color: var(--textoPrimario);
     white-space: nowrap;
@@ -101,7 +101,7 @@
     align-items: center;
     gap: 4px;
     padding: 2px 8px;
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     color: var(--textoSecundario);
     background: var(--fondoElevado2);
     border: 1px solid var(--bordeSutil);
@@ -153,7 +153,7 @@
 }
 
 .knobControlValor {
-    font-size: 9px;
+    font-size: var(--fuenteMini);
     color: var(--textoSecundario);
     font-family: monospace;
     line-height: 1;
@@ -161,7 +161,7 @@
 }
 
 .knobControlEtiqueta {
-    font-size: 8px;
+    font-size: var(--fuenteMicro);
     color: var(--textoTerciario);
     text-transform: uppercase;
     letter-spacing: 0.5px;
