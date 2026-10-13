@@ -7,8 +7,8 @@
     border: 1px solid var(--bordeSutil);
     border-radius: var(--radiusMezclador);
     box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.5),
-        0 0 0 1px rgba(255, 255, 255, 0.05);
+        0 var(--espacioSm) var(--espacio2xl) var(--colorRgba-0-0-0-0_5),
+        0 0 0 var(--espacioMinimo) var(--hoverSutil);
     display: flex;
     flex-direction: column;
     max-height: 90vh;
@@ -17,7 +17,7 @@
 
 .ventanaFlotanteArrastrando {
     opacity: 0.92;
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 var(--espacioMd) var(--espacio3xl) var(--colorRgba-0-0-0-0_6);
 }
 
 .ventanaFlotanteTitulo {
@@ -71,7 +71,7 @@
 }
 
 .ventanaFlotanteBoton:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--colorRgba-255-255-255-0_1);
     color: var(--textoPrimario);
 }
 
@@ -140,16 +140,16 @@
 
 .knobControlSvg {
     cursor: ns-resize;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 var(--espacioMinimo) var(--espacio2xs) var(--colorRgba-0-0-0-0_3));
     transition: filter 0.15s;
 }
 
 .knobControlSvg:hover {
-    filter: drop-shadow(0 1px 4px rgba(108, 99, 255, 0.3));
+    filter: drop-shadow(0 var(--espacioMinimo) var(--espacioXs) var(--colorRgba-108-99-255-0_3));
 }
 
 .knobControlArrastrando .knobControlSvg {
-    filter: drop-shadow(0 0 6px rgba(108, 99, 255, 0.5));
+    filter: drop-shadow(0 0 var(--fuenteNano) var(--colorRgba-108-99-255-0_5));
 }
 
 .knobControlValor {

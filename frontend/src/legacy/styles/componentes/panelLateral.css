@@ -219,7 +219,7 @@
     left: 0;
     right: 0;
     padding: var(--espacioSm) var(--espacioMd);
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    background: linear-gradient(transparent, var(--colorRgba-0-0-0-0_7));
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -230,13 +230,13 @@
     font-size: var(--fuenteSm);
     font-weight: var(--pesoSemibold);
     line-height: 1.2;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 var(--espacioMinimo) var(--espacio3xs) var(--colorRgba-0-0-0-0_5);
 }
 
 .panelColeccionPortadaAutor {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--colorRgba-255-255-255-0_8);
     font-size: var(--fuenteXs);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 var(--espacioMinimo) var(--espacio3xs) var(--colorRgba-0-0-0-0_5);
 }
 
 .panelSugerenciasCargando,

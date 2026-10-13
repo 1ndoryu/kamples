@@ -161,8 +161,8 @@
 
 /* QL115: Botón deshacer combinación */
 .coleccionAccionUndo {
-    color: var(--advertencia, #e9a033);
-    border-color: var(--advertencia, #e9a033);
+    color: var(--advertencia, var(--colorRgba-233-160-51-1));
+    border-color: var(--advertencia, var(--colorRgba-233-160-51-1));
 }
 
 /* Grid de samples: usa .listaDeSamples centralizado en feedSamples.css */

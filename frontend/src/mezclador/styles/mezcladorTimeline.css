@@ -34,7 +34,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--colorRgba-255-255-255-0_08);
     border: 1px solid var(--acento);
     border-radius: var(--radiusMezclador);
     cursor: grab;
@@ -45,7 +45,7 @@
 }
 
 .minimapaViewport:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--colorRgba-255-255-255-0_12);
 }
 
 .minimapaViewport:active {

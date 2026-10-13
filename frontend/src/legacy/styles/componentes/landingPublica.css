@@ -82,7 +82,7 @@
 }
 
 .landingHeroBuscador button {
-    border-radius: 100px;
+    border-radius: var(--medidaPx-100);
 }
 
 .landingHeroAcciones {

@@ -56,7 +56,7 @@
     top: var(--espacioSm);
     left: var(--espacioSm);
     padding: 2px var(--espacioSm);
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: var(--colorRgba-0-0-0-0_7);
     color: var(--blanco);
     font-size: var(--fuenteXs);
     border-radius: var(--radioSm);

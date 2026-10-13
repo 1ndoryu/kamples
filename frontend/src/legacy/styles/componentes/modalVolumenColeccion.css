@@ -7,7 +7,7 @@
 .modalVolumenIcono {
     width: 56px;
     height: 56px;
-    border-radius: 16px;
+    border-radius: var(--espacioLg);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -17,7 +17,7 @@
 
 .modalVolumenTitulo {
     margin: 0;
-    font-size: 22px;
+    font-size: var(--medidaPx-22);
     font-weight: 700;
 }
 
@@ -35,11 +35,11 @@
 
 .modalVolumenResumen {
     padding: 12px 14px;
-    border-radius: 14px;
+    border-radius: var(--fuenteBase);
     background: var(--fondoElevado2);
     color: var(--colorTexto);
 }
 
 .modalVolumenResumenError {
-    color: var(--error, #c0392b);
+    color: var(--error, var(--colorRgba-192-57-43-1));
 }

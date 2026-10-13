@@ -85,7 +85,7 @@
     gap: var(--espacioSm);
     padding: var(--espacioSm) var(--espacioMd);
     background: var(--exitoMuted);
-    border: 1px solid rgba(16, 185, 129, 0.2);
+    border: var(--espacioMinimo) solid var(--colorRgba-16-185-129-0_2);
     border-radius: var(--radioMd);
     font-size: var(--fuenteSm);
     color: var(--exito);

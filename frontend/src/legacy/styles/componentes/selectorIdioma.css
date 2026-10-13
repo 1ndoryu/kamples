@@ -9,19 +9,19 @@
 .selectorIdioma {
     display: flex;
     align-items: center;
-    gap: var(--espacio3xs, 3px);
+    gap: var(--espacio3xs, var(--espacio3xs));
 }
 
 .selectorIdiomaBoton {
     display: flex;
     align-items: center;
-    gap: var(--espacio3xs, 3px);
-    padding: var(--espacio3xs, 3px) var(--espacioXs, 4px);
+    gap: var(--espacio3xs, var(--espacio3xs));
+    padding: var(--espacio3xs, var(--espacio3xs)) var(--espacioXs, var(--espacioXs));
     border: 1px solid transparent;
-    border-radius: var(--radioSm, 4px);
+    border-radius: var(--radioSm, var(--espacioXs));
     background: transparent;
-    color: var(--textoSecundario, #888);
-    font-size: var(--fuenteSm, 12px);
+    color: var(--textoSecundario, var(--colorGrisMedio));
+    font-size: var(--fuenteSm, var(--espacioMd));
     font-family: var(--fuentePrincipal);
     cursor: pointer;
     transition: background var(--transicionRapida, 150ms ease), color var(--transicionRapida, 150ms ease), border-color var(--transicionRapida, 150ms ease);
@@ -29,28 +29,28 @@
 }
 
 .selectorIdiomaBoton:hover {
-    background: var(--hoverSutil, rgba(255, 255, 255, 0.05));
-    color: var(--textoPrimario, #e8e1c9);
+    background: var(--hoverSutil, var(--hoverSutil));
+    color: var(--textoPrimario, var(--colorRgba-232-225-201-1));
 }
 
 .selectorIdiomaBoton--activo {
-    background: var(--acentoMuted, rgba(74, 102, 91, 0.15));
-    border-color: var(--acento, #4a665b);
-    color: var(--acento, #4a665b);
+    background: var(--acentoMuted, var(--fondoSeleccion));
+    border-color: var(--acento, var(--colorRgba-74-102-91-1));
+    color: var(--acento, var(--colorRgba-74-102-91-1));
     font-weight: var(--pesoSemibold, 500);
 }
 
 .selectorIdiomaBandera {
-    font-size: 1em;
+    font-size: var(--medidaEm-1);
     line-height: 1;
 }
 
 .selectorIdiomaEtiqueta {
-    font-size: var(--fuenteXs, 11px);
+    font-size: var(--fuenteXs, var(--fuenteXs));
     letter-spacing: 0.02em;
 }
 
 /* Variante completo: padding un poco más generoso */
 .selectorIdioma--completo .selectorIdiomaBoton {
-    padding: var(--espacioXs, 4px) var(--espacioSm, 8px);
+    padding: var(--espacioXs, var(--espacioXs)) var(--espacioSm, var(--espacioSm));
 }

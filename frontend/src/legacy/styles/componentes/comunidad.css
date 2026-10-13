@@ -66,7 +66,7 @@
     padding: 0;
     border-radius: var(--radioFull);
     background: var(--blanco);
-    border: 1.5px solid rgba(0, 0, 0, 0.12);
+    border: var(--espacioMinimo) solid var(--colorRgba-0-0-0-0_12);
     color: var(--negro);
     display: flex;
     align-items: center;
@@ -74,13 +74,13 @@
     transition:
         transform 0.12s,
         box-shadow 0.12s;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 var(--espacioMinimo) var(--espacioXs) var(--colorRgba-0-0-0-0_18);
     z-index: 1;
 }
 
 .comunidadBtnSeguirIcono.botonBase:hover {
     transform: scale(1.12);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 var(--espacio2xs) var(--espacioSm) var(--colorRgba-0-0-0-0_28);
 }
 
 /* Botón manual de "Cargar más" para throttle de paginación */

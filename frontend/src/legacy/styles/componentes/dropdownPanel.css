@@ -251,7 +251,7 @@
 .dropdownNombreConBadge {
     display: inline-flex;
     align-items: center;
-    gap: var(--espacio2xs, 2px);
+    gap: var(--espacio2xs, var(--espacio2xs));
 }
 
 .dropdownVerificado {

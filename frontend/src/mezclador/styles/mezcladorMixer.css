@@ -257,7 +257,7 @@
 }
 
 .slotEfectoOcupado {
-    background: rgba(79, 195, 247, 0.05);
+    background: var(--colorRgba-79-195-247-0_05);
 }
 
 .slotEfectoLed {
@@ -357,7 +357,7 @@
 
 .panelDetalleInsertColorActivo {
     border-color: var(--colorBlancoPuro);
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 var(--espacioXs) var(--colorRgba-255-255-255-0_4);
 }
 
 .panelDetalleInsertRouting {

@@ -9,7 +9,7 @@
 }
 
 .configBloqueSeccion {
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: var(--espacioMinimo) solid var(--hoverSutil);
     border-radius: var(--radiusMezclador);
     padding: 10px;
 }

@@ -281,7 +281,7 @@
     opacity: 0;
     transition: opacity 0.15s ease;
     z-index: 10;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 var(--espacioXs) var(--espacioMd) var(--colorRgba-0-0-0-0_3);
     margin-bottom: var(--espacioXs);
 }
 

@@ -256,5 +256,5 @@
 
 /* [193A-44] Toggle rápido "solo me encanta" — corazón activo */
 .filtroEncantaActivo {
-    color: var(--error, #e74c3c);
+    color: var(--error, var(--colorRgba-231-76-60-1));
 }

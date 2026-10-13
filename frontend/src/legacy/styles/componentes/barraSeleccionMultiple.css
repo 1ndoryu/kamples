@@ -52,12 +52,12 @@
 }
 
 .barraSeleccionBtnPeligro {
-    color: var(--error, #e55353);
+    color: var(--error, var(--colorRgba-229-83-83-1));
 }
 
 .barraSeleccionBtnPeligro:hover {
-    color: var(--error, #e55353);
-    background-color: var(--errorMuted, rgba(229, 83, 83, 0.1));
+    color: var(--error, var(--colorRgba-229-83-83-1));
+    background-color: var(--errorMuted, var(--colorRgba-229-83-83-0_1));
 }
 
 .barraSeleccionCerrar {

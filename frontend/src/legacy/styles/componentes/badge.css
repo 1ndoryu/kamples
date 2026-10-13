@@ -81,7 +81,7 @@
 
 /* Badge premium */
 .badge.badgePremium {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, var(--colorRgba-245-158-11-1), var(--colorRgba-217-119-6-1));
     color: var(--blanco);
     font-weight: var(--pesoSemibold);
 }

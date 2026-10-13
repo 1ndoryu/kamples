@@ -133,12 +133,12 @@
 }
 
 .papeleraDiasAdvertencia {
-    background-color: rgba(245, 158, 11, 0.15);
-    color: #f59e0b;
+    background-color: var(--colorRgba-245-158-11-0_15);
+    color: var(--colorRgba-245-158-11-1);
 }
 
 .papeleraDiasCritico {
-    background-color: rgba(239, 68, 68, 0.15);
+    background-color: var(--colorRgba-239-68-68-0_15);
     color: var(--colorRojoError);
 }
 

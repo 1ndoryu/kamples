@@ -98,7 +98,7 @@
 .authError {
     padding: var(--espacioSm) var(--espacioMd);
     background: var(--errorMuted);
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    border: var(--espacioMinimo) solid var(--colorRgba-239-68-68-0_3);
     border-radius: var(--radioSm);
     color: var(--error);
     font-size: var(--fuenteSm);

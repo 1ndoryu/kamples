@@ -27,7 +27,7 @@
     gap: 2px;
     padding: 4px 8px;
     background: var(--colorFondoAzulProfundo);
-    border-bottom: 1px solid #2a2a4a;
+    border-bottom: var(--espacioMinimo) solid var(--colorFondoPanelAzulGris);
     flex-shrink: 0;
     min-height: 32px;
 }
@@ -77,7 +77,7 @@
 .pianoRollSelectSnap {
     background: var(--colorFondoAzulNoche);
     color: var(--colorGrisPerla);
-    border: 1px solid #2a2a4a;
+    border: var(--espacioMinimo) solid var(--colorFondoPanelAzulGris);
     border-radius: var(--radiusMezclador);
     padding: 2px 6px;
     font-size: var(--fuenteXs);
@@ -112,8 +112,8 @@
 
 .pianoRollToggleActivo {
     color: var(--colorVerdeTerminal);
-    border-color: rgba(138, 226, 52, 0.3);
-    background: rgba(138, 226, 52, 0.08);
+    border-color: var(--colorRgba-138-226-52-0_3);
+    background: var(--colorRgba-138-226-52-0_08);
 }
 
 .pianoRollEtiquetaSnap {
@@ -138,7 +138,7 @@
     overflow: hidden;
     position: relative;
     background: var(--colorGrisCasiNegro);
-    border-right: 1px solid #333;
+    border-right: var(--espacioMinimo) solid var(--colorGrisCarbonClaro);
     z-index: 2;
 }
 
@@ -155,7 +155,7 @@
     display: flex;
     align-items: center;
     padding-left: 4px;
-    border-bottom: 1px solid #222;
+    border-bottom: var(--espacioMinimo) solid var(--colorRgba-34-34-34-1);
     cursor: pointer;
     transition: background 0.06s;
     box-sizing: border-box;
@@ -177,7 +177,7 @@
 }
 
 .pianoRollTeclaActiva {
-    background: #5c82ff !important;
+    background: var(--colorRgba-92-130-255-1) !important;
     color: var(--colorBlancoPuro) !important;
 }
 
@@ -205,7 +205,7 @@
     flex-shrink: 0;
     position: relative;
     background: var(--colorFondoAzulProfundo);
-    border-bottom: 1px solid #333;
+    border-bottom: var(--espacioMinimo) solid var(--colorGrisCarbonClaro);
     overflow: hidden;
 }
 
@@ -262,7 +262,7 @@
 }
 
 .pianoRollNotaSeleccionada {
-    outline: 1px solid #fff;
+    outline: var(--espacioMinimo) solid var(--colorBlancoPuro);
     outline-offset: -1px;
     z-index: 3;
 }
@@ -297,7 +297,7 @@
 
 .pianoRollNotaHandleIzq:hover,
 .pianoRollNotaHandleDer:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: var(--colorRgba-255-255-255-0_15);
 }
 
 /* Velocity visual: borde inferior proporcional */
@@ -307,7 +307,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--colorRgba-255-255-255-0_5);
     pointer-events: none;
 }
 
@@ -317,8 +317,8 @@
 
 .pianoRollMarquee {
     position: absolute;
-    border: 1px dashed rgba(100, 150, 255, 0.7);
-    background: rgba(100, 150, 255, 0.08);
+    border: var(--espacioMinimo) dashed var(--colorRgba-100-150-255-0_7);
+    background: var(--colorRgba-100-150-255-0_08);
     z-index: 5;
     pointer-events: none;
 }
@@ -328,8 +328,8 @@
 .pianoRollGhostNota {
     position: absolute;
     border-radius: var(--radiusMezclador);
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--hoverSutil);
+    border: var(--espacioMinimo) solid var(--colorRgba-255-255-255-0_08);
     pointer-events: none;
     z-index: 0;
 }
@@ -347,8 +347,8 @@
 /* PANEL DE CONTROL INFERIOR */
 
 .pianoRollPanelControl {
-    border-top: 1px solid #333;
-    background: #12122a;
+    border-top: var(--espacioMinimo) solid var(--colorGrisCarbonClaro);
+    background: var(--colorRgba-18-18-42-1);
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -361,7 +361,7 @@
     gap: 2px;
     padding: 2px 8px;
     background: var(--colorFondoAzulProfundo);
-    border-bottom: 1px solid #2a2a3a;
+    border-bottom: var(--espacioMinimo) solid var(--colorRgba-42-42-58-1);
     min-height: 22px;
 }
 
@@ -416,7 +416,7 @@
     bottom: 0;
     width: 3px;
     min-width: 3px;
-    background: #fcaf3e;
+    background: var(--colorRgba-252-175-62-1);
     border-radius: var(--radiusMezclador);
     cursor: ns-resize;
     transition: background 0.1s;
@@ -427,7 +427,7 @@
 }
 
 .pianoRollBarraControlSeleccionada {
-    outline: 1px solid rgba(255, 255, 255, 0.4);
+    outline: var(--espacioMinimo) solid var(--colorRgba-255-255-255-0_4);
 }
 
 /* MINIMAPA */
@@ -436,9 +436,9 @@
     flex-shrink: 0;
     height: 28px;
     position: relative;
-    background: #0e0e1e;
-    border-top: 1px solid #2a2a4a;
-    border-bottom: 1px solid #2a2a4a;
+    background: var(--colorRgba-14-14-30-1);
+    border-top: var(--espacioMinimo) solid var(--colorFondoPanelAzulGris);
+    border-bottom: var(--espacioMinimo) solid var(--colorFondoPanelAzulGris);
     cursor: pointer;
     overflow: hidden;
 }
@@ -457,11 +457,11 @@
     position: fixed;
     z-index: 9999;
     background: var(--colorFondoAzulNoche);
-    border: 1px solid #3a3a5a;
+    border: var(--espacioMinimo) solid var(--colorRgba-58-58-90-1);
     border-radius: var(--radiusMezclador);
     padding: 4px 0;
     min-width: 160px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 var(--espacioSm) var(--fuenteXl) var(--colorRgba-0-0-0-0_5);
     font-size: var(--fuenteXs);
     color: var(--colorGrisPerla);
 }
@@ -512,7 +512,7 @@
     width: 14px;
     height: 14px;
     border-radius: var(--radiusMezclador);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: var(--espacioMinimo) solid var(--colorRgba-255-255-255-0_15);
     cursor: pointer;
     transition: transform 0.1s;
 }
@@ -531,7 +531,7 @@
 .pianoRollMenuContextualVelBtn {
     flex: 1;
     padding: 3px 0;
-    border: 1px solid #3a3a5a;
+    border: var(--espacioMinimo) solid var(--colorRgba-58-58-90-1);
     background: transparent;
     color: var(--colorGrisClaro);
     border-radius: var(--radiusMezclador);
@@ -543,5 +543,5 @@
 .pianoRollMenuContextualVelBtn:hover {
     background: var(--colorFondoPanelAzul);
     color: var(--colorBlancoPuro);
-    border-color: #5a5a8a;
+    border-color: var(--colorRgba-90-90-138-1);
 }

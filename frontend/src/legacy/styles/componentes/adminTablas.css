@@ -279,7 +279,7 @@
 .tarjetaEstadoRuntime {
     font-size: var(--fuenteXs);
     color: var(--textoTerciario);
-    margin-top: var(--espacio2xs, 4px);
+    margin-top: var(--espacio2xs, var(--espacioXs));
 }
 
 .tarjetaEstadoControles {

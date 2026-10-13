@@ -156,7 +156,7 @@
 
 .mezcladorBloqueBoton:hover {
     color: var(--textoSecundario);
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--colorRgba-255-255-255-0_08);
 }
 
 .mezcladorBloqueBoton.mezcladorBloqueEliminar:hover {
@@ -177,7 +177,7 @@
     letter-spacing: 0.5px;
     padding: 0 2px;
     border-radius: var(--radiusMezclador);
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--colorRgba-255-255-255-0_12);
     color: var(--textoSecundario);
     line-height: 1.4;
     text-transform: uppercase;

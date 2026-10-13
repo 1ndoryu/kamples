@@ -45,27 +45,27 @@
 
 .authCampo span {
   color: var(--colorTextoSuave);
-  font-size: 0.92rem;
+  font-size: var(--medidaRem-0_92);
 }
 
 .authCampo input {
   width: 100%;
   min-height: 52px;
   padding: 0 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: var(--espacioMinimo) solid var(--colorRgba-255-255-255-0_08);
   border-radius: var(--radioMedio);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--hoverSutil);
   color: var(--colorTexto);
 }
 
 .authCampo input:focus {
-  outline: 2px solid rgba(155, 242, 200, 0.24);
-  border-color: rgba(155, 242, 200, 0.3);
+  outline: var(--espacio2xs) solid var(--colorRgba-155-242-200-0_24);
+  border-color: var(--colorRgba-155-242-200-0_3);
 }
 
 .authPanelSecundario h2 {
   margin-top: 0;
-  font-size: 1.6rem;
+  font-size: var(--medidaRem-1_6);
 }
 
 .authPanelSecundario a {

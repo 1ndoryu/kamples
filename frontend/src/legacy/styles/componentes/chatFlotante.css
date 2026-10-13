@@ -248,7 +248,7 @@
     background-color: var(--fondoElevado2);
     border: 1px solid var(--bordeSutil);
     border-radius: var(--radioMd);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 var(--espacioXs) var(--espacioLg) var(--colorRgba-0-0-0-0_25);
     z-index: 10;
     padding: var(--espacioXs) 0;
 }

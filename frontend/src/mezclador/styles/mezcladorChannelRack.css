@@ -91,7 +91,7 @@
     background: var(--fondoElevado1);
     border: 1px solid var(--bordeSutil);
     border-radius: var(--radiusMezclador);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 var(--espacioSm) var(--fuenteXl) var(--colorRgba-0-0-0-0_5);
     max-height: 250px;
     overflow-y: auto;
     min-width: 180px;
@@ -229,8 +229,8 @@
     cursor: pointer;
     user-select: none;
     flex-shrink: 0;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    box-shadow: inset 0 0 0 var(--espacioMinimo) var(--hoverSutil);
+    text-shadow: 0 var(--espacioMinimo) var(--espacio2xs) var(--colorRgba-0-0-0-0_8);
     overflow: hidden;
     padding: 0 4px;
     transition:
@@ -275,7 +275,7 @@
     min-width: 0;
     align-items: center;
     padding-left: 8px; /* Separación visual del control */
-    background: rgba(0, 0, 0, 0.2); /* Fondo sutil para el área de pasos */
+    background: var(--colorRgba-0-0-0-0_2); /* Fondo sutil para el área de pasos */
     height: 100%;
     border-radius: var(--radiusMezclador);
     padding-right: 2px;
@@ -294,7 +294,7 @@
     padding: 0;
     transition: all 0.05s;
     flex-shrink: 1;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 var(--espacioMinimo) 0 var(--hoverSutil);
 }
 
 /* Colores de fondo inactivos (Alternancia de grupos) */
@@ -312,7 +312,7 @@
 .pasoBotonActivo {
     background: var(--acento); /* Color global de acento */
     box-shadow: 0 0 6px var(--acentoMuted);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: var(--espacioMinimo) solid var(--colorRgba-255-255-255-0_1);
 }
 
 /* Variaciones sutiles si se desea diferenciar impares/pares activos */

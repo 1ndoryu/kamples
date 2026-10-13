@@ -49,11 +49,11 @@
   display: block;
   margin-bottom: 12px;
   color: var(--colorTextoSuave);
-  font-size: 0.92rem;
+  font-size: var(--medidaRem-0_92);
 }
 
 .statCard strong {
-  font-size: 1.9rem;
+  font-size: var(--medidaRem-1_9);
 }
 
 @media (max-width: 1024px) {

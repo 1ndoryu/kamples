@@ -19,13 +19,13 @@
   margin-bottom: 24px;
   border: 1px solid var(--colorBorde);
   border-radius: var(--radioGrande);
-  background: rgba(8, 22, 30, 0.78);
+  background: var(--colorRgba-8-22-30-0_78);
   backdrop-filter: blur(18px);
   box-shadow: var(--sombraGrande);
 }
 
 .logo {
-  font-size: 1.4rem;
+  font-size: var(--medidaRem-1_4);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -49,7 +49,7 @@
   justify-content: center;
   min-height: 44px;
   padding: 0 16px;
-  border-radius: 999px;
+  border-radius: var(--medidaPx-999);
   border: 1px solid transparent;
   transition:
     transform 180ms ease,
@@ -65,23 +65,23 @@
 .enlaceActivo,
 .enlace:hover {
   color: var(--colorTexto);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--hoverSutil);
 }
 
 .accionPrimaria {
-  border-color: rgba(155, 242, 200, 0.3);
-  background: linear-gradient(135deg, rgba(155, 242, 200, 0.2), rgba(93, 216, 164, 0.34));
+  border-color: var(--colorRgba-155-242-200-0_3);
+  background: linear-gradient(135deg, var(--colorRgba-155-242-200-0_2), var(--colorRgba-93-216-164-0_34));
   color: var(--colorTexto);
 }
 
 .accionSecundaria {
-  border-color: rgba(137, 198, 255, 0.24);
-  background: rgba(137, 198, 255, 0.08);
+  border-color: var(--colorRgba-137-198-255-0_24);
+  background: var(--colorRgba-137-198-255-0_08);
   color: var(--colorTexto);
 }
 
 .accionFantasma {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--colorRgba-255-255-255-0_08);
   background: transparent;
   color: var(--colorTextoSuave);
 }
@@ -129,7 +129,7 @@
 .heroEyebrow {
   margin: 0 0 8px;
   color: var(--colorPrimario);
-  font-size: 0.82rem;
+  font-size: var(--medidaRem-0_82);
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -155,24 +155,24 @@
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border-radius: 999px;
-  font-size: 0.92rem;
+  border-radius: var(--medidaPx-999);
+  font-size: var(--medidaRem-0_92);
 }
 
 .estadoOk {
   color: var(--colorExito);
-  background: rgba(155, 242, 200, 0.12);
+  background: var(--colorRgba-155-242-200-0_12);
 }
 
 .estadoError,
 .mensajeError {
   color: var(--colorError);
-  background: rgba(255, 139, 139, 0.12);
+  background: var(--colorRgba-255-139-139-0_12);
 }
 
 .estadoNeutral {
   color: var(--colorTextoSuave);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--hoverSutil);
 }
 
 .mensajeError {

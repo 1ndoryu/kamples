@@ -298,12 +298,12 @@
     height: 28px;
     border: 1px solid var(--bordeSutil);
     border-radius: var(--radiusMezclador);
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--colorRgba-0-0-0-0_3);
 }
 
 .medidorPicos {
     height: 28px;
     border: 1px solid var(--bordeSutil);
     border-radius: var(--radiusMezclador);
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--colorRgba-0-0-0-0_3);
 }

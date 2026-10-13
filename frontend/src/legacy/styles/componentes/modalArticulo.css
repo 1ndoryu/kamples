@@ -353,7 +353,7 @@
     width: 14px;
     height: 14px;
     border: 2px solid var(--bordeSutil);
-    border-radius: 3px;
+    border-radius: var(--espacio3xs);
     display: flex;
     align-items: center;
     justify-content: center;

@@ -529,13 +529,13 @@
 .crearMensajeError {
     background-color: var(--errorMuted);
     color: var(--error);
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    border: var(--espacioMinimo) solid var(--colorRgba-239-68-68-0_2);
 }
 
 .crearMensajeExito {
     background-color: var(--exitoMuted);
     color: var(--exito);
-    border: 1px solid rgba(34, 197, 94, 0.2);
+    border: var(--espacioMinimo) solid var(--colorRgba-34-197-94-0_2);
 }
 
 .crearMensajeCerrar {
