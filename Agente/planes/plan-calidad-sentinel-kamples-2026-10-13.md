@@ -64,9 +64,31 @@ Línea base: `Arranque gate "KAMPLES" --inicio` (hallazgos guardados en `workspa
 ## Estado
 
 - F1 (F1a, F1b, F1c): hecho. Gate `Arranque gate "KAMPLES" --cierre`: 0 nuevos, 254 resueltos (base 2797, ahora 2543).
-- Siguiente paso: abrir F2 (mecánica) como lote en este plan.
-- F2, F3: sin empezar.
+- F2 (mecánica): lotes hechos en `ffb669f`, `e695539`, `1cdd550`. Tablero 2026-10-13 13:04Z: KAMPLES 2473 (base 2797).
+- F2 restante (fuera de F3 visual):
+  - `console-production` 129 (frontend 117, clients 12): decisión pendiente de enfoque (`crearLogger` de `frontend/src/legacy/services/logger.ts`). Cambia la salida de consola en producción; no se toca sin confirmar que el logger no silencia errores (§4).
+  - `token-unused` 22, `token-duplicado-cross-archivo` 8: tokens de `frontend/src/styles/tokens.css`; cambian CSS, verificar visualmente.
+  - `barras-decorativas` 3, `any-type-explicito` 1, `todo-prosa-sin-marcador` 1, `singleton-mutable-state` 1: pequeños, sin decisión de diseño.
+- F3 (diseño y CSS, requiere verificación visual; sin visuales nuevos): `valorHardcoded` 494, `claseHuerfana` 453, `css-hardcoded-value` 346, `cssInlineReact` 193, `inline-style-prohibido` 178, `window-reference-outside-platform` 141, `css-especificacion-diseno-local` 128, `dom-access-outside-platform` 109, `css-adhoc-button-style` 58, `cssInlineScript` 58, `css-elemento-html-directo` 48, `modal-*` 60, `directorio-abarrotado` 21, `limite-lineas` 9+3, `modal-con-titulo` 8, `componente-artesanal` 4, `usestate-excesivo` 2, `componente-sin-hook-glory` 2, `mixed-barrel-logic` 2, `button-clase-especifica` 1.
+  - Por raíz: `frontend` 1111, `[varsense] frontend` 1228 (solapan con las de CSS), `clients` 134.
 - F4 (Rust, 194 errores): pendiente; el cambio de config vive en `rescate/sentinel-rs-kamples`, no en `main`.
+
+## Backlog anotado (no olvidar)
+
+Falsos positivos y huecos de herramientas, para el final (actualizar workspace-manager/Sentinel/VarSense):
+
+- Vendorizado: hallazgos en `frontend/src/glory-core/` y `glory-css/` (no se editan).
+- `navigationStore.ts:111`: prosa con «todo» sin marcador (posible falso positivo).
+- `glory-core/utils/apiCache.ts:14`: singleton mutable, aceptado.
+- `PageBuilder.tsx:97`: `any` a revisar; posible falso positivo si es tipo externo.
+- `objeto-mutable-exportado`: falso negativo sobre `Readonly<…>` (se resolvió con `Object.freeze`).
+- `innerhtml-variable`: el `sentinel-disable` debe usar ese id exacto.
+- `key-index-lista`: marca `Array.from().map` con índice en esqueletos estáticos.
+- Duplicados `features/mezclador` vs `src/mezclador`; `legacy/islands` vs `features`.
+- Hallazgo `sinCommit` obsoleto (1) en el tablero.
+- Artefacto `(área) :: salud` (1): ruta en `C:\tmp`, no del proyecto.
+- `alta` checklist (`registro`): no acepta `noAplica`. Falso positivo en opencode-delegate, que tiene `sin-servicio`.
+- `Arranque gate --cierre` exige línea base `--inicio`; proyectos dados de alta después no la tienen.
 
 ## Definition of Done
 
