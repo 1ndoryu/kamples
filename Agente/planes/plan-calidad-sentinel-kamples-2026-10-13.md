@@ -76,6 +76,10 @@ Línea base: `Arranque gate "KAMPLES" --inicio` (hallazgos guardados en `workspa
   - `barras-decorativas` 3, `any-type-explicito` 1, `todo-prosa-sin-marcador` 1, `singleton-mutable-state` 1: pequeños, sin decisión de diseño.
 - F3 (diseño y CSS, requiere verificación visual; sin visuales nuevos): `valorHardcoded` 494, `claseHuerfana` 453, `css-hardcoded-value` 346, `cssInlineReact` 193, `inline-style-prohibido` 178, `window-reference-outside-platform` 141, `css-especificacion-diseno-local` 128, `dom-access-outside-platform` 109, `css-adhoc-button-style` 58, `cssInlineScript` 58, `css-elemento-html-directo` 48, `modal-*` 60, `directorio-abarrotado` 21, `limite-lineas` 9+3, `modal-con-titulo` 8, `componente-artesanal` 4, `usestate-excesivo` 2, `componente-sin-hook-glory` 2, `mixed-barrel-logic` 2, `button-clase-especifica` 1.
   - Por raíz: `frontend` 1111, `[varsense] frontend` 1228 (solapan con las de CSS), `clients` 134.
+  - Lote F3 font-size (`c092ae5`): 172 declaraciones → tokens `--fuente*` (sin cambio de valor resuelto).
+  - Lote F3 colores (`c8540f7`): 72 declaraciones `color/background/border-color` en 14 archivos → `--colorBlancoPuro`…`--colorFondoPanelAzul` (tokens.css :root, invariantes al tema).
+  - Lote F4 colores (`040c55c`): 33 declaraciones hex (`#2a2a4a`, `#1e1e38`, `#16162a`, `#ef4444`…) → tokens `--colorFondoAzulNoche`…`--colorVerdeTerminal`.
+  - Pendiente tras F4: `border:` shorthand con hex (`pianoRoll.css`, no lo cubre la regla), rgba() de fondos, `border-radius` 4–28px, `font-size` 12px/14px/11px/`0.92rem` restantes, y `var(--error, #e55353)` (fallback literal).
 - F4 (Rust, 194 errores): pendiente; el cambio de config vive en `rescate/sentinel-rs-kamples`, no en `main`.
 
 ## Backlog anotado (no olvidar)
@@ -83,6 +87,10 @@ Línea base: `Arranque gate "KAMPLES" --inicio` (hallazgos guardados en `workspa
 Falsos positivos y huecos de herramientas, para el final (actualizar workspace-manager/Sentinel/VarSense):
 
 - Vendorizado: hallazgos en `frontend/src/glory-core/` y `glory-css/` (no se editan).
+- `token-duplicado-cross-archivo` en `tokens.css:23-24` (`--fondoElevado2/3: var(--fondoElevado1)`): falso positivo, son alias por `var()`, no valores duplicados; la herramienta no distingue alias de literal repetido.
+- `valorHardcoded` marca `var(--x, #literal)` como literal hardcodeado: el fallback no es un valor de diseño. Falso positivo parcial; la herramienta debería ignorar el fallback.
+- `valorHardcoded` no cubre el shorthand `border:` con color hex (solo `border-color`): hueco de cobertura, no falso positivo.
+- Tablero obsoleto tras cada lote: `board-f3.json` se escaneó antes de `c8540f7`; el forzado debe repetirse por lote.
 - `navigationStore.ts:111`: prosa con «todo» sin marcador (posible falso positivo).
 - `glory-core/utils/apiCache.ts:14`: singleton mutable, aceptado.
 - `PageBuilder.tsx:97`: `any` a revisar; posible falso positivo si es tipo externo.
