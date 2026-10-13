@@ -89,6 +89,13 @@ Línea base: `Arranque gate "KAMPLES" --inicio` (hallazgos guardados en `workspa
   - Tablero (`escaneadoEn` 2026-10-13T14:00Z, KAMPLES total 1971) por regla: claseHuerfana 453, css-hardcoded-value 245, valorHardcoded 226, cssInlineReact 193, inline-style-prohibido 178, window-reference-outside-platform 141, css-especificacion-diseno-local 128, dom-access-outside-platform 109, css-adhoc-button-style 58, cssInlineScript 58, css-elemento-html-directo 48, modal-* 50, console-production 23 (todas en `glory-core`, vendorizado), directorio-abarrotado 21, limite-lineas 9+3, modal-con-titulo 8, componente-artesanal 4, otras ≤3.
   - **No resuelto en esta sesión y por qué:** F3 (≈1.9k) requiere decisión por caso y verificación visual (p. ej. `border-radius` 6–14px no tiene token exacto: cambiarlo sí altera el render). `limite-lineas` y `directorio-abarrotado` exigen dividir o mover archivos (refactor estructural). `usestate-excesivo`, `componente-sin-hook-glory` y `mixed-barrel-logic` son refactors de comportamiento. `console-production` (glory-core) es vendorizado: no se edita.
   - **Bloqueo de verificación funcional:** navegador y backend (cuenta admin, subida de audio/imágenes) siguen sin credenciales de PostgreSQL de prueba. Propuesta: base `kamples_verif` (no `glory_db`), credenciales que aporte la usuaria.
+- **Sesión 13AA-3 (claseHuerfana CSS):**
+  - Lote `4c7ba01`: 268 reglas en 37 archivos de `frontend/src/legacy/styles` quitadas. Criterio: todos los selectores de la regla contienen una clase huérfana (nombre ausente de todo `frontend/src` como literal y sin construcción dinámica por prefijo/sufijo; 199 nombres únicos; cero referencias fuera de `frontend/src`). Script: scratchpad de la sesión, no en el repo.
+  - Verificación: `npx vite build` exit 0 (`C:/tmp/kamples-dist-13aa3`); gate `--cierre` 0 nuevos, 1050 resueltos, 1747 abiertos (base 2797); diff solo CSS (1771 líneas borradas, 0 añadidas).
+  - Sin cambio visual esperado: ningún elemento del DOM puede coincidir con estas reglas. **No verificado en navegador** (bloqueo de credenciales); verificación estática.
+  - Riesgo conocido: el guard de construcción dinámica es heurístico (tallo + ≤4 caracteres antes de `${` o `"+`; sufijo tras `}`). Un nombre compuesto con separador mayor no se detectaría; la búsqueda de composición en `frontend/src` no encontró ninguno.
+  - Decidido: no se borran reglas con `:not(.x)` ni selectores mixtos; la única regla con clase huérfana en `:not` (`.experimentosAccion:hover:not(:disabled)`) tiene la clase como sujeto y es correcta.
+  - Decidido: `features/mezclador` (duplicado no importado) no se toca en este lote: los archivos divergen, y decidir cuál es canónico exige comparar, no solo borrar. Pendiente en backlog.
 
 ## Backlog anotado (no olvidar)
 
@@ -110,6 +117,16 @@ Falsos positivos y huecos de herramientas, para el final (actualizar workspace-m
 - Artefacto `(área) :: salud` (1): ruta en `C:\tmp`, no del proyecto.
 - `alta` checklist (`registro`): no acepta `noAplica`. Falso positivo en opencode-delegate, que tiene `sin-servicio`.
 - `Arranque gate --cierre` exige línea base `--inicio`; proyectos dados de alta después no la tienen.
+- **Dos escalas de conteo:** el tablero suma total (1971 en 13AA-1) y el gate cuenta abiertos frente a base (1970 vs 2797 base). Documentar o unificar la métrica para que «problemas» signifique lo mismo en ambos.
+- **930 entradas sin desglose por regla** (VarSense y no parseadas): el tablero no las agrupa por regla; el desglose por regla suma ~1.0k. Añadir desglose o clasificar las no parseadas.
+- `claseHuerfana` vendorizado (112 en `glory-core`/`glory-css`/`clients`): falso positivo para el proyecto, no editable. Excluir por ruta vendorizada.
+- `claseHuerfana` por construcción dinámica (falso positivo): `avatarXs`–`avatar2xl`, `badgeXs`, `badgeNeutro`, `badgeAcento`, `badgeExito`, `variantePrimario`, `varianteGhost`, `variantePeligro`, `tamanoMd`, `adminModeracionDetalle`. El nombre se compone en runtime con prefijo; la herramienta debería reconocer el prefijo o aceptar un patrón declarado.
+- `claseHuerfana` sin composición detectada en `frontend/src`: 13AA-3 quitó 268 reglas. Para completar la herramienta: detectar clases por sufijo/prefijo dinámico con tokenizador en vez de búsqueda por substring.
+- `valorHardcoded` vendorizado (107): falso positivo para el proyecto.
+- `cssInlineReact` (187 editables, 6 vendor): algunos valores son dinámicos (props, cálculos) y no son estilo inline de diseño; distinguir valor literal de expresión.
+- Duplicados `features/mezclador` vs `src/mezclador` (alias `@mezclador` en vite.config.ts:16): hallazgos contados en las dos copias. Pendiente: decidir cuál es canónica y borrar la otra por lote (no tocado en 13AA-3). Divergen en ErrorBoundaryMezclador.tsx, useExportarMezcla.ts, useTimeline.ts, motorAudioService.ts, accionesCargaAudio.ts.
+- Dependabot de GitHub: 67 vulnerabilidades en la rama por defecto (2 críticas, 35 altas). No gestionadas en el tablero; fuera de alcance de este plan, anotado.
+- Proyectos con `PORT=3000` en `.env`/`.env.example` (NAKOMI, PROYECTO TASKS, WANDORIUS, RESTAURANTE): los dueños deciden; el tablero no los señala.
 
 ## Definition of Done
 
