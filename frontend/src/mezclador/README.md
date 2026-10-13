@@ -17,7 +17,7 @@ Origen: `glorytemplate/Mezclador/` (legado WordPress).
 1. **174A-109b-fase4 — montar ruta SPA:**
    - Añadir `<Route path="/mezclador" element={<MezcladorPanel />} />` al router.
    - Lazy-load la feature porque pesa ≥100 archivos + dependencias de audio (`soundtouchjs`, `lucide-react`).
-2. **174A-109b-fase5 — quitar `exclude: src/features/**/*` del `tsconfig.json` cuando todas las features compilen.**
+2. ~~174A-109b-fase5 — quitar `exclude: src/features/**/*` del `tsconfig.json`~~ — hecho en 13AA-8: `src/features/` eliminado (copia muerta) y la exclusión retirada.
 
 ## Notas de adaptación
 

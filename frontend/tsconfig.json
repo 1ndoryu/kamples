@@ -24,6 +24,5 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/legacy", "src/glory-core", "src/mezclador", "src/main.tsx", "src/bootstrap", "src/vite-env.d.ts"],
-  "exclude": ["src/features/**/*"]
+  "include": ["src/legacy", "src/glory-core", "src/mezclador", "src/main.tsx", "src/bootstrap", "src/vite-env.d.ts"]
 }

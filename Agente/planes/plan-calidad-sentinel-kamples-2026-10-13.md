@@ -159,3 +159,10 @@ Falsos positivos y huecos de herramientas, para el final (actualizar workspace-m
 - Decidido (F3 valores): para literales sin token exacto, redondear al token más cercano cuando la diferencia sea pequeña; crear token nuevo cuando esté lejos, de modo que el valor renderizado no cambie. Sin cambio visual salvo redondeos aceptados por la usuaria.
 - Decidido (verificación en navegador): base `kamples_verif` en el PostgreSQL local, no `glory_db`. Credenciales pendientes de la usuaria; cuenta admin y contenido de prueba (audio, imagen) generados por el agente.
 - Decidido (vendorizados, 363): tarea upstream aparte en su repo de origen; no se editan copias vendorizadas ni se excluyen en silencio de `sentinel.config.json`.
+
+### Sesión 13AA-8 (copia muerta `frontend/src/features/`)
+
+- Comprobado antes de borrar: ningún import vivo (grep de `features/` solo en docs y `tsconfig.json`). 37 de 39 `.tsx/.ts` idénticos a su equivalente en `legacy/islands/`; `player/ReproductorIsland.tsx` y `samples/SampleDetalleIsland.tsx` son versiones antiguas (la viva tiene los arreglos).
+- Eliminado con `git rm` (40 archivos, incluido `features/README.md`). Quitada la exclusión `src/features/**/*` de `frontend/tsconfig.json`. Recuperable desde git.
+- Evidencia: `vite build` OK; `tsc --noEmit` con 3 errores preexistentes en `src/legacy/hooks/useAuth.ts` (`require` sin `@types/node`), ajenos al cambio; gate `--cierre`: 0 nuevos, tablero 1158 → 1110.
+- Pendiente: los errores `require` de `useAuth.ts` (tarea aparte).
