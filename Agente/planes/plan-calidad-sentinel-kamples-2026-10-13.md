@@ -52,6 +52,8 @@ Añadir `**/*.rs` a `includePatterns` de `sentinel.config.json` sube el análisi
 3. `npm run quality:lock:check` y `npm run quality:doctor` en la raíz de KAMPLES
 4. Relectura del tablero (`GET http://127.0.0.1:8787/api/consola/problemas`)
 5. Cambios de comportamiento visual: registrar la limitación (E2E y verify-parity requieren backend en `:3001` y BD, no ejecutados en esta tarea).
+6. **Datos de prueba para verificar (pedido de la usuaria, 2026-10-13):** para cada zona tocada, probar con datos reales en el entorno local: crear una cuenta admin de prueba, subir contenido de prueba (audio, imágenes y demás según la zona) y recorrer los flujos afectados. Solo en host local (`localhost`), con valores de prueba generados por el agente; nunca credenciales reales ni de producción; nunca `config/settings.json` en commits.
+7. **Sin cambios visuales:** la UI de KAMPLES ya se ve bien. Se permiten ajustes menores de coherencia visual, pero el objetivo es que todo sea coherente como se espera, no rediseñar. Comparar con la huella de render de las rutas antes y después de cada lote.
 
 Línea base: `Arranque gate "KAMPLES" --inicio` (hallazgos guardados en `workspace-manager/data/gate-inicio/KAMPLES.json`). Cierre: `Arranque gate "KAMPLES" --cierre` sin hallazgos nuevos.
 
@@ -66,7 +68,10 @@ Línea base: `Arranque gate "KAMPLES" --inicio` (hallazgos guardados en `workspa
 - F1 (F1a, F1b, F1c): hecho. Gate `Arranque gate "KAMPLES" --cierre`: 0 nuevos, 254 resueltos (base 2797, ahora 2543).
 - F2 (mecánica): lotes hechos en `ffb669f`, `e695539`, `1cdd550`. Tablero 2026-10-13 13:04Z: KAMPLES 2473 (base 2797).
 - F2 restante (fuera de F3 visual):
-  - `console-production` 129 (frontend 117, clients 12): decisión pendiente de enfoque (`crearLogger` de `frontend/src/legacy/services/logger.ts`). Cambia la salida de consola en producción; no se toca sin confirmar que el logger no silencia errores (§4).
+  - `console-production`: hecho en `3d55e63` (`clients/desktop`, 176 llamadas → `logSync`, tsc 0 errores) y `2fcd15a` (`useWebSocket.ts`, comentario JSDoc). Queda `frontend/src/glory-core` 23 (vendorizado, no se edita: va al backlog).
+  - **Decidido (logger):** `clients/desktop` usa `logSync` de `src/services/syncLogger.ts`, que guarda en el buffer de diagnóstico y además imprime en consola (`agregarAlBuffer`), así que es reemplazo directo sin perder salida. Mapeo: `console.log`→`logSync.info`, `info`→`info`, `warn`→`warn`, `error`→`error`; módulo = nombre del archivo sin extensión. `frontend/src/legacy` usa `crearLogger` (en producción solo emite errores: los `info/debug` dejan de salir en producción; es el diseño del logger, y los errores siguen visibles).
+  - Sin `node_modules` en `clients/desktop`: `npm ci` previo al baseline de `type-check` (hecho, 142 paquetes; `tsc --noEmit` = 0 errores).
+  - Baseline `frontend` `type-check`: 3 errores TS2591 en `frontend/src/legacy/hooks/useAuth.ts` (`require` sin `@types/node`), preexistentes y no causados por estos cambios. Pendiente de explicar, no de corregir en F2.
   - `token-unused` 22, `token-duplicado-cross-archivo` 8: tokens de `frontend/src/styles/tokens.css`; cambian CSS, verificar visualmente.
   - `barras-decorativas` 3, `any-type-explicito` 1, `todo-prosa-sin-marcador` 1, `singleton-mutable-state` 1: pequeños, sin decisión de diseño.
 - F3 (diseño y CSS, requiere verificación visual; sin visuales nuevos): `valorHardcoded` 494, `claseHuerfana` 453, `css-hardcoded-value` 346, `cssInlineReact` 193, `inline-style-prohibido` 178, `window-reference-outside-platform` 141, `css-especificacion-diseno-local` 128, `dom-access-outside-platform` 109, `css-adhoc-button-style` 58, `cssInlineScript` 58, `css-elemento-html-directo` 48, `modal-*` 60, `directorio-abarrotado` 21, `limite-lineas` 9+3, `modal-con-titulo` 8, `componente-artesanal` 4, `usestate-excesivo` 2, `componente-sin-hook-glory` 2, `mixed-barrel-logic` 2, `button-clase-especifica` 1.
