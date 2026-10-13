@@ -5,6 +5,8 @@ import { Fragment, type ReactNode, useEffect, useLayoutEffect, useRef, useState 
 import { createPortal } from 'react-dom';
 import '../../styles/legacyUi.css';
 import { BotonBase } from './BotonBase';
+import { anchoVentana, altoVentana } from '../../../glory-core/platform/ventana';
+import { cuerpoDocumento } from '../../../glory-core/platform/documento';
 
 export interface MenuItemDef {
   id: string;
@@ -64,8 +66,8 @@ export const MenuContextual = ({
     const targetLeft = alinearDerecha ? x - width : x;
 
     setPosition({
-      left: Math.max(margin, Math.min(targetLeft, window.innerWidth - width - margin)),
-      top: Math.max(margin, Math.min(y, window.innerHeight - height - margin)),
+      left: Math.max(margin, Math.min(targetLeft, anchoVentana() - width - margin)),
+      top: Math.max(margin, Math.min(y, altoVentana() - height - margin)),
     });
   }, [abierto, alinearDerecha, items.length, x, y]);
 
@@ -117,7 +119,7 @@ export const MenuContextual = ({
         {renderedItems}
       </div>
     </>,
-    document.body,
+    cuerpoDocumento(),
   );
 };
 

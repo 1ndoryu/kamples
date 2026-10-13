@@ -3,6 +3,8 @@
  * Replica la lógica de dibujo de useWaveformPlayer (barras simétricas).
  */
 
+import { crearElemento, cuerpoDocumento } from '@/platform/documento';
+
 const SVG_WIDTH = 800;
 const SVG_HEIGHT = 120;
 const ANCHO_BARRA = 2;
@@ -62,12 +64,12 @@ export async function descargarWaveformSvg(
 
     const blob = new Blob([svg], { type: 'image/svg+xml' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = crearElemento('a');
     a.href = url;
     a.download = `${nombreArchivo}_waveform.svg`;
-    document.body.appendChild(a);
+    cuerpoDocumento().appendChild(a);
     a.click();
-    document.body.removeChild(a);
+    cuerpoDocumento().removeChild(a);
     URL.revokeObjectURL(url);
 
     return true;

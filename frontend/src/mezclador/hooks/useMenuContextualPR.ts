@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { usePianoRollStore } from '../stores/pianoRollStore';
 import { useNotasStore } from '../stores/accionesNotas';
+import { anchoVentana, altoVentana } from '../../glory-core/platform/ventana';
 
 export interface OpcionMenu {
     label: string;
@@ -176,8 +177,8 @@ export const useMenuContextualPR = ({
     /* Posición clamped al viewport */
     const menuAncho = 180;
     const menuAlto = 320;
-    const posX = Math.min(x, window.innerWidth - menuAncho - 10);
-    const posY = Math.min(y, window.innerHeight - menuAlto - 10);
+    const posX = Math.min(x, anchoVentana() - menuAncho - 10);
+    const posY = Math.min(y, altoVentana() - menuAlto - 10);
 
     return {
         menuRef,

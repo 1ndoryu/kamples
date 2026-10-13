@@ -14,6 +14,7 @@ import { useEditarPerfil } from '@app/hooks/useEditarPerfil';
 import { SkeletonPerfil } from '@app/components/skeletons';
 import '../../styles/componentes/editarPerfil.css';
 import '../../styles/componentes/editarPerfilIsland.css';
+import { volverAtras } from '@/platform/ventana';
 
 export const EditarPerfilIsland = (): JSX.Element => {
     const {
@@ -114,7 +115,7 @@ export const EditarPerfilIsland = (): JSX.Element => {
                 <div className="editarPerfilAcciones">
                     <BotonBase
                         variante="secundario"
-                        onClick={() => window.history.back()}
+                        onClick={() => volverAtras()}
                         type="button"
                     >
                         Cancelar

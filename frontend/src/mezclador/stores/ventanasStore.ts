@@ -5,6 +5,7 @@
  */
 
 import { create } from 'zustand';
+import { anchoVentana, altoVentana } from '../../glory-core/platform/ventana';
 
 export interface VentanaInfo {
     id: string;
@@ -33,8 +34,8 @@ interface VentanasState {
 
 /* Posición centrada por defecto para nuevas ventanas */
 const posicionInicial = (): { x: number; y: number } => {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const w = anchoVentana();
+    const h = altoVentana();
     /* Offset aleatorio para evitar superponer ventanas exactas */
     const jitter = Math.round(Math.random() * 40 - 20);
     return {

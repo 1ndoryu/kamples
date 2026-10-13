@@ -11,6 +11,7 @@ import type { Mensaje, MediaMetadataSample } from '@app/types';
 import { useT } from '@app/utils/i18n/useT';
 import { BotonBase } from '../components/ui/BotonBase';
 import { useVisorImagenStore } from '../stores/visorImagenStore';
+import { irAUrl } from '@/platform/ventana';
 
 /* Formatear tamaño de archivo (reservada para uso futuro con metadatos de archivos) */
 const _formatearTamano = (bytes: number): string => {
@@ -109,7 +110,7 @@ const BurbujaSample = ({ mensaje }: { mensaje: Mensaje }): JSX.Element => {
 
     const navegar = () => {
         if (meta?.slug) {
-            window.location.href = `/sample/${meta.slug}`;
+            irAUrl(`/sample/${meta.slug}`);
         }
     };
 

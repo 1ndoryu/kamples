@@ -41,6 +41,7 @@ import type { SampleResumen } from '@app/types';
 import { useT } from '@app/utils/i18n/useT';
 import '../../styles/componentes/sampleDetalle.css';
 import '../../styles/componentes/sampleDetalleIsland.css';
+import { volverAtras } from '@/platform/ventana';
 
 const TABS_SAMPLE_DETALLE = [{ id: 'sample', etiqueta: 'Sample' }];
 
@@ -105,7 +106,7 @@ export const SampleDetalleIsland = ({ slug: slugProp }: SampleDetalleProps): JSX
                 <div className="detalleError">
                     <AlertCircle size={40} />
                     <p>{error || 'Sample no encontrado.'}</p>
-                    <BotonBase variante="ghost" className="botonVolver" onClick={() => window.history.back()}>
+                    <BotonBase variante="ghost" className="botonVolver" onClick={() => volverAtras()}>
                         <ArrowLeft size={18} />
                         Volver
                     </BotonBase>

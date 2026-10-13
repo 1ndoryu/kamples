@@ -18,6 +18,7 @@ import '../../styles/componentes/artistaDetalle.css';
 import '../../styles/componentes/tablaRelaciones.css';
 import '../../styles/componentes/seccionRelaciones.css';
 import '../../styles/componentes/artistaDetalleIsland.css';
+import { volverAtras } from '@/platform/ventana';
 
 const TABS_ARTISTA = [
     { id: 'canciones', etiqueta: 'Canciones' },
@@ -55,7 +56,7 @@ export const ArtistaDetalleIsland = ({ slug }: ArtistaDetalleProps): JSX.Element
                 <div className="artistaDetalleError">
                     <AlertCircle size={40} />
                     <p>{error || 'Artista no encontrado.'}</p>
-                    <BotonBase variante="ghost" className="botonVolver" onClick={() => window.history.back()}>
+                    <BotonBase variante="ghost" className="botonVolver" onClick={() => volverAtras()}>
                         <ArrowLeft size={18} /> Volver
                     </BotonBase>
                 </div>

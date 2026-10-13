@@ -14,6 +14,7 @@ import { useGoogleAuth } from './useGoogleAuth';
 import { useTooltipPerfilStore } from '../stores/tooltipPerfilStore';
 import type { UsuarioAutenticado } from '../types/usuario';
 import { esAndroid, esCapacitor } from '../utils/plataforma';
+import { irAUrl } from '@/platform/ventana';
 
 const log = crearLogger('useAuth');
 const LS_KEY_TOKEN = 'kamples_auth_token';
@@ -197,7 +198,7 @@ export const useAuth = () => {
                 if (esGoogleNativo) {
                     useNavigationStore.getState().navegar('/');
                 } else {
-                    window.location.href = '/';
+                    irAUrl('/');
                 }
             } else {
                 setError(resp.error ?? 'Credenciales incorrectas');
@@ -242,7 +243,7 @@ export const useAuth = () => {
                 if (esGoogleNativo) {
                     useNavigationStore.getState().navegar('/');
                 } else {
-                    window.location.href = '/';
+                    irAUrl('/');
                 }
             } else {
                 setError(resp.error ?? 'Error al crear la cuenta');
@@ -278,7 +279,7 @@ export const useAuth = () => {
                 if (esGoogleNativo) {
                     useNavigationStore.getState().navegar('/');
                 } else {
-                    window.location.href = '/';
+                    irAUrl('/');
                 }
             } else {
                 setError(resp.error ?? 'Error al iniciar sesión con Google');

@@ -5,6 +5,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useVentanasStore } from '../stores/ventanasStore';
+import { anchoVentana, altoVentana, escucharVentana, dejarDeEscucharVentana } from '../../glory-core/platform/ventana';
 
 export const useVentanaFlotante = (id: string) => {
     const ventana = useVentanasStore(s => s.ventanas.find(v => v.id === id));
@@ -43,11 +44,11 @@ export const useVentanaFlotante = (id: string) => {
 
         const moverHandler = (ev: MouseEvent) => {
             const nuevoX = Math.max(0, Math.min(
-                window.innerWidth - 100,
+                anchoVentana() - 100,
                 ev.clientX - dragRef.current.offsetX
             ));
             const nuevoY = Math.max(0, Math.min(
-                window.innerHeight - 40,
+                altoVentana() - 40,
                 ev.clientY - dragRef.current.offsetY
             ));
             mover(id, { x: nuevoX, y: nuevoY });
@@ -69,8 +70,8 @@ export const useVentanaFlotante = (id: string) => {
         const handler = (e: KeyboardEvent) => {
             if (e.key === 'Escape') cerrar(id);
         };
-        window.addEventListener('keydown', handler);
-        return () => window.removeEventListener('keydown', handler);
+        escucharVentana('keydown', handler);
+        return () => dejarDeEscucharVentana('keydown', handler);
     }, [id, cerrar]);
 
     return {

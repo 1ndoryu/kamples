@@ -5,6 +5,7 @@
  * Sigue el patron de useMenuContextualSample.
  */
 
+import { origenActual } from '@/platform/ventana';
 import { useState, useCallback, type MouseEvent } from 'react';
 import type { Cancion } from '@app/types/cancion';
 import type { MenuItemDef } from '@app/components/ui/MenuContextual';
@@ -76,7 +77,7 @@ function construirItems(
             id: 'copiar-enlace',
             etiqueta: t('cancion.menu.copiarEnlace'),
             onClick: () => {
-                const url = `${window.location.origin}${hrefCancion}`;
+                const url = `${origenActual()}${hrefCancion}`;
                 copiarAlPortapapeles(url);
                 toast.exito(t('cancion.toast.enlaceCopiado'));
             },

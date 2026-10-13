@@ -33,6 +33,8 @@ import { requiereAuth } from '@app/utils/requiereAuth';
 import { EVENTO_SAMPLE_GUARDADO_EN_COLECCION, EVENTO_SAMPLE_QUITADO_DE_COLECCION } from './useModalSeleccionColeccion';
 import { EVENTO_SAMPLE_COMENTADO } from './useComentarios';
 import { crearLogger } from '../services/logger';
+import { crearElemento, cuerpoDocumento } from '@/platform/documento';
+import { escucharVentana, dejarDeEscucharVentana } from '@/platform/ventana';
 const log = crearLogger('TarjetaSample');
 
 export { formatearKey } from './utils/tarjetaSampleUtils';
@@ -86,8 +88,8 @@ export function useTarjetaSample(opciones: UseTarjetaSampleOpciones) {
             const { sampleId } = (e as CustomEvent<{ sampleId: number }>).detail;
             if (sampleId === sample.id) setGuardado(true);
         };
-        window.addEventListener(EVENTO_SAMPLE_GUARDADO_EN_COLECCION, manejar);
-        return () => window.removeEventListener(EVENTO_SAMPLE_GUARDADO_EN_COLECCION, manejar);
+        escucharVentana(EVENTO_SAMPLE_GUARDADO_EN_COLECCION, manejar);
+        return () => dejarDeEscucharVentana(EVENTO_SAMPLE_GUARDADO_EN_COLECCION, manejar);
     }, [sample.id]);
 
     /* [296A-1] Escucha evento global cuando este sample es quitado de una coleccion (toggle Bookmark) */
@@ -96,8 +98,8 @@ export function useTarjetaSample(opciones: UseTarjetaSampleOpciones) {
             const { sampleId } = (e as CustomEvent<{ sampleId: number }>).detail;
             if (sampleId === sample.id) setGuardado(false);
         };
-        window.addEventListener(EVENTO_SAMPLE_QUITADO_DE_COLECCION, manejar);
-        return () => window.removeEventListener(EVENTO_SAMPLE_QUITADO_DE_COLECCION, manejar);
+        escucharVentana(EVENTO_SAMPLE_QUITADO_DE_COLECCION, manejar);
+        return () => dejarDeEscucharVentana(EVENTO_SAMPLE_QUITADO_DE_COLECCION, manejar);
     }, [sample.id]);
 
     /* Escucha evento global cuando el usuario comenta en este sample */
@@ -106,8 +108,8 @@ export function useTarjetaSample(opciones: UseTarjetaSampleOpciones) {
             const { sampleId } = (e as CustomEvent<{ sampleId: number }>).detail;
             if (sampleId === sample.id) setComentado(true);
         };
-        window.addEventListener(EVENTO_SAMPLE_COMENTADO, manejar);
-        return () => window.removeEventListener(EVENTO_SAMPLE_COMENTADO, manejar);
+        escucharVentana(EVENTO_SAMPLE_COMENTADO, manejar);
+        return () => dejarDeEscucharVentana(EVENTO_SAMPLE_COMENTADO, manejar);
     }, [sample.id]);
 
     /* Audio: play/pause/seek/waveform delegado a hook dedicado */
@@ -323,7 +325,7 @@ function esperarUmbralDrag(origenX: number, origenY: number, umbral: number): Pr
         e.dataTransfer.effectAllowed = 'copy';
 
         /* Preview visual personalizado */
-        const preview = document.createElement('div');
+        const preview = crearElemento('div');
         preview.className = 'dragPreviewSample';
         preview.innerHTML = `
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -333,12 +335,12 @@ function esperarUmbralDrag(origenX: number, origenY: number, umbral: number): Pr
             </svg>
             <span>${sample.titulo.length > 25 ? sample.titulo.slice(0, 25) + '...' : sample.titulo}</span>
         `;
-        document.body.appendChild(preview);
+        cuerpoDocumento().appendChild(preview);
         preview.style.position = 'fixed';
         preview.style.top = '-200px';
         preview.style.left = '-200px';
         e.dataTransfer.setDragImage(preview, 20, 16);
-        requestAnimationFrame(() => document.body.removeChild(preview));
+        requestAnimationFrame(() => cuerpoDocumento().removeChild(preview));
     }, [sample]);
 
     /* Comentar: solo abrir panel, sin marcar como comentado prematuramente.

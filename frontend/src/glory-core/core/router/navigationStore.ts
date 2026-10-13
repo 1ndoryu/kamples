@@ -7,6 +7,7 @@
  */
 
 import { create } from 'zustand';
+import { rutaActual, irAUrl, volverAtras, agregarEntradaHistorial, escucharVentana, desplazarVentanaA } from '../../platform/ventana';
 
 export interface GloryRoute {
     island: string;
@@ -133,7 +134,7 @@ function resolverPropsParaRuta(rutas: GloryRoutesMap, rutaNormalizada: string): 
 }
 
 export const useNavigationStore = create<NavigationState & NavigationActions>((set, get) => ({
-    rutaActual: normalizarRuta(window.location.pathname),
+    rutaActual: normalizarRuta(rutaActual()),
     islaActual: null,
     propsActuales: {},
     tituloActual: document.title,
@@ -162,8 +163,8 @@ export const useNavigationStore = create<NavigationState & NavigationActions>((s
         });
 
         /* Escuchar popstate para navegacion con historial (boton atras/adelante) */
-        window.addEventListener('popstate', () => {
-            const nuevaRuta = normalizarRuta(window.location.pathname);
+        escucharVentana('popstate', () => {
+            const nuevaRuta = normalizarRuta(rutaActual());
             const rutasActuales = get().rutas;
             const nuevaConfig = buscarRutaEnMapa(rutasActuales, nuevaRuta);
 
@@ -178,7 +179,7 @@ export const useNavigationStore = create<NavigationState & NavigationActions>((s
                 });
 
                 if (nuevaConfig.title) document.title = nuevaConfig.title;
-                window.scrollTo({ top: 0, behavior: 'instant' });
+                desplazarVentanaA({ top: 0, behavior: 'instant' });
             }
         });
     },
@@ -193,7 +194,7 @@ export const useNavigationStore = create<NavigationState & NavigationActions>((s
         const config = buscarRutaEnMapa(rutas, rutaNormalizada);
         if (!config) {
             /* Ruta no encontrada en mapa SPA ni por prefijo, hacer navegacion tradicional */
-            window.location.href = ruta;
+            irAUrl(ruta);
             return;
         }
 
@@ -207,7 +208,7 @@ export const useNavigationStore = create<NavigationState & NavigationActions>((s
         const urlCompleta = rutaNormalizada + sufijo;
 
         /* Actualizar historial del navegador */
-        window.history.pushState({ gloryRoute: rutaNormalizada }, '', urlCompleta);
+        agregarEntradaHistorial({ gloryRoute: rutaNormalizada }, '', urlCompleta);
 
         /* Actualizar estado.
          * resolverPropsParaRuta extrae slug de la URL cuando es prefijo match
@@ -221,11 +222,11 @@ export const useNavigationStore = create<NavigationState & NavigationActions>((s
         });
 
         if (config.title) document.title = config.title;
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        desplazarVentanaA({ top: 0, behavior: 'instant' });
     },
 
     volverAtras: () => {
-        window.history.back();
+        volverAtras();
     },
 
     resolverRuta: (ruta) => {

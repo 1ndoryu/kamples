@@ -17,6 +17,7 @@ import { FormularioEditarPublicacion } from './FormularioEditarPublicacion';
 import { FormularioEditarColeccion } from './FormularioEditarColeccion';
 import '../../styles/componentes/modalEditar.css';
 import '../../styles/componentes/modalCrear.css';
+import { elementoPorId } from '@/platform/documento';
 
 /* Evento para notificar actualizaciones de entidades */
 export const EVENTO_ENTIDAD_ACTUALIZADA = 'kamples:entidad-actualizada';
@@ -100,7 +101,7 @@ export const ModalEditar = (): JSX.Element | null => {
                             variante="ghost"
                             tamano="sm"
                             soloIcono
-                            onClick={() => document.getElementById('editar-input-audio')?.click()}
+                            onClick={() => elementoPorId('editar-input-audio')?.click()}
                             disabled={!!formularioPublicacion.audioExistente || !!archivos.audioAdjunto}
                             type="button"
                             aria-label="Adjuntar audio"
@@ -111,7 +112,7 @@ export const ModalEditar = (): JSX.Element | null => {
                             variante="ghost"
                             tamano="sm"
                             soloIcono
-                            onClick={() => document.getElementById('editar-input-imagen')?.click()}
+                            onClick={() => elementoPorId('editar-input-imagen')?.click()}
                             disabled={formularioPublicacion.imagenesExistentes.length + archivos.imagenes.length >= 4}
                             type="button"
                             aria-label="Adjuntar imagen"

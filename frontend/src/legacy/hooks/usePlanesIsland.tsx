@@ -16,6 +16,7 @@ import { resolverRutaAsset } from '@app/utils/resolverRutaAsset';
 import { esAndroid, esEscritorio, abrirEnlaceExterno } from '@app/utils/plataforma';
 import { getT } from '@app/utils/i18n';
 import type { PeriodoPlan } from '@app/services/apiPagos';
+import { busquedaActual, irAUrl, reemplazarEntradaHistorial, rutaActual } from '@/platform/ventana';
 
 export type PlanId = 'free' | 'pro' | 'premium';
 
@@ -129,10 +130,10 @@ export const usePlanesIsland = () => {
 
     /* Detectar retorno de Stripe Checkout */
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(busquedaActual());
         if (params.get('checkout') === 'exito') {
             setCheckoutExito(true);
-            window.history.replaceState({}, '', window.location.pathname);
+            reemplazarEntradaHistorial({}, '', rutaActual());
         }
     }, []);
 
@@ -195,7 +196,7 @@ export const usePlanesIsland = () => {
             const periodo: PeriodoPlan = periodoAnual ? 'anual' : 'mensual';
             const resultado = await crearSesionCheckout(planId as 'pro' | 'premium', periodo);
             if (resultado.ok && resultado.url) {
-                window.location.href = resultado.url;
+                irAUrl(resultado.url);
             } else {
                 setError(resultado.error ?? t('planes.error.crearSesionPago'));
             }
@@ -216,7 +217,7 @@ export const usePlanesIsland = () => {
                     await abrirEnlaceExterno(resultado.url);
                     cerrarPlanes();
                 } else {
-                    window.location.href = resultado.url;
+                    irAUrl(resultado.url);
                 }
             } else {
                 setError(resultado.error ?? t('planes.error.abrirPortal'));

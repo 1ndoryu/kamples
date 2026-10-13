@@ -19,6 +19,7 @@ import {
 } from '@app/stores/filtrosStore';
 import { useNavigationStore } from '@/core/router';
 import { useTabsTopBarStore } from '@app/stores/tabsTopBarStore';
+import { busquedaActual, reemplazarEntradaHistorial, rutaActual } from '@/platform/ventana';
 
 const PARAM_ORDEN = 'orden';
 const PARAM_PERIODO = 'periodo';
@@ -101,7 +102,7 @@ export function useUrlFiltros(islaId?: string, tabDefault?: string): void {
         if (inicializadoRef.current) return;
         inicializadoRef.current = true;
 
-        const params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(busquedaActual());
         if (params.size === 0) return;
 
         const store = useFiltrosStore.getState();
@@ -155,11 +156,11 @@ export function useUrlFiltros(islaId?: string, tabDefault?: string): void {
         const tab = useTabsTopBarStore.getState().activa;
         const qs = construirQueryString(state, tab, tabDefault);
         const nuevaUrl = qs
-            ? `${window.location.pathname}?${qs}`
-            : window.location.pathname;
+            ? `${rutaActual()}?${qs}`
+            : rutaActual();
         if (nuevaUrl !== ultimaUrlRef.current) {
             ultimaUrlRef.current = nuevaUrl;
-            window.history.replaceState(null, '', nuevaUrl);
+            reemplazarEntradaHistorial(null, '', nuevaUrl);
         }
     }, [islaActual, islaId, tabDefault]);
 
@@ -172,12 +173,12 @@ export function useUrlFiltros(islaId?: string, tabDefault?: string): void {
             const tab = useTabsTopBarStore.getState().activa;
             const qs = construirQueryString(state, tab, tabDefault);
             const nuevaUrl = qs
-                ? `${window.location.pathname}?${qs}`
-                : window.location.pathname;
+                ? `${rutaActual()}?${qs}`
+                : rutaActual();
 
             if (nuevaUrl !== ultimaUrlRef.current) {
                 ultimaUrlRef.current = nuevaUrl;
-                window.history.replaceState(null, '', nuevaUrl);
+                reemplazarEntradaHistorial(null, '', nuevaUrl);
             }
         };
 

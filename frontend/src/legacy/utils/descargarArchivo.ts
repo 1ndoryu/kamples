@@ -6,6 +6,7 @@
  */
 
 import { esCapacitor } from './plataforma';
+import { crearElemento, cuerpoDocumento } from '@/platform/documento';
 
 /* [183A-95] Convierte ArrayBuffer a base64 en chunks para evitar
  * stack overflow en btoa() con archivos grandes (WAV 5-20MB).
@@ -30,12 +31,12 @@ function arrayBufferABase64(buffer: ArrayBuffer): string {
 export async function descargarArchivo(url: string, nombreArchivo: string): Promise<string | void> {
     if (!esCapacitor()) {
         /* Descarga web estándar */
-        const a = document.createElement('a');
+        const a = crearElemento('a');
         a.href = url;
         a.download = nombreArchivo;
-        document.body.appendChild(a);
+        cuerpoDocumento().appendChild(a);
         a.click();
-        document.body.removeChild(a);
+        cuerpoDocumento().removeChild(a);
         return;
     }
 

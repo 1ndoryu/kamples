@@ -11,6 +11,7 @@ import { Music, X, Camera } from 'lucide-react';
 import type { FormularioPublicacion } from '@app/hooks/useEditar';
 import type { useArchivosDragDrop } from '@app/hooks/useArchivosDragDrop';
 import '../../styles/componentes/formularioEditarPublicacion.css';
+import { elementoPorId } from '@/platform/documento';
 
 interface FormularioEditarPublicacionProps {
     formulario: FormularioPublicacion;
@@ -79,7 +80,7 @@ export const FormularioEditarPublicacion = ({
                             className="crearImagenOverlayEditar"
                             onClick={() => {
                                 slotReemplazar.current = { tipo: 'existente', indice: i };
-                                document.getElementById('editar-input-reemplazar')?.click();
+                                elementoPorId('editar-input-reemplazar')?.click();
                             }}
                             role="button"
                             aria-label="Cambiar imagen"
@@ -98,7 +99,7 @@ export const FormularioEditarPublicacion = ({
                             className="crearImagenOverlayEditar"
                             onClick={() => {
                                 slotReemplazar.current = { tipo: 'nueva', indice: i };
-                                document.getElementById('editar-input-reemplazar')?.click();
+                                elementoPorId('editar-input-reemplazar')?.click();
                             }}
                             role="button"
                             aria-label="Cambiar imagen"

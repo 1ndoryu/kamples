@@ -8,6 +8,7 @@ import { type ReactNode, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import '../../styles/componentes/modal.css';
 import { BotonBase } from './BotonBase';
+import { cuerpoDocumento } from '@/platform/documento';
 
 type TamanoModal = 'pequeno' | 'normal' | 'grande';
 
@@ -52,11 +53,11 @@ export const Modal = ({
         if (!abierto) return;
 
         document.addEventListener('keydown', manejarKeyDown);
-        document.body.style.overflow = 'hidden';
+        cuerpoDocumento().style.overflow = 'hidden';
 
         return () => {
             document.removeEventListener('keydown', manejarKeyDown);
-            document.body.style.overflow = '';
+            cuerpoDocumento().style.overflow = '';
         };
     }, [abierto, manejarKeyDown]);
 
@@ -105,7 +106,7 @@ export const Modal = ({
                 {pie && <div className="modalPie">{pie}</div>}
             </div>
         </div>,
-        document.body
+        cuerpoDocumento()
     );
 };
 

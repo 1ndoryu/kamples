@@ -34,6 +34,7 @@ import { useAlgoTimingStore } from '@app/stores/algoTimingStore';
 import { useVersionStore } from '@app/stores/versionStore';
 import { useT } from '@app/utils/i18n';
 import '../../styles/componentes/topbar.css';
+import { irAUrl } from '@/platform/ventana';
 /* [183A-111] TopBar migrado a i18n: hamburguesaItems, menuItems, aria-labels via t() */
 
 export const TopBar = (): JSX.Element => {
@@ -213,7 +214,7 @@ export const TopBar = (): JSX.Element => {
                 if (esDesktop) {
                     useNavigationStore.getState().navegar('/');
                 } else {
-                    window.location.href = '/';
+                    irAUrl('/');
                 }
             },
         },
@@ -355,7 +356,7 @@ export const TopBar = (): JSX.Element => {
                     useNavigationStore.getState().navegar('/');
                 } else {
                     /* Web: recarga completa para invalidar nonces WP y estado React */
-                    window.location.href = '/';
+                    irAUrl('/');
                 }
             },
         },

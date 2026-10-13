@@ -24,6 +24,7 @@ import { eliminarArticulo } from '@app/services/apiArticulos';
 import { toast } from '@app/stores/toastStore';
 import { useT } from '@app/utils/i18n/useT';
 import '@app/styles/componentes/articuloDetalle.css';
+import { origenActual, rutaActual } from '@/platform/ventana';
 
 interface ArticuloDetalleIslandProps {
     slug?: string;
@@ -32,7 +33,7 @@ interface ArticuloDetalleIslandProps {
 export const ArticuloDetalleIsland: React.FC<ArticuloDetalleIslandProps> = ({ slug: slugProp }) => {
     /* Extraer slug de la URL si no viene como prop */
     const slugDeUrl = typeof window !== 'undefined'
-        ? window.location.pathname.split('/').filter(Boolean).pop() ?? ''
+        ? rutaActual().split('/').filter(Boolean).pop() ?? ''
         : '';
     const slug = slugProp || slugDeUrl;
 
@@ -232,7 +233,7 @@ export const ArticuloDetalleIsland: React.FC<ArticuloDetalleIslandProps> = ({ sl
                             id: 'copiar',
                             etiqueta: t('comun.copiarEnlace'),
                             onClick: () => {
-                                navigator.clipboard.writeText(`${window.location.origin}/blog/${articulo.slug}/`);
+                                navigator.clipboard.writeText(`${origenActual()}/blog/${articulo.slug}/`);
                                 cerrarMenuDetalle();
                             },
                         },

@@ -14,6 +14,7 @@ import { useNavigationStore } from '@/core/router';
 import { usePanelLateralStore } from '@app/stores/panelLateralStore';
 import { useReproductorStore } from '@app/stores/reproductorStore';
 import type { Sample, SampleResumen } from '@app/types';
+import { escucharVentana, dejarDeEscucharVentana } from '@/platform/ventana';
 
 /* Evento compartido para coordinar reproduccion entre audios */
 const EVENTO_REPRODUCCION_SAMPLE = 'kamples:reproduccion-sample';
@@ -185,9 +186,9 @@ export function usePanelDetalleSample(sample: SampleResumen) {
                 audioRef.current.pause();
             }
         };
-        window.addEventListener(EVENTO_REPRODUCCION_SAMPLE, pausarSiEsOtro as EventListener);
+        escucharVentana(EVENTO_REPRODUCCION_SAMPLE, pausarSiEsOtro as EventListener);
         return () => {
-            window.removeEventListener(EVENTO_REPRODUCCION_SAMPLE, pausarSiEsOtro as EventListener);
+            dejarDeEscucharVentana(EVENTO_REPRODUCCION_SAMPLE, pausarSiEsOtro as EventListener);
         };
     }, [sample.id]);
 

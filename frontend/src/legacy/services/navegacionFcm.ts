@@ -13,6 +13,7 @@
 import { crearLogger } from './logger';
 import { esAndroid, esCapacitor } from '@app/utils/plataforma';
 import { leerNavegacionFcmCapacitor } from './fcmToken';
+import { irAUrl } from '@/platform/ventana';
 
 const log = crearLogger('navegacionFcm');
 /* Navegaciones mas antiguas a 5 minutos se descartan */
@@ -66,7 +67,7 @@ export async function procesarNavegacionFcm(): Promise<void> {
             log.info('Navegacion FCM procesada:', enlace);
         } else {
             /* Fallback si SPA no esta inicializado: redirigir via location */
-            window.location.href = enlace;
+            irAUrl(enlace);
         }
     } catch (err) {
         log.error('Error procesando navegacion FCM:', err);

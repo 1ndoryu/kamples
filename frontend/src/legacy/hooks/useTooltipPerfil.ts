@@ -11,6 +11,7 @@ import { useAuthStore } from '@app/stores/authStore';
 import { useTooltipPerfilStore } from '@app/stores/tooltipPerfilStore';
 import { useNavigationStore } from '@/core/router';
 import type { Usuario } from '@app/types/usuario';
+import { dejarDeEscucharVentana, escucharVentana } from '@/platform/ventana';
 
 export function useTooltipPerfil() {
     const username = useTooltipPerfilStore(s => s.username);
@@ -69,8 +70,8 @@ export function useTooltipPerfil() {
     useEffect(() => {
         if (!username) return;
         const manejar = () => cerrarInmediato();
-        window.addEventListener('scroll', manejar, { capture: true, passive: true });
-        return () => window.removeEventListener('scroll', manejar, { capture: true });
+        escucharVentana('scroll', manejar, { capture: true, passive: true });
+        return () => dejarDeEscucharVentana('scroll', manejar, { capture: true });
     }, [username, cerrarInmediato]);
 
     /* [183A-39] Cerrar al navegar (click en nombre de usuario fuera del tooltip) */

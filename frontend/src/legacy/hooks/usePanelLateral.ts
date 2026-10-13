@@ -8,6 +8,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePanelLateralStore } from '@app/stores/panelLateralStore';
 import { useReproductorStore } from '@app/stores/reproductorStore';
 import { crearLogger } from '@app/services/logger';
+import { anchoVentana } from '@/platform/ventana';
+import { cuerpoDocumento } from '@/platform/documento';
 
 const LS_KEY_ANCHO = 'kamples:anchoPanelLateral';
 const ANCHO_MIN = 280;
@@ -46,12 +48,12 @@ export const usePanelLateral = () => {
     const iniciarResize = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
         resizingRef.current = true;
-        document.body.style.cursor = 'col-resize';
-        document.body.style.userSelect = 'none';
+        cuerpoDocumento().style.cursor = 'col-resize';
+        cuerpoDocumento().style.userSelect = 'none';
 
         const mover = (ev: MouseEvent) => {
             if (!resizingRef.current) return;
-            const nuevoAncho = window.innerWidth - ev.clientX;
+            const nuevoAncho = anchoVentana() - ev.clientX;
             const clamp = Math.max(ANCHO_MIN, Math.min(ANCHO_MAX, nuevoAncho));
             setAncho(clamp);
             document.documentElement.style.setProperty('--anchoPanelLateral', `${clamp}px`);
@@ -59,8 +61,8 @@ export const usePanelLateral = () => {
 
         const soltar = () => {
             resizingRef.current = false;
-            document.body.style.cursor = '';
-            document.body.style.userSelect = '';
+            cuerpoDocumento().style.cursor = '';
+            cuerpoDocumento().style.userSelect = '';
             document.removeEventListener('mousemove', mover);
             document.removeEventListener('mouseup', soltar);
             /* Guardar en localStorage */

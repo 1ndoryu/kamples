@@ -11,6 +11,8 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import '../../styles/componentes/tooltip.css';
+import { dejarDeEscucharVentana, escucharVentana } from '@/platform/ventana';
+import { cuerpoDocumento } from '@/platform/documento';
 
 type PosicionTooltip = 'top' | 'bottom' | 'left' | 'right';
 
@@ -102,12 +104,12 @@ export const TooltipGlobal = (): JSX.Element | null => {
 
         document.addEventListener('mouseover', manejarEntrada, true);
         document.addEventListener('mouseout', manejarSalida, true);
-        window.addEventListener('scroll', manejarScroll, true);
+        escucharVentana('scroll', manejarScroll, true);
 
         return () => {
             document.removeEventListener('mouseover', manejarEntrada, true);
             document.removeEventListener('mouseout', manejarSalida, true);
-            window.removeEventListener('scroll', manejarScroll, true);
+            dejarDeEscucharVentana('scroll', manejarScroll, true);
             limpiarTimer();
         };
     }, [limpiarTimer, ocultar]);
@@ -129,6 +131,6 @@ export const TooltipGlobal = (): JSX.Element | null => {
         >
             {estado.texto}
         </div>,
-        document.body,
+        cuerpoDocumento(),
     );
 };

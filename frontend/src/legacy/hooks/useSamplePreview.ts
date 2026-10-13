@@ -7,6 +7,7 @@
 
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { enviarTrackingReproduccion } from '../utils/trackingReproduccion';
+import { escucharVentana, dejarDeEscucharVentana } from '../../glory-core/platform/ventana';
 
 const EVENTO_REPRODUCCION = 'kamples:reproduccion-sample';
 
@@ -54,9 +55,9 @@ export const useSamplePreview = (sampleId: number, rutaPreview: string) => {
             }
         };
 
-        window.addEventListener(EVENTO_REPRODUCCION, pausarSiEsOtro as EventListener);
+        escucharVentana(EVENTO_REPRODUCCION, pausarSiEsOtro as EventListener);
         return () => {
-            window.removeEventListener(EVENTO_REPRODUCCION, pausarSiEsOtro as EventListener);
+            dejarDeEscucharVentana(EVENTO_REPRODUCCION, pausarSiEsOtro as EventListener);
             if (audioRef.current) {
                 if (!audioRef.current.paused) {
                     enviarTrackingReproduccion(sampleId, audioRef.current.currentTime || 0, false);

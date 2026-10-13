@@ -25,6 +25,8 @@ import { useNavigationStore } from './router/navigationStore';
 import { PageRenderer } from './router/PageRenderer';
 import type { GloryRoutesMap } from './router/navigationStore';
 import { logger } from "../utils/logger";
+import { rutaActual } from '../platform/ventana';
+import { consultarElemento, consultarElementos } from '../platform/documento';
 
 export interface InitOptions {
     appProvider?: ComponentType<{ children: ReactNode }>;
@@ -160,7 +162,7 @@ function initializeSPA(routes: GloryRoutesMap, options: InitOptions): void {
      * Leer esos props evaluados y mergarlos en la ruta actual del mapa,
      * para que la isla inicial reciba datos como el usuario autenticado.
      */
-    const contenedorInicial = document.querySelector<HTMLElement>('[data-island]');
+    const contenedorInicial = consultarElemento<HTMLElement>('[data-island]');
 
     /* Extraer props evaluados del servidor (data-props del DOM).
      * Para rutas dinámicas (/cancion/slug), la búsqueda exacta en el mapa fallaría
@@ -176,7 +178,7 @@ function initializeSPA(routes: GloryRoutesMap, options: InitOptions): void {
     }
 
     /* Inicializar store con rutas + props evaluados del servidor para la ruta inicial */
-    useNavigationStore.getState().inicializar(routes, window.location.pathname, propsEvaluadosServidor);
+    useNavigationStore.getState().inicializar(routes, rutaActual(), propsEvaluadosServidor);
 
     if (import.meta.env.DEV) {
         const rutasStr = Object.keys(routes).join(', ');
@@ -184,7 +186,7 @@ function initializeSPA(routes: GloryRoutesMap, options: InitOptions): void {
     }
 
     /* Encontrar el contenedor principal [data-island] para montar el PageRenderer */
-    const container = document.querySelector<HTMLElement>('[data-island]');
+    const container = consultarElemento<HTMLElement>('[data-island]');
     if (!container) {
         if (import.meta.env.DEV) {
             logger.error('[Glory SPA] No se encontro contenedor [data-island] para PageRenderer');
@@ -221,7 +223,7 @@ function initializeSPA(routes: GloryRoutesMap, options: InitOptions): void {
  * Modo clasico: monta cada isla individualmente en su contenedor DOM.
  */
 function initializeClassicIslands(options: InitOptions): void {
-    const islands = document.querySelectorAll<HTMLElement>('[data-island]');
+    const islands = consultarElementos<HTMLElement>('[data-island]');
 
     if (islands.length === 0) {
         if (import.meta.env.DEV) {

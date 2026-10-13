@@ -10,6 +10,7 @@ import { useReproductorStore } from '../stores/reproductorStore';
 import { useNavigationStore } from '@/core/router';
 import { darLike, quitarLike } from '../services/apiSocial';
 import { EVENTO_LIKE_CAMBIADO } from './useFeedLikes';
+import { escucharVentana, dejarDeEscucharVentana } from '@/platform/ventana';
 
 const formatearTiempo = (segundos: number): string => {
     if (!segundos || isNaN(segundos)) return '0:00';
@@ -79,8 +80,8 @@ export const useReproductorGlobal = () => {
                 actualizarLike(nuevoLiked);
             }
         };
-        window.addEventListener(EVENTO_LIKE_CAMBIADO, manejar);
-        return () => window.removeEventListener(EVENTO_LIKE_CAMBIADO, manejar);
+        escucharVentana(EVENTO_LIKE_CAMBIADO, manejar);
+        return () => dejarDeEscucharVentana(EVENTO_LIKE_CAMBIADO, manejar);
     }, [actualizarLike]);
 
     /* [183A-52] Navegar a la página del sample al hacer click en portada/título */

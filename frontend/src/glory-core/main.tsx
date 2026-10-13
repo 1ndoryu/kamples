@@ -14,6 +14,7 @@ import { initializeIslands } from './core/hydration';
 
 /* Islas del proyecto (importadas desde App/React) */
 import appIslands, { AppProvider } from '@app/appIslands';
+import { cuerpoDocumento } from './platform/documento';
 
 function marcarEntornoNativo(): void {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
@@ -44,10 +45,10 @@ function marcarEntornoNativo(): void {
     })();
 
     window.__KAMPLES_MOBILE__ = true;
-    document.body.classList.add('plataformaCapacitor');
+    cuerpoDocumento().classList.add('plataformaCapacitor');
 
     if (plataforma === 'android' || /android/i.test(navigator.userAgent)) {
-        document.body.classList.add('plataformaAndroid');
+        cuerpoDocumento().classList.add('plataformaAndroid');
     }
 }
 

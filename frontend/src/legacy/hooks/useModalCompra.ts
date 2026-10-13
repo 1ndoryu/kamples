@@ -10,6 +10,7 @@ import { crearCheckoutSample } from '@app/services/apiPagos';
 import { toast } from '@app/stores/toastStore';
 import { getT } from '@app/utils/i18n';
 import { esEscritorio, abrirEnlaceExterno } from '@app/utils/plataforma';
+import { irAUrl } from '@/platform/ventana';
 
 export const useModalCompra = () => {
     const abierto = useCompraModalStore(s => s.abierto);
@@ -30,7 +31,7 @@ export const useModalCompra = () => {
                     await abrirEnlaceExterno(resp.url);
                     cerrar();
                 } else {
-                    window.location.href = resp.url;
+                    irAUrl(resp.url);
                 }
             } else {
                 toast.error(resp.error ?? 'Error al iniciar la compra');

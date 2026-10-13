@@ -5,6 +5,7 @@
  * Acciones: ver post, copiar enlace, editar, aprobar, eliminar, reportar.
  */
 
+import { origenActual } from '@/platform/ventana';
 import { useState, useCallback, useMemo, type MouseEvent, type Dispatch, type SetStateAction } from 'react';
 import { User, Link2, Trash2, Flag, CheckCircle, Pencil } from 'lucide-react';
 import { useReportarStore } from '@app/stores/reportarStore';
@@ -94,7 +95,7 @@ export const useMenuContextualPublicacion = (
             icono: <Link2 size={16} />,
             separadorDespues: true,
             onClick: () => {
-                copiarAlPortapapeles(`${window.location.origin}/comunidad/?post=${post.id}`);
+                copiarAlPortapapeles(`${origenActual()}/comunidad/?post=${post.id}`);
                 toast.exito('Enlace copiado');
             },
         });

@@ -14,6 +14,7 @@
  */
 
 import { create } from 'zustand';
+import { cuerpoDocumento } from '@/platform/documento';
 
 export interface InfoVersion {
     version: string;
@@ -42,7 +43,7 @@ interface VersionStore {
 function detectarPlataforma(): PlataformaApp {
     const w = window as unknown as Record<string, unknown>;
     if (w.__KAMPLES_DESKTOP__) {
-        return document.body.classList.contains('plataformaAndroid') ? 'apk' : 'windows';
+        return cuerpoDocumento().classList.contains('plataformaAndroid') ? 'apk' : 'windows';
     }
     return 'web';
 }

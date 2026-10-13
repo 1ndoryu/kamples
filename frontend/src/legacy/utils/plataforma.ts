@@ -3,6 +3,8 @@
  * Centralizan checks de Tauri, Android, desktop para evitar duplicación.
  */
 
+import { cuerpoDocumento } from '@/platform/documento';
+
 function tieneMarcaDesktop(): boolean {
     return typeof window !== 'undefined' && !!window.__KAMPLES_DESKTOP__;
 }
@@ -41,7 +43,7 @@ function tieneBridgeCapacitor(): boolean {
 }
 
 function tieneClasePlataforma(clase: string): boolean {
-    return typeof document !== 'undefined' && document.body.classList.contains(clase);
+    return typeof document !== 'undefined' && cuerpoDocumento().classList.contains(clase);
 }
 
 export const esCapacitor = (): boolean =>

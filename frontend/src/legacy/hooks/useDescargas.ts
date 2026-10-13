@@ -16,6 +16,7 @@ import { toast } from '@app/stores/toastStore';
 import { getT } from '@app/utils/i18n';
 import { crearLogger } from '@app/services/logger';
 import { esTauri } from '@app/utils/plataforma';
+import { crearElemento } from '@/platform/documento';
 
 const log = crearLogger('useDescargas');
 
@@ -90,7 +91,7 @@ export const useDescargas = (): RetornoDescargas => {
                         }
                     } else {
                         /* Web: patron estandar que funciona en browsers */
-                        const link = document.createElement('a');
+                        const link = crearElemento('a');
                         link.href = resp.data.url;
                         link.download = resp.data.nombre;
                         link.click();

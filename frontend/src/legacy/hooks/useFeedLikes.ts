@@ -9,6 +9,7 @@ import { darLike, quitarLike } from '@app/services/apiSocial';
 import type { SampleResumen, TipoReaccion } from '@app/types';
 import { requiereAuth } from '@app/utils/requiereAuth';
 import { usePanelLateralStore } from '@app/stores/panelLateralStore';
+import { escucharVentana, dejarDeEscucharVentana } from '@/platform/ventana';
 
 /* QL56: Evento global para sincronizar likes entre feed, reproductor y BotonLike aislados */
 export const EVENTO_LIKE_CAMBIADO = 'kamples:like-cambiado';
@@ -91,8 +92,8 @@ export function useFeedLikes({ samples, setSamples, invalidarCache, onLike }: Us
                 return { ...s, liked, reaccion: reac ?? (liked ? 'like' : null) };
             }));
         };
-        window.addEventListener(EVENTO_LIKE_CAMBIADO, manejar);
-        return () => window.removeEventListener(EVENTO_LIKE_CAMBIADO, manejar);
+        escucharVentana(EVENTO_LIKE_CAMBIADO, manejar);
+        return () => dejarDeEscucharVentana(EVENTO_LIKE_CAMBIADO, manejar);
     }, [setSamples]);
 
     return { manejarLike, abrirSugerencias };

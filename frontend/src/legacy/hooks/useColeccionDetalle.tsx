@@ -22,6 +22,7 @@ import { useColeccionDetalleMenu } from '@app/hooks/useColeccionDetalleMenu';
 import { useCodigoGratisStore } from '@app/stores/codigoGratisStore';
 import { useColeccionCombinacionPendiente } from '@app/hooks/useColeccionCombinacionPendiente';
 import type { Coleccion, ColeccionResumen, SampleResumen } from '@app/types';
+import { crearElemento, cuerpoDocumento } from '@/platform/documento';
 
 const TABS_COLECCION_DETALLE = [
     { id: 'samples', etiqueta: 'Samples' },
@@ -194,10 +195,10 @@ export function useColeccionDetalle({ propSlug }: ColeccionDetalleParams) {
             const codigoGratis = obtenerCodigoParaColeccion(coleccion.id) ?? undefined;
             const resp = await descargarColeccionZip(coleccion.id, codigoGratis);
             if (resp.ok && resp.data) {
-                const a = document.createElement('a');
+                const a = crearElemento('a');
                 a.href = resp.data.url;
                 a.download = resp.data.nombre;
-                document.body.appendChild(a);
+                cuerpoDocumento().appendChild(a);
                 a.click();
                 a.remove();
 

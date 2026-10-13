@@ -9,6 +9,7 @@ import { darLike, quitarLike } from '@app/services/apiSocial';
 import type { TipoLikeable } from '@app/services/apiSocial';
 import type { TipoReaccion } from '@app/types';
 import { EVENTO_LIKE_CAMBIADO } from '@app/hooks/useFeedLikes';
+import { escucharVentana, dejarDeEscucharVentana } from '@/platform/ventana';
 
 interface UseBotonLikeParams {
     tipo: TipoLikeable;
@@ -40,8 +41,8 @@ export const useBotonLike = ({
                 setLiked(prev => prev === nuevoLiked ? prev : nuevoLiked);
             }
         };
-        window.addEventListener(EVENTO_LIKE_CAMBIADO, manejar);
-        return () => window.removeEventListener(EVENTO_LIKE_CAMBIADO, manejar);
+        escucharVentana(EVENTO_LIKE_CAMBIADO, manejar);
+        return () => dejarDeEscucharVentana(EVENTO_LIKE_CAMBIADO, manejar);
     }, [tipo, targetId]);
 
     /* Click directo: toggle like simple */

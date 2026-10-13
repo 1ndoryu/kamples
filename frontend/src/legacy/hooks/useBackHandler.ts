@@ -35,6 +35,7 @@ import { useColeccionPickerStore } from '@app/stores/coleccionPickerStore';
 import { useVisorImagenStore } from '@app/stores/visorImagenStore';
 import { useReportarStore } from '@app/stores/reportarStore';
 import { useChatFlotanteStore } from '@app/stores/chatFlotanteStore';
+import { agregarEntradaHistorial, dejarDeEscucharVentana, escucharVentana, rutaActual as rutaVentana } from '@/platform/ventana';
 
 /*
  * Lista de stores con patron abierto/cerrar, ordenados por prioridad visual
@@ -183,14 +184,14 @@ export function useBackHandler(): void {
              * el historial. getState() es sincrono y el store aun tiene
              * la ruta previa porque stopImmediatePropagation evito su update. */
             const rutaActual = useNavigationStore.getState().rutaActual
-                ?? window.location.pathname;
-            window.history.pushState({ gloryRoute: rutaActual }, '', rutaActual);
+                ?? rutaVentana();
+            agregarEntradaHistorial({ gloryRoute: rutaActual }, '', rutaActual);
         };
 
-        window.addEventListener('popstate', manejarPopstate, true);
+        escucharVentana('popstate', manejarPopstate, true);
 
         return () => {
-            window.removeEventListener('popstate', manejarPopstate, true);
+            dejarDeEscucharVentana('popstate', manejarPopstate, true);
         };
     }, []);
 }

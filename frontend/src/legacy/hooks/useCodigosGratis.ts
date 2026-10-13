@@ -18,6 +18,7 @@ import { useCodigoGratisStore } from '@app/stores/codigoGratisStore';
 import { verificarCodigo, reclamarCodigo } from '@app/services/apiCodigosGratis';
 import { toast } from '@app/stores/toastStore';
 import { getT } from '@app/utils/i18n';
+import { busquedaActual } from '@/platform/ventana';
 
 export const useCodigosGratis = (): void => {
     const usuario = useAuthStore((s) => s.usuario);
@@ -29,7 +30,7 @@ export const useCodigosGratis = (): void => {
 
     /* Al montar: detectar ?codigoGratis= en URL y procesar */
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(busquedaActual());
         const codigo = params.get('codigoGratis');
         if (!codigo) return;
 

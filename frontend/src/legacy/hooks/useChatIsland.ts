@@ -17,6 +17,7 @@ import { useMensajesStore } from '@app/stores/mensajesStore';
 import { useAuthStore } from '@app/stores/authStore';
 import { useNavigationStore } from '@/core/router';
 import type { Conversacion, Mensaje } from '@app/types';
+import { rutaActual } from '@/platform/ventana';
 
 /* Formatear fecha para agrupación */
 const formatearFechaGrupo = (fecha: string): string => {
@@ -81,7 +82,7 @@ export const useChatIsland = ({ conversacionId: propId }: UseChatIslandParams) =
     const conversacionId = propId
         ? parseInt(propId, 10)
         : (() => {
-              const path = window.location.pathname;
+              const path = rutaActual();
               const partes = path.split('/').filter(Boolean);
               const idx = partes.indexOf('mensajes');
               return idx >= 0 && partes[idx + 1] ? parseInt(partes[idx + 1], 10) : null;

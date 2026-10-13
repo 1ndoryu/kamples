@@ -11,6 +11,7 @@ import type { BloqueMezclador } from '../types/mezclador';
 import { ModalConfigBloque } from './ModalConfigBloque';
 import { useBloqueSample } from '../hooks/useBloqueSample';
 import { BotonBase } from '@app/components/ui/BotonBase';
+import { cuerpoDocumento } from '../../glory-core/platform/documento';
 
 interface BloqueSampleProps {
     bloque: BloqueMezclador;
@@ -152,7 +153,7 @@ export const BloqueSample = ({
                     bloque={bloque}
                     onCerrar={cerrarConfig}
                 />,
-                document.body
+                cuerpoDocumento()
             )}
         </div>
     );

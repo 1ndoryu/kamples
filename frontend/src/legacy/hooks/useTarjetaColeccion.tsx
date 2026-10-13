@@ -4,6 +4,7 @@
  * [183A-15] Extiende el bookmark de detalle a la tarjeta sin convertir el componente en un orquestador grande.
  */
 
+import { origenActual } from '@/platform/ventana';
 import { useCallback, useEffect, useMemo, useState, type MouseEvent } from 'react';
 import { Edit3, Trash2, Link2, Combine, Flag } from 'lucide-react';
 import type { Coleccion } from '@app/types';
@@ -122,7 +123,7 @@ export function useTarjetaColeccion({
                 icono: <Link2 size={16} />,
                 separadorDespues: true,
                 onClick: () => {
-                    copiarAlPortapapeles(`${window.location.origin}/coleccion/${coleccion.slug ?? coleccion.id}/`);
+                    copiarAlPortapapeles(`${origenActual()}/coleccion/${coleccion.slug ?? coleccion.id}/`);
                 },
             },
         ];

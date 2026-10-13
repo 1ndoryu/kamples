@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { cabezaDocumento, crearElemento, consultarElemento } from '../glory-core/platform/documento';
 
 const GSI_SCRIPT_SRC = 'https://accounts.google.com/gsi/client';
 
@@ -81,7 +82,7 @@ export function useGoogleAuth(onCredential: (credential: string) => void, skip =
       return;
     }
 
-    const existingScript = document.querySelector(`script[src="${GSI_SCRIPT_SRC}"]`);
+    const existingScript = consultarElemento(`script[src="${GSI_SCRIPT_SRC}"]`);
     if (existingScript) {
       existingScript.addEventListener('load', initializeGoogle);
       return () => {
@@ -89,12 +90,12 @@ export function useGoogleAuth(onCredential: (credential: string) => void, skip =
       };
     }
 
-    const script = document.createElement('script');
+    const script = crearElemento('script');
     script.src = GSI_SCRIPT_SRC;
     script.async = true;
     script.defer = true;
     script.onload = initializeGoogle;
-    document.head.appendChild(script);
+    cabezaDocumento().appendChild(script);
 
     return () => {
       script.onload = null;

@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuthStore } from '@app/stores/authStore';
 import type { DatosSuspension } from '@app/types';
+import { irAUrl } from '@/platform/ventana';
 
 interface TiempoRestante {
     dias: number;
@@ -86,7 +87,7 @@ export const useOverlaySuspension = (): UseOverlaySuspensionResult => {
 
     const cerrarSesion = useCallback(() => {
         cerrarSesionStore();
-        window.location.href = '/';
+        irAUrl('/');
     }, [cerrarSesionStore]);
 
     return { visible, suspension, tiempoRestante, textoTiempo, cerrarSesion };

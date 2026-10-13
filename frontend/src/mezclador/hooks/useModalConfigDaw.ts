@@ -6,6 +6,7 @@
 import { useEffect, useRef } from 'react';
 import { useMezcladorStore } from '../stores/mezcladorStore';
 import { useVentanasStore } from '../stores/ventanasStore';
+import { anchoVentana, altoVentana } from '../../glory-core/platform/ventana';
 
 const VENTANA_ID = 'config-daw';
 
@@ -29,8 +30,8 @@ export const useModalConfigDaw = ({ abierto, onCerrar }: UseModalConfigDawParams
                 tipo: 'configDaw',
                 titulo: 'Configuración DAW',
                 posicion: {
-                    x: Math.max(20, Math.round(window.innerWidth / 2 - 175)),
-                    y: Math.max(20, Math.round(window.innerHeight / 2 - 120)),
+                    x: Math.max(20, Math.round(anchoVentana() / 2 - 175)),
+                    y: Math.max(20, Math.round(altoVentana() / 2 - 120)),
                 },
             });
         } else {

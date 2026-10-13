@@ -8,6 +8,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useModalAuth } from '../../hooks/useModalAuth';
 import IconoGoogle from '../ui/IconoGoogle';
 import '../../styles/componentes/authModal.css';
+import { cuerpoDocumento } from '../../glory-core/platform/documento';
 
 const authImage = '/auth/2.jpg';
 
@@ -188,7 +189,7 @@ function FormularioLogin({ onCambiar }: { onCambiar: () => void }): JSX.Element 
     }
 
     document.addEventListener('keydown', manejarEscape);
-    document.body.style.overflow = 'hidden';
+    cuerpoDocumento().style.overflow = 'hidden';
 
     return () => {
       document.removeEventListener('keydown', manejarEscape);
@@ -224,6 +225,6 @@ function FormularioLogin({ onCambiar }: { onCambiar: () => void }): JSX.Element 
           : <FormularioRegistro onCambiar={cambiarALogin} />}
       </section>
     </div>,
-    document.body,
+    cuerpoDocumento(),
   );
 }

@@ -17,6 +17,7 @@ import { useModalAuth } from '../../hooks/useModalAuth';
 import '../../styles/componentes/authModal.css';
 import { resolverRutaAsset } from '@app/utils/resolverRutaAsset';
 import { useT } from '@app/utils/i18n';
+import { cuerpoDocumento } from '@/platform/documento';
 /* [183A-111] ModalAuth migrado a i18n: FormularioLogin, FormularioRegistro y ModalAuth via t() */
 /* [2003A-17] imagenAuth movida al interior del componente — la constante módulo se evalúa antes
  * de que window.__KAMPLES_DESKTOP__ sea seteado por main.tsx, retornando ruta relativa rota. */
@@ -195,10 +196,10 @@ export const ModalAuth = (): JSX.Element | null => {
     useEffect(() => {
         if (!abierto) return;
         document.addEventListener('keydown', manejarEscape);
-        document.body.style.overflow = 'hidden';
+        cuerpoDocumento().style.overflow = 'hidden';
         return () => {
             document.removeEventListener('keydown', manejarEscape);
-            document.body.style.overflow = '';
+            cuerpoDocumento().style.overflow = '';
         };
     }, [abierto, manejarEscape]);
 
@@ -231,6 +232,6 @@ export const ModalAuth = (): JSX.Element | null => {
                 }
             </section>
         </div>,
-        document.body
+        cuerpoDocumento()
     );
 };

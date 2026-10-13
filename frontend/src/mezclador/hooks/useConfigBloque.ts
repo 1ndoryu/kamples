@@ -8,6 +8,7 @@ import type { BloqueMezclador, ConfigBloque } from '../types/mezclador';
 import { useMezcladorStore } from '../stores/mezcladorStore';
 import { useVentanasStore } from '../stores/ventanasStore';
 import { invalidarCacheBloque } from '../services/pitchShiftService';
+import { anchoVentana, altoVentana } from '../../glory-core/platform/ventana';
 
 export const useConfigBloque = (bloque: BloqueMezclador, onCerrar: () => void) => {
     const actualizarConfigBloque = useMezcladorStore(s => s.actualizarConfigBloque);
@@ -26,8 +27,8 @@ export const useConfigBloque = (bloque: BloqueMezclador, onCerrar: () => void) =
             titulo: bloque.sample.titulo,
             bloqueId: bloque.id,
             posicion: {
-                x: Math.max(20, Math.round(window.innerWidth / 2 - 350)),
-                y: Math.max(20, Math.round(window.innerHeight / 2 - 280)),
+                x: Math.max(20, Math.round(anchoVentana() / 2 - 350)),
+                y: Math.max(20, Math.round(altoVentana() / 2 - 280)),
             },
         });
     }, []);

@@ -10,6 +10,7 @@ import { useAuthStore } from '../stores';
 import '../styles/variables.css';
 import '../styles/bienvenida.css';
 import { BotonBase } from '../components/ui/BotonBase';
+import { irAUrl } from '@/platform/ventana';
 
 interface PasoOnboarding {
     icono: string;
@@ -46,14 +47,14 @@ export const BienvenidaIsland = (): JSX.Element => {
     const avanzar = () => {
         if (esUltimoPaso) {
             /* Redirige al feed principal al terminar onboarding */
-            window.location.href = '/';
+            irAUrl('/');
             return;
         }
         setPasoActual((prev) => prev + 1);
     };
 
     const saltar = () => {
-        window.location.href = '/';
+        irAUrl('/');
     };
 
     return (

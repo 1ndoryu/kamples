@@ -12,6 +12,7 @@ import { toast } from '@app/stores/toastStore';
 import { getT } from '@app/utils/i18n';
 import { sanitizarHtml } from '@app/utils/sanitizarHtml';
 import type { EmbedArticulo } from '@app/types';
+import { crearElemento } from '@/platform/documento';
 
 export const useEditorArticulo = () => {
     const store = useArticuloEditorStore();
@@ -139,7 +140,7 @@ export const useEditorArticulo = () => {
     }, []);
 
     const insertarImagen = useCallback(() => {
-        const input = document.createElement('input');
+        const input = crearElemento('input');
         input.type = 'file';
         input.accept = 'image/*';
         input.onchange = () => {

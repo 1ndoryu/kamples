@@ -7,6 +7,7 @@
 
 import { useState, useEffect, type RefObject } from 'react';
 import type { AnclaRect } from '@app/stores/tooltipPerfilStore';
+import { altoVentana, anchoVentana } from '@/platform/ventana';
 
 const MARGEN = 8;
 const ANCHO_TOOLTIP = 340;
@@ -31,8 +32,8 @@ export function usePosicionTooltipPerfil(
         /* Esperamos un frame para que el tooltip se renderice y podamos medir su alto */
         const raf = requestAnimationFrame(() => {
             const altoTooltip = tooltipRef.current?.offsetHeight ?? 300;
-            const vh = window.innerHeight;
-            const vw = window.innerWidth;
+            const vh = altoVentana();
+            const vw = anchoVentana();
 
             /* Posicion debajo del ancla */
             let top = ancla.top + ancla.height + MARGEN;

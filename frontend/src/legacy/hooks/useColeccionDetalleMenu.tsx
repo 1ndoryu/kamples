@@ -3,6 +3,7 @@
  * Extraído de useColeccionDetalle para cumplir SRP y límite de líneas.
  */
 
+import { origenActual } from '@/platform/ventana';
 import { useState, useCallback, useMemo } from 'react';
 import { Link2, Trash2, Flag, Edit3, Combine, Gift, ShieldOff, Plus } from 'lucide-react';
 import { copiarAlPortapapeles } from '@app/services/clipboard';
@@ -57,7 +58,7 @@ export function useColeccionDetalleMenu({
             icono: <Link2 size={16} />,
             separadorDespues: true,
             onClick: () => {
-                copiarAlPortapapeles(`${window.location.origin}/coleccion/${coleccion.slug ?? coleccion.id}/`);
+                copiarAlPortapapeles(`${origenActual()}/coleccion/${coleccion.slug ?? coleccion.id}/`);
                 cerrarMenuColeccion();
             },
         });
@@ -123,7 +124,7 @@ export function useColeccionDetalleMenu({
                     const resp = await generarCodigo('coleccion', coleccion.id);
                     if (resp.ok && resp.data?.codigo) {
                         const slug = coleccion.slug ?? coleccion.id;
-                        const url = `${window.location.origin}/coleccion/${slug}/?codigoGratis=${resp.data.codigo}`;
+                        const url = `${origenActual()}/coleccion/${slug}/?codigoGratis=${resp.data.codigo}`;
                         copiarAlPortapapeles(url);
                         toast.exito('Enlace de descarga gratis copiado al portapapeles');
                     } else {

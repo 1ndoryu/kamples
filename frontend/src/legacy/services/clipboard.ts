@@ -5,16 +5,17 @@
  */
 
 import { toast } from '@app/stores/toastStore';
+import { crearElemento, cuerpoDocumento } from '@/platform/documento';
 
 /* Fallback para navegadores sin Clipboard API o sin contexto seguro */
 function copiarConFallback(texto: string): boolean {
-    const textarea = document.createElement('textarea');
+    const textarea = crearElemento('textarea');
     textarea.value = texto;
     textarea.style.position = 'fixed';
     textarea.style.left = '-9999px';
     textarea.style.top = '-9999px';
     textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
+    cuerpoDocumento().appendChild(textarea);
     textarea.focus();
     textarea.select();
     let exito = false;
@@ -23,7 +24,7 @@ function copiarConFallback(texto: string): boolean {
     } catch {
         exito = false;
     }
-    document.body.removeChild(textarea);
+    cuerpoDocumento().removeChild(textarea);
     return exito;
 }
 

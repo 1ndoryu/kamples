@@ -16,6 +16,7 @@ import {useT} from '@app/utils/i18n/useT';
 import {useVersionStore} from '@app/stores/versionStore';
 import {ContenidoSeccion, NavSecciones, SECCIONES_NAV, type HookConfiguracion} from './ConfiguracionSecciones';
 import '../../styles/componentes/modalConfiguracion.css';
+import { cuerpoDocumento } from '@/platform/documento';
 
 /* [TareaFinal-B] Pie de versión en el footer del nav lateral de configuraciones.
  * Muestra la versión del binario para la plataforma detectada (windows/apk).
@@ -96,7 +97,7 @@ const ConfiguracionMovil = (h: HookConfiguracion): JSX.Element => {
             )}
         </div>
     </div>,
-    document.body
+    cuerpoDocumento()
     );
 };
 

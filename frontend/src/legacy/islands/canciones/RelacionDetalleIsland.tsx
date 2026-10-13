@@ -23,6 +23,7 @@ import { useRelacionDetalleIsland } from '@app/hooks/useRelacionDetalleIsland';
 import { ETIQUETAS_TIPO_RELACION, ETIQUETAS_TIPO_ELEMENTO } from '@app/types/cancion';
 import '../../styles/componentes/relacionDetalle.css';
 import '../../styles/componentes/seccionRelaciones.css';
+import { volverAtras } from '@/platform/ventana';
 
 interface RelacionDetalleProps {
     id?: string;
@@ -60,7 +61,7 @@ export const RelacionDetalleIsland = ({ id, slug }: RelacionDetalleProps): JSX.E
                 <div className="relacionDetalleError">
                     <AlertCircle size={40} />
                     <p>{error || 'Relación no encontrada.'}</p>
-                    <BotonBase variante="ghost" className="botonVolver" onClick={() => window.history.back()}>
+                    <BotonBase variante="ghost" className="botonVolver" onClick={() => volverAtras()}>
                         <ArrowLeft size={18} /> Volver
                     </BotonBase>
                 </div>

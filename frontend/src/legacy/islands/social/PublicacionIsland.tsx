@@ -16,6 +16,7 @@ import { useComentarios } from '@app/hooks/useComentarios';
 import { usePublicacionDetalle } from '@app/hooks/usePublicacionDetalle';
 import { conAutenticacion } from '@app/components/auth/ConAutenticacion';
 import '../../styles/componentes/publicacionDetalle.css';
+import { volverAtras } from '@/platform/ventana';
 
 interface PublicacionIslandProps {
     publicacionId?: string;
@@ -63,7 +64,7 @@ const PublicacionBase = ({ publicacionId: idProp }: PublicacionIslandProps): JSX
                 <div className="publicacionDetalleError">
                     <AlertCircle size={40} />
                     <p>{error || 'Publicación no encontrada.'}</p>
-                    <BotonBase variante="ghost" className="botonVolver" onClick={() => window.history.back()}>
+                    <BotonBase variante="ghost" className="botonVolver" onClick={() => volverAtras()}>
                         <ArrowLeft size={18} /> Volver
                     </BotonBase>
                 </div>
@@ -77,7 +78,7 @@ const PublicacionBase = ({ publicacionId: idProp }: PublicacionIslandProps): JSX
                 <BotonBase
                     variante="ghost"
                     className="botonVolver"
-                    onClick={() => window.history.back()}
+                    onClick={() => volverAtras()}
                     aria-label="Volver"
                 >
                     <ArrowLeft size={18} />

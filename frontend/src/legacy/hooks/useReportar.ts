@@ -9,6 +9,7 @@ import { useReportarStore, type TipoReporte } from '@app/stores/reportarStore';
 import { apiPost } from '@app/services/apiCliente';
 import { toast } from '@app/stores/toastStore';
 import { getT } from '@app/utils/i18n';
+import { rutaActual } from '@/platform/ventana';
 
 interface RespuestaReporte {
     ok: boolean;
@@ -72,7 +73,7 @@ export function useReportar() {
             targetId: targetId ?? 0,
             razon: razonTrim,
             detalles: detallesTrim || undefined,
-            ...(esError ? { url: window.location.pathname } : {}),
+            ...(esError ? { url: rutaActual() } : {}),
         });
 
         setEnviando(false);

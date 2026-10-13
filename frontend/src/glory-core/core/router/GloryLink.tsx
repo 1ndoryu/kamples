@@ -8,6 +8,7 @@
 
 import { useCallback, type MouseEvent, type AnchorHTMLAttributes, type ReactNode } from 'react';
 import { useNavigationStore } from './navigationStore';
+import { origenActual } from '../../platform/ventana';
 
 export interface GloryLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
     href: string;
@@ -24,8 +25,8 @@ function esEnlaceInterno(href: string): boolean {
     if (href.startsWith('#')) return false;
 
     try {
-        const url = new URL(href, window.location.origin);
-        return url.origin === window.location.origin;
+        const url = new URL(href, origenActual());
+        return url.origin === origenActual();
     } catch {
         return false;
     }
@@ -38,7 +39,7 @@ function extraerPath(href: string): string {
     if (href.startsWith('/')) return href;
 
     try {
-        return new URL(href, window.location.origin).pathname;
+        return new URL(href, origenActual()).pathname;
     } catch {
         return href;
     }

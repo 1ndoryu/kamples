@@ -214,3 +214,24 @@ Falsos positivos o ruido a corregir en `workspace-manager` cuando se actualice l
 - Consola del navegador: errores 401/404/405 y `fetchPriority` en `LandingPublica.tsx` (prop `fetchPriority` no reconocida; preexistente, no tocado).
 - Decidido: la contraseña genérica de Postgres local (`root`, localhost) la autorizó la usuaria para `kamples_verif`; se usa solo para esa BD en localhost, nunca en chat ni en el repo. Pendiente: reiniciar el backend 3001 (proceso propio) con `KAMPLES_WORKERS_ENABLED=true` para procesar el WAV de prueba; no se ha hecho.
 - Nota: se paró una consulta psql en segundo plano (proceso propio) que dejó el resultado vacío; no se reinició.
+
+## Sesión 13AF (frontera window/document: `window-reference-outside-platform` y `dom-access-outside-platform`)
+
+Decidido: arquitectura por adaptadores, no comentarios ni `sentinel-disable`. Toda referencia a `window`/`document` vive bajo `frontend/src/glory-core/platform/` (regla de `sentinel.config.json` `portableBoundaries`).
+
+- `platform/ventana.ts`: `ubicacionActual`, `rutaActual`, `busquedaActual`, `origenActual`, `protocoloActual`, `irAUrl`, `volverAtras`, `agregarEntradaHistorial`, `reemplazarEntradaHistorial`, `anchoVentana`, `altoVentana`, `desplazarVentanaA`, `escucharVentana`, `dejarDeEscucharVentana`.
+- `platform/documento.ts`: `cuerpoDocumento`, `cabezaDocumento`, `crearElemento`, `consultarElemento`, `consultarElementos`, `elementoPorId`.
+- Sobrecargas añadidas: `escucharVentana`/`dejarDeEscucharVentana` aceptan `string` para eventos personalizados (`kamples:...`, no están en `WindowEventMap`). `desplazarVentanaA` acepta `ScrollToOptions` además de `(x, y)`.
+- `useBackHandler.ts`: `rutaActual` local (string) se mantiene; el alias `rutaVentana` solo se usa para leer la ruta del navegador (`?? rutaVentana()`), así no hay ambigüedad entre estado y ventana.
+- Migración: ~90 archivos en `legacy/**`, `mezclador/**`, `glory-core/**`, `hooks/**`, `components/**`, `router.tsx`, `main.tsx`. Verificado por grep: ninguna referencia fuera de `platform/` (solo comentarios).
+- Gate `--cierre` (2026-10-13): 0 nuevos, 1998 resueltos, 799 abiertos (base 2797).
+- Type-check: solo los 3 errores preexistentes de `legacy/hooks/useAuth.ts` (TS2591).
+- Build: `npm run build` falla antes de Vite por `scripts/gen-colors-list.mjs` (ENOENT en `public/legacy-assets/colors`, gitignored, preexistente). Decidido: no tocar assets ignorados; `npx vite build` compila sin errores (solo advertencias `INEFFECTIVE_DYNAMIC_IMPORT` en `clients/desktop/src/services/*`, preexistentes). Tarea aparte: hacer que el script del build tolere el asset ausente o documentar el paso manual.
+- Cliente de escritorio (16 hits en `clients/desktop/src/*`): no cubierto por esta migración; pendiente de confirmar si `@desktop` alcanza `@/platform` antes de editar.
+- Pendiente de verificación visual de esta frontera: sin cambio visual esperado. Falta recorrer en `kamples_verif` los flujos que tocan ruta, scroll, menús contextuales y reproductor.
+
+### Pendiente de este plan (siguiente bloque)
+
+- `css-especificacion-diseno-local` (103) y `css-adhoc-button-style` (41): cambian render; requieren verificación visual antes y después.
+- `directorio-abarrotado` (16): reorganizar carpetas con reescritura de imports (riesgo de disparar la regla en la carpeta nueva; precedente `Agente/completados/tareas-2026-10-07.md:350`).
+- Estructurales: `limite-lineas` (7) y `limite-lineas-nivel-2` (3).

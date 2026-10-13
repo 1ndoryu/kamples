@@ -24,6 +24,7 @@ import {
 } from '@app/services/apiPagos';
 import { esEscritorio, abrirEnlaceExterno } from '@app/utils/plataforma';
 import { useNavigationStore } from '@/core/router';
+import { irAUrl } from '@/platform/ventana';
 
 /* Calcular porcentaje de cambio entre dos periodos */
 const calcularCambio = (actual: number, anterior: number): { valor: number; positivo: boolean } => {
@@ -98,7 +99,7 @@ export function useDashboardCreador() {
                 if (esEscritorio()) {
                     await abrirEnlaceExterno(resultado.url);
                 } else {
-                    window.location.href = resultado.url;
+                    irAUrl(resultado.url);
                 }
             }
         } catch {

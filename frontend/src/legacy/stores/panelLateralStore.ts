@@ -11,6 +11,7 @@ import { create } from 'zustand';
 import type { SampleResumen, Coleccion } from '@app/types';
 import { crearLogger } from '@app/services/logger';
 import { normalizarSampleResumen } from '@app/services/normalizers/sampleNormalizer';
+import { anchoVentana } from '@/platform/ventana';
 
 type ModoPanelLateral = 'sugerencias' | 'detalle' | 'comentarios' | 'mezclador' | 'libreria' | 'coleccion' | null;
 
@@ -118,7 +119,7 @@ export const usePanelLateralStore = create<PanelLateralState>((set, get) => ({
         /* C155: Solo abrir si la preferencia esta activa */
         if (!get().sugerenciasAlDarLike) return;
         /* QL55: No auto-abrir sugerencias en movil (panel no visible) */
-        if (typeof window !== 'undefined' && window.innerWidth <= 1024) return;
+        if (typeof window !== 'undefined' && anchoVentana() <= 1024) return;
         set({
             modo: 'detalle',
             sampleId: sample.id,

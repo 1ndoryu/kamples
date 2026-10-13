@@ -9,6 +9,7 @@
  */
 
 import { create } from 'zustand';
+import { busquedaActual } from '@/platform/ventana';
 
 export interface TabTopBar {
     id: string;
@@ -40,7 +41,7 @@ export const useTabsTopBarStore = create<EstadoTabsTopBar>((set, get) => ({
         let tabRestaurada = activaInicial ?? tabs[0]?.id ?? '';
 
         /* Restaurar desde URL si hay ?tab= */
-        const urlTab = new URLSearchParams(window.location.search).get('tab');
+        const urlTab = new URLSearchParams(busquedaActual()).get('tab');
         if (urlTab && tabs.some(t => t.id === urlTab)) {
             tabRestaurada = urlTab;
         } else if (islaId && tabsPorIsla[islaId]) {

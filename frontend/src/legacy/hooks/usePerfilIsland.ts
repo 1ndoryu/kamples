@@ -30,6 +30,7 @@ import type { Usuario } from '@app/types/usuario';
 import type { SampleResumen } from '@app/types/sample';
 import type { Publicacion } from '@app/types/publicacion';
 import { crearLogger } from '@app/services/logger';
+import { escucharVentana, dejarDeEscucharVentana } from '@/platform/ventana';
 
 const log = crearLogger('PerfilIsland');
 
@@ -81,11 +82,11 @@ export function usePerfilIsland({ usernameProp }: PerfilParams) {
                 });
             }
         };
-        window.addEventListener(EVENTO_SAMPLE_ELIMINADO, manejarEliminacion as EventListener);
-        window.addEventListener(EVENTO_SAMPLE_RESTAURADO, manejarRestauracion as EventListener);
+        escucharVentana(EVENTO_SAMPLE_ELIMINADO, manejarEliminacion as EventListener);
+        escucharVentana(EVENTO_SAMPLE_RESTAURADO, manejarRestauracion as EventListener);
         return () => {
-            window.removeEventListener(EVENTO_SAMPLE_ELIMINADO, manejarEliminacion as EventListener);
-            window.removeEventListener(EVENTO_SAMPLE_RESTAURADO, manejarRestauracion as EventListener);
+            dejarDeEscucharVentana(EVENTO_SAMPLE_ELIMINADO, manejarEliminacion as EventListener);
+            dejarDeEscucharVentana(EVENTO_SAMPLE_RESTAURADO, manejarRestauracion as EventListener);
         };
     }, []);
 
@@ -118,9 +119,9 @@ export function usePerfilIsland({ usernameProp }: PerfilParams) {
                 setPublicacionesPerfil(prev => prev.filter(p => p.id !== detalle.publicacionId));
             }
         };
-        window.addEventListener(EVENTO_PUBLICACION_ELIMINADA, manejarEliminacionPost as EventListener);
+        escucharVentana(EVENTO_PUBLICACION_ELIMINADA, manejarEliminacionPost as EventListener);
         return () => {
-            window.removeEventListener(EVENTO_PUBLICACION_ELIMINADA, manejarEliminacionPost as EventListener);
+            dejarDeEscucharVentana(EVENTO_PUBLICACION_ELIMINADA, manejarEliminacionPost as EventListener);
         };
     }, []);
 

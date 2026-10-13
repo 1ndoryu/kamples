@@ -21,6 +21,8 @@ import { MinimapaPianoRoll } from './MinimapaPianoRoll';
 import { previewNota, detenerPreview } from '../../services/pianoRollAudioService';
 import { motorAudio } from '../../services/motorAudioService';
 import type { HerramientaPianoRoll } from '../../types/pianoRoll';
+import { escucharVentana, dejarDeEscucharVentana } from '../../../glory-core/platform/ventana';
+import { cuerpoDocumento } from '../../../glory-core/platform/documento';
 
 /* Compases por defecto para un patrón de piano roll */
 const TOTAL_COMPASES_DEFAULT = 4;
@@ -170,8 +172,8 @@ export const PianoRoll = (): JSX.Element | null => {
             }
         };
 
-        window.addEventListener('keydown', handler);
-        return () => window.removeEventListener('keydown', handler);
+        escucharVentana('keydown', handler);
+        return () => dejarDeEscucharVentana('keydown', handler);
     }, [abierto, patronId, canalId, setHerramienta]);
 
     /* Callbacks para teclado piano */
@@ -278,5 +280,5 @@ export const PianoRoll = (): JSX.Element | null => {
     );
 
     /* Usar portal para evitar bubble de eventos al mezclador */
-    return createPortal(contenido, document.body);
+    return createPortal(contenido, cuerpoDocumento());
 };

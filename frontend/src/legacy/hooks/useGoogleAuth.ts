@@ -11,6 +11,7 @@
 
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { crearLogger } from '../services/logger';
+import { cabezaDocumento, consultarElemento, crearElemento } from '@/platform/documento';
 
 const log = crearLogger('useGoogleAuth');
 
@@ -107,19 +108,19 @@ export function useGoogleAuth(onCredential: (credential: string) => void, skip =
         }
 
         /* Cargar script de GSI dinámicamente */
-        const existente = document.querySelector(`script[src="${GSI_SCRIPT_SRC}"]`);
+        const existente = consultarElemento(`script[src="${GSI_SCRIPT_SRC}"]`);
         if (existente) {
             existente.addEventListener('load', inicializarGSI);
             return;
         }
 
-        const script = document.createElement('script');
+        const script = crearElemento('script');
         script.src = GSI_SCRIPT_SRC;
         script.async = true;
         script.defer = true;
         script.onload = inicializarGSI;
         script.onerror = () => log.error('Error cargando Google Identity Services script');
-        document.head.appendChild(script);
+        cabezaDocumento().appendChild(script);
     }, [skip]);
 
     /*

@@ -9,6 +9,7 @@
  */
 
 import { crearLogger } from '../services/logger';
+import { escucharVentana } from '@/platform/ventana';
 const log = crearLogger('SWPush');
 
 const ES_DESKTOP = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
@@ -18,7 +19,7 @@ export function registrarServiceWorker(): void {
     if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return;
 
     /* No bloquear el render — registrar después del load */
-    window.addEventListener('load', () => {
+    escucharVentana('load', () => {
         navigator.serviceWorker.register('/sw-push.js', { scope: '/' }).catch((error) => {
             /* No es crítico — push no funcionará pero la app sí */
             log.warn('No se pudo registrar el Service Worker:', error);

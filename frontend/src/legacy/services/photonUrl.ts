@@ -9,6 +9,8 @@
  * Gotcha: En desarrollo local (localhost) devolver la URL sin modificar.
  */
 
+import { origenActual, ubicacionActual } from '@/platform/ventana';
+
 interface PhotonOpciones {
     w?: number;
     h?: number;
@@ -23,8 +25,8 @@ const esUrlAbsoluta = (url: string): boolean =>
 
 const esLocalhost = (): boolean =>
     typeof window !== 'undefined' && (
-        window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1'
+        ubicacionActual().hostname === 'localhost' ||
+        ubicacionActual().hostname === '127.0.0.1'
     );
 
 export function photonUrl(url: string, opciones: PhotonOpciones = {}): string {
@@ -34,7 +36,7 @@ export function photonUrl(url: string, opciones: PhotonOpciones = {}): string {
 
     /* [193A-92] Rutas relativas → absolutas para que Photon pueda procesarlas */
     if (!esUrlAbsoluta(url) && url.startsWith('/') && typeof window !== 'undefined') {
-        url = `${window.location.origin}${url}`;
+        url = `${origenActual()}${url}`;
     }
 
     if (!esUrlAbsoluta(url)) return url;

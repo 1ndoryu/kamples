@@ -10,6 +10,7 @@ import { codificarWav } from '../utils/audioBufferUtils';
 import { compasesASegundos } from '../utils/compasUtils';
 import { CONSTANTES_MEZCLADOR } from '../types/mezclador';
 import { crearLogger } from '../../legacy/services/logger';
+import { cuerpoDocumento, crearElemento } from '../../glory-core/platform/documento';
 const log = crearLogger('Mezclador');
 
 export const useExportarMezcla = () => {
@@ -87,12 +88,12 @@ export const useExportarMezcla = () => {
             const blob = new Blob([wavData], { type: 'audio/wav' });
             const url = URL.createObjectURL(blob);
 
-            const enlace = document.createElement('a');
+            const enlace = crearElemento('a');
             enlace.href = url;
             enlace.download = `kamples_mezcla_${Date.now()}.wav`;
-            document.body.appendChild(enlace);
+            cuerpoDocumento().appendChild(enlace);
             enlace.click();
-            document.body.removeChild(enlace);
+            cuerpoDocumento().removeChild(enlace);
             URL.revokeObjectURL(url);
 
             return true;

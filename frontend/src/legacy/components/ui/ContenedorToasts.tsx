@@ -10,6 +10,7 @@ import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 import { useToastStore, type Toast } from '@app/stores/toastStore';
 import '../../styles/componentes/toast.css';
 import { BotonBase } from './BotonBase';
+import { dejarDeEscucharVentana, escucharVentana } from '@/platform/ventana';
 
 const ICONOS_TIPO = {
     info: Info,
@@ -84,8 +85,8 @@ export const ContenedorToasts = (): JSX.Element | null => {
     useEffect(() => {
         const hayConfirmacion = toasts.some(t => t.tipo === 'confirmacion' && !t.eliminando);
         if (!hayConfirmacion) return;
-        window.addEventListener('keydown', manejarEnter);
-        return () => window.removeEventListener('keydown', manejarEnter);
+        escucharVentana('keydown', manejarEnter);
+        return () => dejarDeEscucharVentana('keydown', manejarEnter);
     }, [toasts, manejarEnter]);
 
     if (toasts.length === 0) return null;

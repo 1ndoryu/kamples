@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { BloqueMezclador } from '../types/mezclador';
 import { anchoBloquePorc, posicionBloquePorc, snapABeat, snapConResolucion } from '../utils/compasUtils';
 import { useMezcladorStore } from '../stores/mezcladorStore';
+import { cuerpoDocumento } from '../../glory-core/platform/documento';
 
 interface UseBloqueSampleParams {
     bloque: BloqueMezclador;
@@ -61,8 +62,8 @@ export const useBloqueSample = ({
         };
         resizingRef.current = true;
         setResizing(true);
-        document.body.style.cursor = 'ew-resize';
-        document.body.style.userSelect = 'none';
+        cuerpoDocumento().style.cursor = 'ew-resize';
+        cuerpoDocumento().style.userSelect = 'none';
     }, [bloque.duracionCompases, guardarSnapshot, fijarTotalExtendido]);
 
     /* Document listeners para resize */
@@ -86,8 +87,8 @@ export const useBloqueSample = ({
             setResizing(false);
             /* C296: Descongelar total extendido */
             desfijarTotalExtendido();
-            document.body.style.cursor = '';
-            document.body.style.userSelect = '';
+            cuerpoDocumento().style.cursor = '';
+            cuerpoDocumento().style.userSelect = '';
         };
 
         document.addEventListener('mousemove', mover);

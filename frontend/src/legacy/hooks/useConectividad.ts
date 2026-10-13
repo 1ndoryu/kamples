@@ -6,6 +6,7 @@
 
 import { useEffect } from 'react';
 import { create } from 'zustand';
+import { escucharVentana } from '@/platform/ventana';
 
 interface EstadoConectividad {
     enLinea: boolean;
@@ -24,10 +25,10 @@ function registrarListeners(): void {
     if (listenerRegistrado || typeof window === 'undefined') return;
     listenerRegistrado = true;
 
-    window.addEventListener('online', () => {
+    escucharVentana('online', () => {
         useConectividadStore.setState({ enLinea: true, ultimoCambio: Date.now() });
     });
-    window.addEventListener('offline', () => {
+    escucharVentana('offline', () => {
         useConectividadStore.setState({ enLinea: false, ultimoCambio: Date.now() });
     });
 }

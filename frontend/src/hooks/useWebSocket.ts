@@ -18,6 +18,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { customInstance } from '../api/axios-instance';
+import { protocoloActual, ubicacionActual } from '../glory-core/platform/ventana';
 
 export type WsStatus = 'idle' | 'connecting' | 'open' | 'closed' | 'error';
 
@@ -36,8 +37,8 @@ interface TicketResponse {
 
 function resolveWsUrl(ticket: string): string {
   /* Mismo host/scheme que la app, swap http(s) → ws(s). */
-  const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const host = window.location.host;
+  const proto = protocoloActual() === 'https:' ? 'wss:' : 'ws:';
+  const host = ubicacionActual().host;
   return `${proto}//${host}/api/ws?ticket=${encodeURIComponent(ticket)}`;
 }
 

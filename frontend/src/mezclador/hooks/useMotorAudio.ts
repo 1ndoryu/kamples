@@ -12,6 +12,7 @@ import { usePatronesStore } from '../stores/patronesStore';
 import { motorAudio } from '../services/motorAudioService';
 import { compasesASegundos } from '../utils/compasUtils';
 import { EVENTO_REPROGRAMAR_AUDIO } from '../types/mezclador';
+import { escucharVentana, dejarDeEscucharVentana } from '../../glory-core/platform/ventana';
 
 export const useMotorAudio = () => {
     const tiempoInicioRef = useRef<number>(0);
@@ -318,8 +319,8 @@ export const useMotorAudio = () => {
             }
         };
 
-        window.addEventListener(EVENTO_REPROGRAMAR_AUDIO, reprogramar);
-        return () => window.removeEventListener(EVENTO_REPROGRAMAR_AUDIO, reprogramar);
+        escucharVentana(EVENTO_REPROGRAMAR_AUDIO, reprogramar);
+        return () => dejarDeEscucharVentana(EVENTO_REPROGRAMAR_AUDIO, reprogramar);
     }, [programarBloques, programarPatronActivo]);
 
     return {

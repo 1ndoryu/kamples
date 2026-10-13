@@ -4,6 +4,7 @@
  * Extraído de useMenuContextualSample para cumplir SRP.
  */
 
+import { origenActual } from '@/platform/ventana';
 import { createElement } from 'react';
 import type { SampleResumen } from '@app/types';
 import type { MenuItemDef } from '@app/components/ui/MenuContextual';
@@ -91,7 +92,7 @@ export const construirItemsMenuSample = (d: DepsMenuSample): MenuItemDef[] => {
             },
         }] : []),
         { id: 'creador', etiqueta: t('sample.menu.irACreador', { nombre: s.creador.nombreVisible || s.creador.username }), icono: ic(User), href: `/perfil/${s.creador.username}/`, onClick: () => d.navegar(`/perfil/${s.creador.username}/`) },
-        { id: 'compartir', etiqueta: t('sample.menu.copiarEnlace'), icono: ic(Link), onClick: () => d.copiarAlPortapapeles(`${window.location.origin}/sample/${s.slug}/`) },
+        { id: 'compartir', etiqueta: t('sample.menu.copiarEnlace'), icono: ic(Link), onClick: () => d.copiarAlPortapapeles(`${origenActual()}/sample/${s.slug}/`) },
         { id: 'sugerencias', etiqueta: t('sample.tambienTePodria'), icono: ic(Sparkles), onClick: () => d.abrirSugerencias(s) },
         { id: 'abrir-panel', etiqueta: t('sample.menu.abrirPanel'), icono: ic(PanelRight), separadorDespues: true, onClick: () => d.abrirDetalle(s) },
     ];
@@ -140,7 +141,7 @@ export const construirItemsMenuSample = (d: DepsMenuSample): MenuItemDef[] => {
         items.push({ id: 'compartir-gratis', etiqueta: t('sample.menu.compartirGratis'), icono: ic(Gift), onClick: async () => {
             const resp = await generarCodigo('sample', s.id);
             if (resp.ok && resp.data?.codigo) {
-                const url = `${window.location.origin}/sample/${s.slug}/?codigoGratis=${resp.data.codigo}`;
+                const url = `${origenActual()}/sample/${s.slug}/?codigoGratis=${resp.data.codigo}`;
                 d.copiarAlPortapapeles(url);
                 toast.exito(t('sample.toast.enlaceGratisCopiado'));
             } else {

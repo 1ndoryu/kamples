@@ -10,6 +10,7 @@ import { useTimeline } from './useTimeline';
 import { useExportarMezcla } from './useExportarMezcla';
 import { EVENTO_AGREGAR_MEZCLADOR } from '../types/mezclador';
 import type { SampleResumen } from '@app/types';
+import { escucharVentana, dejarDeEscucharVentana } from '../../glory-core/platform/ventana';
 
 export const useMezclador = () => {
     const abierto = useMezcladorStore(s => s.abierto);
@@ -48,8 +49,8 @@ export const useMezclador = () => {
             }
         };
 
-        window.addEventListener(EVENTO_AGREGAR_MEZCLADOR, handler);
-        return () => window.removeEventListener(EVENTO_AGREGAR_MEZCLADOR, handler);
+        escucharVentana(EVENTO_AGREGAR_MEZCLADOR, handler);
+        return () => dejarDeEscucharVentana(EVENTO_AGREGAR_MEZCLADOR, handler);
     }, [agregarSample]);
 
     /* Atajos de teclado cuando el mezclador está abierto */
@@ -79,8 +80,8 @@ export const useMezclador = () => {
             }
         };
 
-        window.addEventListener('keydown', handler);
-        return () => window.removeEventListener('keydown', handler);
+        escucharVentana('keydown', handler);
+        return () => dejarDeEscucharVentana('keydown', handler);
     }, [abierto, motor.toggleReproduccion]);
 
     /* Contar bloques totales */

@@ -15,6 +15,7 @@ import { darLike, quitarLike, repostear, quitarRepost, obtenerPublicacion, lista
 import { EVENTO_ENTIDAD_ACTUALIZADA } from '@app/components/social/ModalEditar';
 import type { TipoReaccion, Publicacion } from '@app/types';
 import { usePaginacionProgresiva } from '@app/hooks/usePaginacionProgresiva';
+import { escucharVentana, dejarDeEscucharVentana } from '@/platform/ventana';
 
 export type FiltroComunidad = 'todos' | 'siguiendo' | 'populares';
 
@@ -58,8 +59,8 @@ export function useComunidadIsland() {
                 setPublicaciones(prev => prev.map(p => p.id === id ? { ...p, ...resp.data! } : p));
             } catch { /* sin-op: fallo silencioso no critico en refresh de post */ }
         };
-        window.addEventListener(EVENTO_ENTIDAD_ACTUALIZADA, manejarActualizacion);
-        return () => window.removeEventListener(EVENTO_ENTIDAD_ACTUALIZADA, manejarActualizacion);
+        escucharVentana(EVENTO_ENTIDAD_ACTUALIZADA, manejarActualizacion);
+        return () => dejarDeEscucharVentana(EVENTO_ENTIDAD_ACTUALIZADA, manejarActualizacion);
     }, []);
 
     /* Cargar página 1 al cambiar filtro — resetea todo el estado de paginación */

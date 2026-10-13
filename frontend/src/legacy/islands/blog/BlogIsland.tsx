@@ -7,6 +7,7 @@
  * [193A-20] Menú contextual incluye "Editar" si el usuario es el autor.
  */
 
+import { origenActual } from '@/platform/ventana';
 import { useState, useCallback } from 'react';
 import { BookOpen, User } from 'lucide-react';
 import { useBlog } from '@app/hooks/useBlog';
@@ -130,7 +131,7 @@ export const BlogIsland: React.FC = () => {
             id: 'compartir',
             etiqueta: t('comun.copiarEnlace'),
             onClick: () => {
-                navigator.clipboard.writeText(`${window.location.origin}/blog/${articuloMenu.slug}/`);
+                navigator.clipboard.writeText(`${origenActual()}/blog/${articuloMenu.slug}/`);
                 toast.exito('Enlace copiado');
                 cerrarMenu();
             },

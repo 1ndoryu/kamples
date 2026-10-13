@@ -10,6 +10,8 @@ import { createPortal } from 'react-dom';
 import { ChevronDown } from 'lucide-react';
 import { useT } from '@app/utils/i18n/useT';
 import '../../styles/componentes/selectorMenu.css';
+import { altoVentana } from '@/platform/ventana';
+import { cuerpoDocumento } from '@/platform/documento';
 
 export interface OpcionSelector {
     valor: string;
@@ -51,7 +53,7 @@ export const SelectorMenu = ({
     const abrir = useCallback(() => {
         if (disabled || !triggerRef.current) return;
         const rect = triggerRef.current.getBoundingClientRect();
-        const espacioAbajo = window.innerHeight - rect.bottom;
+        const espacioAbajo = altoVentana() - rect.bottom;
         const altoEstimado = Math.min(opciones.length * 36 + 8, 240);
 
         /* Si no cabe abajo, abrir arriba */
@@ -138,7 +140,7 @@ export const SelectorMenu = ({
                         ))}
                     </div>
                 </>,
-                document.body
+                cuerpoDocumento()
             )}
         </div>
     );

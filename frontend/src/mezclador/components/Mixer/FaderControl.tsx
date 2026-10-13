@@ -4,6 +4,7 @@
  */
 
 import { useCallback, useRef, useState } from 'react';
+import { cuerpoDocumento } from '../../../glory-core/platform/documento';
 
 interface FaderControlProps {
     valor: number;
@@ -56,12 +57,12 @@ export const FaderControl = ({
             setArrastrando(false);
             document.removeEventListener('mousemove', moverHandler);
             document.removeEventListener('mouseup', soltarHandler);
-            document.body.style.cursor = '';
-            document.body.style.userSelect = '';
+            cuerpoDocumento().style.cursor = '';
+            cuerpoDocumento().style.userSelect = '';
         };
 
-        document.body.style.cursor = 'ns-resize';
-        document.body.style.userSelect = 'none';
+        cuerpoDocumento().style.cursor = 'ns-resize';
+        cuerpoDocumento().style.userSelect = 'none';
         document.addEventListener('mousemove', moverHandler);
         document.addEventListener('mouseup', soltarHandler);
     }, [yAValor, onChange, min, max]);

@@ -9,6 +9,7 @@ import { createPortal } from 'react-dom';
 import { CheckCircle, AlertTriangle, XCircle, Info, X } from 'lucide-react';
 import '../../styles/componentes/notificacion.css';
 import { BotonBase } from './BotonBase';
+import { cuerpoDocumento } from '@/platform/documento';
 
 export type TipoToast = 'exito' | 'error' | 'advertencia' | 'info';
 
@@ -108,7 +109,7 @@ export const ContenedorNotificaciones = ({
                 <NotificacionItem key={toast.id} toast={toast} onCerrar={onCerrar} />
             ))}
         </div>,
-        document.body
+        cuerpoDocumento()
     );
 };
 

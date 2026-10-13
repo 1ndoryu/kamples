@@ -15,6 +15,7 @@ import ModalAuth from './components/auth/ModalAuth';
 import NavPublico from './components/layout/NavPublico';
 import { useAuthModalStore } from './app/stores/authModalStore';
 import { useAuth } from './hooks/useAuth';
+import { cuerpoDocumento } from './glory-core/platform/documento';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const DiscoverPage = lazy(() => import('./pages/DiscoverPage'));
@@ -32,10 +33,10 @@ function Layout() {
 
   useEffect(() => {
     const layoutMode = !auth.isAuthenticated && !auth.isLoading ? 'public' : 'app';
-    document.body.dataset.layout = layoutMode;
+    cuerpoDocumento().dataset.layout = layoutMode;
 
     return () => {
-      delete document.body.dataset.layout;
+      delete cuerpoDocumento().dataset.layout;
     };
   }, [auth.isAuthenticated, auth.isLoading]);
 

@@ -5,6 +5,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { cuerpoDocumento } from '../../glory-core/platform/documento';
 
 interface UseInputTempoParams {
     valor: number;
@@ -55,7 +56,7 @@ export const useInputTempo = ({
             valorInicial: valor,
             shift: e.shiftKey,
         };
-        document.body.style.cursor = 'ns-resize';
+        cuerpoDocumento().style.cursor = 'ns-resize';
     }, [editando, valor]);
 
     /* Listeners globales para drag */
@@ -72,7 +73,7 @@ export const useInputTempo = ({
         const soltar = () => {
             if (dragRef.current.activo) {
                 dragRef.current.activo = false;
-                document.body.style.cursor = '';
+                cuerpoDocumento().style.cursor = '';
             }
         };
 

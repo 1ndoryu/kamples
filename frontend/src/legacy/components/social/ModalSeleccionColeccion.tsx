@@ -12,6 +12,7 @@ import { BotonBase } from '../ui/BotonBase';
 import { CampoTexto } from '../ui/CampoTexto';
 import { ImgOptimizada } from '../ui/ImgOptimizada';
 import { useT } from '@app/utils/i18n/useT';
+import { altoVentana, anchoVentana } from '@/platform/ventana';
 
 export const ModalSeleccionColeccion = (): JSX.Element | null => {
     const {
@@ -30,8 +31,8 @@ export const ModalSeleccionColeccion = (): JSX.Element | null => {
     const estiloPanel: React.CSSProperties | undefined = posicion
         ? {
             position: 'fixed',
-            top: Math.max(8, Math.min(posicion.y, window.innerHeight - 428)),
-            left: Math.max(8, Math.min(posicion.x, window.innerWidth - 328)),
+            top: Math.max(8, Math.min(posicion.y, altoVentana() - 428)),
+            left: Math.max(8, Math.min(posicion.x, anchoVentana() - 328)),
         }
         : undefined;
 

@@ -8,6 +8,7 @@ import { useMezcladorStore } from '../stores/mezcladorStore';
 import { snapConResolucion } from '../utils/compasUtils';
 import type { SampleResumen } from '@app/types';
 import { crearLogger } from '../../legacy/services/logger';
+import { cuerpoDocumento } from '../../glory-core/platform/documento';
 const log = crearLogger('Mezclador');
 
 interface DragState {
@@ -109,8 +110,8 @@ export const useTimeline = () => {
         setDuracionBloqueDrag(bloque?.duracionCompases ?? 0);
         setPistaIdHover(pistaId);
 
-        document.body.style.cursor = 'grabbing';
-        document.body.style.userSelect = 'none';
+        cuerpoDocumento().style.cursor = 'grabbing';
+        cuerpoDocumento().style.userSelect = 'none';
     }, [xACompas]);
 
     /*
@@ -153,8 +154,8 @@ export const useTimeline = () => {
             setPosicionDragFantasma(null);
             setPistaIdHover(null);
             setDuracionBloqueDrag(0);
-            document.body.style.cursor = '';
-            document.body.style.userSelect = '';
+            cuerpoDocumento().style.cursor = '';
+            cuerpoDocumento().style.userSelect = '';
         };
 
         document.addEventListener('mousemove', mover);

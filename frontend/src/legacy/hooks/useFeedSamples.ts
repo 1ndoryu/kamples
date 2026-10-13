@@ -33,6 +33,7 @@ import { useFeedRefresco } from '@app/hooks/useFeedRefresco';
 import type { SampleResumen } from '@app/types';
 import { requiereAuth } from '@app/utils/requiereAuth';
 import type { ProveedorSamples } from '@app/components/feed/FeedSamples';
+import { altoVentana, dejarDeEscucharVentana, escucharVentana } from '@/platform/ventana';
 
 export interface UseFeedSamplesOpciones {
     proveedor: ProveedorSamples;
@@ -390,7 +391,7 @@ export function useFeedSamples(opciones: UseFeedSamplesOpciones) {
 
         const raf = requestAnimationFrame(() => {
             const rect = sentinela.getBoundingClientRect();
-            const enZona = rect.top < window.innerHeight + 600;
+            const enZona = rect.top < altoVentana() + 600;
             if (enZona && !cargandoMasRef.current && !cargandoRef.current && hayMasPaginasRef.current) {
                 const nuevaPagina = paginaActualRef.current + 1;
                 throttle.programarCarga(nuevaPagina, () => {
@@ -411,8 +412,8 @@ export function useFeedSamples(opciones: UseFeedSamplesOpciones) {
             const nuevoInicio = Math.max(0, Math.floor(scrollTop / alturaTarjeta) - 10);
             setIndiceInicio(nuevoInicio);
         };
-        window.addEventListener('scroll', manejarScroll, { passive: true });
-        return () => window.removeEventListener('scroll', manejarScroll);
+        escucharVentana('scroll', manejarScroll, { passive: true });
+        return () => dejarDeEscucharVentana('scroll', manejarScroll);
     }, [virtualizar, alturaTarjeta]);
 
     /* Listener para CRUD de samples */
@@ -458,15 +459,15 @@ export function useFeedSamples(opciones: UseFeedSamplesOpciones) {
             cargarPaginaRef.current(1, true);
         };
 
-        window.addEventListener(EVENTO_SAMPLE_ELIMINADO, manejarEliminacion as EventListener);
-        window.addEventListener(EVENTO_SAMPLE_RESTAURADO, manejarRestauracion as EventListener);
-        window.addEventListener(EVENTO_SAMPLE_ACTUALIZADO, manejarActualizacion as EventListener);
-        window.addEventListener(EVENTO_SAMPLE_CREADO, manejarCreacion);
+        escucharVentana(EVENTO_SAMPLE_ELIMINADO, manejarEliminacion as EventListener);
+        escucharVentana(EVENTO_SAMPLE_RESTAURADO, manejarRestauracion as EventListener);
+        escucharVentana(EVENTO_SAMPLE_ACTUALIZADO, manejarActualizacion as EventListener);
+        escucharVentana(EVENTO_SAMPLE_CREADO, manejarCreacion);
         return () => {
-            window.removeEventListener(EVENTO_SAMPLE_ELIMINADO, manejarEliminacion as EventListener);
-            window.removeEventListener(EVENTO_SAMPLE_RESTAURADO, manejarRestauracion as EventListener);
-            window.removeEventListener(EVENTO_SAMPLE_ACTUALIZADO, manejarActualizacion as EventListener);
-            window.removeEventListener(EVENTO_SAMPLE_CREADO, manejarCreacion);
+            dejarDeEscucharVentana(EVENTO_SAMPLE_ELIMINADO, manejarEliminacion as EventListener);
+            dejarDeEscucharVentana(EVENTO_SAMPLE_RESTAURADO, manejarRestauracion as EventListener);
+            dejarDeEscucharVentana(EVENTO_SAMPLE_ACTUALIZADO, manejarActualizacion as EventListener);
+            dejarDeEscucharVentana(EVENTO_SAMPLE_CREADO, manejarCreacion);
         };
     }, []);
 

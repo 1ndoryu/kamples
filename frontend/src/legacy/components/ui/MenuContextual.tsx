@@ -10,6 +10,8 @@ import { createPortal } from 'react-dom';
 import '../../styles/componentes/menuContextual.css';
 import { BotonBase } from './BotonBase';
 import { useEsMovil } from '@app/hooks/useEsMovil';
+import { altoVentana, anchoVentana, dejarDeEscucharVentana, escucharVentana } from '@/platform/ventana';
+import { cuerpoDocumento } from '@/platform/documento';
 
 export interface MenuItemDef {
     id: string;
@@ -72,14 +74,14 @@ export const MenuContextual = ({
             const anchoReal = nodo?.offsetWidth ?? 160;
             const altoReal = nodo?.offsetHeight ?? (items.length * 36 + 8);
             const posX = alinearDerecha ? x - anchoReal : x;
-            const left = Math.max(margen, Math.min(posX, window.innerWidth - anchoReal - margen));
-            const top = Math.max(margen, Math.min(y, window.innerHeight - altoReal - margen));
+            const left = Math.max(margen, Math.min(posX, anchoVentana() - anchoReal - margen));
+            const top = Math.max(margen, Math.min(y, altoVentana() - altoReal - margen));
             setPosicionAjustada({ left, top });
         };
 
         ajustar();
-        window.addEventListener('resize', ajustar);
-        return () => window.removeEventListener('resize', ajustar);
+        escucharVentana('resize', ajustar);
+        return () => dejarDeEscucharVentana('resize', ajustar);
     }, [abierto, esMovil, items.length, x, y, alinearDerecha]);
 
     if (!abierto) return null;
@@ -138,7 +140,7 @@ export const MenuContextual = ({
                     </div>
                 </div>
             </>,
-            document.body
+            cuerpoDocumento()
         );
     }
 
@@ -154,7 +156,7 @@ export const MenuContextual = ({
                 {contenidoItems}
             </div>
         </>,
-        document.body
+        cuerpoDocumento()
     );
 };
 
