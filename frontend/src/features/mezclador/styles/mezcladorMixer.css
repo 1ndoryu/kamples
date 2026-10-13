@@ -387,12 +387,12 @@
 }
 
 .panelDetalleInsertColor:hover {
-    border-color: #fff;
+    border-color: var(--colorBlancoPuro);
     transform: scale(1.2);
 }
 
 .panelDetalleInsertColorActivo {
-    border-color: #fff;
+    border-color: var(--colorBlancoPuro);
     box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
 }
 

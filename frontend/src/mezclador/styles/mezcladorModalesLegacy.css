@@ -223,7 +223,7 @@
 
 .modalConfigModoBtn.activo {
     background: var(--acento);
-    color: white;
+    color: var(--colorBlancoPuro);
     font-weight: 600;
 }
 
@@ -253,5 +253,5 @@
 .modalConfigSnapBtn.modalConfigSnapBtnActivo {
     background: var(--acento);
     border-color: var(--acento);
-    color: #fff;
+    color: var(--colorBlancoPuro);
 }

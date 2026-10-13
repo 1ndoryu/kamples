@@ -12,7 +12,7 @@
     height: 100%;
     min-height: 400px;
     background: var(--fondoBase);
-    color: #ccc;
+    color: var(--colorGrisPerla);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: var(--fuenteXs);
     user-select: none;
@@ -48,7 +48,7 @@
     height: 24px;
     border: none;
     background: transparent;
-    color: #888;
+    color: var(--colorGrisMedio);
     border-radius: var(--radiusMezclador);
     cursor: pointer;
     transition:
@@ -57,13 +57,13 @@
 }
 
 .pianoRollBotonHerramienta:hover {
-    background: #2a2a4e;
-    color: #bbb;
+    background: var(--colorFondoPanelAzul);
+    color: var(--colorGrisPlata);
 }
 
 .pianoRollBotonHerramientaActiva {
     background: #3a3a6e;
-    color: #fff;
+    color: var(--colorBlancoPuro);
 }
 
 .pianoRollSeparador {
@@ -76,7 +76,7 @@
 
 .pianoRollSelectSnap {
     background: #1e1e38;
-    color: #ccc;
+    color: var(--colorGrisPerla);
     border: 1px solid #2a2a4a;
     border-radius: var(--radiusMezclador);
     padding: 2px 6px;
@@ -98,7 +98,7 @@
     height: 24px;
     border: 1px solid transparent;
     background: transparent;
-    color: #888;
+    color: var(--colorGrisMedio);
     border-radius: var(--radiusMezclador);
     cursor: pointer;
     font-size: var(--fuenteXs);
@@ -106,8 +106,8 @@
 }
 
 .pianoRollToggle:hover {
-    color: #bbb;
-    background: #2a2a4e;
+    color: var(--colorGrisPlata);
+    background: var(--colorFondoPanelAzul);
 }
 
 .pianoRollToggleActivo {
@@ -117,7 +117,7 @@
 }
 
 .pianoRollEtiquetaSnap {
-    color: #666;
+    color: var(--colorGrisOscuro);
     font-size: var(--fuente2xs);
     margin-right: 4px;
 }
@@ -137,7 +137,7 @@
     flex-shrink: 0;
     overflow: hidden;
     position: relative;
-    background: #111;
+    background: var(--colorGrisCasiNegro);
     border-right: 1px solid #333;
     z-index: 2;
 }
@@ -168,7 +168,7 @@
 
 .pianoRollTeclaNegra {
     background: #333;
-    color: #999;
+    color: var(--colorGrisSuave);
     z-index: 1;
 }
 
@@ -178,7 +178,7 @@
 
 .pianoRollTeclaActiva {
     background: #5c82ff !important;
-    color: #fff !important;
+    color: var(--colorBlancoPuro) !important;
 }
 
 .pianoRollTeclaLabel {
@@ -383,21 +383,21 @@
     height: 16px;
     border: none;
     background: transparent;
-    color: #888;
+    color: var(--colorGrisMedio);
     cursor: pointer;
     font-size: var(--fuente2xs);
     flex-shrink: 0;
 }
 
 .pianoRollPanelControlToggle:hover {
-    color: #ccc;
+    color: var(--colorGrisPerla);
 }
 
 .pianoRollPanelControlTab {
     padding: 2px 8px;
     border: none;
     background: transparent;
-    color: #666;
+    color: var(--colorGrisOscuro);
     font-size: var(--fuente2xs);
     cursor: pointer;
     border-radius: var(--radiusMezclador);
@@ -405,11 +405,11 @@
 }
 
 .pianoRollPanelControlTab:hover {
-    color: #aaa;
+    color: var(--colorGrisClaro);
 }
 
 .pianoRollPanelControlTabActivo {
-    color: #ccc;
+    color: var(--colorGrisPerla);
     background: #2a2a4a;
 }
 
@@ -473,7 +473,7 @@
     min-width: 160px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     font-size: var(--fuenteXs);
-    color: #ccc;
+    color: var(--colorGrisPerla);
 }
 
 .pianoRollMenuContextualItem {
@@ -484,7 +484,7 @@
     padding: 5px 12px;
     border: none;
     background: transparent;
-    color: #ccc;
+    color: var(--colorGrisPerla);
     font-size: var(--fuenteXs);
     cursor: pointer;
     text-align: left;
@@ -492,11 +492,11 @@
 }
 
 .pianoRollMenuContextualItem:hover {
-    background: #2a2a4e;
+    background: var(--colorFondoPanelAzul);
 }
 
 .pianoRollMenuContextualTitulo {
-    color: #888;
+    color: var(--colorGrisMedio);
     cursor: default;
     font-weight: 500;
 }
@@ -529,7 +529,7 @@
 
 .pianoRollMenuContextualColor:hover {
     transform: scale(1.25);
-    border-color: #fff;
+    border-color: var(--colorBlancoPuro);
 }
 
 .pianoRollMenuContextualVelocity {
@@ -543,7 +543,7 @@
     padding: 3px 0;
     border: 1px solid #3a3a5a;
     background: transparent;
-    color: #aaa;
+    color: var(--colorGrisClaro);
     border-radius: var(--radiusMezclador);
     font-size: var(--fuente2xs);
     cursor: pointer;
@@ -551,7 +551,7 @@
 }
 
 .pianoRollMenuContextualVelBtn:hover {
-    background: #2a2a4e;
-    color: #fff;
+    background: var(--colorFondoPanelAzul);
+    color: var(--colorBlancoPuro);
     border-color: #5a5a8a;
 }

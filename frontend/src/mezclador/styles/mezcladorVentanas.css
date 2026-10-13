@@ -77,7 +77,7 @@
 
 .ventanaFlotanteBotonCerrar:hover {
     background: var(--error);
-    color: #fff;
+    color: var(--colorBlancoPuro);
 }
 
 .ventanaFlotanteContenido {

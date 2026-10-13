@@ -87,6 +87,17 @@
   --landingPaddingHeroSuperior: 4rem;
   --landingFuenteTitulo: 'Junicode Landing', 'Times New Roman', serif;
   --landingFuenteSubtitulo: 'Bricolage Landing', var(--fuentePrincipal);
+  /* [F3] Colores literales de valor fijo, invariantes al tema (sustituyen hex/white en CSS). */
+  --colorBlancoPuro: #ffffff;
+  --colorNegroPuro: #000000;
+  --colorGrisCasiNegro: #111111;
+  --colorGrisOscuro: #666666;
+  --colorGrisMedio: #888888;
+  --colorGrisSuave: #999999;
+  --colorGrisClaro: #aaaaaa;
+  --colorGrisPlata: #bbbbbb;
+  --colorGrisPerla: #cccccc;
+  --colorFondoPanelAzul: #2a2a4e;
 }
 
 /* [13AA-1] Alias de compatibilidad para nombres en inglés de glory-css/ y glory-core/ (copias vendorizadas,

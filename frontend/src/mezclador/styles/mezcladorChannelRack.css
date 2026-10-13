@@ -246,7 +246,7 @@
 .canalLedSolo {
     background: var(--advertencia);
     box-shadow: 0 0 5px var(--advertencia);
-    color: #000;
+    color: var(--colorNegroPuro);
 }
 
 /* Knobs Container */
@@ -534,7 +534,7 @@
 
 .mezcladorModoBotonActivo {
     background: var(--acento);
-    color: #000;
+    color: var(--colorNegroPuro);
 }
 
 /* Ocultar etiquetas y valores en Channel Rack (Canales + Cabecera/Swing) para estilo minimalista */

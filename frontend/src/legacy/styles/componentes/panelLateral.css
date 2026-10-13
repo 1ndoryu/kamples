@@ -226,7 +226,7 @@
 }
 
 .panelColeccionPortadaNombre {
-    color: #fff;
+    color: var(--colorBlancoPuro);
     font-size: var(--fuenteSm);
     font-weight: var(--pesoSemibold);
     line-height: 1.2;

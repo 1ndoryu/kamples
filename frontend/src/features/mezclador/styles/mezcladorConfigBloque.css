@@ -125,7 +125,7 @@
 .configBloqueLedActivo {
     background: var(--exito);
     border-color: var(--exito);
-    color: #000;
+    color: var(--colorNegroPuro);
 }
 
 /* C311: LED on/off en el header de VentanaFlotante */
@@ -223,7 +223,7 @@
 
 .configBloqueModoBtn.activo {
     background: var(--acento);
-    color: white;
+    color: var(--colorBlancoPuro);
     font-weight: 600;
 }
 
