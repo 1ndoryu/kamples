@@ -3,6 +3,11 @@
   "private": true,
   "description": "Comandos unificados para el monorepo Rust + React",
   "scripts": {
+    "quality:setup": "node scripts/quality/quality-setup.mjs",
+    "quality:lock": "node scripts/quality/lock-generator.mjs --write",
+    "quality:lock:check": "node scripts/quality/lock-generator.mjs",
+    "quality:doctor": "sentinel doctor --json",
+    "quality:check": "npm run quality:lock:check && npm run quality:doctor",
     "check": "cargo check && cargo clippy && npm --prefix frontend run type-check",
     "check:back": "cargo check && cargo clippy",
     "check:front": "npm --prefix frontend run type-check",

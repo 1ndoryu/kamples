@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 2,
+  "mode": "enforce",
+  "budgets": {
+    "mode": "enforce"
+  },
+  "project": {
+    "primaryBranch": "main"
+  },
+  "guard": {
+    "directCommands": {
+      "npmScripts": [
+        "lint",
+        "test",
+        "build",
+        "check"
+      ],
+      "npxTools": [
+        "eslint",
+        "tsc",
+        "typescript",
+        "vitest"
+      ],
+      "cargoSubcommands": [],
+      "tools": [
+        "tsc",
+        "vitest",
+        "eslint"
+      ]
+    }
+  },
+  "analyzers": {
+    "sentinel": {
+      "enabled": true,
+      "profile": "node",
+      "config": {
+        "includePatterns": [
+          "**/*.ts",
+          "**/*.tsx",
+          "**/*.js",
+          "**/*.jsx",
+          "**/*.css"
+        ],
+        "excludePatterns": [
+          "**/node_modules/**",
+          "**/dist/**",
+          "**/build/**",
+          "**/target/**",
+          "**/.git/**",
+          "**/.quality-tools/**",
+          "**/.quality-reports/**",
+          "**/.sentinel/**"
+        ],
+        "directoryExceptions": [],
+        "rules": {},
+        "runtime": {
+          "minimumVersion": "",
+          "protocolVersion": 0,
+          "lockFile": ""
+        }
+      }
+    }
+  }
+}

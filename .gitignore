@@ -34,6 +34,7 @@ desktop.ini
 !/scripts/backup-postgres.sh
 !/scripts/backup-postgres-loop.sh
 !/scripts/audit-api.mjs
+!/scripts/quality/
 !/scripts/lib/
 !/scripts/lib/*.mjs
 /prerendered/
@@ -78,3 +79,8 @@ register_migrations.sql
 test-sine.wav
 clients/kamples-scraper/.lock_daily
 temp/
+
+# Calidad (Sentinel/VarSense): evidencia, reportes y runtime local
+.sentinel/
+.quality-reports/
+.runtime/
