@@ -93,18 +93,7 @@
 }
 
 /* Sección por categoría */
-.blogSeccion {
-    display: flex;
-    flex-direction: column;
-    gap: var(--espacioMd);
-}
 
-.blogSeccionTitulo {
-    font-size: var(--fuenteLg);
-    font-weight: var(--pesoMedio);
-    color: var(--textoPrimario);
-    text-transform: capitalize;
-}
 
 /* Estado vacío */
 .blogVacio {

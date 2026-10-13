@@ -177,7 +177,6 @@
     width: 100%;
 }
 
-.coleccionCargando,
 .coleccionError {
     display: flex;
     flex-direction: column;

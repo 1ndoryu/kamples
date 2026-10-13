@@ -22,26 +22,10 @@
 }
 
 /* Superposición de hover para mostrar posición */
-.waveformOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
+
 
 /* Línea indicadora de tiempo actual */
-.waveformLinea {
-    position: absolute;
-    top: 0;
-    width: 1px;
-    height: 100%;
-    background-color: var(--blanco);
-    opacity: 0.8;
-    pointer-events: none;
-    transition: left var(--transicionRapida);
-}
+
 
 /* Tiempo flotante al hacer hover */
 .waveformTiempoFlotante {

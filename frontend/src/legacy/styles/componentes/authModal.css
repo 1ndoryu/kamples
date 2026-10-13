@@ -77,31 +77,13 @@
 }
 
 /* Logo */
-.authLogo {
-    display: flex;
-    align-items: center;
-    gap: var(--espacioSm);
-    color: var(--textoPrimario);
-    margin-bottom: var(--espacioSm);
-}
 
-.authLogoTexto {
-    font-size: var(--fuenteLg);
-    font-weight: 700;
-    letter-spacing: -0.5px;
-}
 
 /* Titulo y subtitulo */
 .authTitulo {
     font-size: var(--fuenteXl);
     font-weight: 700;
     color: var(--textoPrimario);
-    margin: 0;
-}
-
-.authSubtitulo {
-    font-size: var(--fuenteSm);
-    color: var(--textoSecundario);
     margin: 0;
 }
 

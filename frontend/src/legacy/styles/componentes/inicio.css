@@ -23,12 +23,7 @@
 /* Centinela de scroll infinito */
 
 /* Sección de tags dinámicos */
-.inicioTags {
-    display: flex;
-    align-items: stretch;
-    flex-direction: column;
-    gap: var(--espacioSm);
-}
+
 
 /* Barra de ordenamientos + filtros */
 .inicioBarraControl {

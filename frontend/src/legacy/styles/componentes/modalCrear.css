@@ -334,7 +334,7 @@
     color: var(--textoSecundario);
 }
 
-.crearCondicionActiva, .crearCondicionPremium, .crearCondicionPrecio  {
+.crearCondicionActiva {
     border-color: var(--acento);
     color: var(--acento) !important;
     background-color: var(--fondoElevado3);

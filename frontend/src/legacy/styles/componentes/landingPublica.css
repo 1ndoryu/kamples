@@ -241,12 +241,7 @@
         line-height: 0.98;
     }
 
-    .landingHeroDescripcion,
-    .landingTrendingHeader h2,
-    .landingPlanes h2,
-    .landingPlan h3,
-    .landingFooterCta h2,
-    .landingNavLogo {
+    .landingHeroDescripcion {
         font-size: var(--landingTextoUi);
     }
 }

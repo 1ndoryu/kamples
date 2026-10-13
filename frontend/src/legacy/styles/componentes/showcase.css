@@ -72,12 +72,6 @@
 
 /* Paleta de colores */
 
-.showcaseColor {
-    display: flex;
-    flex-direction: column;
-    gap: var(--espacioXs);
-    align-items: center;
-}
 
 .showcaseColorNombre {
     font-size: var(--fuenteXs);

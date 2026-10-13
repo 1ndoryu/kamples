@@ -535,17 +535,7 @@
 }
 
 /* Detalle de decisión IA */
-.adminModeracionDetalle {
-    display: flex;
-    align-items: center;
-    gap: var(--espacioXs);
-    font-size: var(--fuenteXs);
-    color: var(--textoTerciario);
-    padding: var(--espacioXs) var(--espacioSm);
-    background: var(--fondoElevado2);
-    border-radius: var(--radioSm);
-    width: fit-content;
-}
+
 
 /*
  * C351: Galería de imágenes en tarjeta de moderación.

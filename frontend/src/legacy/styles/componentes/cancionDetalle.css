@@ -134,10 +134,7 @@
 }
 
 /* Tabla de relaciones: filas separadas por línea horizontal */
-.cancionDetalleRelaciones {
-    display: flex;
-    flex-direction: column;
-}
+
 
 /* YouTube embed */
 .cancionDetalleYoutube {

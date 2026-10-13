@@ -21,12 +21,6 @@
 
 /* C347: clase .publicacionDetalleVolver eliminada — ahora usa .botonVolver (botonBase.css) */
 
-.publicacionDetalleCargando {
-    text-align: center;
-    padding: var(--espacioXl) 0;
-    color: var(--textoSecundario);
-    font-size: var(--fuenteSm);
-}
 
 .publicacionDetalleError {
     display: flex;

@@ -17,19 +17,7 @@
 }
 
 /* D3: Logo Kamples */
-.topbarLogo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--textoPrimario);
-    flex-shrink: 0;
-    transition: color var(--transicionRapida);
-}
 
-.topbarLogo:hover {
-    color: var(--acento);
-}
 
 /* Tabs de navegación — columna izquierda, scroll horizontal si hay muchas */
 .topbarTabs {

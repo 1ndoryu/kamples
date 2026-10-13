@@ -25,12 +25,6 @@
 /* Reemplazado por EstadoVacio centralizado (C359) */
 
 /* Cargando */
-.exploradorCargando {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--espacio3xl);
-    color: var(--textoTerciario);
-}
+
 
 /* Paginación */

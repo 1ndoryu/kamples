@@ -144,3 +144,9 @@ Falsos positivos y huecos de herramientas, para el final (actualizar workspace-m
 - F1 cerrado con verificación §Verificación por lote.
 - Hallazgos F2/F3 restantes listados con conteo actualizado en el tablero y enlazados aquí.
 - Al cerrar cada fase: entrada en `Agente/completados/tareas-2026-10-13.md`.
+
+### Sesión 13AA-6 (claseHuerfana CSS, pase de verificación)
+
+- Hecho: 65 nombres SIN_USO (grep -w en todo el repo, solo CSS); 68 reglas y 76 selectores quitados en 19 CSS de `frontend/src`. Gate `--cierre`: 0 nuevos, 1351 abiertos. Detalle en [completados 13AA-6](../completados/tareas-2026-10-13.md).
+- Backlog de herramienta (nuevo): (a) Sentinel `claseHuerfana` marca 28 clases usadas literalmente en TSX (falsos positivos; causa sin verificar, probablemente nombres pasados por mapa); (b) la guarda de 13AA-3 confunde tallos (`paso`) con construcciones dinámicas; corregir con nombre completo; (c) la guarda de comentarios: el preludio de una regla incluye sus comentarios; tratarlos aparte.
+- Decidido: quitar selectores solo si su clase está en la lista SIN_USO y no aparece en ningún archivo no CSS; `:not()`/`:is()` no cuentan como uso. Motivo: un selector con clase ausente del DOM no coincide nunca, así que retirarlo no cambia el render.

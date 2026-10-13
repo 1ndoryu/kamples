@@ -158,13 +158,7 @@
 }
 
 /* Acciones */
-.tarjetaPubAcciones {
-    display: flex;
-    align-items: center;
-    gap: var(--espacioXl);
-    padding-top: var(--espacioSm);
-    border-top: 1px solid var(--bordeSutil);
-}
+
 
 /* Bloque de repost: indicador superior y contenido embebido del original */
 .tarjetaPubRepostIndicador {

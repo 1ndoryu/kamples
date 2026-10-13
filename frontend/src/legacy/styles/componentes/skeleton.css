@@ -18,14 +18,7 @@
 }
 
 /* Variante de texto — lineas con alturas predefinidas */
-.skeletonTexto {
-    height: 0.75rem;
-    width: 100%;
-}
 
-.skeletonTextoCorto {
-    width: 40%;
-}
 
 .skeletonTextoMedio {
     width: 65%;
