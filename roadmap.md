@@ -63,7 +63,7 @@
 
 ## Pendiente
 
-- Calidad Sentinel/VarSense KAMPLES (13AA-1): F1 hecho (0 nuevos, 2797 → 2543); F2 mecánica parcial; console-production hecho en escritorio (`3d55e63`) y en `useWebSocket.ts` (`2fcd15a`). Pendiente: console-production de `glory-core` (vendorizado, backlog), tokens y F3 de diseño con verificación visual; plan y backlog en [plan](Agente/planes/plan-calidad-sentinel-kamples-2026-10-13.md). F4 (Rust, 194 errores) pendiente: el cambio de config está en `rescate/sentinel-rs-kamples` (`f32fd05`), no en `main`.
+- Calidad Sentinel/VarSense KAMPLES (13AA-1): F1 hecho (0 nuevos, 2797 → 2543); F2 mecánica parcial; console-production hecho en escritorio (`3d55e63`) y en `useWebSocket.ts` (`2fcd15a`). Pendiente: console-production de `glory-core` (vendorizado, backlog), tokens y F3 de diseño con verificación visual; plan y backlog en [plan](Agente/planes/plan-calidad-sentinel-kamples-2026-10-13.md). F4 (Rust, 194 errores) pendiente: el cambio de config está en `rescate/sentinel-rs-kamples` (`f32fd05`), no en `main`. Decidido (13AA-5): no integrarla aún, porque activar `*.rs` en `main` haría que el gate `--cierre` cuente 194 hallazgos nuevos. Desbloqueo: triaje del lote F4; después integrar `f32fd05` por fast-forward o merge y borrar la rama.
 - admin/panel/ al recargar debería abrir la tab que estaba abierta no regresar al principio
 - Revisar excepción cargo-audit RUSTSEC-2023-0071 (rsa): **vence 2026-11-12**. Ver `.cargo/audit.toml`. Quitarla si hay parche o sqlx-mysql sale del lock; si no, renovar con fecha nueva.
 
