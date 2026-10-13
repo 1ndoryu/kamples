@@ -183,6 +183,13 @@ Falsos positivos y huecos de herramientas, para el final (actualizar workspace-m
 - Excepción: las 4 llamadas de `logger.ts` llevan `sentinel-disable-next-line console-production`, porque es el único punto de salida a consola. Cuentan como hallazgo aceptado en el tablero.
 - Build OK; tsc sin errores nuevos (solo los 3 preexistentes de `useAuth.ts`).
 
+## Sesión 13AE (genuinos sin cambio visual: token, any, singleton)
+
+- Commit `a59e462` en `main` (pusheado): `tokens.css` quita `--fondoElevado2/3` duplicados de `legacy/styles/variables.css`; `PageBuilder.tsx` cast sin `any` ni `eslint-disable`; `apiCache.ts` estado privado (`leerCacheApi`/`guardarCacheApi`); `useWordPressApi.ts` usa esas funciones.
+- Type-check: solo los 3 errores preexistentes de `legacy/hooks/useAuth.ts` (TS2591 `require`).
+- Gate `--cierre`: 0 nuevos; base 2797, ahora 980 abiertos (1817 resueltos).
+- Sin cambio visual: ninguno de estos cambios altera el render.
+
 ### Backlog de la herramienta (anotado, para el final)
 
 Falsos positivos o ruido a corregir en `workspace-manager` cuando se actualice la herramienta:
