@@ -1,0 +1,19 @@
+/* Clases extraídas de style={{}} inline en ModalSolicitudWhatsapp. */
+
+.modalSolicitudWhatsapp-inl1 {
+    font-size: var(--fuenteSm);
+    color: var(--textoPrimario);
+    line-height: 1.6;
+}
+
+.modalSolicitudWhatsapp-inl2 {
+    font-size: var(--fuenteSm);
+    color: var(--textoPrimario);
+    line-height: 1.6;
+}
+
+.modalSolicitudWhatsapp-inl3 {
+    font-size: var(--fuenteXs);
+    color: var(--textoSecundario);
+    line-height: 1.5;
+}

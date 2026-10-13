@@ -1,0 +1,27 @@
+/* modalSuspenderAdmin.css — Estilos extraídos de ModalSuspenderAdmin.tsx. */
+
+.modalSuspenderAdmin-inl1 {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.modalSuspenderAdmin-inl2 {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.modalSuspenderAdmin-inl3 {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: var(--fuenteMd);
+    color: var(--textoSecundario);
+}
+
+.modalSuspenderAdmin-inl4 {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: var(--fuenteMd);
+    color: var(--textoSecundario);
+}

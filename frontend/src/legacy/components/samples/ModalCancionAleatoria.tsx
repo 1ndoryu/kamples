@@ -19,6 +19,7 @@ import { useLikeCancion } from '@app/hooks/useLikeCancion';
 import { ETIQUETAS_ROL } from '@app/types/cancion';
 import { useNavigationStore } from '@/core/router';
 import '../../styles/componentes/cancionDetalle.css';
+import '../../styles/componentes/modalCancionAleatoria.css';
 
 interface Props {
     ctrl: ReturnType<typeof useCancionAleatoria>;
@@ -41,7 +42,7 @@ export const ModalCancionAleatoria = ({ ctrl }: Props): JSX.Element | null => {
             tamano="grande"
         >
             {/* [223A-3-E] Filtros género y década centrados arriba */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--espacioSm)', marginBottom: 'var(--espacioMd)', flexWrap: 'wrap' }}>
+            <div className="modalCancionAleatoria-inl1">
                 {ctrl.generosDisponibles.length > 0 && (
                     <SelectFiltro
                         etiqueta="Género"
@@ -65,17 +66,17 @@ export const ModalCancionAleatoria = ({ ctrl }: Props): JSX.Element | null => {
             </div>
 
             {cargando || !cancion ? (
-                <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
+                <div className="modalCancionAleatoria-inl2">
                     <Loader2 size={32} className="animacionGiro" />
                 </div>
             ) : (
-                <div className="cancionDetalleTarjeta" style={{ border: 'none', boxShadow: 'none' }}>
+                <div className="cancionDetalleTarjeta modalCancionAleatoria-inl3">
                     <div className="cancionDetalleCabecera">
                         <div className="cancionDetallePortada">
                             {cancion.imagenUrl ? (
                                 <img src={cancion.imagenUrl} alt={cancion.titulo} loading="lazy" />
                             ) : (
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                                <div className="modalCancionAleatoria-inl4">
                                     <Music size={48} color="var(--textoTerciario)" />
                                 </div>
                             )}
@@ -83,8 +84,7 @@ export const ModalCancionAleatoria = ({ ctrl }: Props): JSX.Element | null => {
 
                         <div className="cancionDetalleInfo">
                             <h2
-                                className="cancionDetalleTitulo"
-                                style={{ cursor: 'pointer' }}
+                                className="cancionDetalleTitulo modalCancionAleatoria-inl5"
                                 onClick={() => { ctrl.cerrar(); navegar(`/cancion/${cancion.slug}`); }}
                             >
                                 {cancion.titulo}
@@ -189,13 +189,13 @@ export const ModalCancionAleatoria = ({ ctrl }: Props): JSX.Element | null => {
                             ?? 0;
                         const startParam = primerTiming > 0 ? `&start=${Math.floor(primerTiming)}` : '';
                         return (
-                            <div className="cancionDetalleYoutube" style={{ marginTop: 'var(--espacioMd)' }}>
+                            <div className="cancionDetalleYoutube modalCancionAleatoria-inl6">
                                 <iframe
                                     src={`https://www.youtube-nocookie.com/embed/${cancion.youtubeId}?autoplay=1${startParam}`}
                                     title={`${cancion.titulo} - YouTube`}
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope"
                                     allowFullScreen
-                                    style={{ width: '100%', aspectRatio: '16/9', border: 'none', borderRadius: 'var(--radio-md, 8px)' }}
+                                    className="modalCancionAleatoria-inl7"
                                 />
                             </div>
                         );
@@ -203,7 +203,7 @@ export const ModalCancionAleatoria = ({ ctrl }: Props): JSX.Element | null => {
 
                     {/* Resumen relaciones */}
                     {(detalle.samplesDe.length > 0 || detalle.sampleadaEn.length > 0) && (
-                        <div style={{ marginTop: 'var(--espacioMd)', fontSize: '0.85rem', opacity: 0.7 }}>
+                        <div className="modalCancionAleatoria-inl8">
                             {detalle.samplesDe.length > 0 && (
                                 <span>Samplea a {detalle.samplesDe.length} canción(es) · </span>
                             )}
@@ -215,13 +215,7 @@ export const ModalCancionAleatoria = ({ ctrl }: Props): JSX.Element | null => {
 
                     {/* Mensaje de resultado de recorte */}
                     {ctrl.mensajeRecorte && (
-                        <div style={{
-                            marginTop: 'var(--espacioSm)',
-                            fontSize: '0.8rem',
-                            padding: '0.5rem',
-                            borderRadius: 'var(--radio-sm, 4px)',
-                            background: 'var(--fondoTerciario, #1a1a1a)',
-                        }}>
+                        <div className="modalCancionAleatoria-inl9">
                             {ctrl.mensajeRecorte}
                         </div>
                     )}

@@ -282,4 +282,6 @@ a {
   --medidaRem-1_6: 1.6rem;
   --medidaRem-1_7: 1.7rem;
   --medidaRem-1_9: 1.9rem;
+  --colorRgba-26-26-26-1: rgba(26, 26, 26, 1);
+  --colorRgba-156-163-175-1: rgba(156, 163, 175, 1);
 }

@@ -14,6 +14,7 @@ import { CampoTexto } from '../ui/CampoTexto';
 import { useReportar } from '@app/hooks/useReportar';
 import { useT } from '@app/utils/i18n/useT';
 import '../../styles/componentes/modalReportarError.css';
+import '../../styles/componentes/modalReportar.css';
 
 export const ModalReportar = (): JSX.Element | null => {
     const {
@@ -44,7 +45,7 @@ export const ModalReportar = (): JSX.Element | null => {
         >
             <div className="reportarErrorFormulario">
                 {tipo === 'usuario' && targetNombre && (
-                    <p className="reportarErrorNota" style={{ fontSize: 'var(--fuenteSm)', color: 'var(--textoPrimario)' }}>
+                    <p className="reportarErrorNota modalReportar-inl1">
                         {t('reporte.reportandoA')} <strong>@{targetNombre}</strong>
                     </p>
                 )}

@@ -1,0 +1,20 @@
+.appIslands-inl1 {
+    padding: 32px;
+    color: var(--colorRojoError);
+    font-family: monospace;
+    white-space: pre-wrap;
+    background: var(--colorRgba-26-26-26-1);
+    height: 100vh;
+    overflow: auto;
+}
+
+.appIslands-inl2 {
+    color: var(--colorRojoError);
+    margin-bottom: 16px;
+}
+
+.appIslands-inl3 {
+    color: var(--colorRgba-156-163-175-1);
+    font-size: var(--fuenteSm);
+    margin-top: 12px;
+}

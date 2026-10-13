@@ -76,7 +76,7 @@ const FilaPapelera = ({
                 aria-label={`Restaurar ${item.titulo}`}
             >
                 {restaurando ? (
-                    <Loader2 size={14} style={{ animation: 'girar 1s linear infinite' }} />
+                    <Loader2 size={14} className="modalPapelera-inl1" />
                 ) : (
                     <RotateCcw size={14} />
                 )}

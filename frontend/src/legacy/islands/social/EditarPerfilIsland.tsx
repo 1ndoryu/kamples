@@ -13,6 +13,7 @@ import { conAutenticacion } from '../../components/auth/ConAutenticacion';
 import { useEditarPerfil } from '@app/hooks/useEditarPerfil';
 import { SkeletonPerfil } from '@app/components/skeletons';
 import '../../styles/componentes/editarPerfil.css';
+import '../../styles/componentes/editarPerfilIsland.css';
 
 export const EditarPerfilIsland = (): JSX.Element => {
     const {
@@ -43,7 +44,7 @@ export const EditarPerfilIsland = (): JSX.Element => {
                     {portadaUrl && <img src={portadaUrl} alt="Portada" />}
                     <div className="editarPerfilPortadaOverlay">
                         <Camera size={20} />
-                        <span style={{ marginLeft: 8 }}>Cambiar portada</span>
+                        <span className="editarPerfilIsland-inl1">Cambiar portada</span>
                     </div>
                     <Input
                         ref={portadaInputRef}
@@ -74,7 +75,7 @@ export const EditarPerfilIsland = (): JSX.Element => {
                         />
                     </div>
                     <div>
-                        <p style={{ color: 'var(--textoSecundario)', fontSize: 'var(--fuenteSm)' }}>
+                        <p className="editarPerfilIsland-inl2">
                             Click para cambiar avatar
                         </p>
                     </div>

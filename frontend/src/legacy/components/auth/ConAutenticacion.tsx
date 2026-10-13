@@ -7,6 +7,7 @@
 import { useEffect, type ComponentType, type JSX } from 'react';
 import { useAuthStore } from '@app/stores/authStore';
 import { useAuthModalStore } from '@app/stores/authModalStore';
+import '../../styles/componentes/conAutenticacion.css';
 
 interface OpcionesGuard {
     mensajeCarga?: string;
@@ -38,13 +39,7 @@ export function conAutenticacion<P extends Record<string, unknown>>(
 
         if (cargando) {
             return (
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    minHeight: '300px',
-                    color: 'var(--textoSecundario)',
-                }}>
+                <div className="conAutenticacion-inl1">
                     {mensajeCarga}
                 </div>
             );

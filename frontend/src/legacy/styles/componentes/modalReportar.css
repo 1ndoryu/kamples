@@ -1,0 +1,6 @@
+/* modalReportar.css — Estilos extraídos de ModalReportar.tsx. */
+
+.modalReportar-inl1 {
+    font-size: var(--fuenteSm);
+    color: var(--textoPrimario);
+}

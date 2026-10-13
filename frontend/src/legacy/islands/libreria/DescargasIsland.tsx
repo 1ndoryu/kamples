@@ -22,6 +22,7 @@ import { conAutenticacion } from '@app/components/auth/ConAutenticacion';
 import { obtenerImagenColor } from '@app/services/imagenesColor';
 import { useFiltrosStore } from '@app/stores/filtrosStore';
 import '../../styles/componentes/coleccionDetalle.css';
+import '../../styles/componentes/descargasIsland.css';
 import { BotonBase } from '../../components/ui/BotonBase';
 import { SkeletonColeccionDetalle } from '@app/components/skeletons';
 import { ModalFiltros } from '@app/components/ui/ModalFiltros';
@@ -237,7 +238,7 @@ const DescargasBase = (): JSX.Element => {
                 cargandoComprados ? (
                     <SkeletonColeccionDetalle cantidadSamples={3} />
                 ) : comprados.length === 0 ? (
-                    <div className="coleccionVacia" style={{ flexDirection: 'column', gap: 'var(--espacioMd)' }}>
+                    <div className="coleccionVacia descargasIsland-inl1">
                         <ShoppingBag size={32} />
                         <p>{t('descargas.mensajeVacio.comprados')}</p>
                     </div>

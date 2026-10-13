@@ -27,6 +27,7 @@ import { ETIQUETAS_ROL } from '@app/types/cancion';
 import { EstadoVacio } from '@app/components/ui/EstadoVacio';
 import '../../styles/componentes/cancionDetalle.css';
 import '../../styles/componentes/seccionRelaciones.css';
+import '../../styles/componentes/cancionDetalleIsland.css';
 
 const TABS_CANCION = [{ id: 'cancion', etiqueta: 'Canción' }];
 
@@ -106,7 +107,7 @@ export const CancionDetalleIsland = ({ slug }: CancionDetalleProps): JSX.Element
                 <div className="cancionDetalleTarjeta">
                     <div className="cancionDetalleCabecera">
                         <Skeleton alto={160} ancho={160} />
-                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--espacioSm)' }}>
+                        <div className="cancionDetalleIsland-inl1">
                             <Skeleton alto={28} />
                             <Skeleton alto={20} ancho={200} />
                             <Skeleton alto={16} ancho={120} />
@@ -146,7 +147,7 @@ export const CancionDetalleIsland = ({ slug }: CancionDetalleProps): JSX.Element
                         {cancion.imagenUrl ? (
                             <img src={cancion.imagenUrl} alt={cancion.titulo} loading="lazy" />
                         ) : (
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                            <div className="cancionDetalleIsland-inl2">
                                 <Music size={48} color="var(--textoTerciario)" />
                             </div>
                         )}

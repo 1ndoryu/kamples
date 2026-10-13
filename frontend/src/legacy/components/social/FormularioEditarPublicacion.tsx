@@ -10,6 +10,7 @@ import { Input } from '@app/components/ui/Input';
 import { Music, X, Camera } from 'lucide-react';
 import type { FormularioPublicacion } from '@app/hooks/useEditar';
 import type { useArchivosDragDrop } from '@app/hooks/useArchivosDragDrop';
+import '../../styles/componentes/formularioEditarPublicacion.css';
 
 interface FormularioEditarPublicacionProps {
     formulario: FormularioPublicacion;
@@ -113,13 +114,13 @@ export const FormularioEditarPublicacion = ({
         )}
 
         {/* Inputs ocultos para adjuntar archivos */}
-        <Input id="editar-input-audio" type="file" accept=".wav,.mp3,.flac,.aiff,.aif" style={{ display: 'none' }} onChange={archivos.manejarInputAudio} />
-        <Input id="editar-input-imagen" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple style={{ display: 'none' }} onChange={archivos.manejarInputImagen} />
+        <Input id="editar-input-audio" type="file" accept=".wav,.mp3,.flac,.aiff,.aif" className="formularioEditarPublicacion-inl1" onChange={archivos.manejarInputAudio} />
+        <Input id="editar-input-imagen" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple className="formularioEditarPublicacion-inl2" onChange={archivos.manejarInputImagen} />
         <Input
             id="editar-input-reemplazar"
             type="file"
             accept="image/jpeg,image/png,image/webp,image/gif"
-            style={{ display: 'none' }}
+            className="formularioEditarPublicacion-inl3"
             onChange={(e) => {
                 const slot = slotReemplazar.current;
                 if (!slot || !e.target.files?.length) return;

@@ -1,0 +1,12 @@
+/* chatIsland.css — Estilos extraídos de ChatIsland.tsx. */
+
+.chatIsland-inl1 {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+}
+
+.chatIsland-inl2 {
+    display: none;
+}

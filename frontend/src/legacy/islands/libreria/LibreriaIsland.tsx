@@ -21,6 +21,7 @@ import { useAuthStore } from '@app/stores/authStore';
 import { EstadoVacio } from '@app/components/ui/EstadoVacio';
 import { useT } from '@app/utils/i18n';
 import '../../styles/componentes/libreria.css';
+import '../../styles/componentes/libreriaIsland.css';
 
 const TABS_LIBRERIA = [
     { id: 'explorar', etiqueta: 'panel.libreria.explorar' },
@@ -224,10 +225,10 @@ export const LibreriaIsland = (): JSX.Element => {
                                 </div>
                                 {/* [2003A-39] Sentinel para infinite scroll */}
                                 {hayMasExplorar && (
-                                    <div ref={sentinelaCallback} style={{ height: 1 }} />
+                                    <div ref={sentinelaCallback} className="libreriaIsland-inl1" />
                                 )}
                                 {cargandoMas && (
-                                    <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--espacioLg)', gap: 'var(--espacioMd)' }}>
+                                    <div className="libreriaIsland-inl2">
                                         <SkeletonTarjetaColeccion />
                                         <SkeletonTarjetaColeccion />
                                     </div>

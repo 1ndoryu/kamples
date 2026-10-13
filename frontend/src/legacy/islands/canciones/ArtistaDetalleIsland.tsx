@@ -17,6 +17,7 @@ import type { Cancion } from '@app/types/cancion';
 import '../../styles/componentes/artistaDetalle.css';
 import '../../styles/componentes/tablaRelaciones.css';
 import '../../styles/componentes/seccionRelaciones.css';
+import '../../styles/componentes/artistaDetalleIsland.css';
 
 const TABS_ARTISTA = [
     { id: 'canciones', etiqueta: 'Canciones' },
@@ -38,7 +39,7 @@ export const ArtistaDetalleIsland = ({ slug }: ArtistaDetalleProps): JSX.Element
             <div className="artistaDetalleContenedor" id="seccionArtistaDetalle">
                 <div className="artistaDetalleCabecera">
                     <Skeleton alto={120} ancho={120} />
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--espacioSm)' }}>
+                    <div className="artistaDetalleIsland-inl1">
                         <Skeleton alto={28} ancho={250} />
                         <Skeleton alto={16} ancho={180} />
                     </div>

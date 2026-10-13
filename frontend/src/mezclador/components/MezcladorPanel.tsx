@@ -21,6 +21,7 @@ import {useBrowserDaw} from '../hooks/useBrowserDaw';
 import {FEATURE_FLAGS} from '../featureFlags';
 /* C293: CSS refactorizado en módulos */
 import '../styles/index.css';
+import '../../legacy/styles/componentes/mezcladorPanel.css';
 import { BotonBase } from '@app/components/ui/BotonBase';
 import { Input } from '@app/components/ui/Input';
 
@@ -101,7 +102,7 @@ const MezcladorContenido = (): JSX.Element => {
                     <BotonBase variante="ghost" className="mezcladorBotonCabecera" onClick={() => inputArchivoRef.current?.click()} title="Subir audio desde PC">
                         <FolderUp size={14} />
                     </BotonBase>
-                    <Input ref={inputArchivoRef} type="file" accept="audio/*" multiple onChange={alSeleccionarArchivo} style={{display: 'none'}} />
+                    <Input ref={inputArchivoRef} type="file" accept="audio/*" multiple onChange={alSeleccionarArchivo} className="mezcladorPanel-inl1" />
                     {exportando && <Loader size={14} className="mezcladorSpinner" />}
                     <BotonBase variante="ghost" className="mezcladorBotonCabecera" onClick={descargarMezcla} disabled={!puedeExportar || exportando} title="Descargar mezcla (1 crédito)">
                         <Download size={14} />

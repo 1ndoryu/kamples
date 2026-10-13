@@ -184,3 +184,7 @@
 .papeleraSkeletonLineaLarga {
     width: 40%;
 }
+
+.modalPapelera-inl1 {
+    animation: girar 1s linear infinite;
+}

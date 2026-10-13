@@ -40,6 +40,7 @@ import { useCodigosGratis } from '@app/hooks/useCodigosGratis';
 import type { SampleResumen } from '@app/types';
 import { useT } from '@app/utils/i18n/useT';
 import '../../styles/componentes/sampleDetalle.css';
+import '../../styles/componentes/sampleDetalleIsland.css';
 
 const TABS_SAMPLE_DETALLE = [{ id: 'sample', etiqueta: 'Sample' }];
 
@@ -83,10 +84,10 @@ export const SampleDetalleIsland = ({ slug: slugProp }: SampleDetalleProps): JSX
     if (cargando) {
         return (
             <div className="detalleContenedor" id="seccionSampleDetalle">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--espacioMd)', padding: 'var(--espacioLg)' }}>
+                <div className="sampleDetalleIsland-inl1">
                     <Skeleton alto={64} />
                     <Skeleton alto={120} />
-                    <div style={{ display: 'flex', gap: 'var(--espacioSm)' }}>
+                    <div className="sampleDetalleIsland-inl2">
                         <Skeleton alto={32} ancho={80} />
                         <Skeleton alto={32} ancho={80} />
                         <Skeleton alto={32} ancho={80} />

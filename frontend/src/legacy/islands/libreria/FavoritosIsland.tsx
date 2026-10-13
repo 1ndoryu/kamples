@@ -28,6 +28,7 @@ import { obtenerImagenColor } from '@app/services/imagenesColor';
 import { useT } from '@app/utils/i18n';
 import '../../styles/componentes/coleccionDetalle.css';
 import { BotonBase } from '../../components/ui/BotonBase';
+import '../../styles/componentes/favoritosIsland.css';
 
 const TABS_FAVORITOS = [
     { id: 'favoritos', etiqueta: 'favoritos.tabs.misFavoritos' },
@@ -110,7 +111,7 @@ const FavoritosBase = (): JSX.Element => {
             {/* Contenido según tab activa — key distinta fuerza desmontaje (C46) */}
             {tabActiva === 'favoritos' ? (
                 samples.length === 0 ? (
-                    <div className="coleccionVacia" style={{ flexDirection: 'column', gap: 'var(--espacioMd)' }}>
+                    <div className="coleccionVacia favoritosIsland-inl1">
                         <Heart size={32} />
                         <p>{t('descargas.mensajeVacio.favoritos')}</p>
                     </div>

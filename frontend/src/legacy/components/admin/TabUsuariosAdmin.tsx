@@ -18,6 +18,7 @@ import { ModalSuspenderAdmin } from './ModalSuspenderAdmin';
 import { useTabUsuariosAdmin } from '@app/hooks/useTabUsuariosAdmin';
 import { KpisCompactosAdmin } from './KpisCompactosAdmin';
 import { useT } from '@app/utils/i18n/useT';
+import '../../styles/componentes/tabUsuariosAdmin.css';
 
 interface TabUsuariosAdminProps {
     kpis?: KpisAdmin | null;
@@ -151,7 +152,7 @@ export const TabUsuariosAdmin = ({
                                         <a href={`/perfil/${u.username}/`} target="_blank" rel="noopener noreferrer" className="adminUsuarioNombreLink">
                                             <span className="adminUsuarioNombre">
                                                 {u.nombre_visible || u.username}
-                                                {u.verificado && <BadgeCheck size={12} style={{ marginLeft: '4px', color: 'var(--acento)' }} />}
+                                                {u.verificado && <BadgeCheck size={12} className="tabUsuariosAdmin-inl1" />}
                                             </span>
                                         </a>
                                         <span className="adminUsuarioUsername">@{u.username}</span>

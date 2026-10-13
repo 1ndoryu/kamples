@@ -133,7 +133,7 @@ const VentanaChat = ({ chat }: { chat: ChatFlotanteInfo }): JSX.Element => {
                 )}
                 <Input ref={archivoRef} type="file"
                     accept="image/jpeg,image/png,image/gif,image/webp,audio/mpeg,audio/wav,audio/ogg"
-                    onChange={manejarArchivo} style={{ display: 'none' }} />
+                    onChange={manejarArchivo} className="chatFlotante-inl1" />
                 {/* [183A-103] Fila de controles: adjuntar + input + enviar en su propio div */}
                 <div className="chatFlotanteInputFila">
                     <BotonBase variante="ghost" className="chatFlotanteAdjuntarBtn" onClick={() => archivoRef.current?.click()}

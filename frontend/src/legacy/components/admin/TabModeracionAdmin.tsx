@@ -18,6 +18,7 @@ import { getT } from '@app/utils/i18n';
 import type { DatosModeracion, PublicacionModeracion, ArticuloModeracion } from '../../services/apiAdmin';
 import { BotonBase, EstadoVacio, MenuContextual, Modal, SelectorBase, Input } from '../ui';
 import type { MenuItemDef } from '../ui';
+import '../../styles/componentes/tabModeracionAdmin.css';
 
 type DuracionBan = '1h' | '24h' | '7d' | '30d';
 
@@ -326,7 +327,7 @@ export const TabModeracionAdmin = ({
                                     </div>
                                     <div className="adminModeracionContenido">
                                         <strong>{art.titulo}</strong>
-                                        {art.extracto && <p style={{ margin: '4px 0 0', opacity: 0.7 }}>{art.extracto}</p>}
+                                        {art.extracto && <p className="tabModeracionAdmin-inl1">{art.extracto}</p>}
                                     </div>
                                     <div className="adminModeracionAcciones">
                                         <BotonBase variante="ghost" className="historialBoton" onClick={() => window.open(`/blog/${art.slug}/`, '_blank')} type="button">{t('admin.moderacion.ver')}</BotonBase>
@@ -423,7 +424,7 @@ export const TabModeracionAdmin = ({
                     placeholder={t('admin.moderacion.razonPlaceholder')}
                     value={banModal.razon}
                     onChange={(e) => setBanModal(prev => ({ ...prev, razon: e.target.value }))}
-                    style={{ marginTop: 'var(--espacioMd)', width: '100%', boxSizing: 'border-box' }}
+                    className="tabModeracionAdmin-inl2"
                 />
             </Modal>
         </>

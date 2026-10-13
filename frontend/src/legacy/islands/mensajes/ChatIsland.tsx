@@ -10,6 +10,7 @@ import { BurbujaMensaje } from '@app/components/social/BurbujaMensaje';
 import { useChatIsland } from '@app/hooks/useChatIsland';
 import { conAutenticacion } from '@app/components/auth/ConAutenticacion';
 import '../../styles/componentes/chat.css';
+import '../../styles/componentes/chatIsland.css';
 import { BotonBase } from '../../components/ui/BotonBase';
 import { CampoTexto } from '../../components/ui/CampoTexto';
 import { Input } from '../../components/ui/Input';
@@ -63,7 +64,7 @@ const ChatIslandBase = ({ conversacionId: propId }: ChatIslandProps): JSX.Elemen
                     </div>
                 )}
                 {cargando ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 16 }}>
+                    <div className="chatIsland-inl1">
                         {Array.from({ length: 4 }).map((_, i) => (
                             <Skeleton key={`chat-skeleton-${i}`} ancho={i % 2 === 0 ? '60%' : '45%'} alto={36} className={i % 2 === 0 ? '' : 'skeleton'} />
                         ))}
@@ -85,7 +86,7 @@ const ChatIslandBase = ({ conversacionId: propId }: ChatIslandProps): JSX.Elemen
             <div className="chatInputArea">
                 <Input ref={archivoRef} type="file"
                     accept="image/jpeg,image/png,image/gif,image/webp,audio/mpeg,audio/wav,audio/ogg"
-                    onChange={manejarArchivo} style={{ display: 'none' }} />
+                    onChange={manejarArchivo} className="chatIsland-inl2" />
                 <BotonBase variante="ghost" className="chatAdjuntarBtn" onClick={() => archivoRef.current?.click()}
                     type="button" aria-label="Adjuntar archivo" disabled={enviando}>
                     <Paperclip size={18} />

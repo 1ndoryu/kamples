@@ -24,6 +24,7 @@ import { useT } from '@app/utils/i18n';
 import { useTooltipPerfilStore } from '@app/stores/tooltipPerfilStore';
 import type { UsuarioResumen } from '@app/types/usuario';
 import '../../styles/componentes/comunidad.css';
+import '../../styles/componentes/comunidadIsland.css';
 
 /* [193A-65] Tabs se construyen dentro del componente para acceder a t() */
 
@@ -209,7 +210,7 @@ const ComunidadBase = (): JSX.Element => {
 
     if (cargandoAuth) {
         return (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '300px', color: 'var(--textoSecundario)' }}>
+            <div className="comunidadIsland-inl1">
                 Verificando sesión...
             </div>
         );

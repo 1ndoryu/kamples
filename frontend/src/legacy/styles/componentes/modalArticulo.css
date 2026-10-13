@@ -496,3 +496,7 @@
         height: 60px;
     }
 }
+
+.modalArticulo-inl1 {
+    display: none;
+}

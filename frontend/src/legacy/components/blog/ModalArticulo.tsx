@@ -137,7 +137,7 @@ const ContenidoEditor = (): JSX.Element => {
                 type="file"
                 accept="image/*"
                 onChange={manejarPortada}
-                style={{ display: 'none' }}
+                className="modalArticulo-inl1"
             />
 
             {/* Toolbar — [183A-110-C] Botón adjuntar sample/colección añadido */}

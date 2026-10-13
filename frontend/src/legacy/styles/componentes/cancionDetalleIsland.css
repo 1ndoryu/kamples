@@ -1,0 +1,15 @@
+/* Clases extraídas de style={{}} inline en CancionDetalleIsland. */
+
+.cancionDetalleIsland-inl1 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacioSm);
+}
+
+.cancionDetalleIsland-inl2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}

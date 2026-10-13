@@ -1,0 +1,10 @@
+.libreriaIsland-inl1 {
+    height: 1px;
+}
+
+.libreriaIsland-inl2 {
+    display: flex;
+    justify-content: center;
+    padding: var(--espacioLg);
+    gap: var(--espacioMd);
+}

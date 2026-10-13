@@ -27,6 +27,7 @@ import {CampoTexto} from '../ui/CampoTexto';
 import {Input} from '../ui/Input';
 import {useT} from '@app/utils/i18n';
 import {SelectorIdioma} from '@app/components/ui/SelectorIdioma';
+import '../../styles/componentes/configuracionSecciones.css';
 
 /* Tipo del resultado del hook — usado en Desktop y Móvil */
 export type HookConfiguracion = ReturnType<typeof useModalConfiguracion>;
@@ -233,7 +234,7 @@ export const ContenidoSeccion = ({h}: {h: HookConfiguracion}): JSX.Element | nul
                     {/* [183A-111] Selector de idioma integrado en la sección apariencia */}
                     <div className="configSeccion">
                         <label className="configLabel">
-                            <Globe size={14} style={{display: 'inline', marginRight: '6px', verticalAlign: 'middle'}} />
+                            <Globe size={14} className="configuracionSecciones-inl1" />
                             {t('config.idioma')}
                         </label>
                         <span className="configSubtexto">{t('config.idioma.descripcion')}</span>

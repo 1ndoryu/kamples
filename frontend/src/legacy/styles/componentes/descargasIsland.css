@@ -1,0 +1,6 @@
+/* descargasIsland.css — Estilos extraídos de DescargasIsland.tsx. */
+
+.descargasIsland-inl1 {
+    flex-direction: column;
+    gap: var(--espacioMd);
+}

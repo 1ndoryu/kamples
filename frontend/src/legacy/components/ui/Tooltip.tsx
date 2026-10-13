@@ -40,7 +40,7 @@ export const Tooltip = ({
             data-tooltip={texto}
             data-tooltip-posicion={posicion !== 'top' ? posicion : undefined}
             data-tooltip-demora={demora !== undefined ? String(demora) : undefined}
-            style={{ display: 'inline-flex' }}
+            className="tooltip-inl1"
         >
             {children}
         </span>

@@ -11,6 +11,7 @@ import { CampoTexto } from '../ui/CampoTexto';
 import { SelectorMenu, type OpcionSelector } from '../ui/SelectorMenu';
 import { useT } from '@app/utils/i18n/useT';
 import type { UsuarioAdmin } from '@app/services/apiAdmin';
+import '../../styles/componentes/modalSuspenderAdmin.css';
 
 type AccionSuspension = 'suspender' | 'eliminar' | null;
 
@@ -58,7 +59,7 @@ export const ModalSuspenderAdmin = ({
     };
 
     const pie = (
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+        <div className="modalSuspenderAdmin-inl1">
             <BotonBase variante="ghost" onClick={onCerrar} disabled={procesando} type="button">
                 {t('comun.cancelar')}
             </BotonBase>
@@ -85,12 +86,12 @@ export const ModalSuspenderAdmin = ({
             tamano="pequeno"
             pie={pie}
         >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div className="modalSuspenderAdmin-inl2">
                 {accion === 'suspender' && (
                     <div>
                         <label
                             htmlFor="duracionSuspension"
-                            style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.85rem', color: 'var(--textoSecundario)' }}
+                            className="modalSuspenderAdmin-inl3"
                         >
                             {t('admin.suspender.duracion')}
                         </label>
@@ -106,7 +107,7 @@ export const ModalSuspenderAdmin = ({
                 <div>
                     <label
                         htmlFor="razonSuspension"
-                        style={{ display: 'block', marginBottom: '0.25rem', fontSize: '0.85rem', color: 'var(--textoSecundario)' }}
+                        className="modalSuspenderAdmin-inl4"
                     >
                         {accion === 'eliminar' ? t('admin.suspender.razonEliminacion') : t('admin.suspender.razonSuspension')}
                     </label>

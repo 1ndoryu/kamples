@@ -46,6 +46,7 @@ import {BlogPageIsland} from './islands/blog/BlogPageIsland';
 import {LayoutPrincipal} from '@app/components/layout/LayoutPrincipal';
 import {InicializadorAuth} from '@app/components/auth/InicializadorAuth';
 import { crearLogger } from './services/logger';
+import './styles/componentes/appIslands.css';
 const log = crearLogger('Kamples');
 
 // Register blocks
@@ -73,10 +74,10 @@ class RootErrorBoundary extends Component<{children: ReactNode}, {error: Error |
     render(): ReactNode {
         if (this.state.error) {
             return (
-                <div style={{ padding: '32px', color: '#ef4444', fontFamily: 'monospace', whiteSpace: 'pre-wrap', background: '#1a1a1a', height: '100vh', overflow: 'auto' }}>
-                    <h2 style={{ color: '#ef4444', marginBottom: '16px' }}>Error de render</h2>
+                <div className="appIslands-inl1">
+                    <h2 className="appIslands-inl2">Error de render</h2>
                     <pre>{this.state.error.message}</pre>
-                    <pre style={{ color: '#9ca3af', fontSize: '12px', marginTop: '12px' }}>{this.state.error.stack}</pre>
+                    <pre className="appIslands-inl3">{this.state.error.stack}</pre>
                 </div>
             );
         }

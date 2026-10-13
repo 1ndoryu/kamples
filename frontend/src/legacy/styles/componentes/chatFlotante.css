@@ -342,3 +342,7 @@
     color: var(--acento);
     padding: 0;
 }
+
+.chatFlotante-inl1 {
+    display: none;
+}

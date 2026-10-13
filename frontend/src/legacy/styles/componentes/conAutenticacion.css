@@ -1,0 +1,9 @@
+/* Clases extraídas de style={{}} inline en ConAutenticacion. */
+
+.conAutenticacion-inl1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    color: var(--textoSecundario);
+}

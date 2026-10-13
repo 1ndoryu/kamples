@@ -139,7 +139,7 @@ export const TarjetaRelacionSample = ({
                         </span>
                     )}
                     {relacion.apareceEnTodo && (
-                        <span className="tarjetaRelacionThroughout" style={{ display: 'none' }}>
+                        <span className="tarjetaRelacionThroughout tarjetaRelacionSample-inl1">
                            
                         </span>
                     )}

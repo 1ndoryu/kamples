@@ -12,6 +12,7 @@ import { CampoTexto } from '../ui/CampoTexto';
 import { useSolicitudWhatsapp } from '@app/hooks/useSolicitudWhatsapp';
 import { useT } from '@app/utils/i18n/useT';
 import '../../styles/componentes/modalReportarError.css';
+import '../../styles/componentes/modalSolicitudWhatsapp.css';
 
 export const ModalSolicitudWhatsapp = (): JSX.Element | null => {
     const {
@@ -44,7 +45,7 @@ export const ModalSolicitudWhatsapp = (): JSX.Element | null => {
         return (
             <Modal abierto={abierto} onCerrar={cerrar} tamano="pequeno">
                 <div className="reportarErrorFormulario">
-                    <p className="reportarErrorNota" style={{ fontSize: 'var(--fuenteSm)', color: 'var(--textoPrimario)', lineHeight: 1.6 }}>
+                    <p className="reportarErrorNota modalSolicitudWhatsapp-inl1">
                         {t('whatsapp.limiteDiario')}
                     </p>
                     <div className="modalAcciones">
@@ -60,7 +61,7 @@ export const ModalSolicitudWhatsapp = (): JSX.Element | null => {
         return (
             <Modal abierto={abierto} onCerrar={cerrar} tamano="pequeno">
                 <div className="reportarErrorFormulario">
-                    <p className="reportarErrorNota" style={{ fontSize: 'var(--fuenteSm)', color: 'var(--textoPrimario)', lineHeight: 1.6 }}>
+                    <p className="reportarErrorNota modalSolicitudWhatsapp-inl2">
                         {t('whatsapp.yaEnviada')}
                     </p>
                     <div className="modalAcciones">
@@ -74,7 +75,7 @@ export const ModalSolicitudWhatsapp = (): JSX.Element | null => {
     return (
         <Modal abierto={abierto} onCerrar={cerrar} tamano="pequeno">
             <div className="reportarErrorFormulario">
-                <p className="reportarErrorNota" style={{ fontSize: 'var(--fuenteXs)', color: 'var(--textoSecundario)', lineHeight: 1.5 }}>
+                <p className="reportarErrorNota modalSolicitudWhatsapp-inl3">
                     {t('whatsapp.descripcionBeta')}
                 </p>
 

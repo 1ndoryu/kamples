@@ -166,3 +166,12 @@ Falsos positivos y huecos de herramientas, para el final (actualizar workspace-m
 - Eliminado con `git rm` (40 archivos, incluido `features/README.md`). Quitada la exclusión `src/features/**/*` de `frontend/tsconfig.json`. Recuperable desde git.
 - Evidencia: `vite build` OK; `tsc --noEmit` con 3 errores preexistentes en `src/legacy/hooks/useAuth.ts` (`require` sin `@types/node`), ajenos al cambio; gate `--cierre`: 0 nuevos, tablero 1158 → 1110.
 - Pendiente: los errores `require` de `useAuth.ts` (tarea aparte).
+
+## Sesión 13AA-9 (estilos inline estáticos a CSS)
+
+- Alcance: 49 `style={{...}}` estáticos en 26 TSX (sitios vivos en `legacy/` y `mezclador/`), movidos a `legacy/styles/componentes/<stem>.css` con clase `<stem>-inlN`. Valores iguales salvo redondeos a token.
+- Excluidos (dinámicos, falsos positivos para la herramienta): `VisualizadorOnda.tsx` (alto variable), `ComunidadIsland`, `LibreriaIsland` y otros `style` con expresiones.
+- Redondeos (revisar visualmente en localhost con `kamples_verif`): `0.85rem` → `--fuenteMd` (13px, en `modalSuspenderAdmin.css` y `modalCancionAleatoria.css`); `0.8rem` → `--fuenteSm` (12px); `#1a1a1a`, `#9ca3af` → tokens nuevos `--colorRgba-26-26-26-1` y `--colorRgba-156-163-175-1` en `styles/tokens.css` (bloque 13AA-7); `#ef4444` → `--colorRojoError`; `8px` de radio → `--espacioSm` (mismo valor, sin radio propio de 8px).
+- Gate: `--inicio` base 2797; `--cierre` tras los lotes: 19 nuevos (CSS nuevo sin tokens), corregidos; `--cierre` final: 0 nuevos, 1012 abiertos.
+- Build: `vite build` OK.
+- Pendiente: verificación visual en navegador (bloqueada hasta credenciales de `kamples_verif`).

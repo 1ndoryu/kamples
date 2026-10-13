@@ -49,3 +49,7 @@
         scale: 1;
     }
 }
+
+.tooltip-inl1 {
+    display: inline-flex;
+}

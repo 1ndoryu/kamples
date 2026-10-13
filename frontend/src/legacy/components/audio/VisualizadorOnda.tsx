@@ -6,6 +6,7 @@
  */
 
 import { useVisualizadorOnda } from '../../hooks/useVisualizadorOnda';
+import '../../styles/componentes/visualizadorOnda.css';
 
 interface VisualizadorOndaProps {
     /* Elemento <audio> o MediaStream a visualizar */
@@ -61,11 +62,7 @@ export const VisualizadorOnda = ({
         >
             <canvas
                 ref={canvasRef}
-                style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'block',
-                }}
+                className="visualizadorOnda-inl1"
             />
         </div>
     );

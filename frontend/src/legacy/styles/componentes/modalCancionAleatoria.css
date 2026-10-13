@@ -1,0 +1,56 @@
+/* modalCancionAleatoria.css — Estilos extraídos de ModalCancionAleatoria.tsx. */
+
+.modalCancionAleatoria-inl1 {
+    display: flex;
+    justify-content: center;
+    gap: var(--espacioSm);
+    margin-bottom: var(--espacioMd);
+    flex-wrap: wrap;
+}
+
+.modalCancionAleatoria-inl2 {
+    display: flex;
+    justify-content: center;
+    padding: 3rem;
+}
+
+.modalCancionAleatoria-inl3 {
+    border: none;
+    box-shadow: none;
+}
+
+.modalCancionAleatoria-inl4 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.modalCancionAleatoria-inl5 {
+    cursor: pointer;
+}
+
+.modalCancionAleatoria-inl6 {
+    margin-top: var(--espacioMd);
+}
+
+.modalCancionAleatoria-inl7 {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
+    border-radius: var(--espacioSm);
+}
+
+.modalCancionAleatoria-inl8 {
+    margin-top: var(--espacioMd);
+    font-size: var(--fuenteMd);
+    opacity: 0.7;
+}
+
+.modalCancionAleatoria-inl9 {
+    margin-top: var(--espacioSm);
+    font-size: var(--fuenteSm);
+    padding: 0.5rem;
+    border-radius: var(--radioSm);
+    background: var(--colorRgba-26-26-26-1);
+}
