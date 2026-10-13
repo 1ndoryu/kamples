@@ -8,6 +8,7 @@
 import { useMemo } from 'react';
 import type { GloryContext } from '../types/glory';
 import { useGloryProvider } from '../core/useGloryProvider';
+import { logger } from "../utils/logger";
 
 const defaultContext: GloryContext = {
     siteUrl: '',
@@ -28,7 +29,7 @@ export function useGloryContext(): GloryContext {
         /* Fallback: leer directo de window (compatibilidad sin provider) */
         const ctx = window.GLORY_CONTEXT;
         if (!ctx) {
-            console.warn('Glory: window.GLORY_CONTEXT no disponible, usando valores por defecto');
+            logger.warn('Glory: window.GLORY_CONTEXT no disponible, usando valores por defecto');
             return defaultContext;
         }
         return { ...defaultContext, ...ctx };

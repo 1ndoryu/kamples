@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import type { WPPost } from '../types/wordpress';
 import type { GloryContentMap } from '../types/glory';
 import { useGloryProvider } from '../core/useGloryProvider';
+import { logger } from "../utils/logger";
 
 interface UseGloryContentResult<T extends WPPost> {
     data: T[];
@@ -68,7 +69,7 @@ export function useGloryContent<T extends WPPost = WPPost>(
                 .filter((item): item is T => item !== null);
 
             if (import.meta.env.DEV && validItems.length !== items.length) {
-                console.warn(
+                logger.warn(
                     `[Glory] ${items.length - validItems.length} items de "${key}" no pasaron validacion runtime`,
                 );
             }

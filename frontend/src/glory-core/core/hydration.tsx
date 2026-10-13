@@ -24,6 +24,7 @@ import { DevOverlay } from './DevOverlay';
 import { useNavigationStore } from './router/navigationStore';
 import { PageRenderer } from './router/PageRenderer';
 import type { GloryRoutesMap } from './router/navigationStore';
+import { logger } from "../utils/logger";
 
 export interface InitOptions {
     appProvider?: ComponentType<{ children: ReactNode }>;
@@ -60,7 +61,7 @@ function mountIsland(
 ): void {
     const resolved = islandRegistry.resolve(islandName);
     if (!resolved) {
-        console.error(`[Glory] Componente "${islandName}" no registrado en IslandRegistry`);
+        logger.error(`[Glory] Componente "${islandName}" no registrado en IslandRegistry`);
         return;
     }
 
@@ -105,26 +106,26 @@ function mountIsland(
         if (shouldHydrate && hasContent) {
             hydrateRoot(container, element);
             if (import.meta.env.DEV) {
-                console.warn(`[Glory] Isla "${islandName}" hidratada (SSG)`);
+                logger.warn(`[Glory] Isla "${islandName}" hidratada (SSG)`);
             }
         } else {
             container.innerHTML = '';
             createRoot(container).render(element);
             if (import.meta.env.DEV) {
-                console.warn(`[Glory] Isla "${islandName}" montada (CSR)`);
+                logger.warn(`[Glory] Isla "${islandName}" montada (CSR)`);
             }
         }
     } catch (error) {
-        console.error(`[Glory] Error montando isla "${islandName}":`, error);
+        logger.error(`[Glory] Error montando isla "${islandName}":`, error);
 
         /* Fallback: si la hidratacion falla, intentar CSR */
         if (shouldHydrate) {
-            console.warn(`[Glory] Fallback a CSR para "${islandName}"`);
+            logger.warn(`[Glory] Fallback a CSR para "${islandName}"`);
             try {
                 container.innerHTML = '';
                 createRoot(container).render(element);
             } catch (fallbackError) {
-                console.error(`[Glory] Fallback CSR tambien fallo para "${islandName}":`, fallbackError);
+                logger.error(`[Glory] Fallback CSR tambien fallo para "${islandName}":`, fallbackError);
             }
         }
     }
@@ -179,14 +180,14 @@ function initializeSPA(routes: GloryRoutesMap, options: InitOptions): void {
 
     if (import.meta.env.DEV) {
         const rutasStr = Object.keys(routes).join(', ');
-        console.warn(`[Glory SPA] Modo SPA activo con ${Object.keys(routes).length} rutas: ${rutasStr}`);
+        logger.warn(`[Glory SPA] Modo SPA activo con ${Object.keys(routes).length} rutas: ${rutasStr}`);
     }
 
     /* Encontrar el contenedor principal [data-island] para montar el PageRenderer */
     const container = document.querySelector<HTMLElement>('[data-island]');
     if (!container) {
         if (import.meta.env.DEV) {
-            console.error('[Glory SPA] No se encontro contenedor [data-island] para PageRenderer');
+            logger.error('[Glory SPA] No se encontro contenedor [data-island] para PageRenderer');
         }
         return;
     }
@@ -212,7 +213,7 @@ function initializeSPA(routes: GloryRoutesMap, options: InitOptions): void {
 
     if (import.meta.env.DEV) {
         const { islaActual } = useNavigationStore.getState();
-        console.warn(`[Glory SPA] PageRenderer montado, isla inicial: ${islaActual}`);
+        logger.warn(`[Glory SPA] PageRenderer montado, isla inicial: ${islaActual}`);
     }
 }
 
@@ -224,20 +225,20 @@ function initializeClassicIslands(options: InitOptions): void {
 
     if (islands.length === 0) {
         if (import.meta.env.DEV) {
-            console.warn('[Glory] No se encontraron islas para montar');
+            logger.warn('[Glory] No se encontraron islas para montar');
         }
         return;
     }
 
     if (import.meta.env.DEV) {
-        console.warn(`[Glory] Montando ${islands.length} isla(s), registry: ${islandRegistry.getNames().join(', ')}`);
+        logger.warn(`[Glory] Montando ${islands.length} isla(s), registry: ${islandRegistry.getNames().join(', ')}`);
     }
 
     islands.forEach((container) => {
         const islandName = container.dataset.island;
 
         if (!islandName) {
-            console.error('[Glory] Contenedor sin nombre de isla:', container);
+            logger.error('[Glory] Contenedor sin nombre de isla:', container);
             return;
         }
 
@@ -248,7 +249,7 @@ function initializeClassicIslands(options: InitOptions): void {
             try {
                 props = JSON.parse(propsJson) as Record<string, unknown>;
             } catch (err) {
-                console.error(`[Glory] Error parseando props para "${islandName}":`, err);
+                logger.error(`[Glory] Error parseando props para "${islandName}":`, err);
             }
         }
 

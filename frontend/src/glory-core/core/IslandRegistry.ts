@@ -8,6 +8,7 @@
  */
 
 import { lazy, type ComponentType } from 'react';
+import { logger } from "../utils/logger";
 
 export type IslandComponent = ComponentType<Record<string, unknown>>;
 export type IslandLoader = () => Promise<{ default: IslandComponent }>;
@@ -31,7 +32,7 @@ class IslandRegistryManager {
      */
     register(name: string, component: IslandComponent): void {
         if (this.entries.has(name) && import.meta.env.DEV) {
-            console.warn(`[Glory Registry] Sobrescribiendo isla "${name}"`);
+            logger.warn(`[Glory Registry] Sobrescribiendo isla "${name}"`);
         }
         this.entries.set(name, { component });
     }

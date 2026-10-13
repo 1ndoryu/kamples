@@ -15,6 +15,7 @@
  */
 
 import type {BlockDefinition} from './types';
+import { logger } from "../utils/logger";
 
 /**
  * Almacén interno de definiciones de bloque
@@ -30,7 +31,7 @@ export const BlockRegistry = {
      */
     register<T = Record<string, unknown>>(definition: BlockDefinition<T>): void {
         if (registry.has(definition.type)) {
-            console.warn(`[BlockRegistry] Bloque "${definition.type}" ya registrado, sobrescribiendo.`);
+            logger.warn(`[BlockRegistry] Bloque "${definition.type}" ya registrado, sobrescribiendo.`);
         }
         registry.set(definition.type, definition as BlockDefinition);
     },

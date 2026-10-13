@@ -175,3 +175,30 @@ Falsos positivos y huecos de herramientas, para el final (actualizar workspace-m
 - Gate: `--inicio` base 2797; `--cierre` tras los lotes: 19 nuevos (CSS nuevo sin tokens), corregidos; `--cierre` final: 0 nuevos, 1012 abiertos.
 - Build: `vite build` OK.
 - Pendiente: verificación visual en navegador (bloqueada hasta credenciales de `kamples_verif`).
+
+## Sesión 13AD (console-production y backlog de herramienta)
+
+- Decidido: consola del framework glory-core pasa por `src/glory-core/utils/logger.ts`. `error` siempre; `warn/info/debug` solo en `import.meta.env.DEV`. Cambio de comportamiento: en producción ya no aparecen los avisos diagnósticos `[Glory]`. Sin cambio visual.
+- 8 archivos migrados (23 llamadas): `core/ErrorBoundary.tsx`, `core/hydration.tsx`, `core/IslandRegistry.ts`, `hooks/useGloryContent.ts`, `hooks/useGloryContext.ts`, `pageBuilder/BlockRegistry.ts`, `pageBuilder/BlockRenderer.tsx`, `pageBuilder/hooks/usePageBuilder.ts`.
+- Excepción: las 4 llamadas de `logger.ts` llevan `sentinel-disable-next-line console-production`, porque es el único punto de salida a consola. Cuentan como hallazgo aceptado en el tablero.
+- Build OK; tsc sin errores nuevos (solo los 3 preexistentes de `useAuth.ts`).
+
+### Backlog de la herramienta (anotado, para el final)
+
+Falsos positivos o ruido a corregir en `workspace-manager` cuando se actualice la herramienta:
+- `claseHuerfana` (140 en KAMPLES): clases usadas por composición dinámica (`className={\`x-${v}\`}`) o por nombres en objetos; el detector no las ve.
+- Estilos inline dinámicos (`style={{ alto: variable }}`) contados como `inline-style-prohibido`/`cssInlineReact`, aunque no tienen equivalente estático (p. ej. `VisualizadorOnda`, `ComunidadIsland`, `LibreriaIsland`).
+- Guard 13AA-3 confunde el stem `paso` con otro componente.
+- Guard de comentarios: marca `sentinel-disable-*` y comentarios explicativos como problemas.
+- `--cierre` cuenta ramas retenidas como sueltas aunque estén integradas.
+- Nombres mecánicos de tokens (`--colorRgba-26-26-26-1`) que la herramienta no distingue de tokens semánticos.
+- Fallbacks redundantes `var(--x, var(--x))` no detectados como problema en algunos casos.
+- Excepción sentinel documentada (`logger.ts`) sin forma de marcarla como aceptada.
+
+### Pendiente real (propios, sin cambiar en esta sesión)
+
+- `window-reference-outside-platform` (116) y `dom-access-outside-platform` (86): refactor de comportamiento con pruebas funcionales antes y después.
+- `css-especificacion-diseno-local` (103), `css-adhoc-button-style` (41), `css-elemento-html-directo` (30), `modal-*` (~50).
+- `directorio-abarrotado` (16), `limite-lineas` (7) y `limite-lineas-nivel-2` (3).
+- `componente-artesanal` (4), `usestate-excesivo` (2), `mixed-barrel-logic` (2), `token-duplicado-cross-archivo` (2), `singleton-mutable-state` (1), `any-type-explicito` (1), `button-clase-especifica` (1), `componente-sin-hook-glory` (1).
+- Verificación visual en `kamples_verif`: bloqueada hasta credenciales de la usuaria.

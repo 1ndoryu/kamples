@@ -9,6 +9,7 @@
 import {useState, useCallback, useMemo} from 'react';
 import {BlockRegistry} from '../BlockRegistry';
 import type {BlockData} from '../types';
+import { logger } from "../../utils/logger";
 
 interface UsePageBuilderParams {
     initialBlocks: BlockData[] | null | undefined;
@@ -94,7 +95,7 @@ export function usePageBuilder({initialBlocks, saveEndpoint, restNonce, onBlocks
     /* Guardar bloques vía REST API */
     const handleSave = useCallback(async () => {
         if (!saveEndpoint) {
-            console.warn('[PageBuilder] No hay endpoint de guardado configurado');
+            logger.warn('[PageBuilder] No hay endpoint de guardado configurado');
             return;
         }
 
@@ -113,15 +114,15 @@ export function usePageBuilder({initialBlocks, saveEndpoint, restNonce, onBlocks
             const data = await response.json();
 
             if (response.ok && data.success) {
-                if ((import.meta as unknown as {env: {DEV: boolean}}).env.DEV) console.warn('[PageBuilder] Guardado exitoso:', data);
+                if ((import.meta as unknown as {env: {DEV: boolean}}).env.DEV) logger.warn('[PageBuilder] Guardado exitoso:', data);
                 onSaveSuccess?.();
             } else {
                 const errorMsg = data.message || 'Error al guardar';
-                if ((import.meta as unknown as {env: {DEV: boolean}}).env.DEV) console.error('[PageBuilder] Error del servidor:', data);
+                if ((import.meta as unknown as {env: {DEV: boolean}}).env.DEV) logger.error('[PageBuilder] Error del servidor:', data);
                 onSaveError?.(errorMsg);
             }
         } catch (error) {
-            if ((import.meta as unknown as {env: {DEV: boolean}}).env.DEV) console.error('[PageBuilder] Error de red:', error);
+            if ((import.meta as unknown as {env: {DEV: boolean}}).env.DEV) logger.error('[PageBuilder] Error de red:', error);
             onSaveError?.('Error de conexion al guardar');
         } finally {
             setIsSaving(false);
