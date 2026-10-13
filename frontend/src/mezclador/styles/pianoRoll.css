@@ -313,16 +313,6 @@
 
 /* CURSOR DE REPRODUCCION */
 
-.pianoRollCursorReproduccion {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background: #ff4444;
-    z-index: 10;
-    pointer-events: none;
-}
-
 /* MARQUEE DE SELECCION */
 
 .pianoRollMarquee {

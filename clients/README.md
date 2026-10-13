@@ -4,7 +4,7 @@ Clientes externos del proyecto, importados 1:1 desde el legado WordPress
 (`glorytemplate/{kamples-scraper,Mezclador,mobile,desktop}`) en
 **174A-108..111**.
 
-[174A-109b] `Mezclador` se movió a `frontend/src/features/mezclador/`
+[174A-109b] `Mezclador` vive en `frontend/src/mezclador/` (antes `features/mezclador/`, duplicado eliminado en 13AA-5)
 porque es una feature in-process del front, no un cliente externo.
 
 ## Estado

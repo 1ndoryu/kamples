@@ -278,9 +278,6 @@
 }
 
 /* C209: Animar pista cuando se arrastra un sample externo sobre ella */
-.mezcladorPistaContenido:has(.mezcladorPistaVacia) {
-    transition: background var(--transicionRapida);
-}
 
 /* Error boundary */
 .mezcladorError {

@@ -152,42 +152,6 @@
     touch-action: none;
 }
 
-.faderControlPista {
-    position: relative;
-    width: 8px;
-    border-radius: var(--radiusMezclador);
-    background: linear-gradient(to top, var(--fondoElevado1), var(--fondoElevado2));
-    border: 1px solid var(--bordeSutil);
-    cursor: ns-resize;
-}
-
-.faderControlRelleno {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border-radius: var(--radiusMezclador);
-    pointer-events: none;
-}
-
-.faderControlThumb {
-    position: absolute;
-    left: -3px;
-    right: -3px;
-    height: 6px;
-    background: var(--textoPrimario);
-    border-radius: var(--radiusMezclador);
-    pointer-events: none;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-}
-
-.faderControlDb {
-    font-size: var(--fuenteMicro);
-    color: var(--textoSecundario);
-    text-align: center;
-    white-space: nowrap;
-}
-
 /* Peak Meter */
 .peakMeter {
     display: flex;

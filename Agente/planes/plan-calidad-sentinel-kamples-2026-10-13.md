@@ -96,6 +96,11 @@ Línea base: `Arranque gate "KAMPLES" --inicio` (hallazgos guardados en `workspa
   - Riesgo conocido: el guard de construcción dinámica es heurístico (tallo + ≤4 caracteres antes de `${` o `"+`; sufijo tras `}`). Un nombre compuesto con separador mayor no se detectaría; la búsqueda de composición en `frontend/src` no encontró ninguno.
   - Decidido: no se borran reglas con `:not(.x)` ni selectores mixtos; la única regla con clase huérfana en `:not` (`.experimentosAccion:hover:not(:disabled)`) tiene la clase como sujeto y es correcta.
   - Decidido: `features/mezclador` (duplicado no importado) no se toca en este lote: los archivos divergen, y decidir cuál es canónico exige comparar, no solo borrar. Pendiente en backlog.
+- **Sesión 13AA-5 (duplicado mezclador y huérfanas):**
+  - Decidido: `frontend/src/mezclador/` es canónica (alias `@mezclador`, consumidor `PanelLateral.tsx`). Eliminado `features/mezclador/` (103 archivos, copia muerta; divergencias solo en la profundidad de import de `crearLogger`).
+  - Gate tras eliminar el duplicado: 58 nuevos (`claseHuerfana` en `src/mezclador/styles`) por desfase de rutas del gate (compara por ruta). Resueltos quitando las 76 reglas huérfanas verificadas; gate final 0 nuevos (base 2797, abiertos 1423).
+  - Build `C:/tmp/kamples-dist-13aa5b` exit 0; `tsc` del mezclador idéntico a HEAD.
+  - Guarda de construcción dinámica: falso positivo por tallo `paso` (coincidía con `paso-${i}` de `graphEdi`); corregido a mano, no en la herramienta todavía (ver backlog).
 
 ## Backlog anotado (no olvidar)
 
@@ -112,7 +117,11 @@ Falsos positivos y huecos de herramientas, para el final (actualizar workspace-m
 - `objeto-mutable-exportado`: falso negativo sobre `Readonly<…>` (se resolvió con `Object.freeze`).
 - `innerhtml-variable`: el `sentinel-disable` debe usar ese id exacto.
 - `key-index-lista`: marca `Array.from().map` con índice en esqueletos estáticos.
-- Duplicados `features/mezclador` vs `src/mezclador`; `legacy/islands` vs `features`.
+- Duplicado `features/mezclador` vs `src/mezclador`: resuelto en 13AA-5 (copia viva: `src/mezclador`). Pendiente: `legacy/islands` vs `features`.
+- **Gate por ruta:** `--cierre` compara por ruta y regla; mover o borrar una copia redistribuye hallazgos como nuevos y resueltos (13AA-5: 58 nuevos sin cambio real). Comparar por contenido o hash, o registrar el movimiento.
+- **Guarda de construcción dinámica:** el tallo corto (`paso`, `mezclador`) coincide con código no relacionado (`paso-${i}` en `graphEdi`) y omite clases huérfanas reales (13AA-5: 6). Usar tallo completo y límite de token.
+- **Selectores mezclados (script 13AA-3/13AA-5):** la regla se quita solo si todos sus selectores están muertos; los selectores huérfanos en listas con clases vivas quedan y producen hallazgos (13AA-5: 4 editados a mano). El script debería quitar solo el selector muerto.
+- **Guarda de uso sobre comentarios:** corregido en 13AA-5 (los comentarios ya no cuentan como uso).
 - Hallazgo `sinCommit` obsoleto (1) en el tablero.
 - Artefacto `(área) :: salud` (1): ruta en `C:\tmp`, no del proyecto.
 - `alta` checklist (`registro`): no acepta `noAplica`. Falso positivo en opencode-delegate, que tiene `sin-servicio`.

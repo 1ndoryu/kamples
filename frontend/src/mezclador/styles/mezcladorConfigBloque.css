@@ -44,89 +44,7 @@
     flex-wrap: wrap;
 }
 
-.configBloqueControlGrupo {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.configBloqueControlAncho {
-    flex: 1;
-    min-width: 140px;
-}
-
-.configBloqueControlEtiqueta {
-    font-size: var(--fuente2xs);
-    color: var(--textoTerciario);
-    min-width: 24px;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    flex-shrink: 0;
-}
-
-.configBloqueControlValor {
-    font-size: var(--fuente2xs);
-    color: var(--textoSecundario);
-    min-width: 32px;
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    flex-shrink: 0;
-}
-
-.configBloqueSlider {
-    flex: 1;
-    height: 4px;
-    -webkit-appearance: none;
-    appearance: none;
-    background: var(--fondoElevado2);
-    border-radius: var(--radiusMezclador);
-    outline: none;
-    cursor: pointer;
-}
-
-.configBloqueSlider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 12px;
-    height: 12px;
-    border-radius: var(--radiusMezclador);
-    background: var(--acento);
-    cursor: pointer;
-    border: none;
-}
-
-.configBloqueSlider::-moz-range-thumb {
-    width: 12px;
-    height: 12px;
-    border-radius: var(--radiusMezclador);
-    background: var(--acento);
-    cursor: pointer;
-    border: none;
-}
-
 /* LED on/off */
-.configBloqueLed {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    background: var(--fondoElevado2);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radiusMezclador);
-    color: var(--textoTerciario);
-    cursor: pointer;
-    transition: all var(--transicionRapida);
-}
-
-.configBloqueLed:hover {
-    border-color: var(--bordeActivo);
-}
-
-.configBloqueLedActivo {
-    background: var(--exito);
-    border-color: var(--exito);
-    color: var(--colorNegroPuro);
-}
 
 /* C311: LED on/off en el header de VentanaFlotante */
 .configBloqueHeaderLed {
@@ -302,23 +220,5 @@
 }
 
 /* Boton restablecer */
-.configBloqueRestablecer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    width: 100%;
-    padding: 6px;
-    font-size: var(--fuenteXs);
-    color: var(--textoSecundario);
-    background: none;
-    border: 1px dashed var(--bordeSutil);
-    border-radius: var(--radiusMezclador);
-    cursor: pointer;
-    transition: all var(--transicionRapida);
-}
 
 /* C295: Eliminar boton restablecer global, solo quedan resets individuales */
-.configBloqueRestablecer {
-    display: none;
-}

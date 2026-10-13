@@ -3,7 +3,7 @@
   "include": [
     "src/vite-env.d.ts",
     "src/app/**/*",
-    "src/features/mezclador/**/*"
+    "src/mezclador/**/*"
   ],
   "exclude": []
 }

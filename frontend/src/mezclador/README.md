@@ -2,7 +2,7 @@
 
 Origen: `glorytemplate/Mezclador/` (legado WordPress).
 
-[174A-109b] Movido 1:1 a `frontend/src/features/mezclador/` (era `clients/Mezclador/`). El `tsconfig.json` interno se eliminó porque ya está cubierto por el del frontend, que excluye `src/features/**/*` del type-check global hasta que cada feature complete su adaptación.
+[174A-109b] Movido 1:1 a `frontend/src/features/mezclador/` (era `clients/Mezclador/`); duplicado eliminado en 13AA-5, la copia viva es `frontend/src/mezclador/` (alias `@mezclador`). El `tsconfig.json` interno se eliminó porque ya está cubierto por el del frontend, que excluye `src/features/**/*` del type-check global hasta que cada feature complete su adaptación.
 
 ## Estado actual
 

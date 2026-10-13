@@ -237,7 +237,6 @@
 }
 
 /* C233.1: Altura uniforme 28px en todos los botones del mezclador */
-.mezcladorBotonCompas,
 .mezcladorBotonAccion {
     display: flex;
     align-items: center;
@@ -253,8 +252,7 @@
 }
 
 /* Override BotonBase padding/height en botones de accón del mezclador */
-.botonBase.mezcladorBotonAccion,
-.botonBase.mezcladorBotonCompas {
+.botonBase.mezcladorBotonAccion {
     padding: 0;
     width: 28px;
     height: 28px;
@@ -262,7 +260,6 @@
     border-radius: var(--radiusMezclador);
 }
 
-.mezcladorBotonCompas:hover,
 .mezcladorBotonAccion:hover {
     color: var(--textoPrimario);
     border-color: var(--bordeActivo);
@@ -278,55 +275,11 @@
     border-color: var(--error);
 }
 
-.mezcladorCompasContador {
-    font-size: var(--fuenteXs);
-    color: var(--textoSecundario);
-    min-width: 40px;
-    text-align: center;
-}
-
 /* C216: Separador vertical entre grupos de controles */
-.mezcladorSeparadorVertical {
-    width: 1px;
-    height: 16px;
-    background: var(--bordeSutil);
-    margin: 0 2px;
-    flex-shrink: 0;
-}
 
 /* C216: Label y select de snap */
-.mezcladorSnapLabel {
-    font-size: var(--fuente2xs);
-    color: var(--textoTerciario);
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    flex-shrink: 0;
-}
-
-.mezcladorSnapSelect {
-    padding: 2px 4px;
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radiusMezclador);
-    background: var(--fondoElevado1);
-    color: var(--textoPrimario);
-    font-size: var(--fuente2xs);
-    outline: none;
-    cursor: pointer;
-    min-width: 44px;
-}
-
-.mezcladorSnapSelect:focus {
-    border-color: var(--acento);
-}
 
 /* C217: Label de nivel de zoom */
-.mezcladorZoomLabel {
-    font-size: var(--fuente2xs);
-    color: var(--textoTerciario);
-    min-width: 32px;
-    text-align: center;
-    font-variant-numeric: tabular-nums;
-}
 
 .mezcladorSpinner {
     animation: mezcladorGirar 1s linear infinite;
