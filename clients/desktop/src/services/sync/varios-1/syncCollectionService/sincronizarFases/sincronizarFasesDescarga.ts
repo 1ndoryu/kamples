@@ -166,7 +166,7 @@ export async function sincronizarDescargas(
 
     onProgreso?.({ fase: 'completado', actual: totalSamples, total: totalSamples });
 
-    /* Finalizar modo lote: persistir todo de una vez */
+    /* Finalizar modo lote: persistir el lote completo de una vez */
     await finalizarLote();
 
     return { nuevos, errores };

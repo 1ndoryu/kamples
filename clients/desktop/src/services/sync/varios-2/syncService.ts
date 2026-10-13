@@ -21,16 +21,6 @@
  * - syncGuards.ts: guards de descarga + base URL centralizada
  */
 
-import {
-    detenerSyncBidireccional as detenerBidireccional,
-    marcarNoSincronizar as _marcarNoSincronizar,
-    marcarNoSincronizarPorId as _marcarNoSincronizarPorId,
-    reactivarSync as _reactivarSync,
-    obtenerEstadoSync as _obtenerEstadoSync,
-    obtenerSamplesNoSincronizados as _obtenerSamplesNoSincronizados,
-    moverSampleEnServidorPublico as _moverSampleEnServidorPublico,
-} from './syncWatcherSetup';
-
 /* Re-exports de tipos para mantener API pública sin romper importadores */
 export { type ProgresoSync, type ProgressCallback, type SyncConfig } from './syncState';
 
@@ -54,14 +44,16 @@ export {
     rehidratarImagenesPendientesForzadoSync,
 } from './syncRehidratacionService';
 
-/* Re-exports de operaciones del watcher */
-export const marcarNoSincronizar = _marcarNoSincronizar;
-export const marcarNoSincronizarPorId = _marcarNoSincronizarPorId;
-export const reactivarSync = _reactivarSync;
-export const obtenerEstadoSync = _obtenerEstadoSync;
-export const obtenerSamplesNoSincronizados = _obtenerSamplesNoSincronizados;
-export const moverSampleEnServidorPublico = _moverSampleEnServidorPublico;
-export const detenerSyncBidireccional = detenerBidireccional;
+/* Re-exports de operaciones del watcher (reexport directo, sin alias en const) */
+export {
+    detenerSyncBidireccional,
+    marcarNoSincronizar,
+    marcarNoSincronizarPorId,
+    reactivarSync,
+    obtenerEstadoSync,
+    obtenerSamplesNoSincronizados,
+    moverSampleEnServidorPublico,
+} from './syncWatcherSetup';
 
 /* Re-exports de módulos en syncService/ */
 export {

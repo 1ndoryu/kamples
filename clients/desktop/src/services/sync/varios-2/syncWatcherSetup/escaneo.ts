@@ -3,7 +3,7 @@
  * (arranque o copias con la app cerrada). Idempotente.
  */
 import { logSync } from '../../varios-1/syncLogger';
-import { estado, guardarIndice, buscarEnIndicePorRuta, type ArchivoLocal } from '../syncState';
+import { estado, guardarIndice, buscarEnIndicePorRuta } from '../syncState';
 import { EXTENSIONES_AUDIO_SCAN, CARPETAS_SISTEMA_SYNC, CARPETAS_EXCLUIDAS_SCAN } from './syncWatcherConstantes';
 
 interface ResumenEscaneoLocal {
