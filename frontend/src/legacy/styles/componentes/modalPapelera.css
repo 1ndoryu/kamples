@@ -139,7 +139,7 @@
 
 .papeleraDiasCritico {
     background-color: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
+    color: var(--colorRojoError);
 }
 
 /* Botón restaurar */

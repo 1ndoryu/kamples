@@ -26,7 +26,7 @@
     align-items: center;
     gap: 2px;
     padding: 4px 8px;
-    background: #16162a;
+    background: var(--colorFondoAzulProfundo);
     border-bottom: 1px solid #2a2a4a;
     flex-shrink: 0;
     min-height: 32px;
@@ -35,7 +35,7 @@
 .pianoRollGrupoHerramientas {
     display: flex;
     gap: 1px;
-    background: #1e1e38;
+    background: var(--colorFondoAzulNoche);
     border-radius: var(--radiusMezclador);
     padding: 1px;
 }
@@ -62,20 +62,20 @@
 }
 
 .pianoRollBotonHerramientaActiva {
-    background: #3a3a6e;
+    background: var(--colorAzulMedio);
     color: var(--colorBlancoPuro);
 }
 
 .pianoRollSeparador {
     width: 1px;
     height: 20px;
-    background: #2a2a4a;
+    background: var(--colorFondoPanelAzulGris);
     margin: 0 6px;
     flex-shrink: 0;
 }
 
 .pianoRollSelectSnap {
-    background: #1e1e38;
+    background: var(--colorFondoAzulNoche);
     color: var(--colorGrisPerla);
     border: 1px solid #2a2a4a;
     border-radius: var(--radiusMezclador);
@@ -87,7 +87,7 @@
 }
 
 .pianoRollSelectSnap:hover {
-    border-color: #4a4a7a;
+    border-color: var(--colorAzulSuave);
 }
 
 .pianoRollToggle {
@@ -111,7 +111,7 @@
 }
 
 .pianoRollToggleActivo {
-    color: #8ae234;
+    color: var(--colorVerdeTerminal);
     border-color: rgba(138, 226, 52, 0.3);
     background: rgba(138, 226, 52, 0.08);
 }
@@ -162,12 +162,12 @@
 }
 
 .pianoRollTeclaBlanca {
-    background: #d4d4d4;
-    color: #333;
+    background: var(--colorGrisTexto);
+    color: var(--colorGrisCarbonClaro);
 }
 
 .pianoRollTeclaNegra {
-    background: #333;
+    background: var(--colorGrisCarbonClaro);
     color: var(--colorGrisSuave);
     z-index: 1;
 }
@@ -204,7 +204,7 @@
     height: 22px;
     flex-shrink: 0;
     position: relative;
-    background: #16162a;
+    background: var(--colorFondoAzulProfundo);
     border-bottom: 1px solid #333;
     overflow: hidden;
 }
@@ -370,7 +370,7 @@
     align-items: center;
     gap: 2px;
     padding: 2px 8px;
-    background: #16162a;
+    background: var(--colorFondoAzulProfundo);
     border-bottom: 1px solid #2a2a3a;
     min-height: 22px;
 }
@@ -410,7 +410,7 @@
 
 .pianoRollPanelControlTabActivo {
     color: var(--colorGrisPerla);
-    background: #2a2a4a;
+    background: var(--colorFondoPanelAzulGris);
 }
 
 .pianoRollPanelControlCuerpo {
@@ -466,7 +466,7 @@
 .pianoRollMenuContextual {
     position: fixed;
     z-index: 9999;
-    background: #1e1e38;
+    background: var(--colorFondoAzulNoche);
     border: 1px solid #3a3a5a;
     border-radius: var(--radiusMezclador);
     padding: 4px 0;
@@ -507,7 +507,7 @@
 
 .pianoRollMenuContextualSeparador {
     height: 1px;
-    background: #2a2a4a;
+    background: var(--colorFondoPanelAzulGris);
     margin: 3px 8px;
 }
 

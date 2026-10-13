@@ -98,6 +98,17 @@
   --colorGrisPlata: #bbbbbb;
   --colorGrisPerla: #cccccc;
   --colorFondoPanelAzul: #2a2a4e;
+  --colorFondoPanelAzulGris: #2a2a4a;
+  --colorFondoAzulNoche: #1e1e38;
+  --colorFondoAzulProfundo: #16162a;
+  --colorFondoGrisCarbon: #1e1e1e;
+  --colorAzulMedio: #3a3a6e;
+  --colorAzulSuave: #4a4a7a;
+  --colorGrisTexto: #d4d4d4;
+  --colorGrisCarbonClaro: #333333;
+  --colorRojoError: #ef4444;
+  --colorRojoSuave: #e55353;
+  --colorVerdeTerminal: #8ae234;
 }
 
 /* [13AA-1] Alias de compatibilidad para nombres en inglés de glory-css/ y glory-core/ (copias vendorizadas,

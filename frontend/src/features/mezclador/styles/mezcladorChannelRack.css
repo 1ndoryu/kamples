@@ -369,7 +369,7 @@
 }
 
 .pasoBotonGrupoPar {
-    background: #1e1e1e; /* Gris más oscuro para contraste del grupo */
+    background: var(--colorFondoGrisCarbon); /* Gris más oscuro para contraste del grupo */
 }
 
 /* Hover */
