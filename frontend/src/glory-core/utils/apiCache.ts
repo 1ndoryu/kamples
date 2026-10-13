@@ -11,7 +11,16 @@ import type { ApiRequestOptions } from '../types/api';
 export const DEFAULT_CACHE_TTL = 30_000; /* 30 segundos */
 const MAX_CACHE_ENTRIES = 100;
 
-export const apiCache = new Map<string, { data: unknown; timestamp: number }>();
+/* Privado: el estado mutable solo se toca a través de leer/guardar (sin singleton exportado). */
+const apiCache = new Map<string, { data: unknown; timestamp: number }>();
+
+export function leerCacheApi(key: string): { data: unknown; timestamp: number } | undefined {
+    return apiCache.get(key);
+}
+
+export function guardarCacheApi(key: string, data: unknown): void {
+    apiCache.set(key, { data, timestamp: Date.now() });
+}
 
 /* Limpia entries expiradas del cache para evitar memory leak */
 export function limpiarCacheExpirado(ttl: number): void {

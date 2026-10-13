@@ -20,8 +20,6 @@
   --fuentePrincipal: 'Space Grotesk', 'Avenir Next', 'Segoe UI', sans-serif;
   --fondoBase: #070707;
   --fondoElevado1: #070707;
-  --fondoElevado2: var(--fondoElevado1);
-  --fondoElevado3: var(--fondoElevado1);
   --bordeSutil: #161616;
   --bordeActivo: #4a665b;
   --textoPrimario: #e8e1c9;
