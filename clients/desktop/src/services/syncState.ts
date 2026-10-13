@@ -167,7 +167,7 @@ export async function cargarConfigAvanzada(): Promise<SyncConfigAvanzada> {
             }
         }
     } catch (err) {
-        console.error('[SyncState] Error cargando config avanzada:', err);
+        logSync.error('syncState', '[SyncState] Error cargando config avanzada:', err);
     }
 
     return { ...estado.configAvanzada };

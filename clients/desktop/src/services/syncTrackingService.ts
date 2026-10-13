@@ -1143,10 +1143,10 @@ export async function migrarDesdeV1(): Promise<boolean> {
             descripcion: `Migración v1→v2: ${indiceV1.length} archivos convertidos`,
         });
 
-        console.info(`[SyncTracking] Migración v1→v2 completada: ${indiceV1.length} archivos`);
+        logSync.info('syncTrackingService', `[SyncTracking] Migración v1→v2 completada: ${indiceV1.length} archivos`);
         return true;
     } catch (err) {
-        console.error('[SyncTracking] Error en migración v1→v2:', err);
+        logSync.error('syncTrackingService', '[SyncTracking] Error en migración v1→v2:', err);
         return false;
     }
 }

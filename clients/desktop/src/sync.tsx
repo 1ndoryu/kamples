@@ -69,6 +69,7 @@ import {
 import { configurarApiDesktop } from '@desktop/services/apiDesktopAdapter';
 
 import { createRoot } from 'react-dom/client';
+import { logSync } from './services/syncLogger';
 
 /* Marcar entorno desktop y exponer syncService */
 function configurarEntorno(): void {
@@ -125,7 +126,7 @@ async function inicializar(): Promise<void> {
         if (!resp.ok || !resp.data) {
             const { cerrarSesionDesktop } = await import('@desktop/services/authDesktopService');
             await cerrarSesionDesktop();
-            console.info('[Sync] Token inválido — sesión cerrada');
+            logSync.info('sync', '[Sync] Token inválido — sesión cerrada');
         }
     } catch {
         /* Backend no disponible — no limpiar auth, puede ser temporal */

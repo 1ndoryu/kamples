@@ -18,6 +18,7 @@ import {
     type ResultadoDescargaApi,
     type ProgressCallback,
 } from './syncState';
+import { logSync } from './syncLogger';
 
 /*
  * Registra un archivo descargado en el índice v1 legacy.
@@ -143,7 +144,7 @@ export async function sincronizarConServidorV1(
                                     archivoExistente.ruta = nuevaRuta;
                                     await guardarIndice();
                                 } catch (err) {
-                                    console.error(`[Sync] Error reubicando sample ${sample.id} a subcarpeta:`, err);
+                                    logSync.error('syncDownloadV1', `[Sync] Error reubicando sample ${sample.id} a subcarpeta:`, err);
                                 }
                             }
                         }
@@ -211,7 +212,7 @@ export async function sincronizarConServidorV1(
                             ruta: rutaArchivo,
                         });
                     } catch (err) {
-                        console.error(`[Sync] Error descargando sample ${sample.id}:`, err);
+                        logSync.error('syncDownloadV1', `[Sync] Error descargando sample ${sample.id}:`, err);
                         onProgreso?.({
                             actual: procesados,
                             total,
@@ -232,7 +233,7 @@ export async function sincronizarConServidorV1(
 
         return { nuevos, eliminados: 0 };
     } catch (err) {
-        console.error('[Sync] Error global en sincronización v1:', err);
+        logSync.error('syncDownloadV1', '[Sync] Error global en sincronización v1:', err);
         throw err;
     }
 }
@@ -270,6 +271,6 @@ export async function sincronizarEstructuraCarpetasV1(): Promise<void> {
             }
         }
     } catch (err) {
-        console.error('[Sync] Error sincronizando estructura de carpetas v1:', err);
+        logSync.error('syncDownloadV1', '[Sync] Error sincronizando estructura de carpetas v1:', err);
     }
 }

@@ -18,6 +18,7 @@ import { obtenerToken } from './authDesktopService';
  * el wrapper de fetch, resultando en requests a /wp-json/kamples/v1/* (500).
  * Con import estático, instalarRustAdapter() se llama síncronamente en configurarApiDesktop(). */
 import { instalarRustAdapter } from './wpJsonRustAdapter';
+import { logSync } from './syncLogger';
 
 /*
  * URL base del servidor Kamples.
@@ -231,7 +232,7 @@ async function manejarSesionExpirada(): Promise<void> {
         const { useNavigationStore } = await import('@/core/router/navigationStore');
         useNavigationStore.getState().navegar('/');
     } catch (err) {
-        console.error('[ApiDesktop] Error al manejar sesion expirada:', err);
+        logSync.error('apiDesktopAdapter', '[ApiDesktop] Error al manejar sesion expirada:', err);
     } finally {
         /* Delay antes de permitir re-manejo para evitar loops rapidos */
         setTimeout(() => { manejando401 = false; }, 2000);

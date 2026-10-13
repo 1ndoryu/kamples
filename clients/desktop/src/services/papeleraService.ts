@@ -17,6 +17,7 @@
 import { estado } from './syncState';
 import { marcarDescargaEnCurso, marcarMovimientoInterno } from './syncGuards';
 import { actualizarEstadoSampleHistorial } from './syncService';
+import { logSync } from './syncLogger';
 
 const STORE_FILE = 'papelera.json';
 const STORE_KEY_ITEMS = 'papelera_items';
@@ -121,10 +122,10 @@ export async function moverAPapelera(
             rutaLocal: rutaPapelera,
         }).catch(() => { /* No bloquear movimiento a papelera por fallo en historial */ });
 
-        console.info('[Papelera] Archivo movido a papelera:', nombreArchivo);
+        logSync.info('papeleraService', '[Papelera] Archivo movido a papelera:', nombreArchivo);
         return true;
     } catch (err) {
-        console.error('[Papelera] Error moviendo a papelera:', err);
+        logSync.error('papeleraService', '[Papelera] Error moviendo a papelera:', err);
         return false;
     }
 }
@@ -161,10 +162,10 @@ export async function restaurarDePapelera(itemId: string): Promise<boolean> {
         items = items.filter(i => i.id !== itemId);
         await guardarPapelera();
 
-        console.info('[Papelera] Archivo restaurado:', item.nombreArchivo);
+        logSync.info('papeleraService', '[Papelera] Archivo restaurado:', item.nombreArchivo);
         return true;
     } catch (err) {
-        console.error('[Papelera] Error restaurando archivo:', err);
+        logSync.error('papeleraService', '[Papelera] Error restaurando archivo:', err);
         return false;
     }
 }
@@ -182,7 +183,7 @@ export async function eliminarPermanente(itemId: string): Promise<void> {
             await remove(item.rutaPapelera);
         }
     } catch (err) {
-        console.error('[Papelera] Error eliminando permanentemente:', err);
+        logSync.error('papeleraService', '[Papelera] Error eliminando permanentemente:', err);
     }
 
     items = items.filter(i => i.id !== itemId);
@@ -207,7 +208,7 @@ export async function purgarExpirados(): Promise<number> {
             }
             eliminados++;
         } catch (err) {
-            console.error('[Papelera] Error purgando expirado:', item.nombreArchivo, err);
+            logSync.error('papeleraService', '[Papelera] Error purgando expirado:', [item.nombreArchivo, err]);
         }
     }
 
@@ -216,7 +217,7 @@ export async function purgarExpirados(): Promise<number> {
     await guardarPapelera();
 
     if (eliminados > 0) {
-        console.info(`[Papelera] Purgados ${eliminados} items expirados`);
+        logSync.info('papeleraService', `[Papelera] Purgados ${eliminados} items expirados`);
     }
 
     return eliminados;
@@ -251,7 +252,7 @@ export async function vaciarPapelera(): Promise<void> {
 
     items = [];
     await guardarPapelera();
-    console.info('[Papelera] Papelera vaciada');
+    logSync.info('papeleraService', '[Papelera] Papelera vaciada');
 }
 
 /* Persistir items en Tauri Store */

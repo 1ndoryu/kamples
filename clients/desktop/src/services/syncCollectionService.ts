@@ -166,7 +166,7 @@ function encolarCreacionColeccion(nombreNormalizado: string): void {
         body: { nombre: nombreNormalizado, descripcion: '', publica: true },
         claveDuplicacion: `crear_coleccion_${nombreNormalizado.toLowerCase()}`,
     }).catch(err => {
-        console.error('[SyncCollection] Error encolando creación de colección:', err);
+        logSync.error('syncCollectionService', '[SyncCollection] Error encolando creación de colección:', err);
     });
 }
 
@@ -221,13 +221,13 @@ export async function buscarColeccionHuerfana(
             const rutaCarpeta = await join(config.carpetaLocal, col.carpetaLocal);
             const encontrada = await exists(rutaCarpeta);
             if (!encontrada) {
-                console.info('[SyncCollection] Colección huérfana encontrada:', col.id, col.nombre, '→ carpeta no existe:', col.carpetaLocal);
+                logSync.info('syncCollectionService', '[SyncCollection] Colección huérfana encontrada:', [col.id, col.nombre, '→ carpeta no existe:', col.carpetaLocal]);
                 return col;
             }
         }
         return null;
     } catch (err) {
-        console.error('[SyncCollection] Error buscando colección huérfana:', err);
+        logSync.error('syncCollectionService', '[SyncCollection] Error buscando colección huérfana:', err);
         return null;
     }
 }
@@ -307,7 +307,7 @@ export async function obtenerColeccionesDelServidor(): Promise<RespuestaSyncCole
 
         if (!resp.ok) {
             const detalle = await extraerErrorRespuesta(resp);
-            console.error('[SyncCollection] Error obteniendo colecciones:', resp.status, detalle);
+            logSync.error('syncCollectionService', '[SyncCollection] Error obteniendo colecciones:', [resp.status, detalle]);
             return null;
         }
 
@@ -325,7 +325,7 @@ export async function obtenerColeccionesDelServidor(): Promise<RespuestaSyncCole
 
         return resultado;
     } catch (err) {
-        console.error('[SyncCollection] Error en fetch colecciones:', err);
+        logSync.error('syncCollectionService', '[SyncCollection] Error en fetch colecciones:', err);
         return null;
     }
 }
@@ -473,13 +473,13 @@ export async function sincronizarColecciones(
         /* Seguridad: no purgar si servidor devuelve vacío pero hay muchos archivos locales */
         const esRespuestaVaciaSospechosa = sampleIdsServidor.size === 0 && archivosActuales.length > 5;
         if (esRespuestaVaciaSospechosa) {
-            console.warn('[SyncCollection] Servidor retornó 0 samples pero hay', archivosActuales.length, 'locales. Omitiendo purga (posible error de auth/red).');
+            logSync.warn('syncCollectionService', '[SyncCollection] Servidor retornó 0 samples pero hay', [archivosActuales.length, 'locales. Omitiendo purga (posible error de auth/red).']);
         } else {
             for (const archivo of archivosActuales) {
                 if (!sampleIdsServidor.has(archivo.sampleId)) {
                     const esReciente = (Date.now() - (archivo.descargadoEn ?? 0)) < GRACIA_PRESENCIA_SERVIDOR_MS;
                     if (esReciente) {
-                        console.info('[SyncCollection] Omitiendo purge por ventana de gracia (sample reciente):', archivo.sampleId, archivo.nombreLocal);
+                        logSync.info('syncCollectionService', '[SyncCollection] Omitiendo purge por ventana de gracia (sample reciente):', [archivo.sampleId, archivo.nombreLocal]);
                         continue;
                     }
 
@@ -497,13 +497,13 @@ export async function sincronizarColecciones(
                                 estado.config.carpetaLocal,
                             );
                             if (movido) {
-                                console.info('[SyncCollection] Archivo local movido a papelera (borrado en servidor):', archivo.nombreLocal);
+                                logSync.info('syncCollectionService', '[SyncCollection] Archivo local movido a papelera (borrado en servidor):', archivo.nombreLocal);
                             }
                         }
                     }
 
                     await eliminarArchivo(archivo.sampleId, archivo.coleccionId);
-                    console.info('[SyncCollection] Eliminado de tracking (ya no existe en servidor):', archivo.nombreLocal, '(id:', archivo.sampleId, ')');
+                    logSync.info('syncCollectionService', '[SyncCollection] Eliminado de tracking (ya no existe en servidor):', [archivo.nombreLocal, '(id:', archivo.sampleId, ')']);
                 }
             }
         }
@@ -626,7 +626,7 @@ export async function sincronizarColecciones(
     for (const subServer of subcolecciones) {
         const padreLocal = obtenerColeccion(subServer.parent_id!);
         if (!padreLocal) {
-            console.warn('[SyncCollection] Padre no encontrado para subcolección:', subServer.nombre, 'parent_id:', subServer.parent_id);
+            logSync.warn('syncCollectionService', '[SyncCollection] Padre no encontrado para subcolección:', [subServer.nombre, 'parent_id:', subServer.parent_id]);
             continue;
         }
 
@@ -686,7 +686,7 @@ export async function sincronizarColecciones(
                 descripcion: `Carpeta renombrada: "${CARPETA_SIN_COLECCION_LEGACY}" → "${CARPETA_SIN_COLECCION}"`,
             });
         } catch (err) {
-            console.warn('[SyncCollection] No se pudo renombrar carpeta legacy Sin colección:', err);
+            logSync.warn('syncCollectionService', '[SyncCollection] No se pudo renombrar carpeta legacy Sin colección:', err);
         }
     }
 
@@ -738,7 +738,7 @@ export async function sincronizarColecciones(
     /* Verificar espacio en disco antes de descargas masivas */
     const espacioSuficiente = await verificarEspacioDisco(carpetaBase, datosServidor);
     if (!espacioSuficiente) {
-        console.error('[SyncColecciones] Espacio insuficiente en disco. Abortando descargas.');
+        logSync.error('syncCollectionService', '[SyncColecciones] Espacio insuficiente en disco. Abortando descargas.');
         return { nuevos: 0, errores: totalSamples };
     }
 
@@ -1162,7 +1162,7 @@ export async function moverSampleEntreColecciones(
             );
             if (!respQuitar.ok) {
                 const detalle = await extraerErrorRespuesta(respQuitar);
-                console.error('[SyncCollection] Error quitando sample de colección origen:', respQuitar.status, detalle);
+                logSync.error('syncCollectionService', '[SyncCollection] Error quitando sample de colección origen:', [respQuitar.status, detalle]);
             }
         }
 
@@ -1178,7 +1178,7 @@ export async function moverSampleEntreColecciones(
             );
             if (!respAgregar.ok) {
                 const detalle = await extraerErrorRespuesta(respAgregar);
-                console.error('[SyncCollection] Error agregando sample a colección destino:', respAgregar.status, detalle);
+                logSync.error('syncCollectionService', '[SyncCollection] Error agregando sample a colección destino:', [respAgregar.status, detalle]);
                 return false;
             }
         }
@@ -1192,7 +1192,7 @@ export async function moverSampleEntreColecciones(
 
         return true;
     } catch (err) {
-        console.error('[SyncCollection] Error moviendo sample entre colecciones:', err);
+        logSync.error('syncCollectionService', '[SyncCollection] Error moviendo sample entre colecciones:', err);
         return false;
     }
 }
@@ -1218,7 +1218,7 @@ export async function agregarSampleAColeccion(
             body: { sampleId },
             claveDuplicacion: `agregar_sample_${coleccionId}_${sampleId}`,
         });
-        console.info('[SyncCollection] Agregar sample a colección encolado para cuando haya conexión:', sampleId, '→ col:', coleccionId);
+        logSync.info('syncCollectionService', '[SyncCollection] Agregar sample a colección encolado para cuando haya conexión:', [sampleId, '→ col:', coleccionId]);
         return true;
     }
 
@@ -1232,7 +1232,7 @@ export async function agregarSampleAColeccion(
 
         if (!resp.ok) {
             const body = await resp.json().catch(() => ({}));
-            console.error('[SyncCollection] Error agregando sample a colección:', coleccionId, sampleId, resp.status, body);
+            logSync.error('syncCollectionService', '[SyncCollection] Error agregando sample a colección:', [coleccionId, sampleId, resp.status, body]);
 
             /*
              * 403: la colección no pertenece al usuario.
@@ -1245,14 +1245,14 @@ export async function agregarSampleAColeccion(
                     const tracking = (await import('./syncTrackingService'));
                     await tracking.eliminarColeccion(coleccionId);
                 } catch (cleanupErr) {
-                    console.error('[SyncCollection] Error desvinculando colección:', cleanupErr);
+                    logSync.error('syncCollectionService', '[SyncCollection] Error desvinculando colección:', cleanupErr);
                 }
             }
 
             return false;
         }
 
-        console.info('[SyncCollection] Sample agregado a colección:', sampleId, '→ col:', coleccionId);
+        logSync.info('syncCollectionService', '[SyncCollection] Sample agregado a colección:', [sampleId, '→ col:', coleccionId]);
         /* Invalidar cache para que la próxima sincronización obtenga datos frescos.
          * Sin esto, delta sync puede usar datos stale donde el sample aparece en
          * sinColeccion (fue creado por upload antes de ser asignado a colección),
@@ -1260,7 +1260,7 @@ export async function agregarSampleAColeccion(
         invalidarCacheColecciones();
         return true;
     } catch (err) {
-        console.error('[SyncCollection] Error en request agregar sample a colección:', err);
+        logSync.error('syncCollectionService', '[SyncCollection] Error en request agregar sample a colección:', err);
         return false;
     }
 }
@@ -1289,7 +1289,7 @@ export async function crearColeccionDesdeLocal(nombre: string, parentId: number 
                 || c.carpetaLocal.toLowerCase() === carpetaEsperada),
         );
         if (yaExiste) {
-            console.info('[SyncCollection] Colección ya existe en tracking, omitiendo POST:', nombreNormalizado, '→ id:', yaExiste.id);
+            logSync.info('syncCollectionService', '[SyncCollection] Colección ya existe en tracking, omitiendo POST:', [nombreNormalizado, '→ id:', yaExiste.id]);
             return yaExiste.id;
         }
 
@@ -1341,18 +1341,18 @@ export async function crearColeccionDesdeLocal(nombre: string, parentId: number 
 
                 const reintentable = resp.status === 429 || resp.status >= 500;
                 if (!reintentable) {
-                    console.error('[SyncCollection] Error creando colección:', resp.status);
+                    logSync.error('syncCollectionService', '[SyncCollection] Error creando colección:', resp.status);
                     return null;
                 }
 
                 if (intento < MAX_REINTENTOS_CREAR_COLECCION) {
                     const delay = calcularBackoffCreacion(intento, resp.headers.get('Retry-After'));
-                    console.warn(`[SyncCollection] Crear colección reintentable (HTTP ${resp.status}), reintentando en ${delay}ms:`, nombreNormalizado);
+                    logSync.warn('syncCollectionService', `[SyncCollection] Crear colección reintentable (HTTP ${resp.status}), reintentando en ${delay}ms:`, nombreNormalizado);
                     await dormir(delay);
                     continue;
                 }
 
-                console.error('[SyncCollection] Crear colección agotó reintentos, encolando:', resp.status, nombreNormalizado);
+                logSync.error('syncCollectionService', '[SyncCollection] Crear colección agotó reintentos, encolando:', [resp.status, nombreNormalizado]);
                 encolarCreacionColeccion(nombreNormalizado);
                 return null;
             }
@@ -1367,7 +1367,7 @@ export async function crearColeccionDesdeLocal(nombre: string, parentId: number 
             creacionesColeccionEnVuelo.delete(claveColeccion);
         }
     } catch (err) {
-        console.error('[SyncCollection] Error creando colección desde local:', err);
+        logSync.error('syncCollectionService', '[SyncCollection] Error creando colección desde local:', err);
         return null;
     }
 }
@@ -1401,7 +1401,7 @@ export async function renombrarColeccionEnServidor(coleccionId: number, nuevoNom
             body: bodyRename,
             claveDuplicacion: `rename-col-${coleccionId}`,
         });
-        console.info('[SyncCollection] Rename encolado (offline):', coleccionId, '→', nombreNormalizado);
+        logSync.info('syncCollectionService', '[SyncCollection] Rename encolado (offline):', [coleccionId, '→', nombreNormalizado]);
         return false;
     }
 
@@ -1415,7 +1415,7 @@ export async function renombrarColeccionEnServidor(coleccionId: number, nuevoNom
 
         if (!resp.ok) {
             const detalle = await extraerErrorRespuesta(resp);
-            console.error('[SyncCollection] Error renombrando colección en servidor:', resp.status, detalle);
+            logSync.error('syncCollectionService', '[SyncCollection] Error renombrando colección en servidor:', [resp.status, detalle]);
 
             /* F5.2: Conflicto de version — forzar re-sync en el proximo ciclo */
             if (resp.status === 409) {
@@ -1435,7 +1435,7 @@ export async function renombrarColeccionEnServidor(coleccionId: number, nuevoNom
                     const tracking = (await import('./syncTrackingService'));
                     await tracking.eliminarColeccion(coleccionId);
                 } catch (cleanupErr) {
-                    console.error('[SyncCollection] Error desvinculando colección del tracking:', cleanupErr);
+                    logSync.error('syncCollectionService', '[SyncCollection] Error desvinculando colección del tracking:', cleanupErr);
                 }
                 return false;
             }
@@ -1470,7 +1470,7 @@ export async function renombrarColeccionEnServidor(coleccionId: number, nuevoNom
 
         return true;
     } catch (err) {
-        console.error('[SyncCollection] Error renombrando colección en servidor:', err);
+        logSync.error('syncCollectionService', '[SyncCollection] Error renombrando colección en servidor:', err);
         /* Error de red: encolar para reintento */
         await encolarOperacion({
             tipo: 'renombrar_coleccion',
@@ -1526,9 +1526,9 @@ async function verificarEspacioDisco(
         if (espacioDisponible < bytesNecesarios + MARGEN_DISCO_BYTES) {
             const disponibleMB = (espacioDisponible / (1024 * 1024)).toFixed(0);
             const necesarioMB = (bytesNecesarios / (1024 * 1024)).toFixed(0);
-            console.error(
-                `[SyncColecciones] Espacio insuficiente: ${disponibleMB} MB disponibles, ` +
-                `${necesarioMB} MB necesarios + ${(MARGEN_DISCO_BYTES / (1024 * 1024)).toFixed(0)} MB margen`,
+            logSync.error(
+                'syncCollectionService', String(`[SyncColecciones] Espacio insuficiente: ${disponibleMB} MB disponibles, ` +
+                `${necesarioMB} MB necesarios + ${(MARGEN_DISCO_BYTES / (1024 * 1024)).toFixed(0)} MB margen`),
             );
             return false;
         }
@@ -1536,7 +1536,7 @@ async function verificarEspacioDisco(
         return true;
     } catch (err) {
         /* Si no se puede verificar (ej: comando Rust no disponible), permitir descarga igualmente */
-        console.warn('[SyncColecciones] No se pudo verificar espacio en disco:', err);
+        logSync.warn('syncCollectionService', '[SyncColecciones] No se pudo verificar espacio en disco:', err);
         return true;
     }
 }

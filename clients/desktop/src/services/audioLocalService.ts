@@ -11,6 +11,7 @@
 import { esDesktop } from './desktopService';
 import { obtenerRutaLocal } from './syncService';
 import { encolarOperacion } from './offlineQueueService';
+import { logSync } from './syncLogger';
 
 /*
  * Verifica si un sample tiene copia local y retorna la URL apropiada.
@@ -145,7 +146,7 @@ export async function iniciarDragNativo(
             await startDrag({ item: [rutaLocal], icon: iconoDrag });
             return true;
         } catch (err) {
-            console.warn('[DragNativo] Error con archivo local, probando temporal:', err);
+            logSync.warn('audioLocalService', '[DragNativo] Error con archivo local, probando temporal:', err);
         }
     }
 
@@ -161,7 +162,7 @@ export async function iniciarDragNativo(
             }
             dragTempCache.delete(sampleId); /* archivo ya no existe (limpieza OS) */
         } catch (err) {
-            console.warn('[DragNativo] Error con archivo temporal:', err);
+            logSync.warn('audioLocalService', '[DragNativo] Error con archivo temporal:', err);
             dragTempCache.delete(sampleId);
         }
     }
@@ -199,7 +200,7 @@ export async function descargarYArrastrar(
         await startDrag({ item: [tempPath], icon: iconoDrag });
         return true;
     } catch (err) {
-        console.warn('[DragNativo] Error descargando para drag:', err);
+        logSync.warn('audioLocalService', '[DragNativo] Error descargando para drag:', err);
         return false;
     }
 }
@@ -245,7 +246,7 @@ export async function prepararDragNativo(
         await writeFile(tempPath, new Uint8Array(arrayBuffer));
         dragTempCache.set(sampleId, tempPath);
     } catch (err) {
-        console.error('[DragNativo] Error preparando archivo para drag:', err);
+        logSync.error('audioLocalService', '[DragNativo] Error preparando archivo para drag:', err);
         throw err; /* relay para que el caller muestre feedback al usuario */
     } finally {
         dragPreparando.delete(sampleId);

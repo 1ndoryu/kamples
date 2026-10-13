@@ -316,7 +316,7 @@ export async function inicializarUploadQueue(): Promise<void> {
             cola = colaGuardada.filter(i => {
                 if (i.estado === 'completado') return false;
                 if (!estaEnCarpetaSync(i.rutaArchivo)) {
-                    console.warn('[UploadQueue] Purgando item persistido fuera de carpeta sync:', i.nombreArchivo);
+                    logSync.warn('uploadQueueService', '[UploadQueue] Purgando item persistido fuera de carpeta sync:', i.nombreArchivo);
                     return false;
                 }
                 return true;
@@ -339,13 +339,13 @@ export async function inicializarUploadQueue(): Promise<void> {
                 const antesCount = cola.length;
                 cola = cola.filter((_, idx) => {
                     if (!verificaciones[idx]) {
-                        console.warn('[UploadQueue] Purgando item con archivo inexistente:', cola[idx].nombreArchivo);
+                        logSync.warn('uploadQueueService', '[UploadQueue] Purgando item con archivo inexistente:', cola[idx].nombreArchivo);
                         return false;
                     }
                     return true;
                 });
                 if (antesCount !== cola.length) {
-                    console.info(`[UploadQueue] Purgados ${antesCount - cola.length} items con archivos inexistentes`);
+                    logSync.info('uploadQueueService', `[UploadQueue] Purgados ${antesCount - cola.length} items con archivos inexistentes`);
                 }
             } catch {
                 /* plugin-fs no disponible — conservar items existentes */
@@ -472,7 +472,7 @@ export async function encolarArchivo(
 
     /* P3: Rechazar archivos dentro de .papelera — defensa en profundidad */
     if (esRutaPapelera(rutaNormalizada)) {
-        console.info('[UploadQueue] Archivo en .papelera, rechazando:', nombreArchivo);
+        logSync.info('uploadQueueService', '[UploadQueue] Archivo en .papelera, rechazando:', nombreArchivo);
         return false;
     }
 
@@ -486,7 +486,7 @@ export async function encolarArchivo(
      * Defensa en profundidad — complementa el guard del watcher (C378).
      * Cubre edge cases de OneDrive/Windows donde el driver FS emite rutas externas. */
     if (!estaEnCarpetaSync(rutaNormalizada)) {
-        console.warn('[UploadQueue] Archivo fuera de carpeta sync, rechazando en encolamiento:', nombreArchivo, rutaNormalizada);
+        logSync.warn('uploadQueueService', '[UploadQueue] Archivo fuera de carpeta sync, rechazando en encolamiento:', [nombreArchivo, rutaNormalizada]);
         return false;
     }
 
@@ -497,7 +497,7 @@ export async function encolarArchivo(
      * (calculando hash, etc.), rechazar inmediatamente.
      */
     if (rutasEncolando.has(rutaClave)) {
-        console.info('[UploadQueue] Archivo ya en proceso de encolamiento, ignorando:', nombreArchivo);
+        logSync.info('uploadQueueService', '[UploadQueue] Archivo ya en proceso de encolamiento, ignorando:', nombreArchivo);
         return false;
     }
     rutasEncolando.add(rutaClave);
@@ -528,7 +528,7 @@ async function encolarArchivoInterno(
     /* Verificar si ya está en la cola (misma ruta) — O(1) con Set */
     const rutaClave = claveRutaEnCola(rutaArchivo);
     if (rutasEnCola.has(rutaClave) && cola.some(i => claveRutaEnCola(i.rutaArchivo) === rutaClave && i.estado !== 'error')) {
-        console.info('[UploadQueue] Archivo ya en cola, ignorando:', nombreNormalizado);
+        logSync.info('uploadQueueService', '[UploadQueue] Archivo ya en cola, ignorando:', nombreNormalizado);
         return false;
     }
 
@@ -595,11 +595,11 @@ async function encolarArchivoInterno(
         if (estado.trackingModule) {
             const hayActivoConHash = existeArchivoActivoConHash(hash);
             if (!hayActivoConHash) {
-                console.info('[UploadQueue] Hash conocido pero sin archivo activo en tracking, evictando hash stale:', nombreNormalizado);
+                logSync.info('uploadQueueService', '[UploadQueue] Hash conocido pero sin archivo activo en tracking, evictando hash stale:', nombreNormalizado);
                 hashesConocidos.delete(hash);
                 /* Continuar con encolamiento normal */
             } else {
-                console.info(`[UploadQueue] Duplicado confirmado — "${nombreNormalizado}" tiene el mismo contenido que un sample ya subido. Eliminando archivo local.`);
+                logSync.info('uploadQueueService', `[UploadQueue] Duplicado confirmado — "${nombreNormalizado}" tiene el mismo contenido que un sample ya subido. Eliminando archivo local.`);
                 try {
                     const { remove } = await import('@tauri-apps/plugin-fs');
                     await remove(rutaArchivo);
@@ -820,7 +820,7 @@ async function procesarItemUpload(
                 descripcion: `Error al subir: "${item.nombreArchivo}" — ${item.ultimoError ?? 'desconocido'}`,
             }).catch(() => {});
 
-            console.error('[UploadQueue] Máximo de reintentos alcanzado:', item.nombreArchivo);
+            logSync.error('uploadQueueService', '[UploadQueue] Máximo de reintentos alcanzado:', item.nombreArchivo);
         } else {
             item.estado = 'pendiente';
             /* Backoff exponencial antes de reintentar */
@@ -853,7 +853,7 @@ async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
         /* Guard: descartar items cuya ruta está fuera de la carpeta de sync.
          * Usa función centralizada estaEnCarpetaSync (normaliza separadores + casing). */
         if (!estaEnCarpetaSync(item.rutaArchivo)) {
-            console.warn('[UploadQueue] Item fuera de carpeta sync, descartando:', item.rutaArchivo);
+            logSync.warn('uploadQueueService', '[UploadQueue] Item fuera de carpeta sync, descartando:', item.rutaArchivo);
             return true; /* true = no reintentar, simplemente descartar */
         }
 
@@ -863,7 +863,7 @@ async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
          * cubrir el caso donde hash es null (error de FS, OneDrive lock).
          */
         if (rutasEnVuelo.has(rutaClave)) {
-            console.info('[UploadQueue] Ruta en vuelo (upload paralelo), omitiendo:', item.nombreArchivo);
+            logSync.info('uploadQueueService', '[UploadQueue] Ruta en vuelo (upload paralelo), omitiendo:', item.nombreArchivo);
             return true;
         }
         rutasEnVuelo.add(rutaClave);
@@ -880,7 +880,7 @@ async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
         if (estado.trackingModule) {
             const enTracking = estado.trackingModule.buscarArchivoPorRuta(item.rutaArchivo);
             if (enTracking && !enTracking.syncDeshabilitado) {
-                console.info('[UploadQueue] Duplicado detectado en tracking pre-upload, omitiendo:', item.nombreArchivo);
+                logSync.info('uploadQueueService', '[UploadQueue] Duplicado detectado en tracking pre-upload, omitiendo:', item.nombreArchivo);
                 item.sampleIdServidor = enTracking.sampleId;
                 /* Marcar como completado sin subir */
                 return true;
@@ -895,16 +895,16 @@ async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
             if (estado.trackingModule) {
                 const hayActivo = existeArchivoActivoConHash(item.hashParcial);
                 if (!hayActivo) {
-                    console.info('[UploadQueue] Hash stale en pre-upload (sin archivo activo), evictando:', item.nombreArchivo);
+                    logSync.info('uploadQueueService', '[UploadQueue] Hash stale en pre-upload (sin archivo activo), evictando:', item.nombreArchivo);
                     hashesConocidos.delete(item.hashParcial);
                     guardarHashes().catch(() => {});
                     /* Continuar con upload normal */
                 } else {
-                    console.info('[UploadQueue] Duplicado por hash detectado pre-upload:', item.nombreArchivo);
+                    logSync.info('uploadQueueService', '[UploadQueue] Duplicado por hash detectado pre-upload:', item.nombreArchivo);
                     return true;
                 }
             } else {
-                console.info('[UploadQueue] Duplicado por hash detectado pre-upload (sin tracking):', item.nombreArchivo);
+                logSync.info('uploadQueueService', '[UploadQueue] Duplicado por hash detectado pre-upload (sin tracking):', item.nombreArchivo);
                 return true;
             }
         }
@@ -917,7 +917,7 @@ async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
          */
         if (item.hashParcial) {
             if (hashesEnVuelo.has(item.hashParcial)) {
-                console.info('[UploadQueue] Hash en vuelo (upload paralelo), omitiendo:', item.nombreArchivo);
+                logSync.info('uploadQueueService', '[UploadQueue] Hash en vuelo (upload paralelo), omitiendo:', item.nombreArchivo);
                 return true;
             }
             hashesEnVuelo.add(item.hashParcial);
@@ -956,7 +956,7 @@ async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
                 tipo: 'error_subida',
                 descripcion: `Archivo no encontrado, descartado: "${item.nombreArchivo}"`,
             }).catch(() => {});
-            console.warn('[UploadQueue] Archivo no existe, descartando permanentemente:', item.rutaArchivo);
+            logSync.warn('uploadQueueService', '[UploadQueue] Archivo no existe, descartando permanentemente:', item.rutaArchivo);
             return true; /* true = completado/descartado, no reintentar */
         }
 
@@ -1128,10 +1128,10 @@ async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
                     const idCreada = await crearColeccionDesdeLocal(item.carpetas[0]);
                     if (idCreada) {
                         coleccionIdResuelta = idCreada;
-                        console.info('[UploadQueue] Colección creada/resuelta para carpeta:', item.carpetas[0], '→ id:', idCreada);
+                        logSync.info('uploadQueueService', '[UploadQueue] Colección creada/resuelta para carpeta:', [item.carpetas[0], '→ id:', idCreada]);
                     }
                 } catch (err) {
-                    console.error('[UploadQueue] Error creando colección para carpeta:', item.carpetas[0], err);
+                    logSync.error('uploadQueueService', '[UploadQueue] Error creando colección para carpeta:', [item.carpetas[0], err]);
                 }
             }
 
@@ -1142,10 +1142,10 @@ async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
                     const idSub = await crearColeccionDesdeLocal(item.carpetas[1], coleccionIdResuelta);
                     if (idSub) {
                         subcoleccionIdResuelta = idSub;
-                        console.info('[UploadQueue] Subcolección creada/resuelta:', item.carpetas[1], '→ id:', idSub);
+                        logSync.info('uploadQueueService', '[UploadQueue] Subcolección creada/resuelta:', [item.carpetas[1], '→ id:', idSub]);
                     }
                 } catch (err) {
-                    console.error('[UploadQueue] Error creando subcolección:', item.carpetas[1], err);
+                    logSync.error('uploadQueueService', '[UploadQueue] Error creando subcolección:', [item.carpetas[1], err]);
                 }
             }
 
@@ -1161,7 +1161,7 @@ async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
                     const { agregarSampleAColeccion } = await import('./syncCollectionService');
                     await agregarSampleAColeccion(coleccionFinal, resultado.sample_id);
                 } catch (err) {
-                    console.error('[UploadQueue] Error agregando sample a colección:', err);
+                    logSync.error('uploadQueueService', '[UploadQueue] Error agregando sample a colección:', err);
                 }
             }
 
@@ -1183,11 +1183,11 @@ async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
             }
         }
 
-        console.info(
-            '[UploadQueue] Subido exitosamente:',
-            item.nombreArchivo,
+        logSync.info(
+            'uploadQueueService', '[UploadQueue] Subido exitosamente:',
+            [item.nombreArchivo,
             '→ sample_id:',
-            resultado.sample_id,
+            resultado.sample_id],
         );
         return true;
     } catch (err) {
@@ -1279,7 +1279,7 @@ async function calcularHashParcial(rutaArchivo: string): Promise<string | null> 
         const hashArray = Array.from(new Uint8Array(hashBuffer));
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     } catch (err) {
-        console.warn('[UploadQueue] No se pudo calcular hash parcial:', err);
+        logSync.warn('uploadQueueService', '[UploadQueue] No se pudo calcular hash parcial:', err);
         return null;
     }
 }

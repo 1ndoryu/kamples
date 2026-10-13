@@ -217,7 +217,7 @@ export async function marcarNoSincronizar(ruta: string): Promise<boolean> {
 
     if (!archivo) {
         if (trackingModule?.buscarArchivoPorRuta(ruta)) return true;
-        console.warn('[Sync] No se encontró archivo en índice para marcar no_sincronizar:', ruta);
+        logSync.warn('syncWatcherSetup', '[Sync] No se encontró archivo en índice para marcar no_sincronizar:', ruta);
         return false;
     }
 
@@ -225,7 +225,7 @@ export async function marcarNoSincronizar(ruta: string): Promise<boolean> {
     archivo.rutaEliminada = archivo.ruta;
     guardarIndice();
 
-    console.info('[Sync] Sample marcado como no_sincronizar:', archivo.nombre, '(sampleId:', archivo.sampleId, ')');
+    logSync.info('syncWatcherSetup', '[Sync] Sample marcado como no_sincronizar:', [archivo.nombre, '(sampleId:', archivo.sampleId, ')']);
     return true;
 }
 
@@ -253,7 +253,7 @@ export async function marcarNoSincronizarPorId(sampleId: number): Promise<boolea
     archivo.rutaEliminada = archivo.ruta;
     guardarIndice();
 
-    console.info('[Sync] Sample marcado como no_sincronizar por ID:', sampleId);
+    logSync.info('syncWatcherSetup', '[Sync] Sample marcado como no_sincronizar por ID:', sampleId);
     return true;
 }
 
@@ -275,7 +275,7 @@ export async function reactivarSync(sampleId: number): Promise<boolean> {
     estado.indiceArchivos = estado.indiceArchivos.filter(a => a.sampleId !== sampleId);
     guardarIndice();
 
-    console.info('[Sync] Sync reactivada para sample:', sampleId, '— se descargará en próxima sync');
+    logSync.info('syncWatcherSetup', '[Sync] Sync reactivada para sample:', [sampleId, '— se descargará en próxima sync']);
     return true;
 }
 
@@ -382,7 +382,7 @@ async function actualizarColeccionEnMovimiento(
          * el endpoint de quitar necesita el coleccionId origen que puede no estar
          * disponible de forma fiable. El delta sync reconciliará si es necesario. */
     } catch (err) {
-        console.error('[Sync] Error actualizando coleccion_samples en move:', sampleId, err);
+        logSync.error('syncWatcherSetup', '[Sync] Error actualizando coleccion_samples en move:', [sampleId, err]);
     }
 
     /* Actualizar coleccionId en tracking v2 */
@@ -414,7 +414,7 @@ async function moverSampleEnServidor(
             body: { carpeta_primaria: carpetaPrimaria, carpeta_secundaria: carpetaSecundaria },
             claveDuplicacion: `mover_carpeta_${sampleId}`,
         });
-        console.info('[Sync] Move encolado para cuando haya conexion, sample:', sampleId);
+        logSync.info('syncWatcherSetup', '[Sync] Move encolado para cuando haya conexion, sample:', sampleId);
         return true;
     }
 
@@ -431,14 +431,14 @@ async function moverSampleEnServidor(
 
         if (!resp.ok) {
             const body = await resp.json().catch(() => ({}));
-            console.error('[Sync] Error moviendo sample en servidor:', sampleId, body);
+            logSync.error('syncWatcherSetup', '[Sync] Error moviendo sample en servidor:', [sampleId, body]);
             return false;
         }
 
-        console.info('[Sync] Sample movido en servidor:', sampleId, '→', carpetaPrimaria, carpetaSecundaria || '(raíz)');
+        logSync.info('syncWatcherSetup', '[Sync] Sample movido en servidor:', [sampleId, '→', carpetaPrimaria, carpetaSecundaria || '(raíz)']);
         return true;
     } catch (err) {
-        console.error('[Sync] Error en request de mover sample:', sampleId, err);
+        logSync.error('syncWatcherSetup', '[Sync] Error en request de mover sample:', [sampleId, err]);
         return false;
     }
 }
@@ -497,24 +497,24 @@ async function manejarMoveLocal(
                     try {
                         await estado.collectionModule.crearColeccionDesdeLocal(primaria);
                     } catch (err) {
-                        console.error('[Sync] Error asegurando colección destino en move v2:', primaria, err);
+                        logSync.error('syncWatcherSetup', '[Sync] Error asegurando colección destino en move v2:', [primaria, err]);
                     }
                 }
 
                 await moverSampleEnServidor(archivoV2.sampleId, primaria, secundaria);
                 /* Actualizar coleccion_samples en servidor + coleccionId en tracking */
                 await actualizarColeccionEnMovimiento(archivoV2.sampleId, carpetas, archivoV2);
-                console.info('[Sync] Move procesado (solo v2): sample', archivoV2.sampleId, '→', primaria, secundaria || '(raíz)');
+                logSync.info('syncWatcherSetup', '[Sync] Move procesado (solo v2): sample', [archivoV2.sampleId, '→', primaria, secundaria || '(raíz)']);
                 return;
             }
         }
 
-        console.warn('[Sync] Move sin tracking previo; se trata como archivo nuevo para upload:', rutaNueva);
+        logSync.warn('syncWatcherSetup', '[Sync] Move sin tracking previo; se trata como archivo nuevo para upload:', rutaNueva);
 
         const carpetaDestino = (carpetas[0] ?? '').trim();
         if (carpetaDestino && !CARPETAS_SISTEMA_SYNC.has(carpetaDestino.toLowerCase())) {
             estado.collectionModule?.crearColeccionDesdeLocal(carpetaDestino).catch(err => {
-                console.error('[Sync] Error creando colección destino desde move no trackeado:', err);
+                logSync.error('syncWatcherSetup', '[Sync] Error creando colección destino desde move no trackeado:', err);
             });
         }
 
@@ -522,7 +522,7 @@ async function manejarMoveLocal(
             const { encolarArchivo } = await import('./uploadQueueService');
             await encolarArchivo(rutaNueva, nombreArchivo, carpetas);
         } catch (err) {
-            console.error('[Sync] Error encolando move no trackeado como upload:', err);
+            logSync.error('syncWatcherSetup', '[Sync] Error encolando move no trackeado como upload:', err);
         }
         return;
     }
@@ -564,7 +564,7 @@ async function manejarMoveLocal(
         try {
             await estado.collectionModule.crearColeccionDesdeLocal(primaria);
         } catch (err) {
-            console.error('[Sync] Error asegurando colección destino en move:', primaria, err);
+            logSync.error('syncWatcherSetup', '[Sync] Error asegurando colección destino en move:', [primaria, err]);
         }
     }
 
@@ -572,7 +572,7 @@ async function manejarMoveLocal(
     /* Actualizar coleccion_samples en servidor + coleccionId en tracking */
     await actualizarColeccionEnMovimiento(archivo.sampleId, carpetas, archivoTrackingRef);
 
-    console.info('[Sync] Move procesado: sample', archivo.sampleId, '→', primaria, secundaria || '(raíz)');
+    logSync.info('syncWatcherSetup', '[Sync] Move procesado: sample', [archivo.sampleId, '→', primaria, secundaria || '(raíz)']);
 }
 
 /* Polling de estructura de carpetas */
@@ -780,7 +780,7 @@ async function manejarBorradoLocal(ruta: string): Promise<void> {
      * soft-delete del sample recién subido cuando borrarEnServidorAlBorrarLocal está activo.
      */
     if (esMovimientoInterno(ruta)) {
-        console.info('[Sync] Ignorando DELETE de ruta movida internamente:', ruta);
+        logSync.info('syncWatcherSetup', '[Sync] Ignorando DELETE de ruta movida internamente:', ruta);
         return;
     }
 
@@ -810,7 +810,7 @@ async function manejarBorradoLocal(ruta: string): Promise<void> {
         const sid = archivo?.sampleId ?? estado.trackingModule?.buscarArchivoPorRuta(ruta)?.sampleId;
         if (sid) {
             colaBorradosPendientes.push(sid);
-            console.warn(`[Sync] Limite borrados alcanzado (${LIMITE_BORRADOS_POR_CICLO}/ciclo). Encolado para siguiente ciclo:`, sid);
+            logSync.warn('syncWatcherSetup', `[Sync] Limite borrados alcanzado (${LIMITE_BORRADOS_POR_CICLO}/ciclo). Encolado para siguiente ciclo:`, sid);
         }
         return;
     }
@@ -858,14 +858,14 @@ async function softDeleteEnServidor(sampleId: number): Promise<boolean> {
         });
 
         if (!resp.ok) {
-            console.error('[Sync] Error en soft-delete servidor:', sampleId, resp.status);
+            logSync.error('syncWatcherSetup', '[Sync] Error en soft-delete servidor:', [sampleId, resp.status]);
             return false;
         }
 
-        console.info('[Sync] Sample eliminado en servidor (soft-delete):', sampleId);
+        logSync.info('syncWatcherSetup', '[Sync] Sample eliminado en servidor (soft-delete):', sampleId);
         return true;
     } catch (err) {
-        console.error('[Sync] Error en soft-delete:', sampleId, err);
+        logSync.error('syncWatcherSetup', '[Sync] Error en soft-delete:', [sampleId, err]);
         return false;
     }
 }
@@ -906,7 +906,7 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                 const rutaNorm = ruta.replace(/\\/g, '/');
 
                 if (esDescargaEnCurso(rutaNorm)) {
-                    console.info('[Sync] Ignorando create propio (descarga en curso):', nombreArchivo);
+                    logSync.info('syncWatcherSetup', '[Sync] Ignorando create propio (descarga en curso):', nombreArchivo);
                     return;
                 }
 
@@ -920,12 +920,12 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                     if (enTrackingPorRuta) {
                         if (enTrackingPorRuta.syncDeshabilitado) {
                             /* Archivo re-añadido en la misma ruta tras borrado local. */
-                            console.info('[Sync] Archivo re-anadido tras borrado local (misma ruta), re-encolando:', nombreArchivo);
+                            logSync.info('syncWatcherSetup', '[Sync] Archivo re-anadido tras borrado local (misma ruta), re-encolando:', nombreArchivo);
                             trackingModule.eliminarArchivo(enTrackingPorRuta.sampleId, enTrackingPorRuta.coleccionId)
                                 .then(() => encolarArchivo(ruta, nombreArchivo, carpetas))
-                                .catch(err => console.error('[Sync] Error limpiando tracking para re-encolar:', nombreArchivo, err));
+                                .catch(err => logSync.error('syncWatcherSetup', '[Sync] Error limpiando tracking para re-encolar:', [nombreArchivo, err]));
                         } else {
-                            console.info('[Sync] Archivo ya en tracking v2 (misma ruta), ignorando:', nombreArchivo);
+                            logSync.info('syncWatcherSetup', '[Sync] Archivo ya en tracking v2 (misma ruta), ignorando:', nombreArchivo);
                         }
                         return;
                     }
@@ -938,7 +938,7 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                      * la entrada del indice legacy es obsoleta (ej: samples eliminados del servidor).
                      * Limpiar la entrada stale y permitir re-upload.
                      */
-                    console.warn('[Sync] Entrada stale en indice legacy (tracking v2 no la tiene), limpiando:', nombreArchivo);
+                    logSync.warn('syncWatcherSetup', '[Sync] Entrada stale en indice legacy (tracking v2 no la tiene), limpiando:', nombreArchivo);
                     const idx = estado.indiceArchivos.indexOf(porRuta);
                     if (idx >= 0) estado.indiceArchivos.splice(idx, 1);
                     estado.indiceArchivosPorRuta.delete(rutaNorm);
@@ -975,7 +975,7 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                 (nombre: string, _rutaCompleta: string) => {
                     /* Excluir carpetas del sistema que NO son colecciones reales */
                     if (CARPETAS_SISTEMA_SYNC.has(nombre.toLowerCase())) {
-                        console.info('[Sync] Carpeta de sistema ignorada (no es colección):', nombre);
+                        logSync.info('syncWatcherSetup', '[Sync] Carpeta de sistema ignorada (no es colección):', nombre);
                         return;
                     }
                     /*
@@ -996,7 +996,7 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                             if (trackingModule) {
                                 const existente = trackingModule.buscarColeccionPorCarpeta(nombre);
                                 if (existente) {
-                                    console.info('[Sync] Carpeta ya vinculada en tracking, omitiendo:', nombre, '→ id:', existente.id);
+                                    logSync.info('syncWatcherSetup', '[Sync] Carpeta ya vinculada en tracking, omitiendo:', [nombre, '→ id:', existente.id]);
                                     return;
                                 }
                             }
@@ -1012,7 +1012,7 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                             if (!estado.configAvanzada.borrarAlSubirExitoso) {
                                 const huerfana = await colMod.buscarColeccionHuerfana(nombre);
                                 if (huerfana) {
-                                    console.info('[Sync] Carpeta nueva detectada como posible rename (huérfana encontrada):', huerfana.id, huerfana.nombre, '→', nombre);
+                                    logSync.info('syncWatcherSetup', '[Sync] Carpeta nueva detectada como posible rename (huérfana encontrada):', [huerfana.id, huerfana.nombre, '→', nombre]);
                                     const exito = await colMod.renombrarColeccionEnServidor(huerfana.id, nombre);
                                     if (!exito && trackingModule) {
                                         /*
@@ -1024,17 +1024,17 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                                         if (aunExiste) {
                                             await trackingModule.actualizarNombreColeccion(huerfana.id, nombre, nombre);
                                         } else {
-                                            console.info('[Sync] Colección huérfana desvinculada (403), creando nueva para:', nombre);
+                                            logSync.info('syncWatcherSetup', '[Sync] Colección huérfana desvinculada (403), creando nueva para:', nombre);
                                             await colMod.crearColeccionDesdeLocal(nombre);
                                         }
                                     }
                                     return;
                                 }
                             }
-                            console.info('[Sync] Carpeta nueva detectada → crear colección:', nombre);
+                            logSync.info('syncWatcherSetup', '[Sync] Carpeta nueva detectada → crear colección:', nombre);
                             await colMod.crearColeccionDesdeLocal(nombre);
                         } catch (err) {
-                            console.error('[Sync] Error en callback carpeta nueva:', err);
+                            logSync.error('syncWatcherSetup', '[Sync] Error en callback carpeta nueva:', err);
                         }
                     })();
                 },
@@ -1042,22 +1042,22 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                     if (!trackingModule) return;
                     /* Excluir carpetas del sistema que NO son colecciones reales */
                     if (CARPETAS_SISTEMA_SYNC.has(nombreNuevo.toLowerCase())) {
-                        console.info('[Sync] Rename a carpeta de sistema ignorado:', nombreNuevo);
+                        logSync.info('syncWatcherSetup', '[Sync] Rename a carpeta de sistema ignorado:', nombreNuevo);
                         return;
                     }
                     const coleccion = trackingModule.buscarColeccionPorCarpeta(nombreAnterior);
                     if (coleccion) {
-                        console.info('[Sync] Carpeta renombrada → renombrar colección:', coleccion.id, nombreAnterior, '→', nombreNuevo);
+                        logSync.info('syncWatcherSetup', '[Sync] Carpeta renombrada → renombrar colección:', [coleccion.id, nombreAnterior, '→', nombreNuevo]);
                         colMod.renombrarColeccionEnServidor(coleccion.id, nombreNuevo)
                             .then(exito => {
                                 if (!exito) {
                                     trackingModule.actualizarNombreColeccion(coleccion.id, nombreNuevo, nombreNuevo).catch(err => {
-                                        console.error('[Sync] Error actualizando nombre local de colección:', err);
+                                        logSync.error('syncWatcherSetup', '[Sync] Error actualizando nombre local de colección:', err);
                                     });
                                 }
                             })
                             .catch(err => {
-                                console.error('[Sync] Error renombrando colección:', err);
+                                logSync.error('syncWatcherSetup', '[Sync] Error renombrando colección:', err);
                             });
                     } else {
                         /*
@@ -1066,13 +1066,13 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                          * La detección de huérfana es el caso más probable: la carpeta ya fue renombrada
                          * en disco pero tracking aún tiene el nombre viejo.
                          */
-                        console.info('[Sync] Carpeta renombrada sin colección local → verificando en-vuelo/huérfana/servidor:', nombreAnterior, '→', nombreNuevo);
+                        logSync.info('syncWatcherSetup', '[Sync] Carpeta renombrada sin colección local → verificando en-vuelo/huérfana/servidor:', [nombreAnterior, '→', nombreNuevo]);
                         (async () => {
                             try {
                                 /* 1. Creación en vuelo del nombre viejo */
                                 const idEnVuelo = await colMod.esperarCreacionEnVuelo(nombreAnterior);
                                 if (idEnVuelo) {
-                                    console.info('[Sync] Creación en-vuelo completada, renombrando:', idEnVuelo, '→', nombreNuevo);
+                                    logSync.info('syncWatcherSetup', '[Sync] Creación en-vuelo completada, renombrando:', [idEnVuelo, '→', nombreNuevo]);
                                     const exito = await colMod.renombrarColeccionEnServidor(idEnVuelo, nombreNuevo);
                                     if (!exito && trackingModule) {
                                         await trackingModule.actualizarNombreColeccion(idEnVuelo, nombreNuevo, nombreNuevo);
@@ -1089,7 +1089,7 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                                 if (!estado.configAvanzada.borrarAlSubirExitoso) {
                                     const huerfana = await colMod.buscarColeccionHuerfana(nombreNuevo);
                                     if (huerfana) {
-                                        console.info('[Sync] Colección huérfana detectada como rename:', huerfana.id, huerfana.nombre, '→', nombreNuevo);
+                                        logSync.info('syncWatcherSetup', '[Sync] Colección huérfana detectada como rename:', [huerfana.id, huerfana.nombre, '→', nombreNuevo]);
                                         const exito = await colMod.renombrarColeccionEnServidor(huerfana.id, nombreNuevo);
                                         if (!exito && trackingModule) {
                                             await trackingModule.actualizarNombreColeccion(huerfana.id, nombreNuevo, nombreNuevo);
@@ -1101,17 +1101,17 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                                 /* 3. Buscar en servidor por nombre anterior */
                                 const idServidor = await colMod.buscarColeccionServidorPorNombrePublico(nombreAnterior);
                                 if (idServidor) {
-                                    console.info('[Sync] Colección encontrada en servidor por nombre anterior, renombrando:', idServidor, '→', nombreNuevo);
+                                    logSync.info('syncWatcherSetup', '[Sync] Colección encontrada en servidor por nombre anterior, renombrando:', [idServidor, '→', nombreNuevo]);
                                     const exito = await colMod.renombrarColeccionEnServidor(idServidor, nombreNuevo);
                                     if (!exito && trackingModule) {
                                         await trackingModule.actualizarNombreColeccion(idServidor, nombreNuevo, nombreNuevo);
                                     }
                                 } else {
-                                    console.info('[Sync] Colección no existe en ningún registro → crear nueva:', nombreNuevo);
+                                    logSync.info('syncWatcherSetup', '[Sync] Colección no existe en ningún registro → crear nueva:', nombreNuevo);
                                     await colMod.crearColeccionDesdeLocal(nombreNuevo);
                                 }
                             } catch (err) {
-                                console.error('[Sync] Error en fallback rename de colección:', err);
+                                logSync.error('syncWatcherSetup', '[Sync] Error en fallback rename de colección:', err);
                             }
                         })();
                     }
@@ -1127,7 +1127,7 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                 (nombreSub: string, carpetaPadre: string, rutaCompleta: string) => {
                     if (CARPETAS_SISTEMA_SYNC.has(nombreSub.toLowerCase())) return;
                     if (!trackingModule) {
-                        console.warn('[Sync] Subcarpeta nueva ignorada (sin tracking):', nombreSub);
+                        logSync.warn('syncWatcherSetup', '[Sync] Subcarpeta nueva ignorada (sin tracking):', nombreSub);
                         return;
                     }
 
@@ -1147,15 +1147,15 @@ export async function inicializarSyncBidireccional(): Promise<void> {
                                 const nuevaRuta = await join(rootSync, nombreSub);
 
                                 if (await exists(nuevaRuta)) {
-                                    console.warn('[Sync] Destino ya existe, no se puede mover fuera de Sin colección:', nuevaRuta);
+                                    logSync.warn('syncWatcherSetup', '[Sync] Destino ya existe, no se puede mover fuera de Sin colección:', nuevaRuta);
                                     return;
                                 }
 
                                 await rename(rutaCompleta, nuevaRuta);
-                                console.info('[Sync] C3: Carpeta movida fuera de Sin colección:', nombreSub);
+                                logSync.info('syncWatcherSetup', '[Sync] C3: Carpeta movida fuera de Sin colección:', nombreSub);
                                 await colMod.crearColeccionDesdeLocal(nombreSub);
                             } catch (err) {
-                                console.error('[Sync] Error moviendo carpeta fuera de Sin colección:', err);
+                                logSync.error('syncWatcherSetup', '[Sync] Error moviendo carpeta fuera de Sin colección:', err);
                             }
                         })();
                         return;
@@ -1163,20 +1163,20 @@ export async function inicializarSyncBidireccional(): Promise<void> {
 
                     const padre = trackingModule.buscarColeccionPorCarpeta(carpetaPadre);
                     if (!padre) {
-                        console.warn('[Sync] Subcarpeta nueva ignorada (padre no encontrado):', carpetaPadre, '/', nombreSub);
+                        logSync.warn('syncWatcherSetup', '[Sync] Subcarpeta nueva ignorada (padre no encontrado):', [carpetaPadre, '/', nombreSub]);
                         return;
                     }
 
                     /* QL103: Guard — omitir si la subcolección ya existe en tracking */
                     const subExistente = trackingModule.buscarSubcoleccion(carpetaPadre, nombreSub);
                     if (subExistente) {
-                        console.info('[Sync] Subcarpeta ya vinculada en tracking, omitiendo:', carpetaPadre, '/', nombreSub, '→ id:', subExistente.id);
+                        logSync.info('syncWatcherSetup', '[Sync] Subcarpeta ya vinculada en tracking, omitiendo:', [carpetaPadre, '/', nombreSub, '→ id:', subExistente.id]);
                         return;
                     }
 
-                    console.info('[Sync] Subcarpeta nueva → crear subcolección:', nombreSub, 'en', carpetaPadre, '(padreId:', padre.id, ')');
+                    logSync.info('syncWatcherSetup', '[Sync] Subcarpeta nueva → crear subcolección:', [nombreSub, 'en', carpetaPadre, '(padreId:', padre.id, ')']);
                     colMod.crearColeccionDesdeLocal(nombreSub, padre.id).catch(err => {
-                        console.error('[Sync] Error creando subcolección desde subcarpeta local:', err);
+                        logSync.error('syncWatcherSetup', '[Sync] Error creando subcolección desde subcarpeta local:', err);
                     });
                 },
                 (nombreAnterior: string, nombreNuevo: string, carpetaPadre: string, _rutaNueva: string) => {
@@ -1185,28 +1185,28 @@ export async function inicializarSyncBidireccional(): Promise<void> {
 
                     const sub = trackingModule.buscarSubcoleccion(carpetaPadre, nombreAnterior);
                     if (sub) {
-                        console.info('[Sync] Subcarpeta renombrada → renombrar subcolección:', sub.id, nombreAnterior, '→', nombreNuevo);
+                        logSync.info('syncWatcherSetup', '[Sync] Subcarpeta renombrada → renombrar subcolección:', [sub.id, nombreAnterior, '→', nombreNuevo]);
                         colMod.renombrarColeccionEnServidor(sub.id, nombreNuevo)
                             .then(exito => {
                                 if (!exito && trackingModule) {
                                     trackingModule.actualizarNombreColeccion(sub.id, nombreNuevo, nombreNuevo).catch(err => {
-                                        console.error('[Sync] Error actualizando nombre local de subcolección:', err);
+                                        logSync.error('syncWatcherSetup', '[Sync] Error actualizando nombre local de subcolección:', err);
                                     });
                                 }
                             })
                             .catch(err => {
-                                console.error('[Sync] Error renombrando subcolección:', err);
+                                logSync.error('syncWatcherSetup', '[Sync] Error renombrando subcolección:', err);
                             });
                     } else {
                         /* Padre podría no estar en tracking aún — crear la subcolección como nueva */
                         const padre = trackingModule.buscarColeccionPorCarpeta(carpetaPadre);
                         if (padre) {
-                            console.info('[Sync] Subcarpeta renombrada sin sub local → crear nueva:', nombreNuevo, 'en padreId:', padre.id);
+                            logSync.info('syncWatcherSetup', '[Sync] Subcarpeta renombrada sin sub local → crear nueva:', [nombreNuevo, 'en padreId:', padre.id]);
                             colMod.crearColeccionDesdeLocal(nombreNuevo, padre.id).catch(err => {
-                                console.error('[Sync] Error creando subcolección tras rename:', err);
+                                logSync.error('syncWatcherSetup', '[Sync] Error creando subcolección tras rename:', err);
                             });
                         } else {
-                            console.warn('[Sync] Subcarpeta renombrada ignorada (padre y sub no encontrados):', carpetaPadre, '/', nombreAnterior);
+                            logSync.warn('syncWatcherSetup', '[Sync] Subcarpeta renombrada ignorada (padre y sub no encontrados):', [carpetaPadre, '/', nombreAnterior]);
                         }
                     }
                 },
@@ -1224,7 +1224,7 @@ export async function inicializarSyncBidireccional(): Promise<void> {
 
         const iniciado = await iniciarObservacion();
         if (iniciado) {
-            console.info('[Sync] Sync bidireccional activado');
+            logSync.info('syncWatcherSetup', '[Sync] Sync bidireccional activado');
         }
 
         await sincronizarEstructuraCarpetas();
@@ -1235,7 +1235,7 @@ export async function inicializarSyncBidireccional(): Promise<void> {
          * Se lanza async para no bloquear el arranque.
          */
         escanearCarpetaYEncolar().catch(err => {
-            console.error('[Sync] Error en escaneo inicial de carpeta local:', err);
+            logSync.error('syncWatcherSetup', '[Sync] Error en escaneo inicial de carpeta local:', err);
         });
 
         /*
@@ -1246,7 +1246,7 @@ export async function inicializarSyncBidireccional(): Promise<void> {
             const { listen: listenTauri } = await import('@tauri-apps/api/event');
             await listenTauri('escanear-subidas-local', () => {
                 escanearCarpetaYEncolar().catch(err => {
-                    console.error('[Sync] Error en escaneo local bajo demanda:', err);
+                    logSync.error('syncWatcherSetup', '[Sync] Error en escaneo local bajo demanda:', err);
                 });
             });
         } catch {

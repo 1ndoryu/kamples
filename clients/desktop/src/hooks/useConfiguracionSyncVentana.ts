@@ -17,6 +17,7 @@ import {
     STORE_KEY_CONFIG_AVANZADA,
     CONFIG_AVANZADA_DEFAULT,
 } from '@desktop/services/syncConstants';
+import { logSync } from '../services/syncLogger';
 
 interface UseConfiguracionSyncVentanaReturn {
     config: SyncConfigAvanzada;
@@ -62,7 +63,7 @@ export function useConfiguracionSyncVentana(): UseConfiguracionSyncVentanaReturn
                 setConfigInicial(merged);
             }
         } catch (err) {
-            console.error('[ConfigVentana] Error cargando config desde store:', err);
+            logSync.error('useConfiguracionSyncVentana', '[ConfigVentana] Error cargando config desde store:', err);
         }
     }, []);
 
@@ -160,7 +161,7 @@ export function useConfiguracionSyncVentana(): UseConfiguracionSyncVentanaReturn
             const { emit } = await import('@tauri-apps/api/event');
             await emit(EVENTO_CONFIG_ACTUALIZADA);
         } catch (err) {
-            console.error('[ConfigVentana] Error guardando config:', err);
+            logSync.error('useConfiguracionSyncVentana', '[ConfigVentana] Error guardando config:', err);
         } finally {
             setGuardando(false);
         }

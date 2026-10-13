@@ -9,6 +9,7 @@
  */
 
 import { esDesktop } from './desktopService';
+import { logSync } from './syncLogger';
 
 const DEBOUNCE_MS_DEFAULT = 2000;
 
@@ -52,7 +53,7 @@ export function persistirConDebounce(
             await store.set(storeKey, datos);
             await store.save();
         } catch (err) {
-            console.error(`[PersistenciaDebounce] Error persistiendo ${clave}:`, err);
+            logSync.error('persistenciaDebounce', `[PersistenciaDebounce] Error persistiendo ${clave}:`, err);
         } finally {
             tareasPendientes.delete(clave);
         }

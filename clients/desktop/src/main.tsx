@@ -10,14 +10,14 @@
 window.addEventListener('error', (e) => {
     /* QL129: ResizeObserver loop es warning benigno del browser, no un error real */
     if (e.message?.includes('ResizeObserver loop')) return;
-    console.error('[Kamples Desktop] Error global:', e.error ?? e.message);
+    logSync.error('main', '[Kamples Desktop] Error global:', e.error ?? e.message);
     const appEl = document.getElementById('app');
     if (appEl && !appEl.children.length) {
         appEl.innerHTML = `<div style="padding:32px;color:#ef4444;font-family:monospace;white-space:pre-wrap;background:#1a1a1a;height:100vh;overflow:auto"><h2>Error no capturado</h2><pre>${e.error?.stack ?? e.message}</pre></div>`;
     }
 });
 window.addEventListener('unhandledrejection', (e) => {
-    console.error('[Kamples Desktop] Promesa rechazada:', e.reason);
+    logSync.error('main', '[Kamples Desktop] Promesa rechazada:', e.reason);
     const appEl = document.getElementById('app');
     if (appEl && !appEl.children.length) {
         appEl.innerHTML = `<div style="padding:32px;color:#ef4444;font-family:monospace;white-space:pre-wrap;background:#1a1a1a;height:100vh;overflow:auto"><h2>Promesa rechazada</h2><pre>${e.reason?.stack ?? String(e.reason)}</pre></div>`;
@@ -79,6 +79,7 @@ import {
 
 /* Drag service — expuesto en window para drag-to-DAW/desktop nativo */
 import { iniciarDragNativo, descargarYArrastrar, prepararDragNativo, preCachearIconoDrag, estaListoParaDrag, generarPreviewDrag } from '@desktop/services/audioLocalService';
+import { logSync } from './services/syncLogger';
 
 /* Registrar todas las islas */
 islandRegistry.registerAll(appIslands);
@@ -250,7 +251,7 @@ async function marcarEntornoDesktop(): Promise<void> {    window.__KAMPLES_DESKT
 async function init(): Promise<void> {
     try {
         let oauthGooglePendienteRecuperado = false;
-        console.warn('[Kamples Desktop] init() iniciando...');
+        logSync.warn('main', '[Kamples Desktop] init() iniciando...');
         await marcarEntornoDesktop();
         inyectarRutas();
 
@@ -264,23 +265,23 @@ async function init(): Promise<void> {
             }
         });
 
-        console.warn('[Kamples Desktop] inicializarDesktop()...');
+        logSync.warn('main', '[Kamples Desktop] inicializarDesktop()...');
         /* Inicializar servicios desktop (auth store, sync, offline queue) */
         await inicializarDesktop();
         oauthGooglePendienteRecuperado = await procesarOAuthGooglePendienteAlArrancar();
-        console.warn('[Kamples Desktop] inicializarDesktop() completado');
+        logSync.warn('main', '[Kamples Desktop] inicializarDesktop() completado');
 
-        console.warn('[Kamples Desktop] initializeIslands()...');
+        logSync.warn('main', '[Kamples Desktop] initializeIslands()...');
         /* Inicializar el sistema de islas de Glory (hydration + SPA router) */
         initializeIslands({ appProvider: AppProvider });
-        console.warn('[Kamples Desktop] initializeIslands() completado');
+        logSync.warn('main', '[Kamples Desktop] initializeIslands() completado');
 
         if (oauthGooglePendienteRecuperado) {
             const { useNavigationStore } = await import('@/core/router/navigationStore');
             useNavigationStore.getState().navegar('/');
         }
     } catch (err) {
-        console.error('[Kamples Desktop] ERROR FATAL en init():', err);
+        logSync.error('main', '[Kamples Desktop] ERROR FATAL en init():', err);
         /* Mostrar error visible en el DOM para diagnostico */
         const container = document.getElementById('app');
         if (container) {
@@ -290,7 +291,7 @@ async function init(): Promise<void> {
 }
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { init().catch(err => console.error('[Kamples Desktop] Unhandled init error:', err)); });
+    document.addEventListener('DOMContentLoaded', () => { init().catch(err => logSync.error('main', '[Kamples Desktop] Unhandled init error:', err)); });
 } else {
-    init().catch(err => console.error('[Kamples Desktop] Unhandled init error:', err));
+    init().catch(err => logSync.error('main', '[Kamples Desktop] Unhandled init error:', err));
 }

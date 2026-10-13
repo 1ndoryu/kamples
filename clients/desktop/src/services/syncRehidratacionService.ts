@@ -95,7 +95,7 @@ export async function rehidratarImagenesPendientes(): Promise<void> {
         }
 
         if (actualizadas > 0) {
-            console.info(`[Sync] Reconciliadas ${actualizadas} imágenes de samples en historial`);
+            logSync.info('syncRehidratacionService', `[Sync] Reconciliadas ${actualizadas} imágenes de samples en historial`);
         }
     } catch (err) {
         logSync.error('syncService', 'Error rehidratando imágenes pendientes', { error: err instanceof Error ? err.message : String(err) });

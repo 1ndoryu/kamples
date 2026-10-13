@@ -34,6 +34,7 @@ import { toast } from '@app/stores/toastStore';
 import type { EntradaHistorialSample, EstadoSampleHistorial } from '@app/stores/syncStore';
 import '@app/styles/componentes/sincronizacion.css';
 import DiagnosticoSync from './DiagnosticoSync';
+import { logSync } from '../services/syncLogger';
 
 const VERSION_PORTADA_INTERVALO_MS = 15_000;
 
@@ -216,7 +217,7 @@ async function abrirVentanaConfig(): Promise<void> {
         const { invoke } = await import('@tauri-apps/api/core');
         await invoke('mostrar_ventana_config');
     } catch (err) {
-        console.error('[ConfigSync] Error abriendo ventana de configuracion:', err);
+        logSync.error('VentanaSincPanel', '[ConfigSync] Error abriendo ventana de configuracion:', err);
         toast.error('No se pudo abrir la configuración de sync');
     }
 }

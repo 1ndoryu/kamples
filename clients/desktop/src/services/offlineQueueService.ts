@@ -63,7 +63,7 @@ export async function inicializarOfflineQueue(): Promise<void> {
             cola = guardadas.map(op => ({ ...op, intentos: op.intentos ?? 0 }));
         }
     } catch (err) {
-        console.warn('[OfflineQueue] Store no disponible, usando queue en memoria:', err);
+        logSync.warn('offlineQueueService', '[OfflineQueue] Store no disponible, usando queue en memoria:', err);
     }
 
     /* Escuchar cambios de conectividad para sincronizar */

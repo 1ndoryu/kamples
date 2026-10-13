@@ -10,6 +10,7 @@ import { actualizarTokenApi, limpiarAuthApi } from './apiDesktopAdapter';
 import { establecerTokenSync } from './syncGuards';
 import { emitirCambioAuth } from './authDesktopEventos';
 import type { UsuarioAutenticado } from '@app/types/usuario';
+import { logSync } from './syncLogger';
 
 /* Clave del store seguro de Tauri */
 const STORE_KEY_TOKEN = 'auth_token';
@@ -29,18 +30,18 @@ function lsGuardar(clave: string, valor: string): boolean {
         localStorage.setItem(clave, valor);
         const guardado = localStorage.getItem(clave);
         if (guardado !== valor) {
-            console.error(`[AuthDesktop] LS verificación falló: ${clave}`);
+            logSync.error('authDesktopService', `[AuthDesktop] LS verificación falló: ${clave}`);
             return false;
         }
         return true;
     } catch (err) {
-        console.error(`[AuthDesktop] LS setItem falló: ${clave}`, err);
+        logSync.error('authDesktopService', `[AuthDesktop] LS setItem falló: ${clave}`, err);
         return false;
     }
 }
 function lsLeer(clave: string): string | null {
     try { return localStorage.getItem(clave); } catch (err) {
-        console.error(`[AuthDesktop] LS getItem falló: ${clave}`, err);
+        logSync.error('authDesktopService', `[AuthDesktop] LS getItem falló: ${clave}`, err);
         return null;
     }
 }
@@ -70,8 +71,8 @@ export async function inicializarAuthDesktop(): Promise<void> {
             return ok;
         } catch { return false; }
     })();
-    console.info('[AuthDesktop] Init — LS:', lsFuncional ? 'OK' : 'FALLÓ',
-        '| tokenLS:', !!lsLeer(LS_KEY_TOKEN), '| userLS:', !!lsLeer(LS_KEY_USUARIO));
+    logSync.info('authDesktopService', '[AuthDesktop] Init — LS:', [lsFuncional ? 'OK' : 'FALLÓ',
+        '| tokenLS:', !!lsLeer(LS_KEY_TOKEN), '| userLS:', !!lsLeer(LS_KEY_USUARIO)]);
 
     let token: string | null = null;
     let usuario: Record<string, unknown> | null = null;
@@ -89,7 +90,7 @@ export async function inicializarAuthDesktop(): Promise<void> {
         token = await store.get<string>(STORE_KEY_TOKEN) ?? null;
         usuario = await store.get<Record<string, unknown>>(STORE_KEY_USUARIO) ?? null;
         tauriStoreCargado = true;
-        console.info('[AuthDesktop] TauriStore — token:', !!token, '| user:', !!usuario);
+        logSync.info('authDesktopService', '[AuthDesktop] TauriStore — token:', [!!token, '| user:', !!usuario]);
 
         if (token) {
             lsGuardar(LS_KEY_TOKEN, token);
@@ -101,7 +102,7 @@ export async function inicializarAuthDesktop(): Promise<void> {
             lsEliminar(LS_KEY_USUARIO);
         }
     } catch (err) {
-        console.warn('[AuthDesktop] Tauri Store falló — intentando localStorage:', err);
+        logSync.warn('authDesktopService', '[AuthDesktop] Tauri Store falló — intentando localStorage:', err);
     }
 
     /* [2003A-15] Fallback a localStorage SOLO si Tauri Store no pudo cargar (crash/corrupción).
@@ -110,7 +111,7 @@ export async function inicializarAuthDesktop(): Promise<void> {
         const tokenLs = lsLeer(LS_KEY_TOKEN);
         if (tokenLs) {
             token = tokenLs;
-            console.info('[AuthDesktop] Token restaurado desde LS (fallback — TauriStore inaccesible)');
+            logSync.info('authDesktopService', '[AuthDesktop] Token restaurado desde LS (fallback — TauriStore inaccesible)');
             const usuarioLs = lsLeer(LS_KEY_USUARIO);
             if (usuarioLs) { try { usuario = JSON.parse(usuarioLs); } catch { usuario = null; } }
             resincronizarATauriStore(token, usuario).catch(() => {});
@@ -118,7 +119,7 @@ export async function inicializarAuthDesktop(): Promise<void> {
     }
 
     if (!token) {
-        console.info('[AuthDesktop] Sin sesión persistida — usuario no autenticado');
+        logSync.info('authDesktopService', '[AuthDesktop] Sin sesión persistida — usuario no autenticado');
         return;
     }
 
@@ -132,7 +133,7 @@ export async function inicializarAuthDesktop(): Promise<void> {
      * Evita race conditions con useInicializadorAuth.
      */
     if (!usuario) {
-        console.info('[AuthDesktop] Token OK pero sin usuario — llamando /me');
+        logSync.info('authDesktopService', '[AuthDesktop] Token OK pero sin usuario — llamando /me');
         try {
             const { obtenerUsuarioActual } = await import(/* @vite-ignore */ '@app/services/apiAuth');
             const resp = await obtenerUsuarioActual();
@@ -140,10 +141,10 @@ export async function inicializarAuthDesktop(): Promise<void> {
                 usuario = resp.data as unknown as Record<string, unknown>;
                 guardarUsuario(usuario);
             } else {
-                console.warn('[AuthDesktop] /me sin datos:', resp.error ?? 'desconocido');
+                logSync.warn('authDesktopService', '[AuthDesktop] /me sin datos:', resp.error ?? 'desconocido');
             }
         } catch (err) {
-            console.warn('[AuthDesktop] /me falló:', err);
+            logSync.warn('authDesktopService', '[AuthDesktop] /me falló:', err);
         }
     }
 
@@ -160,7 +161,7 @@ export async function inicializarAuthDesktop(): Promise<void> {
             ?? (usuario as Record<string, unknown>)?.id ?? 1;
     }
 
-    console.info('[AuthDesktop] Init OK — token: true, user:', !!usuario);
+    logSync.info('authDesktopService', '[AuthDesktop] Init OK — token: true, user:', !!usuario);
 }
 
 /* Re-sincroniza token/usuario al Tauri Store desde localStorage (background) */
@@ -173,7 +174,7 @@ async function resincronizarATauriStore(
     await store.set(STORE_KEY_TOKEN, token);
     if (usuario) await store.set(STORE_KEY_USUARIO, usuario);
     await store.save();
-    console.info('[AuthDesktop] Re-sync a TauriStore OK');
+    logSync.info('authDesktopService', '[AuthDesktop] Re-sync a TauriStore OK');
 }
 
 /* Guarda token en ambos stores. QK77-A: Verificación de escritura. */
@@ -184,7 +185,7 @@ export async function guardarToken(token: string): Promise<void> {
 
     /* QK77: Backup síncrono inmediato — no depende de await */
     const lsOk = lsGuardar(LS_KEY_TOKEN, token);
-    console.info('[AuthDesktop] guardarToken — localStorage:', lsOk ? 'OK' : 'FALLÓ');
+    logSync.info('authDesktopService', '[AuthDesktop] guardarToken — localStorage:', lsOk ? 'OK' : 'FALLÓ');
 
     if (!esDesktop()) return;
 
@@ -196,9 +197,9 @@ export async function guardarToken(token: string): Promise<void> {
 
     /* QK77-A: Verificar escritura */
         const ok = await store.get<string>(STORE_KEY_TOKEN);
-        console.info('[AuthDesktop] guardarToken TauriStore:', ok === token ? 'OK' : 'FALLÓ');
+        logSync.info('authDesktopService', '[AuthDesktop] guardarToken TauriStore:', ok === token ? 'OK' : 'FALLÓ');
     } catch (err) {
-        console.error('[AuthDesktop] Error guardando token en Tauri Store:', err);
+        logSync.error('authDesktopService', '[AuthDesktop] Error guardando token en Tauri Store:', err);
     }
 
     emitirCambioAuth('login');
@@ -208,7 +209,7 @@ export async function guardarToken(token: string): Promise<void> {
 export async function guardarUsuario(usuario: Record<string, unknown>): Promise<void> {
     /* QK77: Backup síncrono inmediato */
     const lsOk = lsGuardar(LS_KEY_USUARIO, JSON.stringify(usuario));
-    console.info('[AuthDesktop] guardarUsuario LS:', lsOk ? 'OK' : 'FALLÓ');
+    logSync.info('authDesktopService', '[AuthDesktop] guardarUsuario LS:', lsOk ? 'OK' : 'FALLÓ');
 
     if (!esDesktop()) return;
 
@@ -218,7 +219,7 @@ export async function guardarUsuario(usuario: Record<string, unknown>): Promise<
         await store.set(STORE_KEY_USUARIO, usuario);
         await store.save();
     } catch (err) {
-        console.error('[AuthDesktop] Error guardarUsuario TauriStore:', err);
+        logSync.error('authDesktopService', '[AuthDesktop] Error guardarUsuario TauriStore:', err);
     }
 }
 
@@ -311,12 +312,12 @@ export async function cerrarSesionDesktop(): Promise<void> {
         /* Verificar que realmente se borró — defensa contra bugs del plugin */
         const postToken = await store.get<string>(STORE_KEY_TOKEN);
         if (postToken) {
-            console.error('[AuthDesktop] Token persistió tras delete — forzando clear');
+            logSync.error('authDesktopService', '[AuthDesktop] Token persistió tras delete — forzando clear');
             await store.set(STORE_KEY_TOKEN, null as unknown as string);
             await store.save();
         }
     } catch (err) {
-        console.error('[AuthDesktop] Error cerrando sesión en Tauri Store:', err);
+        logSync.error('authDesktopService', '[AuthDesktop] Error cerrando sesión en Tauri Store:', err);
     }
 
     /* [2003A-15] Limpiar localStorage DESPUÉS del store. Si la app cierra antes de que

@@ -15,13 +15,14 @@ import { BotonBase } from '@app/components/ui/BotonBase';
 import { Checkbox } from '@app/components/ui/Checkbox';
 import { Input } from '@app/components/ui/Input';
 import { useConfiguracionSyncVentana } from '../hooks/useConfiguracionSyncVentana';
+import { logSync } from '../services/syncLogger';
 
 async function minimizarVentana(): Promise<void> {
     try {
         const { getCurrentWindow } = await import('@tauri-apps/api/window');
         await getCurrentWindow().minimize();
     } catch (err) {
-        console.error('[ConfigSync] Error minimizando ventana:', err);
+        logSync.error('VentanaConfigSync', '[ConfigSync] Error minimizando ventana:', err);
     }
 }
 
@@ -30,7 +31,7 @@ async function cerrarVentana(): Promise<void> {
         const { getCurrentWindow } = await import('@tauri-apps/api/window');
         await getCurrentWindow().hide();
     } catch (err) {
-        console.error('[ConfigSync] Error ocultando ventana:', err);
+        logSync.error('VentanaConfigSync', '[ConfigSync] Error ocultando ventana:', err);
     }
 }
 

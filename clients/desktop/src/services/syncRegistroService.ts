@@ -15,6 +15,7 @@ import {
     guardarIndice,
 } from './syncState';
 import type { AccionHistorial } from './syncTrackingService';
+import { logSync } from './syncLogger';
 
 /*
  * Registra un archivo descargado en tracking v2 + índice v1 legacy.
@@ -180,10 +181,10 @@ export async function moverArchivoASinColeccion(
             await guardarIndice();
         }
 
-        console.info('[Sync] Archivo movido a Sin colección:', nombreArchivo);
+        logSync.info('syncRegistroService', '[Sync] Archivo movido a Sin colección:', nombreArchivo);
         return nuevaRuta;
     } catch (err) {
-        console.error('[Sync] Error moviendo archivo a Sin colección:', err);
+        logSync.error('syncRegistroService', '[Sync] Error moviendo archivo a Sin colección:', err);
         return null;
     }
 }
