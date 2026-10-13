@@ -38,6 +38,13 @@ inline-style-prohibido 178, cssInlineReact 193, console-production 157, import-m
 
 dom-access-outside-platform 109, window-reference-outside-platform 141, limite-lineas 10 y limite-lineas-nivel-2 4, directorio-abarrotado 21, claseHuerfana 453, valorHardcoded 494, css-hardcoded-value 346, css-especificacion-diseno-local 128, css-adhoc-button-style 58, css-elemento-html-directo 48, cssInlineScript 58, modal-* ~60, componente-artesanal 4, usestate-excesivo 2, componente-sin-hook-glory 2, mixed-barrel-logic 2, button-clase-especifica 1, modal-con-titulo 8.
 
+### F4 — Rust (`**/*.rs`, pendiente, rama de rescate)
+
+Añadir `**/*.rs` a `includePatterns` de `sentinel.config.json` sube el análisis a 194 errores y rompe el gate `--cierre` (análisis con exit 1). Por eso el cambio vive solo en `rescate/sentinel-rs-kamples` (`f32fd05`, pusheada); `main` no lo incluye.
+
+- expect-produccion-rs 109, ruta-post-sin-rate-limit 65, path-join-sin-canonicalize 18, god-object-rs 2.
+- Decidir por lote antes de integrar la rama: corregir el código Rust, o excluir por regla con motivo documentado.
+
 ## Verificación por lote
 
 1. `npm --prefix frontend run type-check`
@@ -59,6 +66,7 @@ Línea base: `Arranque gate "KAMPLES" --inicio` (hallazgos guardados en `workspa
 - F1 (F1a, F1b, F1c): hecho. Gate `Arranque gate "KAMPLES" --cierre`: 0 nuevos, 254 resueltos (base 2797, ahora 2543).
 - Siguiente paso: abrir F2 (mecánica) como lote en este plan.
 - F2, F3: sin empezar.
+- F4 (Rust, 194 errores): pendiente; el cambio de config vive en `rescate/sentinel-rs-kamples`, no en `main`.
 
 ## Definition of Done
 
