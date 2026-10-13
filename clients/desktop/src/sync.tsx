@@ -140,7 +140,7 @@ async function inicializar(): Promise<void> {
      * Exponer origen del servidor para que:
      * 1. configurarApiDesktop() resuelva la URL del servidor correctamente
      *    (obtenerServidorUrl() lee __KAMPLES_CONFIG__ primero)
-     * 2. VentanaSincPanel.resolverUrlPortada() resuelva URLs de imágenes
+     * 2. resolverUrlPortada() (components/VentanaSincPanel/portadas.ts) resuelva URLs de imágenes
      *    relativas contra el origen real (no tauri://localhost)
      *
      * DEBE ir ANTES de configurarApiDesktop() — si no, obtenerServidorUrl()
