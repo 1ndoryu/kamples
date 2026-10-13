@@ -14,7 +14,7 @@
     background: var(--fondoElevado2);
     border: 1px solid var(--bordeSutil);
     pointer-events: auto;
-    box-shadow: var(--sombraMedia);
+    box-shadow: var(--sombraFlotante);
 }
 
 .barraSeleccionInfo {
@@ -52,12 +52,12 @@
 }
 
 .barraSeleccionBtnPeligro {
-    color: var(--peligro, #e55353);
+    color: var(--error, #e55353);
 }
 
 .barraSeleccionBtnPeligro:hover {
-    color: var(--peligro, #e55353);
-    background-color: var(--fondoPeligroSutil, rgba(229, 83, 83, 0.1));
+    color: var(--error, #e55353);
+    background-color: var(--errorMuted, rgba(229, 83, 83, 0.1));
 }
 
 .barraSeleccionCerrar {

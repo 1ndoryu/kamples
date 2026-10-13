@@ -217,9 +217,9 @@
     flex-direction: column;
     gap: var(--espacioSm);
     padding: var(--espacioSm) var(--espacioMd);
-    background: var(--fondoTarjeta);
+    background: var(--fondoElevado1);
     border-radius: var(--radioMd);
-    border: 1px solid var(--borde);
+    border: 1px solid var(--bordeSutil);
 }
 
 .colaIaKeysTitulo {
@@ -246,7 +246,7 @@
     padding: var(--espacioXs) var(--espacioSm);
     background: var(--fondoBase);
     border-radius: var(--radioSm);
-    border: 1px solid var(--borde);
+    border: 1px solid var(--bordeSutil);
     font-size: var(--fuenteSm);
 }
 
@@ -261,7 +261,7 @@
 .colaIaKeyNombre {
     font-family: monospace;
     font-size: var(--fuenteXs);
-    color: var(--texto);
+    color: var(--textoPrimario);
 }
 
 .colaIaKeysExtra {

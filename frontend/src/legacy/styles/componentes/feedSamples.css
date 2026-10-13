@@ -72,9 +72,9 @@
 }
 
 .feedSamplesCargarMas {
-    background: var(--superficie2);
+    background: var(--fondoElevado2);
     color: var(--textoSecundario);
-    border: 1px solid var(--borde);
+    border: 1px solid var(--bordeSutil);
     border-radius: var(--radioMd);
     padding: var(--espacioSm) var(--espacioXl);
     font-size: var(--fuenteSm);
@@ -83,8 +83,8 @@
 }
 
 .feedSamplesCargarMas:hover {
-    background: var(--superficie3);
-    color: var(--textoPrincipal);
+    background: var(--fondoElevado3);
+    color: var(--textoPrimario);
 }
 
 /* Tags dinámicos */
@@ -255,7 +255,7 @@
 .feedSamplesOffline h3 {
     margin: 0;
     font-size: var(--fuenteLg);
-    color: var(--textoPrincipal);
+    color: var(--textoPrimario);
 }
 
 .feedSamplesOffline p {
@@ -269,7 +269,7 @@
     align-items: center;
     gap: var(--espacioSm);
     padding: var(--espacioXs) var(--espacioMd);
-    background: var(--superficieAdvertencia, var(--superficie2));
+    background: var(--advertenciaMuted, var(--fondoElevado2));
     color: var(--textoSecundario);
     font-size: var(--fuenteXs);
     border-radius: var(--radioMd);
@@ -277,5 +277,5 @@
 
 /* [193A-44] Toggle rápido "solo me encanta" — corazón activo */
 .filtroEncantaActivo {
-    color: var(--colorDanger, #e74c3c);
+    color: var(--error, #e74c3c);
 }

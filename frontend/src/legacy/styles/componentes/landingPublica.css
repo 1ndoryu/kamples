@@ -158,7 +158,7 @@
     background: none;
     border: none;
     outline: none;
-    font-size: var(--textoSm);
+    font-size: var(--fuenteSm);
     color: var(--textoPrimario);
     min-width: 0;
 }

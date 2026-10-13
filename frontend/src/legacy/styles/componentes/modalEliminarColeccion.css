@@ -12,7 +12,7 @@
 .modalEliminarIcono {
     display: flex;
     justify-content: center;
-    color: var(--peligro, #e55353);
+    color: var(--error, #e55353);
 }
 
 .modalEliminarTitulo {
@@ -48,9 +48,9 @@
     align-items: center;
     gap: var(--espacioSm);
     padding: var(--espacioSm) var(--espacioMd);
-    border-radius: var(--radio);
-    background-color: var(--fondoPeligroSutil, rgba(229, 83, 83, 0.1));
-    color: var(--peligro, #e55353);
+    border-radius: var(--radioMd);
+    background-color: var(--errorMuted, rgba(229, 83, 83, 0.1));
+    color: var(--error, #e55353);
     font-size: var(--fuenteSm);
     line-height: 1.4;
 }

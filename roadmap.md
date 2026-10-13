@@ -63,6 +63,7 @@
 
 ## Pendiente
 
+- Calidad Sentinel/VarSense KAMPLES (13AA-1): F1 hecho (0 nuevos, 2797 → 2543). Siguiente: F2 y F3 en [plan](Agente/planes/plan-calidad-sentinel-kamples-2026-10-13.md).
 - admin/panel/ al recargar debería abrir la tab que estaba abierta no regresar al principio
 - Revisar excepción cargo-audit RUSTSEC-2023-0071 (rsa): **vence 2026-11-12**. Ver `.cargo/audit.toml`. Quitarla si hay parche o sqlx-mysql sale del lock; si no, renovar con fecha nueva.
 

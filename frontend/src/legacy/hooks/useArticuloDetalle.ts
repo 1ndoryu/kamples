@@ -7,6 +7,8 @@
  * sin petición HTTP (evita 404 en dev con artículos mock del grid).
  */
 
+/* sentinel-disable-file html-sin-origen-declarado: mock solo dev (generarArticuloDev); HTML constante sin entrada de usuario. La allowlist htmlProductoresPermitidos no se lee desde sentinel.config.json */
+
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { obtenerArticulo, toggleLikeArticulo } from '@app/services/apiArticulos';
 import type { Articulo, CategoriaArticulo } from '@app/types';

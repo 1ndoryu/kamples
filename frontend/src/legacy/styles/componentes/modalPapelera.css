@@ -172,7 +172,7 @@
 
 .papeleraSkeletonLinea {
     height: 12px;
-    border-radius: var(--radioXs);
+    border-radius: var(--radioSm);
     background-color: var(--fondoElevado2);
     animation: pulso 1.5s ease-in-out infinite;
 }

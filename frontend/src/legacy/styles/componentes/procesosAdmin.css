@@ -286,7 +286,7 @@
     flex-direction: column;
     gap: var(--espacioSm);
     padding-top: var(--espacioLg);
-    border-top: 1px solid var(--bordeSubtle);
+    border-top: 1px solid var(--bordeSutil);
 }
 
 .benchmarkCabecera {
@@ -318,7 +318,7 @@
 }
 
 .benchmarkOutputContenedor {
-    border: 1px solid var(--bordeSubtle);
+    border: 1px solid var(--bordeSutil);
     border-radius: var(--radioMd);
     overflow: hidden;
 }
@@ -328,10 +328,10 @@
     align-items: center;
     gap: var(--espacioXs);
     padding: var(--espacioXs) var(--espacioMd);
-    background: var(--superficieElevada);
+    background: var(--fondoElevado1);
     font-size: var(--fuenteXs);
     color: var(--textoSecundario);
-    border-bottom: 1px solid var(--bordeSubtle);
+    border-bottom: 1px solid var(--bordeSutil);
 }
 
 .benchmarkOutput {
@@ -340,7 +340,7 @@
     font-family: var(--fuenteMono, monospace);
     font-size: var(--fuenteXs);
     color: var(--textoPrimario);
-    background: var(--superficieBase);
+    background: var(--fondoBase);
     overflow-x: auto;
     white-space: pre;
     max-height: 500px;

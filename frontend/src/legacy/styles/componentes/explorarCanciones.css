@@ -155,9 +155,9 @@
 }
 
 .feedCancionesCargarMas {
-    background: var(--superficie2);
+    background: var(--fondoElevado2);
     color: var(--textoSecundario);
-    border: 1px solid var(--borde);
+    border: 1px solid var(--bordeSutil);
     border-radius: var(--radioMd);
     padding: var(--espacioSm) var(--espacioXl);
     font-size: var(--fuenteSm);
@@ -166,8 +166,8 @@
 }
 
 .feedCancionesCargarMas:hover {
-    background: var(--superficie3);
-    color: var(--textoPrincipal);
+    background: var(--fondoElevado3);
+    color: var(--textoPrimario);
 }
 
 /* Contador de resultados */

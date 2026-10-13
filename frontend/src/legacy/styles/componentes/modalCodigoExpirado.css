@@ -9,22 +9,22 @@
 }
 
 .modalCodigoExpiradoTexto {
-    font-size: var(--textoBase);
+    font-size: var(--fuenteMd);
     color: var(--textoSecundario);
     line-height: 1.6;
     margin: 0;
 }
 
 .modalCodigoExpiradoTexto strong {
-    color: var(--textoPrincipal);
+    color: var(--textoPrimario);
 }
 
 .modalCodigoExpiradoNombre {
-    font-size: var(--textoPequeno);
+    font-size: var(--fuenteXs);
     color: var(--textoTerciario);
     margin: 0;
     padding: var(--espacioSm) var(--espacioMd);
-    background: var(--fondoSutil);
+    background: var(--fondoElevado1);
     border-radius: var(--radioSm);
 }
 

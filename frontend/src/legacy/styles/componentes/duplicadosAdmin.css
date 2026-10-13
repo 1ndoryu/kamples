@@ -220,7 +220,7 @@
     gap: var(--espacioSm);
     width: 100%;
     padding: var(--espacioSm) var(--espacioMd);
-    background: var(--fondoElevado);
+    background: var(--fondoElevado1);
     border: none;
     cursor: pointer;
     font: inherit;
@@ -229,7 +229,7 @@
 }
 
 .dupGrupoCabecera:hover {
-    background: var(--fondoHover);
+    background: var(--hoverSutil);
 }
 
 .dupGrupoTitulo {

@@ -6,7 +6,7 @@
 .articuloDetalleContenedor {
     width: min(100%, 720px);
     margin: 0 auto;
-    padding: var(--landingPaddingSuperior) var(--landingPaddingHorizontal) var(--espacioXxl, 64px);
+    padding: var(--landingPaddingSuperior) var(--landingPaddingHorizontal) var(--espacio4xl, 64px);
     display: flex;
     flex-direction: column;
     gap: var(--espacioLg);

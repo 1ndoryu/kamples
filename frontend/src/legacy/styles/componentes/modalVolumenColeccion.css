@@ -11,7 +11,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--colorBg2);
+    background: var(--fondoElevado2);
     color: var(--colorTexto);
 }
 
@@ -36,10 +36,10 @@
 .modalVolumenResumen {
     padding: 12px 14px;
     border-radius: 14px;
-    background: var(--colorBg2);
+    background: var(--fondoElevado2);
     color: var(--colorTexto);
 }
 
 .modalVolumenResumenError {
-    color: var(--colorPeligro, #c0392b);
+    color: var(--error, #c0392b);
 }

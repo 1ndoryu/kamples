@@ -237,7 +237,7 @@
 .algoTimingExplain {
     margin-top: var(--espacioLg);
     padding-top: var(--espacioMd);
-    border-top: 1px solid var(--bordeClaro);
+    border-top: 1px solid var(--bordeSutil);
 }
 
 .algoTimingExplainTitulo {

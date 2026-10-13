@@ -101,6 +101,49 @@
   --landingFuenteSubtitulo: 'Bricolage Landing', var(--fuentePrincipal);
 }
 
+/* [13AA-1] Alias de compatibilidad para nombres en inglés de glory-css/ y glory-core/ (copias vendorizadas,
+ * no se editan). Apuntan a tokens canónicos con var(), así siguen el tema claro/oscuro. */
+:root {
+  --spacing-xs: var(--espacioXs);
+  --spacing-sm: var(--espacioSm);
+  --spacing-md: var(--espacioMd);
+  --spacing-lg: var(--espacioLg);
+  --spacing-xl: var(--espacioXl);
+  --spacing-3xl: var(--espacio3xl);
+  --text-xs: var(--fuenteXs);
+  --text-sm: var(--fuenteSm);
+  --text-base: var(--fuenteMd);
+  --text-xl: var(--fuenteXl);
+  --text-2xl: var(--fuente2xl);
+  --font-heading: var(--fuentePrincipal);
+  --radius-md: var(--radioMd);
+  --radius-lg: var(--radioLg);
+  --radius-xl: var(--radioGrande);
+  --shadow-sm: var(--sombraFlotante);
+  --shadow-lg: var(--sombraGrande);
+  --transition-fast: var(--transicionRapida);
+  --color-text-primary: var(--textoPrimario);
+  --color-text-secondary: var(--textoSecundario);
+  --color-text-muted: var(--textoTerciario);
+  --color-accent-primary: var(--acento);
+  --color-accent-hover: var(--acentoHover);
+  --color-accent-green: var(--exito);
+  --color-focus-ring: var(--acento);
+  --color-bg-secondary: var(--fondoElevado1);
+  --color-bg-surface: var(--fondoElevado2);
+  --color-border-primary: var(--bordeSutil);
+  --color-border-secondary: var(--bordeActivo);
+  --color-error: var(--error);
+  --color-success: var(--exito);
+  --color-warning: var(--advertencia);
+  --aspect-ratio: 1 / 1;
+  --g-color-bg: var(--fondoBase);
+  --g-color-fg: var(--colorTexto);
+  --g-surface: var(--colorSuperficie);
+  /* Default neutro: cada bloque del mezclador lo sobrescribe inline (BloqueSample.tsx:60). */
+  --colorBloque: transparent;
+}
+
 * {
   box-sizing: border-box;
 }

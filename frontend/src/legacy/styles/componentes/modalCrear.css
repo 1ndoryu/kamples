@@ -61,7 +61,7 @@
 
 .selectorLadoBtn:hover {
     border-color: var(--acento);
-    background: var(--fondo);
+    background: var(--fondoBase);
 }
 
 .selectorLadoBtnTitulo {

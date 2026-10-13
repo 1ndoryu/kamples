@@ -55,7 +55,8 @@
           "**/.git/**",
           "**/.quality-tools/**",
           "**/.quality-reports/**",
-          "**/.sentinel/**"
+          "**/.sentinel/**",
+          "**/_generated/**"
         ],
         "directoryExceptions": [],
         "rules": {},

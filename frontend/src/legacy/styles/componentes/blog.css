@@ -113,7 +113,7 @@
     align-items: center;
     justify-content: center;
     gap: var(--espacioMd);
-    padding: var(--espacioXxl, 64px) 0;
+    padding: var(--espacio4xl, 64px) 0;
     color: var(--textoTerciario);
     text-align: center;
 }
@@ -188,7 +188,7 @@
 .blogCategoriaBtnMios {
     display: flex;
     align-items: center;
-    gap: var(--espacioXxs, 4px);
+    gap: var(--espacioXs, 4px);
     margin-left: var(--espacioSm);
 }
 

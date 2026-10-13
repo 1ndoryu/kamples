@@ -203,7 +203,7 @@ export const KnobControl = ({
                 <path
                     d={arcoFondo}
                     fill="none"
-                    stroke="var(--fondoHover, #333)"
+                    stroke="var(--hoverSutil, #333)"
                     strokeWidth={3}
                     strokeLinecap="round"
                 />

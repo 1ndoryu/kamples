@@ -24,9 +24,9 @@
     align-items: center;
     gap: var(--espacioXs);
     padding: var(--espacioLg);
-    background: var(--fondoElevado);
+    background: var(--fondoElevado1);
     border-radius: var(--radioMd);
-    border: 1px solid var(--borde);
+    border: 1px solid var(--bordeSutil);
     color: var(--textoSecundario);
 }
 
@@ -62,7 +62,7 @@
     grid-template-columns: 120px 1fr 100px 80px;
     gap: var(--espacioSm);
     padding: var(--espacioSm) var(--espacioMd);
-    background: var(--fondoElevado);
+    background: var(--fondoElevado1);
     border-radius: var(--radioSm);
     align-items: center;
     font-size: var(--fuenteSm);
@@ -85,7 +85,7 @@
 
 .tabGananciasNeto {
     font-weight: var(--pesoSemibold);
-    color: var(--acentoPrimario);
+    color: var(--acento);
     text-align: right;
 }
 
