@@ -12,7 +12,7 @@
  *
  * Uso:
  *   const { status, lastMessage, send } = useWebSocket({
- *     onMessage: (msg) => console.log(msg),
+ *     onMessage: (msg) => procesarMensaje(msg),
  *   });
  */
 
