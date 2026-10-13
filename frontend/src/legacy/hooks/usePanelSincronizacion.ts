@@ -11,6 +11,8 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useSyncStore } from '@app/stores/syncStore';
 import type { TabSync } from '@app/stores/syncStore';
+import { crearLogger } from '../services/logger';
+const log = crearLogger('usePanelSincronizacion');
 
 /* Progreso reportado por sincronizarConServidor() en cada archivo */
 interface ProgresoSync {
@@ -372,7 +374,7 @@ export const usePanelSincronizacion = () => {
             setUltimaSync(Date.now());
             return resultado;
         } catch (err) {
-            console.error('[usePanelSincronizacion] ejecutarSyncConProgreso fallo:', err);
+            log.error('ejecutarSyncConProgreso fallo:', err);
             setEstado('error', 'Error durante la sincronización');
             setProgreso(0);
             return { nuevos: 0, eliminados: 0 };

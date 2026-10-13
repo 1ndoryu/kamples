@@ -8,6 +8,8 @@ import { CONSTANTES_MEZCLADOR, DECLIC_DURACIONES } from '../types/mezclador';
 import type { MixerInsertNodes, Patron } from '../types/mezclador';
 import { decodificarAudio } from '../utils/audioBufferUtils';
 import { obtenerBufferProcesado, limpiarCachePitch, obtenerBufferInvertido, limpiarCacheInvertidos } from './pitchShiftService';
+import { crearLogger } from '../../legacy/services/logger';
+const log = crearLogger('MotorAudio');
 
 class MotorAudio {
     private contexto: AudioContext | null = null;
@@ -36,7 +38,7 @@ class MotorAudio {
             });
         } catch (err) {
             /* Fallback sin sampleRate fijo si el navegador no lo soporta */
-            console.error('[MotorAudio] Error creando AudioContext con sampleRate, intentando sin opciones', err);
+            log.error('Error creando AudioContext con sampleRate, intentando sin opciones', err);
             this.contexto = new AudioContext();
         }
         this.masterGain = this.contexto.createGain();
@@ -302,7 +304,7 @@ class MotorAudio {
                 CONSTANTES_MEZCLADOR.SAMPLE_RATE
             );
         } catch (err) {
-            console.error('[MotorAudio] Error creando OfflineAudioContext', err);
+            log.error('Error creando OfflineAudioContext', err);
             throw err;
         }
     }

@@ -6,6 +6,8 @@
  */
 
 import { useRef, useEffect, useCallback, useState } from 'react';
+import { crearLogger } from '../services/logger';
+const log = crearLogger('VisualizadorOnda');
 
 type ModoVisualizador = 'barras' | 'onda' | 'circular';
 
@@ -89,7 +91,7 @@ export const useVisualizadorOnda = ({
             sourceRef.current = source;
             setConectado(true);
         } catch (err) {
-            console.debug('[VisualizadorOnda] No se pudo conectar audio:', err);
+            log.debug('No se pudo conectar audio:', err);
         }
     }, [audioSource, conectado, suavizado]);
 

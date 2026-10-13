@@ -45,6 +45,8 @@ import {TerminosIsland} from './islands/legal/TerminosIsland';
 import {BlogPageIsland} from './islands/blog/BlogPageIsland';
 import {LayoutPrincipal} from '@app/components/layout/LayoutPrincipal';
 import {InicializadorAuth} from '@app/components/auth/InicializadorAuth';
+import { crearLogger } from './services/logger';
+const log = crearLogger('Kamples');
 
 // Register blocks
 registerAppBlocks();
@@ -65,7 +67,7 @@ class RootErrorBoundary extends Component<{children: ReactNode}, {error: Error |
     }
 
     componentDidCatch(error: Error, info: ErrorInfo): void {
-        console.error('[Kamples] Error de render en AppProvider:', error, info.componentStack);
+        log.error('Error de render en AppProvider:', error, info.componentStack);
     }
 
     render(): ReactNode {

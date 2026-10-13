@@ -9,6 +9,8 @@ import { motorAudio } from '../services/motorAudioService';
 import { codificarWav } from '../utils/audioBufferUtils';
 import { compasesASegundos } from '../utils/compasUtils';
 import { CONSTANTES_MEZCLADOR } from '../types/mezclador';
+import { crearLogger } from '../../../legacy/services/logger';
+const log = crearLogger('Mezclador');
 
 export const useExportarMezcla = () => {
     const pistas = useMezcladorStore(s => s.pistas);
@@ -23,7 +25,7 @@ export const useExportarMezcla = () => {
 
         /* Verificar límite 5 minutos */
         if (duracionTotal > CONSTANTES_MEZCLADOR.DURACION_MAXIMA_SEGUNDOS) {
-            console.error('[Mezclador] Duración excede 5 minutos');
+            log.error('Duración excede 5 minutos');
             return null;
         }
 
@@ -95,7 +97,7 @@ export const useExportarMezcla = () => {
 
             return true;
         } catch (error) {
-            console.error('[Mezclador] Error al exportar:', error);
+            log.error('Error al exportar:', error);
             return false;
         } finally {
             setExportando(false);
@@ -119,7 +121,7 @@ export const useExportarMezcla = () => {
 
             return archivo;
         } catch (error) {
-            console.error('[Mezclador] Error al preparar para publicar:', error);
+            log.error('Error al preparar para publicar:', error);
             return null;
         } finally {
             setExportando(false);

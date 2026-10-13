@@ -8,6 +8,9 @@
  * browser push API en el webview nativo).
  */
 
+import { crearLogger } from '../services/logger';
+const log = crearLogger('SWPush');
+
 const ES_DESKTOP = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
 
 export function registrarServiceWorker(): void {
@@ -18,7 +21,7 @@ export function registrarServiceWorker(): void {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw-push.js', { scope: '/' }).catch((error) => {
             /* No es crítico — push no funcionará pero la app sí */
-            console.warn('[SW Push] No se pudo registrar el Service Worker:', error);
+            log.warn('No se pudo registrar el Service Worker:', error);
         });
     }, { once: true });
 }

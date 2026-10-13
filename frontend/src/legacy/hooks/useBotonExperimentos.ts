@@ -8,6 +8,8 @@
 import { useState, useCallback } from 'react';
 import { useAuthStore } from '@app/stores/authStore';
 import { generarExperimento, generarEmbeddings, regenerarEmbeddings } from '@app/services/apiExperimentos';
+import { crearLogger } from '../services/logger';
+const log = crearLogger('Experimentos');
 
 type EstadoBoton = 'idle' | 'cargando' | 'exito' | 'error';
 
@@ -23,7 +25,7 @@ export const useBotonExperimentos = () => {
 
         try {
             const resp = await generarExperimento(acciones);
-            console.log('[Experimentos] Respuesta completa:', resp);
+            log.info('Respuesta completa:', resp);
 
             if (resp.ok && resp.data) {
                 setEstado('exito');
@@ -39,7 +41,7 @@ export const useBotonExperimentos = () => {
             } else {
                 setEstado('error');
                 setUltimoResultado(resp.error ?? 'Error desconocido');
-                console.error('[Experimentos] Error:', resp.error, resp);
+                log.error('Error:', resp.error, resp);
             }
         } catch {
             setEstado('error');

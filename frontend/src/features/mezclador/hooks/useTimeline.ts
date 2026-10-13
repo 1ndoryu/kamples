@@ -7,6 +7,8 @@ import { useCallback, useRef, useState, useEffect } from 'react';
 import { useMezcladorStore } from '../stores/mezcladorStore';
 import { snapConResolucion } from '../utils/compasUtils';
 import type { SampleResumen } from '@app/types';
+import { crearLogger } from '../../../legacy/services/logger';
+const log = crearLogger('Mezclador');
 
 interface DragState {
     bloqueId: string | null;
@@ -180,12 +182,12 @@ export const useTimeline = () => {
                 !('id' in parsed) ||
                 !('rutaPreview' in parsed)
             ) {
-                console.error('[Mezclador] Sample inválido en drag data');
+                log.error('Sample inválido en drag data');
                 return;
             }
             useMezcladorStore.getState().agregarSample(parsed as SampleResumen, pistaId);
         } catch {
-            console.error('[Mezclador] Error parseando sample del drag');
+            log.error('Error parseando sample del drag');
         }
     }, []);
 

@@ -32,6 +32,8 @@ import { esDesktop, obtenerDragService, obtenerSyncService } from './utils/tarje
 import { requiereAuth } from '@app/utils/requiereAuth';
 import { EVENTO_SAMPLE_GUARDADO_EN_COLECCION, EVENTO_SAMPLE_QUITADO_DE_COLECCION } from './useModalSeleccionColeccion';
 import { EVENTO_SAMPLE_COMENTADO } from './useComentarios';
+import { crearLogger } from '../services/logger';
+const log = crearLogger('TarjetaSample');
 
 export { formatearKey } from './utils/tarjetaSampleUtils';
 
@@ -192,7 +194,7 @@ export function useTarjetaSample(opciones: UseTarjetaSampleOpciones) {
                     sample.metadata?.carpeta_primaria as string | undefined,
                     sample.metadata?.carpeta_secundaria as string | undefined,
                 ).catch((err: unknown) => {
-                    console.error('[AutoSync] Error sincronizando sample recién coleccionado:', err);
+                    log.error('Error sincronizando sample recién coleccionado:', err);
                 });
             } else if (esDesktop() && resp.data?.url) {
                 const dragService = obtenerDragService();
@@ -307,7 +309,7 @@ function esperarUmbralDrag(origenX: number, origenY: number, umbral: number): Pr
                         await dragService.descargarYArrastrar(sample.id, resp.data.url, nombreFinal, iconoPreview);
                     }
                 })().catch((err: unknown) => {
-                    console.error('[DragNativo] Error:', err);
+                    log.error('Error:', err);
                 });
                 return;
             }

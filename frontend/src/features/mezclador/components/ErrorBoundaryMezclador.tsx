@@ -6,6 +6,8 @@
 import { Component } from 'react';
 import type { ReactNode, ErrorInfo } from 'react';
 import { BotonBase } from '@app/components/ui/BotonBase';
+import { crearLogger } from '../../../legacy/services/logger';
+const log = crearLogger('Mezclador');
 
 interface Props {
     children: ReactNode;
@@ -24,7 +26,7 @@ export class ErrorBoundaryMezclador extends Component<Props, State> {
     }
 
     componentDidCatch(error: Error, info: ErrorInfo): void {
-        console.error('[Mezclador] Error atrapado por boundary:', error, info.componentStack);
+        log.error('Error atrapado por boundary:', error, info.componentStack);
     }
 
     reiniciar = (): void => {

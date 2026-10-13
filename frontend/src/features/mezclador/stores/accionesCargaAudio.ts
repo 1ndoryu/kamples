@@ -10,6 +10,8 @@ import { inferirCompas } from '../utils/compasUtils';
 import { generarIdBloque, generarIdPista, extraerPeaks } from '../utils/audioBufferUtils';
 import { motorAudio } from '../services/motorAudioService';
 import type { SetMezclador, GetMezclador } from './tiposMezcladorStore';
+import { crearLogger } from '../../../legacy/services/logger';
+const log = crearLogger('Mezclador');
 
 /* Helpers reutilizables para crear pistas y bloques */
 
@@ -157,7 +159,7 @@ export function crearAccionesCargaAudio(set: SetMezclador, get: GetMezclador) {
                 );
                 insertarBloque(bloque);
             } catch (error) {
-                console.error('[Mezclador] Error cargando sample:', error);
+                log.error('Error cargando sample:', error);
             } finally {
                 desmarcarCargando(bloqueId);
             }
@@ -221,7 +223,7 @@ export function crearAccionesCargaAudio(set: SetMezclador, get: GetMezclador) {
                 );
                 insertarBloque(bloque);
             } catch (error) {
-                console.error('[Mezclador] Error cargando audio local:', error);
+                log.error('Error cargando audio local:', error);
             } finally {
                 desmarcarCargando(bloqueId);
             }
