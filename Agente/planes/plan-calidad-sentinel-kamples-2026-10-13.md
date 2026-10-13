@@ -122,6 +122,8 @@ Falsos positivos y huecos de herramientas, para el final (actualizar workspace-m
 - **Guarda de construcción dinámica:** el tallo corto (`paso`, `mezclador`) coincide con código no relacionado (`paso-${i}` en `graphEdi`) y omite clases huérfanas reales (13AA-5: 6). Usar tallo completo y límite de token.
 - **Selectores mezclados (script 13AA-3/13AA-5):** la regla se quita solo si todos sus selectores están muertos; los selectores huérfanos en listas con clases vivas quedan y producen hallazgos (13AA-5: 4 editados a mano). El script debería quitar solo el selector muerto.
 - **Guarda de uso sobre comentarios:** corregido en 13AA-5 (los comentarios ya no cuentan como uso).
+- **`Arranque cierre` y ramas retenidas:** `rescate/sentinel-rs-kamples` (`f32fd05`) salía como rama suelta aunque estuviera anotada en roadmap. Decidido: AGENTS §5 solo permite retener ramas por dependencia ajena; esta depende de triaje propio, así que se hizo bundle verificado (`Agente/backup-ramas-2026-10-13/kamples-rescate-sentinel-rs-kamples.bundle`) y se borró local y remoto. Backlog de herramienta: que `--cierre` no cuente como rama suelta una retenida con motivo válido. Hoy no aplica.
+- **Rama `rescate/sentinel-rs-kamples` (`f32fd05`):** solo cambia `sentinel.config.json` (incluye `*.rs`). Integrarla antes de triar F4 añade 194 hallazgos nuevos al gate.
 - Hallazgo `sinCommit` obsoleto (1) en el tablero.
 - Artefacto `(área) :: salud` (1): ruta en `C:\tmp`, no del proyecto.
 - `alta` checklist (`registro`): no acepta `noAplica`. Falso positivo en opencode-delegate, que tiene `sin-servicio`.
