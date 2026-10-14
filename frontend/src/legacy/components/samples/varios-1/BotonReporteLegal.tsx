@@ -10,6 +10,7 @@ import { ShieldAlert } from 'lucide-react';
 import { ModalReporteLegal } from '../modal/ModalReporteLegal';
 import type { DatosReporteLegal } from '../../../services/api/varios-3/apiReporteLegal';
 import { useT } from '@app/utils/i18n/useT';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import '../../../styles/componentes/boton/botonReporteLegal.css';
 
 interface BotonReporteLegalProps {
@@ -30,8 +31,10 @@ export function BotonReporteLegal({
 
     return (
         <>
-            <button
+            <BotonBase
                 type="button"
+                variante="ghost"
+                tamano="ninguno"
                 className={`botonReporteLegal ${className}`}
                 onClick={() => setAbierto(true)}
                 title={t('legal.reclamar')}
@@ -39,7 +42,7 @@ export function BotonReporteLegal({
             >
                 <ShieldAlert size={14} />
                 <span className="botonReporteLegalTexto">{t('legal.reclamar')}</span>
-            </button>
+            </BotonBase>
 
             <ModalReporteLegal
                 abierto={abierto}

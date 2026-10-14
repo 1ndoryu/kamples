@@ -5,10 +5,11 @@
  * Patrón extraído de inicioBarraControl en InicioIsland.
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { ArrowDownWideNarrow, ChevronDown } from 'lucide-react';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { useT } from '@app/utils/i18n';
+import { useCerrarAlClickFuera } from '@app/hooks/menu/useCerrarAlClickFuera';
 import '../../styles/componentes/barra/barraControlFeed.css';
 
 export type TipoOrdenFeed = 'recientes' | 'nombre' | 'populares' | 'bpm' | 'posicion';
@@ -59,16 +60,7 @@ export const BarraControlFeed = ({
     const { t } = useT();
 
     /* Cerrar dropdown al hacer click fuera */
-    useEffect(() => {
-        if (!menuAbierto) return;
-        const manejarClickFuera = (e: MouseEvent) => {
-            if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-                setMenuAbierto(false);
-            }
-        };
-        document.addEventListener('mousedown', manejarClickFuera);
-        return () => document.removeEventListener('mousedown', manejarClickFuera);
-    }, [menuAbierto]);
+    useCerrarAlClickFuera(wrapperRef, menuAbierto, () => setMenuAbierto(false));
 
     const etiquetaActual = t(opciones.find(o => o.valor === ordenActual)?.etiqueta ?? 'feed.ordenar');
 

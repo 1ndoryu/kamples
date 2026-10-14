@@ -58,10 +58,10 @@ const ConfiguracionDesktop = (h: HookConfiguracion): JSX.Element => {
 };
 
 /* QL89+QL101: Movil  bottom sheet parcial tipo dropdown/menu contextual */
-/* code-sentinel-disable: bottom-sheet requiere overlay custom, no el <Modal> estandar */
 const ConfiguracionMovil = (h: HookConfiguracion): JSX.Element => {
     const { t } = useT();
     return createPortal(
+    // sentinel-disable-next-line componente-artesanal — bottom sheet móvil (QL89/QL101) con overlay propio; <Modal> cambiaría el layout
     <div className="configMovilOverlay" onClick={h.manejarCerrar}>
         <div className="configMovilPantalla" onClick={(e) => e.stopPropagation()}>
             {h.movilEnMenu ? (

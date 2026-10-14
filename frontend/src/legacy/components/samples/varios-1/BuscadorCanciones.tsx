@@ -2,16 +2,15 @@
  * Componente: BuscadorCanciones
  * Buscador con debounce que consulta /canciones/buscar.
  * Muestra resultados como lista seleccionable; expone opcion "nueva cancion".
- * TO-DO: Extraer logica (4 useState + debounce + click-fuera) a useBuscadorCanciones.ts para cumplir SRP.
+ * Estado y debounce en useBuscadorCanciones.
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, PlusCircle, X } from 'lucide-react';
-import { buscarCanciones } from '../../../services/api/varios-1/apiCanciones';
 import type { Cancion } from '../../../types/varios-1/cancion';
 import { InputBusqueda } from '../../ui/input/InputBusqueda';
 import { BotonBase } from '../../ui/boton/BotonBase';
 import { useT } from '@app/utils/i18n/useT';
+import { useBuscadorCanciones } from '@app/hooks/samples/useBuscadorCanciones';
 import '../../../styles/componentes/varios-1/buscadorCanciones.css';
 
 interface BuscadorCancionesProps {
@@ -27,62 +26,17 @@ export function BuscadorCanciones({
     onAgregarNueva,
     cancionActual = null,
 }: BuscadorCancionesProps): JSX.Element {
-    const [query, setQuery] = useState('');
-    const [resultados, setResultados] = useState<Cancion[]>([]);
-    const [cargando, setCargando] = useState(false);
-    const [abierto, setAbierto] = useState(false);
-    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const contenedorRef = useRef<HTMLDivElement>(null);
     const { t } = useT();
-
-    /* Cierra la lista al hacer click fuera */
-    useEffect(() => {
-        const manejarClickFuera = (e: MouseEvent) => {
-            if (contenedorRef.current && !contenedorRef.current.contains(e.target as Node)) {
-                setAbierto(false);
-            }
-        };
-        document.addEventListener('mousedown', manejarClickFuera);
-        return () => document.removeEventListener('mousedown', manejarClickFuera);
-    }, []);
-
-    /* Busqueda con debounce de 350ms */
-    const buscar = useCallback((texto: string) => {
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-        if (texto.length < 2) {
-            setResultados([]);
-            setAbierto(false);
-            return;
-        }
-
-        timeoutRef.current = setTimeout(async () => {
-            setCargando(true);
-            try {
-                const resp = await buscarCanciones(texto, 8);
-                if (resp.ok && resp.data) {
-                    setResultados(resp.data);
-                    setAbierto(true);
-                }
-            } finally {
-                setCargando(false);
-            }
-        }, 350);
-    }, []);
-
-    useEffect(() => {
-        buscar(query);
-        return () => {
-            if (timeoutRef.current) clearTimeout(timeoutRef.current);
-        };
-    }, [query, buscar]);
-
-    const elegirCancion = (c: Cancion) => {
-        onSeleccionar(c);
-        setQuery('');
-        setResultados([]);
-        setAbierto(false);
-    };
+    const {
+        query,
+        setQuery,
+        resultados,
+        cargando,
+        abierto,
+        setAbierto,
+        contenedorRef,
+        elegirCancion,
+    } = useBuscadorCanciones(onSeleccionar);
 
     return (
         <div className="buscadorCanciones" ref={contenedorRef}>

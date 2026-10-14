@@ -3,6 +3,30 @@
  * Boton discreto de reclamacion DMCA para tarjetas de relaciones/samples.
  */
 
+/*
+ * El botón usa BotonBase (variante ghost, sin tamaño) para cumplir button-clase-especifica.
+ * BotonBase fija familia, peso, borde, interlineado, justificación y transición; aquí se
+ * restauran los valores originales del botón. Especificidad superior a .botonBase.varianteGhost.
+ */
+.botonBase.varianteGhost.botonReporteLegal {
+    justify-content: flex-start;
+    gap: var(--espacioXs);
+    font-family: system-ui;
+    font-weight: normal;
+    border: none;
+    line-height: normal;
+    white-space: normal;
+    user-select: auto;
+    transition: color 0.15s, background 0.15s;
+    color: var(--textoTerciario);
+    background: none;
+}
+
+.botonBase.varianteGhost.botonReporteLegal:hover {
+    color: var(--error);
+    background: var(--errorMuted);
+}
+
 .botonReporteLegal {
     display: inline-flex;
     align-items: center;

@@ -20,12 +20,6 @@
     gap: var(--espacioMd);
 }
 
-.blogTitulo {
-    font-size: var(--fuenteXl);
-    font-weight: var(--pesoBold, 700);
-    color: var(--textoPrimario);
-}
-
 /* [183A-110-B] Navegación de categorías con drag-to-scroll */
 .blogCategorias {
     display: flex;

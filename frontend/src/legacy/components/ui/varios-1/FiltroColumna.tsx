@@ -4,9 +4,10 @@
  * Reutilizable en cualquier tabla admin que necesite filtros por columna.
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Filter } from 'lucide-react';
 import { Checkbox } from './Checkbox';
+import { useCerrarAlClickFuera } from '@app/hooks/menu/useCerrarAlClickFuera';
 import '../../../styles/componentes/filtro/filtroColumna.css';
 
 export interface OpcionFiltro {
@@ -25,16 +26,7 @@ export const FiltroColumna = ({ opciones, activos, onChange }: FiltroColumnaProp
     const refContenedor = useRef<HTMLDivElement>(null);
     const tieneActivos = activos.size > 0 && activos.size < opciones.length;
 
-    useEffect(() => {
-        if (!abierto) return;
-        const cerrar = (e: MouseEvent) => {
-            if (refContenedor.current && !refContenedor.current.contains(e.target as Node)) {
-                setAbierto(false);
-            }
-        };
-        document.addEventListener('mousedown', cerrar);
-        return () => document.removeEventListener('mousedown', cerrar);
-    }, [abierto]);
+    useCerrarAlClickFuera(refContenedor, abierto, () => setAbierto(false));
 
     const toggleOpcion = (valor: string) => {
         const siguiente = new Set(activos);
