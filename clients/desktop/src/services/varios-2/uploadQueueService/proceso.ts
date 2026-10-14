@@ -8,7 +8,7 @@ import { estado } from '../../sync/varios-2/syncState';
 import { circuitoUpload } from '../../varios-1/circuitBreaker';
 import { logSync } from '../../sync/varios-1/syncLogger';
 import { ItemUploadCola } from './tipos';
-import { cola, hashesConocidos, hashARutas, procesando, rutasEnCola, normalizarRutaCola, claveRutaEnCola, semaforoUpload, setProcesando, setSemaforoUpload } from './uploadQueueEstado';
+import { cola, estadoUploadQueue, procesando, normalizarRutaCola, claveRutaEnCola, semaforoUpload, setProcesando, setSemaforoUpload } from './uploadQueueEstado';
 import { MAX_REINTENTOS, BACKOFF_BASE_MS, emitirProgreso } from './helpers';
 import { guardarColaDebounced, guardarHashes } from './persistencia';
 import { subirArchivo } from './subirArchivo';
@@ -110,16 +110,16 @@ async function procesarItemUpload(
     if (exito) {
         item.estado = 'completado';
         if (item.hashParcial) {
-            hashesConocidos.add(item.hashParcial);
+            estadoUploadQueue.hashesConocidos.add(item.hashParcial);
             const rutaNorm = normalizarRutaCola(item.rutaArchivo);
-            const existentes = hashARutas.get(item.hashParcial) ?? new Set<string>();
+            const existentes = estadoUploadQueue.hashARutas.get(item.hashParcial) ?? new Set<string>();
             existentes.add(rutaNorm);
-            hashARutas.set(item.hashParcial, existentes);
+            estadoUploadQueue.hashARutas.set(item.hashParcial, existentes);
             /* Persistir hash inmediatamente para que uploads paralelos lo vean.
              * No esperar al fin de procesarCola — previene duplicados por race condition. */
             guardarHashes().catch(() => {});
         }
-        rutasEnCola.delete(claveRutaEnCola(item.rutaArchivo));
+        estadoUploadQueue.rutasEnCola.delete(claveRutaEnCola(item.rutaArchivo));
 
         /* QK97: Borrar archivo local tras upload exitoso si la opción está activa.
          * Se ejecuta después de registrar hash y tracking para no perder referencia.
@@ -153,7 +153,7 @@ async function procesarItemUpload(
         item.intentos++;
         if (item.intentos >= MAX_REINTENTOS) {
             item.estado = 'error';
-            rutasEnCola.delete(claveRutaEnCola(item.rutaArchivo));
+            estadoUploadQueue.rutasEnCola.delete(claveRutaEnCola(item.rutaArchivo));
 
             actualizarEstadoSampleHistorial({
                 sampleId: 0,

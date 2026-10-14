@@ -6,7 +6,7 @@ import { estado } from '../../sync/varios-2/syncState';
 import { esRutaPapelera, normalizarNombreParaDedup } from '../../varios-1/normalizarNombreArchivo';
 import { logSync } from '../../sync/varios-1/syncLogger';
 import { ItemUploadCola } from './tipos';
-import { cola, hashesConocidos, rutasEnCola, rutasEncolando, hashesPendientesEncola, MAX_DETECCIONES_HASH, registrarDeteccionHash, esHashBloqueadoPorAntispam, normalizarRutaCola, claveRutaEnCola, existeArchivoActivoConHash, crearIdempotencyKeyDeterministica } from './uploadQueueEstado';
+import { cola, estadoUploadQueue, MAX_DETECCIONES_HASH, registrarDeteccionHash, esHashBloqueadoPorAntispam, normalizarRutaCola, claveRutaEnCola, existeArchivoActivoConHash, crearIdempotencyKeyDeterministica } from './uploadQueueEstado';
 import { esExtensionAudioValida, estaEnCarpetaSync, calcularHashParcial } from './helpers';
 import { guardarColaDebounced } from './persistencia';
 import { procesarCola } from './proceso';
@@ -51,16 +51,16 @@ export async function encolarArchivo(
      * Si otro llamado a encolarArchivo() ya está procesando esta ruta
      * (calculando hash, etc.), rechazar inmediatamente.
      */
-    if (rutasEncolando.has(rutaClave)) {
+    if (estadoUploadQueue.rutasEncolando.has(rutaClave)) {
         logSync.info('uploadQueueService', '[UploadQueue] Archivo ya en proceso de encolamiento, ignorando:', nombreArchivo);
         return false;
     }
-    rutasEncolando.add(rutaClave);
+    estadoUploadQueue.rutasEncolando.add(rutaClave);
 
     try {
         return await encolarArchivoInterno(rutaNormalizada, nombreArchivo, carpetas);
     } finally {
-        rutasEncolando.delete(rutaClave);
+        estadoUploadQueue.rutasEncolando.delete(rutaClave);
     }
 }
 
@@ -82,7 +82,7 @@ async function encolarArchivoInterno(
 
     /* Verificar si ya está en la cola (misma ruta) — O(1) con Set */
     const rutaClave = claveRutaEnCola(rutaArchivo);
-    if (rutasEnCola.has(rutaClave) && cola.some(i => claveRutaEnCola(i.rutaArchivo) === rutaClave && i.estado !== 'error')) {
+    if (estadoUploadQueue.rutasEnCola.has(rutaClave) && cola.some(i => claveRutaEnCola(i.rutaArchivo) === rutaClave && i.estado !== 'error')) {
         logSync.info('uploadQueueService', '[UploadQueue] Archivo ya en cola, ignorando:', nombreNormalizado);
         return false;
     }
@@ -120,13 +120,13 @@ async function encolarArchivoInterno(
     /* TC2: Verificar si otro encolarArchivoInterno concurrente już reservó este hash.
      * Este check es síncrono e inmediatamente después del await, cerrando la ventana
      * de race entre dos llamados que calculan hash en paralelo. */
-    if (hash && hashesPendientesEncola.has(hash)) {
+    if (hash && estadoUploadQueue.hashesPendientesEncola.has(hash)) {
         /* QL66-EXTRA: skip sin mover a duplicados/ — el archivo ya está siendo encolado por otro hilo concurrente */
         logSync.debug('uploadQueue', `Hash ya reservado por encola concurrente, ignorando: ${nombreNormalizado}`);
         return false;
     }
     /* Reservar hash síncronamente para que el siguiente llamado concurrente lo vea */
-    if (hash) hashesPendientesEncola.add(hash);
+    if (hash) estadoUploadQueue.hashesPendientesEncola.add(hash);
 
     try {
 
@@ -137,7 +137,7 @@ async function encolarArchivoInterno(
         return false;
     }
 
-    if (hash && hashesConocidos.has(hash)) {
+    if (hash && estadoUploadQueue.hashesConocidos.has(hash)) {
         /*
          * C6 fix: Hash conocido → verificar si ALGÚN archivo activo en tracking
          * tiene ese contenido. Si existe, es duplicado confirmado (mismo contenido,
@@ -151,7 +151,7 @@ async function encolarArchivoInterno(
             const hayActivoConHash = existeArchivoActivoConHash(hash);
             if (!hayActivoConHash) {
                 logSync.info('uploadQueueService', '[UploadQueue] Hash conocido pero sin archivo activo en tracking, evictando hash stale:', nombreNormalizado);
-                hashesConocidos.delete(hash);
+                estadoUploadQueue.hashesConocidos.delete(hash);
                 /* Continuar con encolamiento normal */
             } else {
                 logSync.info('uploadQueueService', `[UploadQueue] Duplicado confirmado — "${nombreNormalizado}" tiene el mismo contenido que un sample ya subido. Eliminando archivo local.`);
@@ -184,7 +184,7 @@ async function encolarArchivoInterno(
     };
 
     cola.push(item);
-    rutasEnCola.add(rutaClave);
+    estadoUploadQueue.rutasEnCola.add(rutaClave);
     guardarColaDebounced();
 
     /* Historial per-sample: entrada inicial "detectado" (se actualiza a subiendo/sincronizado) */
@@ -216,6 +216,6 @@ async function encolarArchivoInterno(
     } finally {
         /* TC2: Liberar hash reservado ahora que el item ya está en cola
          * (rutasEnCola lo cubre a partir de aquí) o se rechazó/falló. */
-        if (hash) hashesPendientesEncola.delete(hash);
+        if (hash) estadoUploadQueue.hashesPendientesEncola.delete(hash);
     }
 }

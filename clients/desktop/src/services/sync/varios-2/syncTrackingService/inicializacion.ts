@@ -10,8 +10,7 @@ import { esDesktop } from '../../../varios-1/desktopService';
 import { aplicadorRecuperacion } from './persistencia/journal';
 import {
     datos,
-    indiceNombreSampleHistorial,
-    indiceSampleHistorial,
+    estadoSyncTracking,
     setDatos,
     setJournalActivo,
     setLimpiarHistorialUnlisten,
@@ -188,8 +187,8 @@ export async function inicializarTracking(userIdActual?: number): Promise<void> 
         const { listen } = await import('@tauri-apps/api/event');
         setLimpiarHistorialUnlisten(await listen('limpiar-historial-samples', () => {
             datos.historialSamples = [];
-            indiceSampleHistorial.clear();
-            indiceNombreSampleHistorial.clear();
+            estadoSyncTracking.indiceSampleHistorial.clear();
+            estadoSyncTracking.indiceNombreSampleHistorial.clear();
         }));
     } catch {
         /* Entorno sin Tauri */

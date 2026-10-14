@@ -13,9 +13,7 @@ import {
     NOMBRES_CARPETA_TEMPORAL,
 } from '../fileWatcherConstantes';
 import {
-    carpetasEliminadasPendientes,
-    carpetasPendientesCreacion,
-    carpetasRecientes,
+    estadoFileWatcher,
     onCarpetaNueva,
     onCarpetaRenombrada,
 } from '../fileWatcherEstado';
@@ -44,14 +42,14 @@ export function procesarEventoCarpeta(
 
         if (pendiente) {
             clearTimeout(pendiente.timeout);
-            carpetasEliminadasPendientes.delete(pendiente.nombre);
+            estadoFileWatcher.carpetasEliminadasPendientes.delete(pendiente.nombre);
 
             /* Cancelar creacion pendiente del nombre viejo (delete+create rename) */
             const clavePendiente = pendiente.nombre.toLowerCase();
-            const creacionPendiente = carpetasPendientesCreacion.get(clavePendiente);
+            const creacionPendiente = estadoFileWatcher.carpetasPendientesCreacion.get(clavePendiente);
             if (creacionPendiente) {
                 clearTimeout(creacionPendiente.timeout);
-                carpetasPendientesCreacion.delete(clavePendiente);
+                estadoFileWatcher.carpetasPendientesCreacion.delete(clavePendiente);
                 logSync.info('watcher', `Creacion cancelada por rename (delete+create): ${pendiente.nombre}`);
             }
 
@@ -67,9 +65,9 @@ export function procesarEventoCarpeta(
          * Previene que el par create + modify emita dos callbacks. */
         const claveCarpeta = nombreCarpeta.toLowerCase();
         const ahora = Date.now();
-        const ultimoProcesada = carpetasRecientes.get(claveCarpeta);
+        const ultimoProcesada = estadoFileWatcher.carpetasRecientes.get(claveCarpeta);
         if (ultimoProcesada && (ahora - ultimoProcesada) < DEBOUNCE_CARPETA_MS) return;
-        carpetasRecientes.set(claveCarpeta, ahora);
+        estadoFileWatcher.carpetasRecientes.set(claveCarpeta, ahora);
 
         logSync.info('watcher', `Carpeta nueva detectada, esperando rename: ${nombreCarpeta}`);
 
@@ -79,7 +77,7 @@ export function procesarEventoCarpeta(
          * C1: Carpetas con nombres temporales del OS (Nueva carpeta, New folder, etc.)
          * tienen timeout extendido de 60s y NO se crean si expiran — se ignoran. */
         const claveCreacion = nombreCarpeta.toLowerCase();
-        const pendienteExistente = carpetasPendientesCreacion.get(claveCreacion);
+        const pendienteExistente = estadoFileWatcher.carpetasPendientesCreacion.get(claveCreacion);
         if (pendienteExistente) clearTimeout(pendienteExistente.timeout);
 
         const esTemporal = NOMBRES_CARPETA_TEMPORAL.has(claveCreacion)
@@ -88,7 +86,7 @@ export function procesarEventoCarpeta(
         const delayMs = esTemporal ? DELAY_CARPETA_TEMPORAL_MS : DELAY_CREACION_CARPETA_MS;
 
         const timeoutCreacion = setTimeout(() => {
-            carpetasPendientesCreacion.delete(claveCreacion);
+            estadoFileWatcher.carpetasPendientesCreacion.delete(claveCreacion);
             if (esTemporal) {
                 logSync.info('watcher', `Carpeta temporal ignorada (no renombrada a tiempo): ${nombreCarpeta}`);
                 return;
@@ -99,26 +97,26 @@ export function procesarEventoCarpeta(
             }
         }, delayMs);
 
-        carpetasPendientesCreacion.set(claveCreacion, {
+        estadoFileWatcher.carpetasPendientesCreacion.set(claveCreacion, {
             timeout: timeoutCreacion,
             nombreOriginal: nombreCarpeta,
             rutaCompleta,
         });
     } else if (esEventoEliminacion(tipo)) {
         /* Bufferar eliminación para detectar posible rename */
-        const existente = carpetasEliminadasPendientes.get(nombreCarpeta);
+        const existente = estadoFileWatcher.carpetasEliminadasPendientes.get(nombreCarpeta);
         if (existente) {
             clearTimeout(existente.timeout);
         }
 
         const timeout = setTimeout(() => {
-            carpetasEliminadasPendientes.delete(nombreCarpeta);
+            estadoFileWatcher.carpetasEliminadasPendientes.delete(nombreCarpeta);
             /* Eliminación confirmada — la carpeta fue borrada, no renombrada.
              * No sincronizamos borrado de carpeta al servidor (podría ser limpieza local). */
             logSync.info('watcher', `Carpeta eliminada (no fue rename): ${nombreCarpeta}`);
         }, GRACIA_RENAME_CARPETA_MS);
 
-        carpetasEliminadasPendientes.set(nombreCarpeta, {
+        estadoFileWatcher.carpetasEliminadasPendientes.set(nombreCarpeta, {
             nombre: nombreCarpeta,
             ruta: rutaCompleta,
             timeout,
@@ -131,7 +129,7 @@ export function procesarEventoCarpeta(
  * Debería haber como máximo una a la vez en una operación de rename.
  */
 function encuentraCarpetaEliminadaPendiente(): CarpetaEliminadaPendiente | null {
-    for (const [, val] of carpetasEliminadasPendientes) {
+    for (const [, val] of estadoFileWatcher.carpetasEliminadasPendientes) {
         return val;
     }
     return null;

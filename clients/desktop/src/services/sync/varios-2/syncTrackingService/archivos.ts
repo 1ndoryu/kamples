@@ -1,5 +1,5 @@
 import { generarClaveTracking } from './claves';
-import { datos, indiceNombre, indiceRuta } from './estado';
+import { datos, estadoSyncTracking } from './estado';
 import { registrarEnJournal } from './persistencia/journal';
 import type { ArchivoTracking } from './tipos';
 
@@ -19,14 +19,14 @@ export function buscarArchivoPorSampleId(sampleId: number): ArchivoTracking | nu
 /** O(1) lookup por ruta normalizada usando índice secundario. */
 export function buscarArchivoPorRuta(ruta: string): ArchivoTracking | null {
     const rutaNorm = ruta.replace(/\\/g, '/');
-    const clave = indiceRuta.get(rutaNorm);
+    const clave = estadoSyncTracking.indiceRuta.get(rutaNorm);
     if (clave) return datos.archivos[clave] ?? null;
     return null;
 }
 
 /** O(1) lookup por nombre de archivo usando índice secundario. */
 export function buscarArchivoPorNombre(nombre: string): ArchivoTracking | null {
-    const claves = indiceNombre.get(nombre);
+    const claves = estadoSyncTracking.indiceNombre.get(nombre);
     if (claves && claves.length > 0) return datos.archivos[claves[0]] ?? null;
     return null;
 }
@@ -37,18 +37,18 @@ export async function registrarArchivo(archivo: ArchivoTracking): Promise<void> 
     /* Limpiar índice de entrada anterior si existía con otra ruta/nombre */
     const anterior = datos.archivos[clave];
     if (anterior) {
-        indiceRuta.delete(anterior.rutaLocal.replace(/\\/g, '/'));
+        estadoSyncTracking.indiceRuta.delete(anterior.rutaLocal.replace(/\\/g, '/'));
     }
 
     datos.archivos[clave] = archivo;
 
     /* Actualizar índices secundarios */
     const rutaNorm = archivo.rutaLocal.replace(/\\/g, '/');
-    indiceRuta.set(rutaNorm, clave);
+    estadoSyncTracking.indiceRuta.set(rutaNorm, clave);
     for (const nombre of [archivo.nombreServidor, archivo.nombreLocal]) {
-        const existentes = indiceNombre.get(nombre) ?? [];
+        const existentes = estadoSyncTracking.indiceNombre.get(nombre) ?? [];
         if (!existentes.includes(clave)) existentes.push(clave);
-        indiceNombre.set(nombre, existentes);
+        estadoSyncTracking.indiceNombre.set(nombre, existentes);
     }
 
     await registrarEnJournal('TRACK_FILE', { clave, archivo });
@@ -60,13 +60,13 @@ export async function eliminarArchivo(sampleId: number, coleccionId: number | nu
 
     if (archivo) {
         /* Limpiar índices secundarios */
-        indiceRuta.delete(archivo.rutaLocal.replace(/\\/g, '/'));
+        estadoSyncTracking.indiceRuta.delete(archivo.rutaLocal.replace(/\\/g, '/'));
         for (const nombre of [archivo.nombreServidor, archivo.nombreLocal]) {
-            const existentes = indiceNombre.get(nombre);
+            const existentes = estadoSyncTracking.indiceNombre.get(nombre);
             if (existentes) {
                 const filtrado = existentes.filter(c => c !== clave);
-                if (filtrado.length === 0) indiceNombre.delete(nombre);
-                else indiceNombre.set(nombre, filtrado);
+                if (filtrado.length === 0) estadoSyncTracking.indiceNombre.delete(nombre);
+                else estadoSyncTracking.indiceNombre.set(nombre, filtrado);
             }
         }
     }

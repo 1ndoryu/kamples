@@ -2,7 +2,7 @@
 
 import { esDesktop } from '../../varios-1/desktopService';
 import { persistirConDebounce } from '../persistenciaDebounce';
-import { cola, hashesConocidos, hashARutas, contadorHashDetectado } from './uploadQueueEstado';
+import { cola, estadoUploadQueue } from './uploadQueueEstado';
 import { STORE_FILE, STORE_KEY_COLA, STORE_KEY_HASHES } from './helpers';
 
 /*
@@ -48,15 +48,15 @@ export async function guardarHashes(): Promise<void> {
         const { load } = await import('@tauri-apps/plugin-store');
         const store = await load(STORE_FILE);
         /* Limitar a últimos 5000 hashes para no crecer indefinidamente */
-        const hashesArray = Array.from(hashesConocidos).slice(-5000);
+        const hashesArray = Array.from(estadoUploadQueue.hashesConocidos).slice(-5000);
         await store.set(STORE_KEY_HASHES, hashesArray);
         /* C6: Persistir mapa hash→rutas (1:N) para dedup cross-carpeta entre reinicios */
         const mapaObj: Record<string, string[]> = {};
-        for (const [h, rutas] of hashARutas) mapaObj[h] = Array.from(rutas);
+        for (const [h, rutas] of estadoUploadQueue.hashARutas) mapaObj[h] = Array.from(rutas);
         await store.set('hash_a_ruta', mapaObj);
         /* QL69: Persistir contador antispam */
         const antispamObj: Record<string, number> = {};
-        for (const [h, c] of contadorHashDetectado) antispamObj[h] = c;
+        for (const [h, c] of estadoUploadQueue.contadorHashDetectado) antispamObj[h] = c;
         await store.set('antispam_hash_contador', antispamObj);
         await store.save();
     } catch {

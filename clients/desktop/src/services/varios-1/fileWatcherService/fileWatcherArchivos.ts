@@ -8,7 +8,7 @@ import { logSync } from '../../sync/varios-1/syncLogger';
 import { acumularArchivoNuevo } from './fileWatcherBatch';
 import { CARPETAS_SISTEMA_NO_COLECCION, GRACIA_MOVE_MS } from './fileWatcherConstantes';
 import {
-    eliminacionesPendientes,
+    estadoFileWatcher,
     onArchivoEliminado,
     onArchivoMovido,
 } from './fileWatcherEstado';
@@ -48,12 +48,12 @@ export function manejarArchivoNuevo(rutaOriginal: string, rutaNormalizada: strin
 
     /* Verificar si hay una eliminación pendiente con el mismo nombre */
     const clave = nombreArchivo.toLowerCase();
-    const pendiente = eliminacionesPendientes.get(clave);
+    const pendiente = estadoFileWatcher.eliminacionesPendientes.get(clave);
 
     if (pendiente) {
         /* Es un MOVE: cancelar la eliminación pendiente y emitir move */
         clearTimeout(pendiente.timeout);
-        eliminacionesPendientes.delete(clave);
+        estadoFileWatcher.eliminacionesPendientes.delete(clave);
 
         logSync.info('watcher', `Move detectado: ${pendiente.ruta} → ${rutaOriginal}`);
 
@@ -85,7 +85,7 @@ export function manejarArchivoEliminado(rutaOriginal: string): void {
     const clave = nombreArchivo.toLowerCase();
 
     /* Si ya hay una eliminación pendiente para este nombre, cancelar la anterior */
-    const existente = eliminacionesPendientes.get(clave);
+    const existente = estadoFileWatcher.eliminacionesPendientes.get(clave);
     if (existente) {
         clearTimeout(existente.timeout);
     }
@@ -93,14 +93,14 @@ export function manejarArchivoEliminado(rutaOriginal: string): void {
     logSync.info('watcher', `Eliminación detectada (esperando ${GRACIA_MOVE_MS}ms por posible move): ${rutaOriginal}`);
 
     const timeout = setTimeout(() => {
-        eliminacionesPendientes.delete(clave);
+        estadoFileWatcher.eliminacionesPendientes.delete(clave);
         logSync.info('watcher', `Eliminación confirmada (no fue move): ${rutaOriginal}`);
         if (onArchivoEliminado) {
             onArchivoEliminado(rutaOriginal);
         }
     }, GRACIA_MOVE_MS);
 
-    eliminacionesPendientes.set(clave, {
+    estadoFileWatcher.eliminacionesPendientes.set(clave, {
         ruta: rutaOriginal,
         nombreArchivo,
         timeout,

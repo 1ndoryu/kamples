@@ -1,4 +1,4 @@
-import { datos, indiceRuta, sinColeccionSet } from './estado';
+import { datos, estadoSyncTracking } from './estado';
 import { registrarEnJournal } from './persistencia/journal';
 import type { ColeccionLocal } from './tipos';
 
@@ -73,10 +73,10 @@ export async function actualizarNombreColeccion(id: number, nombre: string, carp
             const nuevaRuta = archivo.rutaLocal.replace(patronReemplazo, `$1${carpetaLocal}$2`);
             if (nuevaRuta !== archivo.rutaLocal) {
                 const rutaNormAnterior = archivo.rutaLocal.replace(/\\/g, '/');
-                indiceRuta.delete(rutaNormAnterior);
+                estadoSyncTracking.indiceRuta.delete(rutaNormAnterior);
                 archivo.rutaLocal = nuevaRuta;
                 const rutaNormNueva = nuevaRuta.replace(/\\/g, '/');
-                indiceRuta.set(rutaNormNueva, clave);
+                estadoSyncTracking.indiceRuta.set(rutaNormNueva, clave);
             }
         }
     }
@@ -103,19 +103,19 @@ export function buscarColeccionPorCarpeta(carpetaLocal: string): ColeccionLocal 
 /* Sin colección */
 
 export function esSinColeccion(sampleId: number): boolean {
-    return sinColeccionSet.has(sampleId);
+    return estadoSyncTracking.sinColeccionSet.has(sampleId);
 }
 
 export async function agregarSinColeccion(sampleId: number): Promise<void> {
-    if (!sinColeccionSet.has(sampleId)) {
-        sinColeccionSet.add(sampleId);
+    if (!estadoSyncTracking.sinColeccionSet.has(sampleId)) {
+        estadoSyncTracking.sinColeccionSet.add(sampleId);
         datos.sinColeccion.push(sampleId);
         await registrarEnJournal('MOVE_FILE', { accion: 'agregarSinColeccion', sampleId });
     }
 }
 
 export async function quitarSinColeccion(sampleId: number): Promise<void> {
-    sinColeccionSet.delete(sampleId);
+    estadoSyncTracking.sinColeccionSet.delete(sampleId);
     datos.sinColeccion = datos.sinColeccion.filter(id => id !== sampleId);
     await registrarEnJournal('MOVE_FILE', { accion: 'quitarSinColeccion', sampleId });
 }

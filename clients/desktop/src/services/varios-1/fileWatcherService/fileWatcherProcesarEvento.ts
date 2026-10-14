@@ -19,7 +19,7 @@ import {
     PATRONES_TEMPORALES,
 } from './fileWatcherConstantes';
 import {
-    archivosRecientes,
+    estadoFileWatcher,
     setRenamePendienteNoPareado,
     renamePendienteNoPareado,
 } from './fileWatcherEstado';
@@ -162,9 +162,9 @@ export async function procesarEvento(
 
         /* Debounce por archivo: ignorar si fue procesado recientemente */
         const ahora = Date.now();
-        const ultimoProcesado = archivosRecientes.get(normalizada);
+        const ultimoProcesado = estadoFileWatcher.archivosRecientes.get(normalizada);
         if (ultimoProcesado && (ahora - ultimoProcesado) < DEBOUNCE_ARCHIVO_MS) continue;
-        archivosRecientes.set(normalizada, ahora);
+        estadoFileWatcher.archivosRecientes.set(normalizada, ahora);
 
         if (esEventoCreacion(tipo)) {
             manejarArchivoNuevo(ruta, normalizada, carpetaBase);
@@ -173,7 +173,7 @@ export async function procesarEvento(
              * Para eliminaciones, limpiar del debounce cache: si luego llega un
              * create (move), no debe ser bloqueado por el debounce del delete previo.
              */
-            archivosRecientes.delete(normalizada);
+            estadoFileWatcher.archivosRecientes.delete(normalizada);
             manejarArchivoEliminado(ruta);
         }
     }

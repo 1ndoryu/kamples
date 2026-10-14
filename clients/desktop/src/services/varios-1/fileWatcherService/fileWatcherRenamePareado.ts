@@ -9,12 +9,11 @@ import {
     EXTENSIONES_AUDIO,
 } from './fileWatcherConstantes';
 import {
-    carpetasPendientesCreacion,
+    estadoFileWatcher,
     onArchivoMovido,
     onArchivoNuevo,
     onCarpetaRenombrada,
     onSubcarpetaRenombrada,
-    subcarpetasPendientesCreacion,
 } from './fileWatcherEstado';
 import { esDirectorioReal } from './fileWatcherUtilidades';
 
@@ -68,10 +67,10 @@ export async function procesarRenamePareado(paths: string[], baseNormalizada: st
              * primero emite CREATE y luego RENAME. Sin esto, la coleccion
              * se crea con el nombre temporal. */
             const claveOrigen = nombreOrigen.toLowerCase();
-            const pendiente = carpetasPendientesCreacion.get(claveOrigen);
+            const pendiente = estadoFileWatcher.carpetasPendientesCreacion.get(claveOrigen);
             if (pendiente) {
                 clearTimeout(pendiente.timeout);
-                carpetasPendientesCreacion.delete(claveOrigen);
+                estadoFileWatcher.carpetasPendientesCreacion.delete(claveOrigen);
                 logSync.info('watcher', `Creacion cancelada por rename: ${nombreOrigen} → ${nombreNueva}`);
             }
 
@@ -106,10 +105,10 @@ export async function procesarRenamePareado(paths: string[], baseNormalizada: st
 
             /* Cancelar creacion pendiente del nombre origen si existe */
             const claveSubOrigen = `${carpetaPadre.toLowerCase()}/${subOrigen.toLowerCase()}`;
-            const pendienteSub = subcarpetasPendientesCreacion.get(claveSubOrigen);
+            const pendienteSub = estadoFileWatcher.subcarpetasPendientesCreacion.get(claveSubOrigen);
             if (pendienteSub) {
                 clearTimeout(pendienteSub.timeout);
-                subcarpetasPendientesCreacion.delete(claveSubOrigen);
+                estadoFileWatcher.subcarpetasPendientesCreacion.delete(claveSubOrigen);
                 logSync.info('watcher', `Creacion subcarpeta cancelada por rename: ${subOrigen} → ${subNuevo}`);
             }
 

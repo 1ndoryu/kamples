@@ -21,21 +21,24 @@ export function setDatos(nuevo: BaseSyncLocal): void {
     datos = nuevo;
 }
 
-/* Índice en memoria para O(1) upsert en historialSamples. Clave: sampleId → índice en array.
- * Entradas sin sampleId real (pre-upload) se indexan por nombre en indiceNombreSampleHistorial. */
-export const indiceSampleHistorial = new Map<number, number>();
-export const indiceNombreSampleHistorial = new Map<string, number>();
+/* Colecciones mutables de módulo agrupadas en un único store: se mutan in-place, nunca se reasignan. */
+export const estadoSyncTracking = {
+    /* Índice en memoria para O(1) upsert en historialSamples. Clave: sampleId → índice en array.
+     * Entradas sin sampleId real (pre-upload) se indexan por nombre en indiceNombreSampleHistorial. */
+    indiceSampleHistorial: new Map<number, number>(),
+    indiceNombreSampleHistorial: new Map<string, number>(),
 
-/*
- * Índices secundarios para O(1) lookup por ruta y nombre.
- * Se reconstruyen al cargar datos y se mantienen en cada registrar/eliminar.
- * Clave del mapa → clave de tracking para acceso directo a datos.archivos[clave].
- */
-export const indiceRuta = new Map<string, string>();
-export const indiceNombre = new Map<string, string[]>();
+    /*
+     * Índices secundarios para O(1) lookup por ruta y nombre.
+     * Se reconstruyen al cargar datos y se mantienen en cada registrar/eliminar.
+     * Clave del mapa → clave de tracking para acceso directo a datos.archivos[clave].
+     */
+    indiceRuta: new Map<string, string>(),
+    indiceNombre: new Map<string, string[]>(),
 
-/* Set sombra para O(1) en sinColeccion. El array en datos se mantiene para serialización al store. */
-export const sinColeccionSet = new Set<number>();
+    /* Set sombra para O(1) en sinColeccion. El array en datos se mantiene para serialización al store. */
+    sinColeccionSet: new Set<number>(),
+};
 
 /* Modo lote: suspende persistencia hasta finalizarLote(). Evita 100+ escrituras en sync masiva. */
 export let enLote = false;

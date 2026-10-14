@@ -7,7 +7,7 @@ import { clasificarError, obtenerEstrategia, esErrorDeRed } from '../../varios-1
 import { circuitoUpload, CircuitoBiertoError } from '../../varios-1/circuitBreaker';
 import { logSync } from '../../sync/varios-1/syncLogger';
 import { ItemUploadCola } from './tipos';
-import { hashesConocidos, hashesEnVuelo, rutasEnVuelo, claveRutaEnCola, existeArchivoActivoConHash } from './uploadQueueEstado';
+import { estadoUploadQueue, claveRutaEnCola, existeArchivoActivoConHash } from './uploadQueueEstado';
 import { estaEnCarpetaSync, MAX_REINTENTOS, esperarArchivoDisponible, humanizarNombreArchivo, generarTagsDesdeContexto, obtenerMimeType } from './helpers';
 import { guardarHashes } from './persistencia';
 
@@ -39,11 +39,11 @@ export async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
          * estén en progreso simultáneamente. Complementa hashesEnVuelo para
          * cubrir el caso donde hash es null (error de FS, OneDrive lock).
          */
-        if (rutasEnVuelo.has(rutaClave)) {
+        if (estadoUploadQueue.rutasEnVuelo.has(rutaClave)) {
             logSync.info('uploadQueueService', '[UploadQueue] Ruta en vuelo (upload paralelo), omitiendo:', item.nombreArchivo);
             return true;
         }
-        rutasEnVuelo.add(rutaClave);
+        estadoUploadQueue.rutasEnVuelo.add(rutaClave);
 
         /*
          * Verificación de última línea contra tracking v2: entre el momento de encolar
@@ -68,12 +68,12 @@ export async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
          * Incluye evicción de hashes stale: si el sample fue borrado del servidor
          * y localmente, hashesConocidos aún retiene el hash fantasma. Verificar
          * que exista un archivo activo real antes de declarar duplicado. */
-        if (item.hashParcial && hashesConocidos.has(item.hashParcial)) {
+        if (item.hashParcial && estadoUploadQueue.hashesConocidos.has(item.hashParcial)) {
             if (estado.trackingModule) {
                 const hayActivo = existeArchivoActivoConHash(item.hashParcial);
                 if (!hayActivo) {
                     logSync.info('uploadQueueService', '[UploadQueue] Hash stale en pre-upload (sin archivo activo), evictando:', item.nombreArchivo);
-                    hashesConocidos.delete(item.hashParcial);
+                    estadoUploadQueue.hashesConocidos.delete(item.hashParcial);
                     guardarHashes().catch(() => {});
                     /* Continuar con upload normal */
                 } else {
@@ -93,11 +93,11 @@ export async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
          * se actualiza tras el POST exitoso.
          */
         if (item.hashParcial) {
-            if (hashesEnVuelo.has(item.hashParcial)) {
+            if (estadoUploadQueue.hashesEnVuelo.has(item.hashParcial)) {
                 logSync.info('uploadQueueService', '[UploadQueue] Hash en vuelo (upload paralelo), omitiendo:', item.nombreArchivo);
                 return true;
             }
-            hashesEnVuelo.add(item.hashParcial);
+            estadoUploadQueue.hashesEnVuelo.add(item.hashParcial);
         }
 
         const { readFile, exists } = await import('@tauri-apps/plugin-fs');
@@ -387,8 +387,8 @@ export async function subirArchivo(item: ItemUploadCola): Promise<boolean> {
     } finally {
         /* Liberar guards en vuelo siempre, éxito o fallo */
         if (item.hashParcial) {
-            hashesEnVuelo.delete(item.hashParcial);
+            estadoUploadQueue.hashesEnVuelo.delete(item.hashParcial);
         }
-        rutasEnVuelo.delete(rutaClave);
+        estadoUploadQueue.rutasEnVuelo.delete(rutaClave);
     }
 }

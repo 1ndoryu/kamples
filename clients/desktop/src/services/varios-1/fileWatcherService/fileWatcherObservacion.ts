@@ -11,7 +11,7 @@ import {
     PURGA_TTL_MS,
 } from './fileWatcherConstantes';
 import {
-    archivosRecientes,
+    estadoFileWatcher,
     limpiarEstadoObservacion,
     observando,
     purgaInterval,
@@ -98,8 +98,8 @@ function iniciarPurgaPeriodica(): void {
     if (purgaInterval) return;
     setPurgaInterval(setInterval(() => {
         const ahora = Date.now();
-        for (const [k, v] of archivosRecientes) {
-            if (ahora - v > PURGA_TTL_MS) archivosRecientes.delete(k);
+        for (const [k, v] of estadoFileWatcher.archivosRecientes) {
+            if (ahora - v > PURGA_TTL_MS) estadoFileWatcher.archivosRecientes.delete(k);
         }
     }, PURGA_INTERVALO_MS));
 }

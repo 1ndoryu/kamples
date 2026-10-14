@@ -1,7 +1,6 @@
 import {
     datos,
-    indiceNombreSampleHistorial,
-    indiceSampleHistorial,
+    estadoSyncTracking,
     setUltimaRecargaStore,
     STORE_KEY_TRACKING,
     storeCache,
@@ -43,10 +42,10 @@ export async function actualizarEstadoSample(entrada: {
     /* Buscar entrada existente: primero por sampleId real, luego por nombre */
     let idxExistente: number | undefined;
     if (entrada.sampleId > 0) {
-        idxExistente = indiceSampleHistorial.get(entrada.sampleId);
+        idxExistente = estadoSyncTracking.indiceSampleHistorial.get(entrada.sampleId);
     }
     if (idxExistente === undefined) {
-        idxExistente = indiceNombreSampleHistorial.get(nombreNorm);
+        idxExistente = estadoSyncTracking.indiceNombreSampleHistorial.get(nombreNorm);
     }
 
     if (idxExistente !== undefined && idxExistente < datos.historialSamples.length) {
@@ -146,8 +145,8 @@ export async function recargarHistorialDesdeStore(): Promise<void> {
 /** Limpia el historial per-sample completo. */
 export async function limpiarHistorialSamples(): Promise<void> {
     datos.historialSamples = [];
-    indiceSampleHistorial.clear();
-    indiceNombreSampleHistorial.clear();
+    estadoSyncTracking.indiceSampleHistorial.clear();
+    estadoSyncTracking.indiceNombreSampleHistorial.clear();
     await persistir();
 
     /*

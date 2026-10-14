@@ -4,7 +4,7 @@ import { esDesktop, estaOnline } from '../../varios-1/desktopService';
 import { escucharVentana } from '@/platform/ventana';
 import { logSync } from '../../sync/varios-1/syncLogger';
 import { ItemUploadCola, OnProgresoUploadFn } from './tipos';
-import { cola, hashARutas, rutasEnCola, contadorHashDetectado, normalizarRutaCola, claveRutaEnCola, crearIdempotencyKeyDeterministica, tienePendientes, setCola, setRutasEnCola, setHashesConocidos, setHashARutas, setCallbackProgreso } from './uploadQueueEstado';
+import { cola, estadoUploadQueue, normalizarRutaCola, claveRutaEnCola, crearIdempotencyKeyDeterministica, tienePendientes, setCola, setRutasEnCola, setHashesConocidos, setHashARutas, setCallbackProgreso } from './uploadQueueEstado';
 import { STORE_FILE, estaEnCarpetaSync, STORE_KEY_COLA, STORE_KEY_HASHES, MAX_REINTENTOS } from './helpers';
 import { procesarCola } from './proceso';
 
@@ -89,14 +89,14 @@ export async function inicializarUploadQueue(): Promise<void> {
         if (mapaGuardado) {
             setHashARutas(new Map());
             for (const [h, v] of Object.entries(mapaGuardado)) {
-                hashARutas.set(h, new Set(Array.isArray(v) ? v : [v]));
+                estadoUploadQueue.hashARutas.set(h, new Set(Array.isArray(v) ? v : [v]));
             }
         }
         /* QL69: Restaurar contador antispam */
         const antispamGuardado = await store.get<Record<string, number>>('antispam_hash_contador');
         if (antispamGuardado) {
             for (const [h, c] of Object.entries(antispamGuardado)) {
-                contadorHashDetectado.set(h, c);
+                estadoUploadQueue.contadorHashDetectado.set(h, c);
             }
         }
     } catch {
@@ -141,7 +141,7 @@ export async function inicializarUploadQueue(): Promise<void> {
                         item.intentos = 0;
                         item.ultimoError = undefined;
                         item.timestampActualizado = Date.now();
-                        rutasEnCola.add(claveRutaEnCola(item.rutaArchivo));
+                        estadoUploadQueue.rutasEnCola.add(claveRutaEnCola(item.rutaArchivo));
                     }
                 }
             }

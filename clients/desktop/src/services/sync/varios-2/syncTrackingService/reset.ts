@@ -1,10 +1,7 @@
 import {
     datos,
-    indiceNombre,
-    indiceRuta,
-    indiceSampleHistorial,
+    estadoSyncTracking,
     setDatos,
-    sinColeccionSet,
 } from './estado';
 import { persistir } from './persistencia/persistencia';
 
@@ -20,9 +17,9 @@ export async function resetearTracking(): Promise<void> {
         historialSamples: [],
         userId: userIdActual,
     });
-    indiceRuta.clear();
-    indiceNombre.clear();
-    sinColeccionSet.clear();
-    indiceSampleHistorial.clear();
+    estadoSyncTracking.indiceRuta.clear();
+    estadoSyncTracking.indiceNombre.clear();
+    estadoSyncTracking.sinColeccionSet.clear();
+    estadoSyncTracking.indiceSampleHistorial.clear();
     await persistir();
 }

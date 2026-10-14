@@ -550,10 +550,18 @@
     background: var(--bordeActivo);
 }
 
+/* Estado vacío del historial (antes inline en ListaHistorialSync.tsx). */
 .sincPanelHistorialVacio {
     padding: var(--espacioLg);
     color: var(--textoTerciario);
     font-size: var(--fuenteSm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 100%;
+    text-align: center;
 }
 
 .sincPanelHistorialItemMinimal {

@@ -13,11 +13,9 @@ import {
     NOMBRES_CARPETA_TEMPORAL,
 } from '../fileWatcherConstantes';
 import {
+    estadoFileWatcher,
     onSubcarpetaNueva,
     onSubcarpetaRenombrada,
-    subcarpetasEliminadasPendientes,
-    subcarpetasPendientesCreacion,
-    subcarpetasRecientes,
 } from '../fileWatcherEstado';
 import type { SubcarpetaEliminadaPendiente } from '../fileWatcherTipos';
 import { esEventoCreacion, esEventoEliminacion } from '../fileWatcherUtilidades';
@@ -49,14 +47,14 @@ export function procesarEventoSubcarpeta(
         if (pendiente) {
             clearTimeout(pendiente.timeout);
             const clavePendiente = `${pendiente.carpetaPadre.toLowerCase()}/${pendiente.nombre.toLowerCase()}`;
-            subcarpetasEliminadasPendientes.delete(clavePendiente);
+            estadoFileWatcher.subcarpetasEliminadasPendientes.delete(clavePendiente);
 
             /* Cancelar creacion pendiente del nombre viejo si existía */
             const claveCreacionVieja = `${pendiente.carpetaPadre.toLowerCase()}/${pendiente.nombre.toLowerCase()}`;
-            const creacionPendiente = subcarpetasPendientesCreacion.get(claveCreacionVieja);
+            const creacionPendiente = estadoFileWatcher.subcarpetasPendientesCreacion.get(claveCreacionVieja);
             if (creacionPendiente) {
                 clearTimeout(creacionPendiente.timeout);
-                subcarpetasPendientesCreacion.delete(claveCreacionVieja);
+                estadoFileWatcher.subcarpetasPendientesCreacion.delete(claveCreacionVieja);
             }
 
             logSync.info('watcher', `Rename subcarpeta detectado: ${pendiente.nombre} → ${nombreSubcarpeta} en ${carpetaPadre}`);
@@ -69,15 +67,15 @@ export function procesarEventoSubcarpeta(
 
         /* Debounce: ignorar si fue procesada recientemente */
         const ahora = Date.now();
-        const ultimoProcesada = subcarpetasRecientes.get(claveCompuesta);
+        const ultimoProcesada = estadoFileWatcher.subcarpetasRecientes.get(claveCompuesta);
         if (ultimoProcesada && (ahora - ultimoProcesada) < DEBOUNCE_CARPETA_MS) return;
-        subcarpetasRecientes.set(claveCompuesta, ahora);
+        estadoFileWatcher.subcarpetasRecientes.set(claveCompuesta, ahora);
 
         logSync.info('watcher', `Subcarpeta nueva detectada, esperando rename: ${nombreSubcarpeta} en ${carpetaPadre}`);
 
         /* Delay para dar tiempo a rename de Windows ("Nueva carpeta" → nombre real)
          * C1: Misma lógica de carpetas temporales aplicada a subcarpetas. */
-        const pendienteExistente = subcarpetasPendientesCreacion.get(claveCompuesta);
+        const pendienteExistente = estadoFileWatcher.subcarpetasPendientesCreacion.get(claveCompuesta);
         if (pendienteExistente) clearTimeout(pendienteExistente.timeout);
 
         const esTemporalSub = NOMBRES_CARPETA_TEMPORAL.has(nombreSubcarpeta.toLowerCase())
@@ -86,7 +84,7 @@ export function procesarEventoSubcarpeta(
         const delayMsSub = esTemporalSub ? DELAY_CARPETA_TEMPORAL_MS : DELAY_CREACION_CARPETA_MS;
 
         const timeoutCreacion = setTimeout(() => {
-            subcarpetasPendientesCreacion.delete(claveCompuesta);
+            estadoFileWatcher.subcarpetasPendientesCreacion.delete(claveCompuesta);
             if (esTemporalSub) {
                 logSync.info('watcher', `Subcarpeta temporal ignorada: ${nombreSubcarpeta} en ${carpetaPadre}`);
                 return;
@@ -97,7 +95,7 @@ export function procesarEventoSubcarpeta(
             }
         }, delayMsSub);
 
-        subcarpetasPendientesCreacion.set(claveCompuesta, {
+        estadoFileWatcher.subcarpetasPendientesCreacion.set(claveCompuesta, {
             timeout: timeoutCreacion,
             nombreOriginal: nombreSubcarpeta,
             carpetaPadre,
@@ -105,17 +103,17 @@ export function procesarEventoSubcarpeta(
         });
     } else if (esEventoEliminacion(tipo)) {
         /* Bufferar eliminación para detectar posible rename */
-        const existente = subcarpetasEliminadasPendientes.get(claveCompuesta);
+        const existente = estadoFileWatcher.subcarpetasEliminadasPendientes.get(claveCompuesta);
         if (existente) {
             clearTimeout(existente.timeout);
         }
 
         const timeout = setTimeout(() => {
-            subcarpetasEliminadasPendientes.delete(claveCompuesta);
+            estadoFileWatcher.subcarpetasEliminadasPendientes.delete(claveCompuesta);
             logSync.info('watcher', `Subcarpeta eliminada (no fue rename): ${nombreSubcarpeta} en ${carpetaPadre}`);
         }, GRACIA_RENAME_CARPETA_MS);
 
-        subcarpetasEliminadasPendientes.set(claveCompuesta, {
+        estadoFileWatcher.subcarpetasEliminadasPendientes.set(claveCompuesta, {
             nombre: nombreSubcarpeta,
             carpetaPadre,
             ruta: rutaCompleta,
@@ -130,7 +128,7 @@ export function procesarEventoSubcarpeta(
  */
 function encuentraSubcarpetaEliminadaPendiente(carpetaPadre: string): SubcarpetaEliminadaPendiente | null {
     const padreNorm = carpetaPadre.toLowerCase();
-    for (const [, val] of subcarpetasEliminadasPendientes) {
+    for (const [, val] of estadoFileWatcher.subcarpetasEliminadasPendientes) {
         if (val.carpetaPadre.toLowerCase() === padreNorm) return val;
     }
     return null;

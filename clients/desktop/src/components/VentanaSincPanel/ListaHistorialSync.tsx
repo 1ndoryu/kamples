@@ -29,7 +29,7 @@ export function ListaHistorialSync({
         <div className="ventanaSincPanelContenido sincPanelMinimalContenido">
             <div className="sincPanelHistorialMinimal">
                 {historialSamples.length === 0 ? (
-                    <div className="sincPanelHistorialVacio" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', height: '100%', textAlign: 'center' }}>
+                    <div className="sincPanelHistorialVacio">
                         {/* [2003A-38] Estado vacío dinámico según contexto */}
                         {!carpetaLocal ? (
                             <>

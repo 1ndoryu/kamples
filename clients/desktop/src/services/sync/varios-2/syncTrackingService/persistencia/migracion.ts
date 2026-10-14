@@ -1,7 +1,7 @@
 import { esDesktop } from '../../../../varios-1/desktopService';
 import { logSync } from '../../../varios-1/syncLogger';
 import { generarClaveTracking } from '../claves';
-import { datos, sinColeccionSet, STORE_FILE } from '../estado';
+import { datos, estadoSyncTracking, STORE_FILE } from '../estado';
 import { reconstruirIndices } from '../indices';
 import { persistir } from './persistencia';
 import { registrarAccion } from '../historial';
@@ -53,7 +53,7 @@ export async function migrarDesdeV1(): Promise<boolean> {
             const clave = generarClaveTracking(v1.sampleId, null);
             datos.archivos[clave] = tracking;
             datos.sinColeccion.push(v1.sampleId);
-            sinColeccionSet.add(v1.sampleId);
+            estadoSyncTracking.sinColeccionSet.add(v1.sampleId);
         }
 
         reconstruirIndices();

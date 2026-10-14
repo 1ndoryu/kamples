@@ -4,7 +4,7 @@ import { estaOnline } from '../../varios-1/desktopService';
 import { estado } from '../../sync/varios-2/syncState';
 import { logSync } from '../../sync/varios-1/syncLogger';
 import { ItemUploadCola, ResumenDebugUploadQueue } from './tipos';
-import { cola, hashesConocidos, hashARutas, procesando, rutasEnCola, hashesEnVuelo, rutasEnVuelo, hashesPendientesEncola, MAX_DETECCIONES_HASH, contadorHashDetectado, claveRutaEnCola, setCola } from './uploadQueueEstado';
+import { cola, estadoUploadQueue, procesando, MAX_DETECCIONES_HASH, claveRutaEnCola, setCola } from './uploadQueueEstado';
 import { guardarCola, guardarHashes } from './persistencia';
 import { procesarCola, tieneSubidaPersistidaConfirmada } from './proceso';
 
@@ -48,13 +48,13 @@ export function obtenerResumenDebugUploadQueue(): ResumenDebugUploadQueue {
         totalCompletados: cola.filter(i => i.estado === 'completado').length,
         totalDuplicados: cola.filter(i => i.estado === 'duplicado').length,
         procesando,
-        rutasEnCola: rutasEnCola.size,
-        rutasEnVuelo: rutasEnVuelo.size,
-        hashesConocidos: hashesConocidos.size,
-        hashesEnVuelo: hashesEnVuelo.size,
-        hashesPendientesEncola: hashesPendientesEncola.size,
-        hashesMapeados: hashARutas.size,
-        hashesBloqueadosAntispam: Array.from(contadorHashDetectado.values()).filter(c => c >= MAX_DETECCIONES_HASH).length,
+        rutasEnCola: estadoUploadQueue.rutasEnCola.size,
+        rutasEnVuelo: estadoUploadQueue.rutasEnVuelo.size,
+        hashesConocidos: estadoUploadQueue.hashesConocidos.size,
+        hashesEnVuelo: estadoUploadQueue.hashesEnVuelo.size,
+        hashesPendientesEncola: estadoUploadQueue.hashesPendientesEncola.size,
+        hashesMapeados: estadoUploadQueue.hashARutas.size,
+        hashesBloqueadosAntispam: Array.from(estadoUploadQueue.contadorHashDetectado.values()).filter(c => c >= MAX_DETECCIONES_HASH).length,
         muestrasActivas,
     };
 }
@@ -69,7 +69,7 @@ export async function reintentarItem(itemId: string): Promise<void> {
         item.intentos = 0;
         item.ultimoError = undefined;
         item.timestampActualizado = Date.now();
-        rutasEnCola.add(claveRutaEnCola(item.rutaArchivo));
+        estadoUploadQueue.rutasEnCola.add(claveRutaEnCola(item.rutaArchivo));
         await guardarCola(); /* Guardar inmediato: acción explícita del usuario */
 
         if (estaOnline()) {
@@ -96,7 +96,7 @@ export async function reintentarTodosConError(): Promise<void> {
             item.intentos = 0;
             item.ultimoError = undefined;
             item.timestampActualizado = Date.now();
-            rutasEnCola.add(claveRutaEnCola(item.rutaArchivo));
+            estadoUploadQueue.rutasEnCola.add(claveRutaEnCola(item.rutaArchivo));
             algunActualizado = true;
         }
     }
@@ -124,7 +124,7 @@ export async function reintentarTodosConError(): Promise<void> {
 export async function eliminarItemCola(itemId: string): Promise<void> {
     const item = cola.find(i => i.id === itemId);
     if (item) {
-        rutasEnCola.delete(claveRutaEnCola(item.rutaArchivo));
+        estadoUploadQueue.rutasEnCola.delete(claveRutaEnCola(item.rutaArchivo));
     }
     setCola(cola.filter(i => i.id !== itemId));
     await guardarCola(); /* Guardar inmediato: acción explícita del usuario */
@@ -137,7 +137,7 @@ export async function limpiarCompletados(): Promise<void> {
     /* Limpiar Set de rutas de items completados */
     for (const item of cola) {
         if (item.estado === 'completado') {
-            rutasEnCola.delete(claveRutaEnCola(item.rutaArchivo));
+            estadoUploadQueue.rutasEnCola.delete(claveRutaEnCola(item.rutaArchivo));
         }
     }
     setCola(cola.filter(i => i.estado !== 'completado'));
@@ -150,8 +150,8 @@ export async function limpiarCompletados(): Promise<void> {
  * incluso después de resetear el tracking (ej: borrado del servidor + re-subida).
  */
 export async function limpiarHashesConocidos(): Promise<void> {
-    hashesConocidos.clear();
-    hashARutas.clear();
+    estadoUploadQueue.hashesConocidos.clear();
+    estadoUploadQueue.hashARutas.clear();
     await guardarHashes();
 }
 
@@ -171,7 +171,7 @@ export async function limpiarArchivosSubidosEnDisco(): Promise<void> {
         let eliminados = 0;
         let fallidos = 0;
 
-        for (const [, rutas] of hashARutas) {
+        for (const [, rutas] of estadoUploadQueue.hashARutas) {
             for (const ruta of rutas) {
                 try {
                     if (!tieneSubidaPersistidaConfirmada({ rutaArchivo: ruta })) continue;

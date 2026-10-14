@@ -1,7 +1,7 @@
 /*
  * Estado mutable del watcher (fileWatcherService).
  *
- * Los mapas se exportan como const (se mutan con set/delete/clear).
+ * Los mapas van agrupados en `estadoFileWatcher` (const; se mutan con set/delete/clear).
  * Los escalares y callbacks que se reasignan se exportan como `let`: los
  * importadores ven el valor vigente (binding vivo de ESM) pero no pueden
  * reasignarlos; las reasignaciones van por los setters de este módulo.
@@ -25,28 +25,31 @@ import type {
     UnwatchFn,
 } from './fileWatcherTipos';
 
-/* Cache de archivos recientemente procesados para ignorar eventos duplicados */
-export const archivosRecientes = new Map<string, number>();
+/* Mapas de estado del watcher agrupados en un único objeto (regla Sentinel singleton-mutable-state). */
+export const estadoFileWatcher = {
+    /* Cache de archivos recientemente procesados para ignorar eventos duplicados */
+    archivosRecientes: new Map<string, number>(),
 
-/* Cache de carpetas recientemente procesadas para ignorar eventos duplicados */
-export const carpetasRecientes = new Map<string, number>();
+    /* Cache de carpetas recientemente procesadas para ignorar eventos duplicados */
+    carpetasRecientes: new Map<string, number>(),
 
-/* Carpetas pendientes de creacion (debounce de rename de nivel 1) */
-export const carpetasPendientesCreacion = new Map<string, PendienteCreacionCarpeta>();
+    /* Carpetas pendientes de creacion (debounce de rename de nivel 1) */
+    carpetasPendientesCreacion: new Map<string, PendienteCreacionCarpeta>(),
 
-/* Mapa: nombreArchivo normalizado → EliminacionPendiente (buffer de MOVE) */
-export const eliminacionesPendientes = new Map<string, EliminacionPendiente>();
+    /* Mapa: nombreArchivo normalizado → EliminacionPendiente (buffer de MOVE) */
+    eliminacionesPendientes: new Map<string, EliminacionPendiente>(),
+
+    /* Buffer de eliminaciones de carpetas de nivel 1 para detectar renames */
+    carpetasEliminadasPendientes: new Map<string, CarpetaEliminadaPendiente>(),
+
+    /* C387: State para subcarpetas de nivel 2. Claves compuestas carpetaPadre/nombreSub */
+    subcarpetasRecientes: new Map<string, number>(),
+    subcarpetasPendientesCreacion: new Map<string, PendienteCreacionSubcarpeta>(),
+    subcarpetasEliminadasPendientes: new Map<string, SubcarpetaEliminadaPendiente>(),
+};
 
 /* Buffer de acumulación de archivos nuevos (QL76). Se vacía con splice. */
 export const bufferArchivosNuevos: ArchivoBufferado[] = [];
-
-/* Buffer de eliminaciones de carpetas de nivel 1 para detectar renames */
-export const carpetasEliminadasPendientes = new Map<string, CarpetaEliminadaPendiente>();
-
-/* C387: State para subcarpetas de nivel 2. Claves compuestas carpetaPadre/nombreSub */
-export const subcarpetasRecientes = new Map<string, number>();
-export const subcarpetasPendientesCreacion = new Map<string, PendienteCreacionSubcarpeta>();
-export const subcarpetasEliminadasPendientes = new Map<string, SubcarpetaEliminadaPendiente>();
 
 /* Timers y escalares reasignables: usar los setters de abajo */
 export let timeoutFlushBatch: ReturnType<typeof setTimeout> | null = null;
@@ -116,37 +119,37 @@ export function setCallbacksSubcarpetas(cbNueva: OnSubcarpetaNuevaFn, cbRenombra
  * acumulados se despachen igualmente).
  */
 export function limpiarEstadoObservacion(): void {
-    archivosRecientes.clear();
-    carpetasRecientes.clear();
+    estadoFileWatcher.archivosRecientes.clear();
+    estadoFileWatcher.carpetasRecientes.clear();
 
     /* Limpiar eliminaciones pendientes para evitar callbacks sueltos */
-    for (const [, pendiente] of eliminacionesPendientes) {
+    for (const [, pendiente] of estadoFileWatcher.eliminacionesPendientes) {
         clearTimeout(pendiente.timeout);
     }
-    eliminacionesPendientes.clear();
+    estadoFileWatcher.eliminacionesPendientes.clear();
 
     /* C357: Limpiar carpetas pendientes de rename */
-    for (const [, pendiente] of carpetasEliminadasPendientes) {
+    for (const [, pendiente] of estadoFileWatcher.carpetasEliminadasPendientes) {
         clearTimeout(pendiente.timeout);
     }
-    carpetasEliminadasPendientes.clear();
+    estadoFileWatcher.carpetasEliminadasPendientes.clear();
 
     /* Limpiar creaciones de carpeta pendientes (debounce rename) */
-    for (const [, pendiente] of carpetasPendientesCreacion) {
+    for (const [, pendiente] of estadoFileWatcher.carpetasPendientesCreacion) {
         clearTimeout(pendiente.timeout);
     }
-    carpetasPendientesCreacion.clear();
+    estadoFileWatcher.carpetasPendientesCreacion.clear();
 
     /* C387: Limpiar state de subcarpetas */
-    for (const [, pendiente] of subcarpetasPendientesCreacion) {
+    for (const [, pendiente] of estadoFileWatcher.subcarpetasPendientesCreacion) {
         clearTimeout(pendiente.timeout);
     }
-    subcarpetasPendientesCreacion.clear();
-    for (const [, pendiente] of subcarpetasEliminadasPendientes) {
+    estadoFileWatcher.subcarpetasPendientesCreacion.clear();
+    for (const [, pendiente] of estadoFileWatcher.subcarpetasEliminadasPendientes) {
         clearTimeout(pendiente.timeout);
     }
-    subcarpetasEliminadasPendientes.clear();
-    subcarpetasRecientes.clear();
+    estadoFileWatcher.subcarpetasEliminadasPendientes.clear();
+    estadoFileWatcher.subcarpetasRecientes.clear();
 
     /* C287: Limpiar rename no pareado pendiente */
     if (renamePendienteNoPareado) {
