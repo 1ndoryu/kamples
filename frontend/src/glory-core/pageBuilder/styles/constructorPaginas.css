@@ -27,7 +27,7 @@
 }
 
 .bloqueSeleccionado {
-    outline: 2px solid #3b82f6;
+    outline: 2px solid var(--info);
 }
 
 .bloqueControles {
@@ -36,7 +36,7 @@
     left: 0;
     display: flex;
     gap: 4px;
-    background: #1a1a1a;
+    background: var(--colorRgba-26-26-26-1);
     padding: 6px 8px;
     border-radius: 6px;
     border: 1px solid var(--colorRgba-255-255-255-0_1);
@@ -44,7 +44,7 @@
 }
 
 .bloqueControlEtiqueta {
-    color: #888;
+    color: var(--colorGrisMedio);
     font-size: var(--fuenteSm);
     margin-right: 8px;
     display: flex;
@@ -54,7 +54,7 @@
 .botonControlBloque {
     background: transparent;
     border: none;
-    color: #fff;
+    color: var(--colorBlancoPuro);
     cursor: pointer;
     padding: 4px 8px;
     border-radius: var(--radioSm);
@@ -67,9 +67,9 @@
 }
 
 .botonEditarBloque {
-    background: #3b82f6;
+    background: var(--info);
     border: none;
-    color: #fff;
+    color: var(--colorBlancoPuro);
     cursor: pointer;
     padding: 4px 12px;
     border-radius: var(--radioSm);
@@ -90,7 +90,7 @@
 .bloquesVacio {
     padding: 60px 20px;
     text-align: center;
-    color: #666;
+    color: var(--colorGrisOscuro);
 }
 
 /* BlockEditorModal */
@@ -98,10 +98,10 @@
 .campoEntradaBase {
     width: 100%;
     padding: 10px 12px;
-    background: #1a1a1a;
+    background: var(--colorRgba-26-26-26-1);
     border: 1px solid var(--colorRgba-255-255-255-0_1);
     border-radius: 6px;
-    color: #fff;
+    color: var(--colorBlancoPuro);
     font-size: var(--fuenteBase);
     outline: none;
     transition: border-color 0.2s;
@@ -138,7 +138,7 @@
 
 .campoArrayItemNumero {
     font-size: var(--fuenteSm);
-    color: #888;
+    color: var(--colorGrisMedio);
 }
 
 .botonEliminarItem {
@@ -158,7 +158,7 @@
 .campoArraySubEtiqueta {
     display: block;
     font-size: var(--fuenteXs);
-    color: #888;
+    color: var(--colorGrisMedio);
     margin-bottom: 4px;
     text-transform: uppercase;
 }
@@ -172,7 +172,7 @@
     background: var(--hoverSutil);
     border: 1px dashed rgba(255, 255, 255, 0.2);
     border-radius: 6px;
-    color: #888;
+    color: var(--colorGrisMedio);
     cursor: pointer;
     font-size: var(--fuenteMd);
     transition: all 0.2s;
@@ -181,7 +181,7 @@
 .modalOverlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.85);
+    background: var(--overlayFuerte);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -201,14 +201,14 @@
 }
 
 .modalError {
-    background: #111;
+    background: var(--colorGrisCasiNegro);
     padding: 24px;
     border-radius: 12px;
     color: var(--colorRojoError);
 }
 
 .modalContenido {
-    background: #0a0a0a;
+    background: var(--colorRgba-10-10-10-1);
     border-radius: 16px;
     border: 1px solid var(--colorRgba-255-255-255-0_1);
     width: 100%;
@@ -231,13 +231,13 @@
     margin: 0;
     font-size: var(--fuenteLg);
     font-weight: 600;
-    color: #fff;
+    color: var(--colorBlancoPuro);
 }
 
 .botonCerrarModal {
     background: transparent;
     border: none;
-    color: #888;
+    color: var(--colorGrisMedio);
     cursor: pointer;
     padding: 4px;
 }
@@ -249,7 +249,7 @@
 }
 
 .modalSinCampos {
-    color: #666;
+    color: var(--colorGrisOscuro);
     text-align: center;
 }
 
@@ -263,7 +263,7 @@
     display: block;
     font-size: var(--fuenteMd);
     font-weight: 500;
-    color: #ccc;
+    color: var(--colorGrisPerla);
     margin-bottom: 8px;
 }
 
@@ -280,7 +280,7 @@
     border-radius: 8px;
     border: 1px solid var(--colorRgba-255-255-255-0_1);
     background: transparent;
-    color: #888;
+    color: var(--colorGrisMedio);
     cursor: pointer;
     font-size: var(--fuenteBase);
 }
@@ -289,8 +289,8 @@
     padding: 10px 24px;
     border-radius: 8px;
     border: none;
-    background: #3b82f6;
-    color: #fff;
+    background: var(--info);
+    color: var(--colorBlancoPuro);
     cursor: pointer;
     font-size: var(--fuenteBase);
     font-weight: 500;
@@ -312,8 +312,12 @@
 }
 
 /* [15A-15] Clases que sustituyen a los style={{}} inline de los componentes
- * del page builder. Los valores que no tienen token de diseno se quedan
- * literales a proposito: darles uno seria decidir un token nuevo, y eso es F3. */
+ * del page builder.
+ *
+ * [15A-16] Los colores de esta hoja que ya tenian un token de valor identico
+ * pasaron a usar el token. Siguen literales los que no tienen ningun token
+ * equivalente y las medidas sin escala (6/8/12/16px): darles token es F3.
+ * El detalle esta en roadmap.md. */
 
 .pageBuilderVacio {
     padding: 40px 20px;
