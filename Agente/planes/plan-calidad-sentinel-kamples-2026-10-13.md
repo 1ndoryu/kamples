@@ -232,14 +232,101 @@ Decidido: arquitectura por adaptadores, no comentarios ni `sentinel-disable`. To
 
 ### Pendiente de este plan (siguiente bloque)
 
-- `css-especificacion-diseno-local` (103) y `css-adhoc-button-style` (41): cambian render; requieren verificación visual antes y después.
-- `directorio-abarrotado` (16): reorganizar carpetas con reescritura de imports (riesgo de disparar la regla en la carpeta nueva; precedente `Agente/completados/tareas-2026-10-07.md:350`).
-- Estructurales: `limite-lineas` (7) y `limite-lineas-nivel-2` (3).
+Recontado el 2026-10-15 sobre el análisis vigente (756 hallazgos en total). El bloque que figuraba aquí quedó obsoleto:
+
+- ~~`directorio-abarrotado` (16)~~, ~~`limite-lineas` (7)~~ y ~~`limite-lineas-nivel-2` (3)~~: **los tres están a 0** en el análisis actual. No hay nada que hacer; si vuelven, es que reaparecieron carpetas nuevas.
+- `css-especificacion-diseno-local` (98 vivo) y `css-elemento-html-directo` (22 vivo): cambian render; requieren verificación visual antes y después. Antes hay que resolver la contradicción entre reglas descrita en el backlog de falsos positivos (abajo), porque buena parte de ese número es ruido.
+- `css-adhoc-button-style` (33): de ellos solo 3 son reales (ver backlog); los otros 30 son falsos positivos.
+- `modal-estructura-no-canonica` (29): prescribe clases canónicas que no existen en el repo (ver backlog).
+- `singleton-mutable-state` (8): corregido en la tarea 15A-1 (abajo); la regla sigue marcando el patrón en cualquier proyecto (ver backlog).
 
 ## Sesión 13AF-cont: cliente desktop window/document (commit `887f061`)
 
 - Migrados 8 archivos de `clients/desktop/src` a `@/platform/ventana` y `@/platform/documento` (17 sustituciones, sin cambio de comportamiento). Type-check desktop: 0 errores.
 - Gate `--cierre`: 0 nuevos, 2014 resueltos (base 2797, ahora 783).
 - Tablero KAMPLES tras el análisis: `window-reference-outside-platform` 5 y `dom-access-outside-platform` 0. Los 5 restantes son comentarios (falsos positivos ya anotados: `LandingPublica.tsx:45`, `useAuth.ts:183,196`, `usePlanesIsland.tsx:170`, `photonUrl.ts:8`).
-- Pendiente, en este orden: `directorio-abarrotado` (16 carpetas, reorganizar por dominio con reescritura de imports; no usar `directoryExceptions` para ocultarlo), `limite-lineas` (7) y `limite-lineas-nivel-2` (3), `css-especificacion-diseno-local` (103) y `css-adhoc-button-style` (41) con verificación visual en `kamples_verif`.
+- Pendiente, en este orden: → **superado, ver "Sesión 15A-1" al final de este documento** (`directorio-abarrotado`, `limite-lineas` y `limite-lineas-nivel-2` están a 0; los recuentos de `css-*` de esta línea son de 13AF).
 - Pendiente de anotar en el backlog de falsos positivos: `claseHuerfana` (140), `cssInlineReact` (81), `cssInlineScript` (40), `inline-style-prohibido` (69) cuando el origen sea estilo dinámico.
+
+## Sesión 15A-1 (falsos positivos y defectos de regla, recontado 2026-10-15)
+
+Base: análisis vigente del tablero, **756 hallazgos**. Reparto por zona (script `poregra.mjs`): árbol vivo 528, árbol muerto 13, vendorizado 215. Reglas con conteo por zona (`regla — vivo / muerto / vendido`):
+
+```
+css-especificacion-diseno-local      98 /  2 /   3
+cssInlineReact                       74 /  1 /   6
+inline-style-prohibido               68 /  0 /   0
+cssInlineScript                      40 /  0 /   0
+css-adhoc-button-style               33 /  0 /   8
+modal-estructura-no-canonica         29 /  2 /   0
+claseHuerfana                        25 /  4 / 112
+css-elemento-html-directo            22 /  3 /   5
+modal-semantica-no-canonica          12 /  0 /   0
+singleton-mutable-state               8 /  0 /   0
+modal-con-titulo                      8 /  0 /   0
+window-reference-outside-platform     5 /  0 /   0
+modal-acciones-no-canonico            4 /  0 /   0
+css-hardcoded-value                   1 /  0 /  75
+usestate-excesivo                     0 /  1 /   0
+valorHardcoded                        0 /  0 / 107
+```
+
+**Nada de esto se ha silenciado**: no hay `sentinel-disable-*`, ni exclusiones nuevas en `sentinel.config.json`, ni clases renombradas para esquivar un patrón. Cada punto de abajo es un defecto de la herramienta, con la evidencia mínima para reproducirlo.
+
+### Defectos de regla confirmados (a corregir en Sentinel/VarSense)
+
+1. **`css-especificacion-diseno-local` (98) — la regla se contradice con su propio mensaje.** En `src/analyzers/static/staticCssRules.ts`, `PROPIEDADES_DISENO_CSS` cuenta como "especificación visual" propiedades que son layout o estado: `padding`, `border`, `border-radius`, `text-align`, `opacity`, `transition`, `line-height`, `letter-spacing`. Pero el mensaje pide *"deja aquí solo layout contextual"*. Un bloque que solo tenga esas propiedades alcanza el umbral (`bloqueDefineEspecificacionDisenoLocal` corta con `length < 2`) y se marca, aunque el mensaje diga justo lo contrario. Ejemplo mínimo: `.adminHistorialItem` señalada por `(border-radius, padding, transition)`. A esto se suma `PATRONES_ROL_INTERACTIVO_LOCAL`, que casa **cualquier** clase terminada en `Trigger|Opcion|Option|Dropdown|Desplegable|SubMenu|Submenu|Menu|Panel|Lista|Item`, de modo que dispara sobre componentes de layout corrientes. *Arreglo:* sacar `padding`, `transition`, `opacity`, `text-align`, `line-height`, `letter-spacing` de la lista, o exigir al menos una propiedad de identidad visual (`color`, `background`, `font-family`, `box-shadow`) para llegar al umbral.
+
+2. **`modal-con-titulo` (8) y `css-elemento-html-directo` (22) se contradicen entre sí.** `modal-con-titulo` prohíbe `<h2>`/`<h3>` dentro de `<Modal>` ("Los modales no llevan titulo — contenido directo + modalAcciones solamente"). `css-elemento-html-directo` prescribe `className="modalTitulo"` para los `h1`/`h2` de cabecera, y entre sus casos vivos están `.dashboardHero h1`, `.feedCabecera h2`, `.seccionLegal h2`, `.authPanelSecundario h2`. No se puede satisfacer a las dos. *Arreglo:* decidir una única política de títulos (¿los modales llevan título o no?) y que la otra regla la respete.
+
+3. **La familia modal (53 en total: 29 + 12 + 8 + 4) prescribe un canon que no existe en el repo.** Las clases que la regla exige —`modalTexto`, `modalFormulario`, `ModalBody`, `ModalField`— tienen **cero ocurrencias** en todo KAMPLES. La regla debería comprobar que la receta canónica exista antes de exigirla.
+
+4. **`modal-acciones-no-canonico` (4) no es aplicable sin cambiar el render.** `.algoTimingAcciones` es byte-idéntica a `.modalAcciones`, pero adoptar el nombre canónico arrastra además `.modalAcciones > .botonBase { flex: 1 }`, que sí altera el layout. La regla asume que la clase canónica es solo un nombre, y no lo es.
+
+5. **`css-adhoc-button-style` (33) — 30 son falsos positivos.** El analizador solo ve CSS, no el JSX. 27 de las clases señaladas ya se pasan a `<BotonBase>` (`className="filtroColumnaBoton"` y compañía), que es exactamente la receta compartida que la regla dice que falta. Solo hay 3 casos reales, listados en "Trabajo real" abajo. *Arreglo:* cruzar la clase con su punto de uso en JSX antes de emitir.
+
+6. **`claseHuerfana` (25 vivo) no resuelve composición dinámica.** Las clases marcadas se aplican por mapa de objetos (`className={MAPA[tipo]}`) o por plantilla (una plantilla con `${v}` dentro de `className`), formas que el detector no sigue. (Ya anotado arriba; se mantiene.)
+
+7. **`window-reference-outside-platform` (5) dispara sobre comentarios.** Los 5 casos vivos son líneas de comentario: `LandingPublica.tsx:45`, `useAuth.ts:183,196`, `usePlanesIsland.tsx:170`, `photonUrl.ts:8`. El regex no descarta comentarios antes de barrer. *Arreglo:* analizar el texto sin comentarios.
+
+8. **`cssInlineScript` (40) mide algo distinto de lo que dice su nombre.** Dispara sobre `elemento.style.x = …` imperativo en hooks `.ts` (manipulación DOM legítima, fuera de React), no sobre estilos inline de JSX. O se renombra o se restringe a JSX.
+
+9. **`cssInlineReact` (74) + `inline-style-prohibido` (68) cuentan dos veces lo mismo.** En el árbol vivo solo hay 77 sitios reales de estilo inline en JSX y 76 son dinámicos (medidas y colores calculados), sin equivalente estático posible. La misma línea suma en las dos reglas. *Arreglo:* que `inline-style-prohibido` no cuente lo que ya cuenta `cssInlineReact`, y documentar que el estilo dinámico no tiene sustituto estático.
+
+10. **Todas las reglas de bloque CSS informan de la línea equivocada.** `verificarCssAdhocButtonStyle`, `verificarModalSemanticaNoCanonica`, `verificarCssEspecificacionDisenoLocal` y `css-hardcoded-value` usan `regexBloques = /([^{}]+)\{([^{}]*)\}/g` y calculan `linea = lineaBase + (selectorRaw.split('\n').length - 1)`, que da la línea del **cierre del bloque anterior**. Solo `verificarCssElementoHTMLDirecto` recorre línea a línea y acierta. *Arreglo:* derivar la línea del índice del `match` completo, no del selector.
+
+11. **`singleton-mutable-state` (8) marca el tipo del contenedor, no el estado mutable.** El patrón es `^\s*export\s+(?:const|let|var)\s+\w+\s*=\s*new\s+(?:Map|Set|WeakMap|WeakSet)\b`: dispara sobre listas de constantes exportadas (`new Set(['wav', 'mp3', 'flac', …])`) que ningún importador muta — verificado, los 8 solo se usan con `.has()`. El remedio propuesto ("mueve el estado a un store o ciclo de vida explícito") es desproporcionado para una tabla de constantes. *Arreglo:* exigir indicio de mutación (un `.add(`/`.set(`/`.delete(` sobre el identificador en el repo). **No es ruido puro, es discutible**: el contenedor sí es mutable de verdad y en KAMPLES se corrige de raíz (tarea 15A-1), pero la regla seguiría marcando el patrón en cualquier proyecto.
+
+12. **`valorHardcoded` (107) y `css-hardcoded-value` (75) viven casi enteros en el árbol vendorizado** (`glory-core/`, `glory-css/`), no en el árbol vivo.
+
+13. **Pendientes ya anotados arriba y aún vigentes:** el guard de 13AA-3 confunde el stem `paso`; el guard de comentarios marca `sentinel-disable-*` y comentarios explicativos; `--cierre` cuenta ramas retenidas como sueltas aunque estén integradas; el análisis no distingue tokens mecánicos (`--colorRgba-26-26-26-1`) de tokens semánticos; la excepción documentada de `logger.ts` no tiene forma de marcarse como aceptada.
+
+### Duplicación real que la regla destapó (mejora aparte, no de esta tarea)
+
+`EXTENSIONES_AUDIO` está definida tres veces con el mismo contenido: `clients/desktop/src/services/sync/varios-1/syncOrphanAnalysis.ts:17`, `.../varios-1/syncReconciliacion.ts:39` y `.../services/varios-1/fileWatcherService/fileWatcherConstantes.ts:6`. `CARPETAS_SISTEMA_SYNC` "espeja" `CARPETAS_SISTEMA_NO_COLECCION` (su propio comentario lo dice, `syncWatcherConstantes.ts:21`). Consolidarlas cruza dos árboles de servicios y no entra en 15A-1.
+
+### Trabajo real pendiente (no es falso positivo)
+
+- `css-adhoc-button-style`: los 3 casos reales.
+  - `.filtroColumnaBoton` con `<button>` crudo en `FiltroColumna.tsx:43` → pasar a `<BotonBase>`.
+  - `.comentarioEdicionBotones button`: selector de elemento sobre hijos que ya son `<BotonBase>`, en `listaComentarios.css:376` → quitar el selector de elemento.
+  - `.diagSyncBoton`: CSS muerto → borrar.
+- `css-especificacion-diseno-local` (98) y `css-elemento-html-directo` (22): **bloqueado en verificación visual**. Cambian render y AGENTS §5 exige evidencia real antes y después; el backend de KAMPLES en `127.0.0.1:3001` no arranca sin `.env` y `kamples_verif` no se ha levantado desde el reinicio del PC. Sin eso, tocarlas es adivinar.
+- Árbol muerto (tarea 15A-1): borrarlo retira 13 hallazgos y una regla entera (`usestate-excesivo` solo existe ahí).
+
+### 15A-1: borrado del shell huérfano — pendiente de ejecutar a mano
+
+El clasificador del auto-modo rechazó `git rm -r` como destrucción irreversible (dos intentos), pese a que la usuaria lo autorizó. El borrado queda a un comando suyo. Desde `KAMPLES/`:
+
+```bash
+git rm -r -q -- frontend/src/App.tsx frontend/src/App.css frontend/src/router.tsx frontend/src/app frontend/src/components frontend/src/pages frontend/src/hooks frontend/src/utils frontend/src/styles && git commit -m "chore(frontend): borrar shell SPA huerfano anterior a 204A-1"
+```
+
+Es recuperable: los 52 archivos están versionados hasta `97ae158`; para restaurar, `git checkout 97ae158 -- frontend/src/<ruta>`. **No incluye `frontend/src/api/`**, que sigue siendo el destino de Orval (`orval.config.ts` → `./src/api/generated`).
+
+Evidencia de que nada lo alcanza (2026-10-15):
+- `frontend/tsconfig.json` no incluye ninguna de esas rutas (`include`: `src/legacy`, `src/glory-core`, `src/mezclador`, `src/main.tsx`, `src/bootstrap`, `src/vite-env.d.ts`).
+- `frontend/index.html` carga solo `/src/main.tsx`, que arranca la hidratación de Glory (`islandRegistry.registerAll(appIslands)`), no `App.tsx`.
+- Ningún alias resuelve ahí: `@app`→`src/legacy`, `@`→`src/glory-core`, `@mezclador`, `@desktop`→`clients/desktop/src`.
+- Sin importadores externos: el grep de imports relativos (`./components|./pages|./hooks|./utils|./app`) solo devuelve coincidencias dentro de `App.tsx` y `router.tsx`, ambos parte del shell.
+- Efecto en el tablero: −13 hallazgos y desaparece la regla `usestate-excesivo` (su único caso vivo estaba ahí).
