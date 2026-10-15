@@ -63,16 +63,12 @@ CREATE TABLE IF NOT EXISTS follows (
 CREATE INDEX IF NOT EXISTS idx_follows_seguido  ON follows (seguido_id);
 CREATE INDEX IF NOT EXISTS idx_follows_seguidor ON follows (seguidor_id, seguido_id);
 
-CREATE TABLE IF NOT EXISTS colecciones_guardadas (
-    id              SERIAL PRIMARY KEY,
-    usuario_id      INTEGER NOT NULL REFERENCES usuarios_ext(id) ON DELETE CASCADE,
-    coleccion_id    INTEGER NOT NULL REFERENCES colecciones(id) ON DELETE CASCADE,
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    UNIQUE (usuario_id, coleccion_id)
-);
-
-CREATE INDEX IF NOT EXISTS idx_colecciones_guardadas_usuario   ON colecciones_guardadas (usuario_id);
-CREATE INDEX IF NOT EXISTS idx_colecciones_guardadas_coleccion ON colecciones_guardadas (coleccion_id);
+/* [15A-2] Aqui vivia la tabla legacy `colecciones_guardadas` (coleccion_id INTEGER
+ * REFERENCES colecciones(id)). Se elimina porque su FK apuntaba a una tabla que
+ * no existe todavia en este punto: `colecciones` la crea 20260418000030, muy
+ * posterior. La tabla canonica la crea 20260418000031 (DROP + CREATE, con
+ * coleccion_id BIGINT), asi que en una base nueva esto no cambia el resultado
+ * final y es lo que permite aplicar el juego de migraciones desde cero. */
 
 CREATE TABLE IF NOT EXISTS comentarios (
     id                 SERIAL PRIMARY KEY,
