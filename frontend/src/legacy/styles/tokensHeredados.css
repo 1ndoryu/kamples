@@ -100,9 +100,6 @@
   --colorTextoSuave: #9cb8b5;
   --colorVerdeTerminal: #8ae234;
   --font-heading: var(--fuentePrincipal);
-  --g-color-bg: var(--fondoBase);
-  --g-color-fg: var(--colorTexto);
-  --g-surface: var(--colorSuperficie);
   --medidaEm-0_9: 0.9em;
   --medidaEm-1: 1em;
   --medidaPx-100: 100px;
