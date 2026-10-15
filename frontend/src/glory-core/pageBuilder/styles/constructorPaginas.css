@@ -11,9 +11,9 @@
 .bloqueError {
     padding: 20px;
     background: rgba(239, 68, 68, 0.1);
-    border: 1px dashed #ef4444;
+    border: 1px dashed var(--colorRojoError);
     border-radius: 8px;
-    color: #ef4444;
+    color: var(--colorRojoError);
     text-align: center;
 }
 
@@ -39,13 +39,13 @@
     background: #1a1a1a;
     padding: 6px 8px;
     border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--colorRgba-255-255-255-0_1);
     z-index: 100;
 }
 
 .bloqueControlEtiqueta {
     color: #888;
-    font-size: 12px;
+    font-size: var(--fuenteSm);
     margin-right: 8px;
     display: flex;
     align-items: center;
@@ -57,8 +57,8 @@
     color: #fff;
     cursor: pointer;
     padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 14px;
+    border-radius: var(--radioSm);
+    font-size: var(--fuenteBase);
 }
 
 .botonControlBloque:disabled {
@@ -72,19 +72,19 @@
     color: #fff;
     cursor: pointer;
     padding: 4px 12px;
-    border-radius: 4px;
-    font-size: 12px;
+    border-radius: var(--radioSm);
+    font-size: var(--fuenteSm);
     font-weight: 500;
 }
 
 .botonEliminarBloque {
     background: transparent;
     border: none;
-    color: #ef4444;
+    color: var(--colorRojoError);
     cursor: pointer;
     padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 14px;
+    border-radius: var(--radioSm);
+    font-size: var(--fuenteBase);
 }
 
 .bloquesVacio {
@@ -99,10 +99,10 @@
     width: 100%;
     padding: 10px 12px;
     background: #1a1a1a;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--colorRgba-255-255-255-0_1);
     border-radius: 6px;
     color: #fff;
-    font-size: 14px;
+    font-size: var(--fuenteBase);
     outline: none;
     transition: border-color 0.2s;
 }
@@ -124,7 +124,7 @@
 
 .campoArrayItem {
     background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--hoverSutil);
     border-radius: 8px;
     padding: 12px;
 }
@@ -137,14 +137,14 @@
 }
 
 .campoArrayItemNumero {
-    font-size: 12px;
+    font-size: var(--fuenteSm);
     color: #888;
 }
 
 .botonEliminarItem {
     background: transparent;
     border: none;
-    color: #ef4444;
+    color: var(--colorRojoError);
     cursor: pointer;
     padding: 4px;
 }
@@ -157,7 +157,7 @@
 
 .campoArraySubEtiqueta {
     display: block;
-    font-size: 11px;
+    font-size: var(--fuenteXs);
     color: #888;
     margin-bottom: 4px;
     text-transform: uppercase;
@@ -169,12 +169,12 @@
     justify-content: center;
     gap: 6px;
     padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--hoverSutil);
     border: 1px dashed rgba(255, 255, 255, 0.2);
     border-radius: 6px;
     color: #888;
     cursor: pointer;
-    font-size: 13px;
+    font-size: var(--fuenteMd);
     transition: all 0.2s;
 }
 
@@ -193,7 +193,7 @@
 .modalOverlayError {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--colorRgba-0-0-0-0_8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -204,13 +204,13 @@
     background: #111;
     padding: 24px;
     border-radius: 12px;
-    color: #ef4444;
+    color: var(--colorRojoError);
 }
 
 .modalContenido {
     background: #0a0a0a;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--colorRgba-255-255-255-0_1);
     width: 100%;
     max-width: 600px;
     max-height: 90vh;
@@ -224,12 +224,12 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--colorRgba-255-255-255-0_1);
 }
 
 .modalTitulo {
     margin: 0;
-    font-size: 18px;
+    font-size: var(--fuenteLg);
     font-weight: 600;
     color: #fff;
 }
@@ -261,7 +261,7 @@
 
 .campoEtiqueta {
     display: block;
-    font-size: 13px;
+    font-size: var(--fuenteMd);
     font-weight: 500;
     color: #ccc;
     margin-bottom: 8px;
@@ -272,17 +272,17 @@
     justify-content: flex-end;
     gap: 12px;
     padding: 20px 24px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--colorRgba-255-255-255-0_1);
 }
 
 .botonCancelar {
     padding: 10px 20px;
     border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--colorRgba-255-255-255-0_1);
     background: transparent;
     color: #888;
     cursor: pointer;
-    font-size: 14px;
+    font-size: var(--fuenteBase);
 }
 
 .botonGuardar {
@@ -292,7 +292,7 @@
     background: #3b82f6;
     color: #fff;
     cursor: pointer;
-    font-size: 14px;
+    font-size: var(--fuenteBase);
     font-weight: 500;
 }
 

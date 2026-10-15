@@ -205,7 +205,7 @@
 
 .faderValor,
 .faderEtiqueta {
-    font-size: 10px;
+    font-size: var(--fuente2xs);
     line-height: 1;
     color: var(--textoSecundario);
 }
