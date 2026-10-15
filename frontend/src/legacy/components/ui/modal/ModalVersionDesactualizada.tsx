@@ -12,6 +12,7 @@
 
 import { ArrowUpCircle } from 'lucide-react';
 import { Modal } from './Modal';
+import { ModalAcciones } from './ModalAcciones';
 import { BotonBase } from '../boton/BotonBase';
 import { useVersionStore, type PlataformaApp } from '@app/stores/varios-4/versionStore';
 import { useT } from '@app/utils/i18n';
@@ -79,7 +80,7 @@ export const ModalVersionDesactualizada = (): JSX.Element | null => {
                     <p className="modalVersionNotas">{infoLatest.notes}</p>
                 )}
 
-                <div className="modalVersionAcciones">
+                <ModalAcciones>
                     <BotonBase variante="ghost" tamano="md" onClick={cerrarModal}>
                         {t('modal.actualizacion.omitir')}
                     </BotonBase>
@@ -88,7 +89,7 @@ export const ModalVersionDesactualizada = (): JSX.Element | null => {
                             {t('modal.actualizacion.actualizar')}
                         </BotonBase>
                     )}
-                </div>
+                </ModalAcciones>
             </div>
         </Modal>
     );

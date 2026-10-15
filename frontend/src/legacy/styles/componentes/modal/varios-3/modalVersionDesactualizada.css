@@ -66,12 +66,3 @@
     line-height: 1.5;
     margin: 0;
 }
-
-.modalVersionAcciones {
-    display: flex;
-    gap: var(--espacioSm);
-}
-
-.modalVersionAcciones > * {
-    flex: 1;
-}
