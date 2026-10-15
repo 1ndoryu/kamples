@@ -66,7 +66,6 @@ export const GraphEditor = ({
             </div>
 
             {/* Barras */}
-            {/* sentinel-disable-next-line key-index-lista */}
             <div className="graphEditorBarras" ref={containerRef}>
                 {canal.pasos.map((paso, i) => {
                     const valor = obtenerValorNormalizado(paso);

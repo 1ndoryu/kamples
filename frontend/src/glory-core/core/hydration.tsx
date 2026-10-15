@@ -34,7 +34,7 @@ export interface InitOptions {
 }
 
 const defaultSuspenseFallback = (
-    <div style={{ /* sentinel-disable inline-style-prohibido — fallback cargando framework Glory */ padding: '12px', textAlign: 'center', color: '#9ca3af', fontSize: '14px' }}>
+    <div className="gloryCargando">
         Cargando...
     </div>
 );

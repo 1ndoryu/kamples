@@ -17,9 +17,9 @@ export function DevOverlay({ islandName, props, children }: DevOverlayProps): JS
     const propsResumen = propsKeys.length > 0 ? propsKeys.join(', ') : 'sin props';
 
     return (
-        <div style={{ /* sentinel-disable inline-style-prohibido — dev overlay, solo visible en desarrollo */ position: 'relative' }}>
+        <div className="devOverlay">
             <div
-                style={{ /* sentinel-disable inline-style-prohibido */
+                style={{
                     position: 'absolute',
                     top: 0,
                     right: 0,

@@ -26,7 +26,6 @@ export const StepGrid = ({
 
     return (
         <div className="stepGrid">
-            {/* sentinel-disable-next-line key-index-lista */}
             {canal.pasos.map((paso, i) => (
                 <PasoBoton
                     key={`paso-${i}`}

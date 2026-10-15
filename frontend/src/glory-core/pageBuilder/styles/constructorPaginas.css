@@ -310,3 +310,67 @@
 #main-nav {
     background: var(--fondoNav);
 }
+
+/* [15A-15] Clases que sustituyen a los style={{}} inline de los componentes
+ * del page builder. Los valores que no tienen token de diseno se quedan
+ * literales a proposito: darles uno seria decidir un token nuevo, y eso es F3. */
+
+.pageBuilderVacio {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--colorGrisOscuro);
+}
+
+.pageBuilderPanel {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    text-align: center;
+}
+
+.pageBuilderPanelTitulo {
+    font-size: var(--fuenteSm);
+    color: var(--colorGrisOscuro);
+    margin-bottom: var(--espacioMd);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pageBuilderPanelTipos {
+    display: inline-flex;
+    gap: var(--espacioSm);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pageBuilderTipoMas {
+    opacity: 0.5;
+}
+
+.pageBuilderToolbarFila {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pageBuilderToolbarIzquierda {
+    display: flex;
+    align-items: center;
+    gap: var(--espacioLg);
+}
+
+.pageBuilderToolbarTitulo {
+    font-size: var(--fuenteBase);
+    font-weight: 500;
+    color: var(--colorBlancoPuro);
+}
+
+.pageBuilderContenido {
+    padding-top: 0;
+}
+
+.pageBuilderContenidoEnEdicion {
+    padding-top: var(--espacio3xl);
+}

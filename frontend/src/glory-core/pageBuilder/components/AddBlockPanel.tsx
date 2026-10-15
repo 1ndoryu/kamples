@@ -8,6 +8,7 @@
  */
 
 import {BlockRegistry} from '../BlockRegistry';
+import '../styles/constructorPaginas.css';
 
 interface AddBlockPanelProps {
     /** Callback al agregar un bloque */
@@ -26,53 +27,27 @@ export function AddBlockPanel({onAddBlock, title = 'Agregar Bloque', allowedType
 
     if (typesToShow.length === 0) {
         return (
-            <div
-                id="add-block-panel-empty"
-                style={{ /* sentinel-disable inline-style-prohibido — panel admin page builder, self-contained */
-                    padding: '40px 20px',
-                    textAlign: 'center',
-                    color: '#666'
-                }}>
+            <div id="add-block-panel-empty" className="pageBuilderVacio">
                 No hay tipos de bloque disponibles
             </div>
         );
     }
 
     return (
-        <div
-            id="add-block-panel"
-            style={{ /* sentinel-disable inline-style-prohibido */
-                maxWidth: '1200px',
-                margin: '0 auto',
-                padding: '24px',
-                textAlign: 'center'
-            }}>
+        <div id="add-block-panel" className="pageBuilderPanel">
             {title && (
-                <p
-                    style={{ /* sentinel-disable inline-style-prohibido */
-                        fontSize: '12px',
-                        color: '#666',
-                        marginBottom: '12px',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px'
-                    }}>
+                <p className="pageBuilderPanelTitulo">
                     {title}
                 </p>
             )}
 
-            <div
-                style={{ /* sentinel-disable inline-style-prohibido */
-                    display: 'inline-flex',
-                    gap: '8px',
-                    flexWrap: 'wrap',
-                    justifyContent: 'center'
-                }}>
+            <div className="pageBuilderPanelTipos">
                 {typesToShow.map(blockType => (
                     <button
                         key={blockType.type}
                         type="button"
                         onClick={() => onAddBlock(blockType.type)}
-                        style={{ /* sentinel-disable inline-style-prohibido */
+                        style={{
                             background: '#1a1a1a',
                             border: '1px solid rgba(255, 255, 255, 0.1)',
                             color: '#fff',
@@ -85,7 +60,7 @@ export function AddBlockPanel({onAddBlock, title = 'Agregar Bloque', allowedType
                             alignItems: 'center',
                             gap: '6px'
                         }}>
-                        <span style={{/* sentinel-disable inline-style-prohibido */ opacity: 0.5}}>+</span>
+                        <span className="pageBuilderTipoMas">+</span>
                         {blockType.label}
                     </button>
                 ))}

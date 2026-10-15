@@ -170,3 +170,31 @@
     border-radius: 1rem;
     object-fit: cover;
 }
+
+/* [15A-15] Clases que sustituyen a los style={{}} inline del runtime del
+ * framework (overlay de desarrollo, fallback de Suspense y paginas del
+ * PageRenderer). Usan los mismos tokens que el resto de la hoja. */
+
+.devOverlay {
+    position: relative;
+}
+
+.gloryCargando {
+    padding: var(--espacioMd);
+    text-align: center;
+    color: var(--colorRgba-156-163-175-1);
+    font-size: var(--fuenteBase);
+}
+
+.gloryPaginaVacia {
+    padding: 40px;
+    text-align: center;
+}
+
+.gloryPagina {
+    display: block;
+}
+
+.gloryPaginaOculta {
+    display: none;
+}

@@ -62,7 +62,7 @@ export class IslandErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
         if (import.meta.env.DEV) {
             return (
                 <div
-                    style={{ /* sentinel-disable inline-style-prohibido — error boundary dev UI */
+                    style={{
                         padding: '16px',
                         border: '2px solid #ef4444',
                         borderRadius: '8px',
@@ -74,7 +74,7 @@ export class IslandErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
                 >
                     <strong>Error en isla &quot;{this.props.islandName}&quot;</strong>
                     <pre
-                        style={{ /* sentinel-disable inline-style-prohibido */
+                        style={{
                             margin: '8px 0 0',
                             whiteSpace: 'pre-wrap',
                             wordBreak: 'break-word',
@@ -85,7 +85,7 @@ export class IslandErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
                     </pre>
                     <button
                         onClick={() => this.setState({ hasError: false, error: null })}
-                        style={{ /* sentinel-disable inline-style-prohibido */
+                        style={{
                             marginTop: '8px',
                             padding: '4px 12px',
                             border: '1px solid #dc2626',
@@ -105,7 +105,7 @@ export class IslandErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
         /* En produccion: fallback limpio con boton reintentar */
         return (
             <div
-                style={{ /* sentinel-disable inline-style-prohibido — error boundary prod fallback */
+                style={{
                     padding: '12px',
                     textAlign: 'center',
                     color: '#6b7280',
@@ -116,7 +116,7 @@ export class IslandErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
                 <br />
                 <button
                     onClick={() => this.setState({ hasError: false, error: null })}
-                    style={{ /* sentinel-disable inline-style-prohibido */
+                    style={{
                         marginTop: '8px',
                         padding: '4px 12px',
                         border: '1px solid #4b5563',

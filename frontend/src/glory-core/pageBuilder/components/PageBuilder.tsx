@@ -38,6 +38,7 @@ import {BlockEditorModal} from '../BlockEditorModal';
 import {PageBuilderToolbar} from './PageBuilderToolbar';
 import {EditModeToggle} from './EditModeToggle';
 import {AddBlockPanel} from './AddBlockPanel';
+import '../styles/constructorPaginas.css';
 import type {BlockData} from '../types';
 import {usePageBuilder} from '../hooks/usePageBuilder';
 
@@ -95,7 +96,7 @@ export function PageBuilder({blocks: initialBlocks, isAdmin = false, saveEndpoin
 
             {/* Contenido */}
             {/* Cast: @types/react 19 incluye bigint/Promise en ReactNode pero JSX no los acepta */}
-            <div style={{/* sentinel-disable inline-style-prohibido */ paddingTop: isEditMode && canEdit ? '48px' : '0'}}>{children ? (children(blocks, isEditMode) as unknown as React.ReactElement) : <BlockRenderer blocks={blocks} isEditMode={isEditMode && canEdit} selectedBlockId={selectedBlockId} onSelectBlock={setSelectedBlockId} onEditBlock={handleEditBlock} onMoveUp={handleMoveUp} onMoveDown={handleMoveDown} onDeleteBlock={handleDeleteBlock} />}</div>
+            <div className={isEditMode && canEdit ? 'pageBuilderContenido pageBuilderContenidoEnEdicion' : 'pageBuilderContenido'}>{children ? (children(blocks, isEditMode) as unknown as React.ReactElement) : <BlockRenderer blocks={blocks} isEditMode={isEditMode && canEdit} selectedBlockId={selectedBlockId} onSelectBlock={setSelectedBlockId} onEditBlock={handleEditBlock} onMoveUp={handleMoveUp} onMoveDown={handleMoveDown} onDeleteBlock={handleDeleteBlock} />}</div>
 
             {/* Panel agregar bloque */}
             {canEdit && isEditMode && <AddBlockPanel onAddBlock={handleAddBlock} allowedTypes={allowedBlockTypes} />}

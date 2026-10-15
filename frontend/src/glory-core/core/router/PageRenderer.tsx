@@ -38,7 +38,7 @@ interface PaginaCacheada {
 let contadorOrden = 0;
 
 const defaultFallback = (
-    <div style={{ /* sentinel-disable inline-style-prohibido — fallback cargando framework Glory */ padding: '12px', textAlign: 'center', color: '#9ca3af', fontSize: '14px' }}>
+    <div className="gloryCargando">
         Cargando...
     </div>
 );
@@ -113,7 +113,7 @@ export function PageRenderer({ suspenseFallback }: PageRendererProps): JSX.Eleme
 
     if (!islaActual) {
         return (
-            <div style={{ /* sentinel-disable inline-style-prohibido */ padding: '40px', textAlign: 'center' }}>
+            <div className="gloryPaginaVacia">
                 <h1>Pagina no encontrada</h1>
             </div>
         );
@@ -153,7 +153,7 @@ export function PageRenderer({ suspenseFallback }: PageRendererProps): JSX.Eleme
                     <div
                         key={pagina.islaId}
                         data-glory-page={pagina.islaId}
-                        style={{ /* sentinel-disable inline-style-prohibido */ display: esActiva ? 'block' : 'none' }}
+                        className={esActiva ? 'gloryPagina' : 'gloryPagina gloryPaginaOculta'}
                     >
                         <IslandErrorBoundary islandName={pagina.islaId} resetKey={pagina.orden}>
                             {contenido}
