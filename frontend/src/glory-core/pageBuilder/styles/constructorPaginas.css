@@ -304,9 +304,9 @@
 }
 
 #page-layout {
-    background: var(--fondoPagina, #050505);
+    background: var(--fondoPagina);
 }
 
 #main-nav {
-    background: var(--fondoNav, #050505cc);
+    background: var(--fondoNav);
 }

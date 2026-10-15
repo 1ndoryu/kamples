@@ -75,9 +75,9 @@
 /* Dropdown: lista de opciones */
 .selectorMenuDropdown {
     position: fixed;
-    top: var(--top, 0px);
-    left: var(--left, 0px);
-    min-width: var(--anchoMin, 160px);
+    top: var(--top);
+    left: var(--left);
+    min-width: var(--anchoMin);
     background-color: var(--fondoElevado1);
     border: 1px solid var(--bordeSutil);
     border-radius: var(--radioMd);

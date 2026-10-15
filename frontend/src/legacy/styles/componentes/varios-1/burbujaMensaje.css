@@ -83,7 +83,7 @@
 
 .burbujaAudioBarra {
     height: 100%;
-    width: var(--porcentaje, 0%);
+    width: var(--porcentaje);
     background: var(--acento);
     border-radius: calc(var(--espacioXs) / 2);
     transition: width 0.1s linear;

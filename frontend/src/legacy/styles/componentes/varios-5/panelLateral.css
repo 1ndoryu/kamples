@@ -6,7 +6,7 @@
 
 /* Panel contenedor — empuja del layout grid */
 .panelLateral {
-    width: var(--anchoPanelLateral, 360px);
+    width: var(--anchoPanelLateral);
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;

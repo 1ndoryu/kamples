@@ -6,6 +6,14 @@
  * carga `main.tsx`. Al borrar el shell (0f6a218) quedaron sin definicion y
  * VarSense los reporta como `variableNoDefinida`.
  *
+ * [15A-8] De los 113, 29 quedaron sin nadie que los leyera al borrarse
+ * `glory-css/settings-panel.css` (694 lineas, 76 clases, cero consumidores en
+ * un barrido de 1423 ficheros): eran los tokens en ingles de ese panel. Se
+ * quitan en vez de dejarlos declarados; barrido de todo el repo con limite de
+ * palabra exacto, 0 usos fuera de la propia definicion. Dos mas (`--radioGrande`
+ * y `--sombraGrande`) solo los leian `--radius-xl: var(--radioGrande)` y
+ * `--shadow-lg: var(--sombraGrande)`, ya borrados; se van con ellos.
+ *
  * Aqui van SOLO los que faltan, con el valor que tenian. Los nombres en ingles
  * (glory-css/, glory-core/) son alias por var() y siguen el tema actual; el
  * resto son colores y medidas del tema anterior, invariantes al tema.
@@ -13,20 +21,12 @@
  */
 :root {
   --aspect-ratio: 1 / 1;
-  --color-accent-green: var(--exito);
   --color-accent-hover: var(--acentoHover);
   --color-accent-primary: var(--acento);
   --color-bg-secondary: var(--fondoElevado1);
-  --color-bg-surface: var(--fondoElevado2);
   --color-border-primary: var(--bordeSutil);
-  --color-border-secondary: var(--bordeActivo);
-  --color-error: var(--error);
-  --color-focus-ring: var(--acento);
-  --color-success: var(--exito);
-  --color-text-muted: var(--textoTerciario);
   --color-text-primary: var(--textoPrimario);
   --color-text-secondary: var(--textoSecundario);
-  --color-warning: var(--advertencia);
   --colorAzulMedio: #3a3a6e;
   --colorAzulSuave: #4a4a7a;
   --colorBlancoPuro: #ffffff;
@@ -95,32 +95,11 @@
   --colorRgba-90-90-138-1: rgba(90, 90, 138, 1);
   --colorRgba-92-130-255-1: rgba(92, 130, 255, 1);
   --colorRojoError: #ef4444;
-  --colorSuperficie: rgba(10, 28, 37, 0.88);
   --colorTexto: #f3fbf7;
   --colorTextoSuave: #9cb8b5;
   --colorVerdeTerminal: #8ae234;
-  --font-heading: var(--fuentePrincipal);
   --medidaEm-0_9: 0.9em;
   --medidaEm-1: 1em;
   --medidaPx-100: 100px;
   --medidaPx-22: 22px;
-  --radioGrande: 28px;
-  --radius-lg: var(--radioLg);
-  --radius-md: var(--radioMd);
-  --radius-xl: var(--radioGrande);
-  --shadow-lg: var(--sombraGrande);
-  --shadow-sm: var(--sombraFlotante);
-  --sombraGrande: 0 24px 80px rgba(0, 0, 0, 0.34);
-  --spacing-3xl: var(--espacio3xl);
-  --spacing-lg: var(--espacioLg);
-  --spacing-md: var(--espacioMd);
-  --spacing-sm: var(--espacioSm);
-  --spacing-xl: var(--espacioXl);
-  --spacing-xs: var(--espacioXs);
-  --text-2xl: var(--fuente2xl);
-  --text-base: var(--fuenteMd);
-  --text-sm: var(--fuenteSm);
-  --text-xl: var(--fuenteXl);
-  --text-xs: var(--fuenteXs);
-  --transition-fast: var(--transicionRapida);
 }

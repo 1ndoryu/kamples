@@ -2,7 +2,7 @@
 
 .contenedorVisualizador {
     width: 100%;
-    height: var(--alto, 64px);
+    height: var(--alto);
     position: relative;
 }
 

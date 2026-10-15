@@ -12,8 +12,8 @@
 
 .menuContextual {
     position: fixed;
-    left: var(--left, 0px);
-    top: var(--top, 0px);
+    left: var(--left);
+    top: var(--top);
     min-width: 160px;
     max-width: 280px;
     max-height: 400px;

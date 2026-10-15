@@ -231,7 +231,7 @@
 .cadenaFlecha {
     color: var(--textoTerciario);
     flex-shrink: 0;
-    margin-left: var(--margenIzq, 8px);
+    margin-left: var(--margenIzq);
 }
 
 .cadenaNodo {

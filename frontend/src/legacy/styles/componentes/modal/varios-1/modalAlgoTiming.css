@@ -138,7 +138,7 @@
 
 /* Sangría variable según la profundidad del nodo del EXPLAIN */
 .algoTimingCeldaSangria {
-    padding-left: var(--sangria, 8px);
+    padding-left: var(--sangria);
 }
 
 .algoTimingCeldaMs {
@@ -175,7 +175,7 @@
 
 .algoTimingBarraRelleno {
     height: 100%;
-    width: var(--porcentaje, 0%);
+    width: var(--porcentaje);
     border-radius: var(--espacio2xs);
     transition: width var(--transicionNormal);
 }

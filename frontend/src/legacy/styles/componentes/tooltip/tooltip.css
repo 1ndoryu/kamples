@@ -5,8 +5,8 @@
 
 .tooltipContenido {
     position: fixed;
-    top: var(--top, 0px);
-    left: var(--left, 0px);
+    top: var(--top);
+    left: var(--left);
     z-index: 9999;
     padding: 0.35rem 0.6rem;
     background: var(--fondoElevado3);

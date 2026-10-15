@@ -129,7 +129,7 @@
 
 .dashboardGraficaBarra {
     flex: 1;
-    height: var(--altura, 0%);
+    height: var(--altura);
     background: var(--fondoElevado3);
     border-radius: calc(var(--espacioXs) / 2) calc(var(--espacioXs) / 2) 0 0;
     min-height: 2px;
