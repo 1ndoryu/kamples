@@ -152,15 +152,88 @@
     touch-action: none;
 }
 
+/*
+ * [15A-4] El fader no tenia hoja de estilo: todo su aspecto vivia en estilos
+ * inline del componente. Aqui queda lo que no cambia (medidas, formas) y los
+ * valores que calcula el componente llegan como custom properties:
+ *   --altoFader  alto del recorrido en px
+ *   --nivelFader relleno activo (0%..100%)
+ *   --colorFader color del relleno; por defecto el acento del tema
+ */
+.faderTrack {
+    position: relative;
+    width: 8px;
+    height: var(--altoFader, 120px);
+    background: var(--bordeSutil);
+    border-radius: var(--radiusMezclador);
+    cursor: ns-resize;
+}
+
+.faderTrackFondo {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radiusMezclador);
+}
+
+.faderTrackRelleno {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--nivelFader, 0%);
+    background: var(--colorFader, var(--acento));
+    border-radius: var(--radiusMezclador);
+}
+
+.faderThumb {
+    position: absolute;
+    left: -4px;
+    width: 16px;
+    height: 8px;
+    bottom: var(--nivelFader, 0%);
+    margin-bottom: -4px;
+    background: var(--textoPrimario);
+    border: 1px solid var(--bordeSutil);
+    border-radius: var(--radiusMezclador);
+}
+
+.faderControlArrastrando .faderThumb {
+    background: var(--acento);
+}
+
+.faderValor,
+.faderEtiqueta {
+    font-size: 10px;
+    line-height: 1;
+    color: var(--textoSecundario);
+}
+
 /* Peak Meter */
 .peakMeter {
     display: flex;
     gap: 1px;
     align-items: flex-end;
+    /*
+     * Escala del medidor: es propia del DAW, no del sistema de diseno, asi que
+     * vive aqui y no en variables.css.
+     */
+    --medidorBajo: #44cc44;
+    --medidorMedio: #88cc44;
+    --medidorAlto: #ffaa00;
+    --medidorSaturado: #ff4444;
+    height: var(--altoMedidor, 100px);
+}
+
+.peakMeterCanal {
+    display: flex;
+    align-items: flex-end;
+    height: 100%;
 }
 
 .peakMeterBarra {
     width: 4px;
+    height: var(--nivelBarra, 0%);
+    background: var(--colorBarra, var(--medidorBajo));
     border-radius: var(--radiusMezclador);
     transition: height 0.05s linear;
     min-height: 1px;

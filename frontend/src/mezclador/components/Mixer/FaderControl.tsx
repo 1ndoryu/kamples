@@ -4,6 +4,7 @@
  */
 
 import { useCallback, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { cuerpoDocumento } from '../../../glory-core/platform/documento';
 
 interface FaderControlProps {
@@ -25,7 +26,7 @@ export const FaderControl = ({
     onChange,
     etiqueta,
     alto = 120,
-    color = 'var(--acento, #6c63ff)',
+    color = 'var(--acento)',
 }: FaderControlProps): JSX.Element => {
     const [arrastrando, setArrastrando] = useState(false);
     const trackRef = useRef<HTMLDivElement>(null);
@@ -75,7 +76,11 @@ export const FaderControl = ({
             <div
                 ref={trackRef}
                 className="faderTrack"
-                style={{ height: alto }}
+                style={{
+                    '--altoFader': `${alto}px`,
+                    '--nivelFader': `${porcentaje}%`,
+                    '--colorFader': color,
+                } as CSSProperties}
                 onMouseDown={iniciarDrag}
                 onDoubleClick={alDobleClick}
             >
@@ -83,16 +88,10 @@ export const FaderControl = ({
                 <div className="faderTrackFondo" />
 
                 {/* Relleno activo */}
-                <div
-                    className="faderTrackRelleno"
-                    style={{ height: `${porcentaje}%`, backgroundColor: color }}
-                />
+                <div className="faderTrackRelleno" />
 
                 {/* Thumb / manija */}
-                <div
-                    className="faderThumb"
-                    style={{ bottom: `${porcentaje}%` }}
-                />
+                <div className="faderThumb" />
             </div>
 
             {/* Valor numérico */}

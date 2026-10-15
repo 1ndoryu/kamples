@@ -5,6 +5,7 @@
  */
 
 import { memo } from 'react';
+import type { CSSProperties } from 'react';
 
 interface PeakMeterProps {
     peakL: number;
@@ -12,12 +13,12 @@ interface PeakMeterProps {
     alto?: number;
 }
 
-/* Mapear nivel (0-1) a color gradiente */
-const nivelAColor = (nivel: number): string => {
-    if (nivel > 0.9) return '#ff4444';
-    if (nivel > 0.7) return '#ffaa00';
-    if (nivel > 0.5) return '#88cc44';
-    return '#44cc44';
+/* Nivel (0-1) → token de la escala del medidor, definida en mezcladorMixer.css */
+const nivelAToken = (nivel: number): string => {
+    if (nivel > 0.9) return 'var(--medidorSaturado)';
+    if (nivel > 0.7) return 'var(--medidorAlto)';
+    if (nivel > 0.5) return 'var(--medidorMedio)';
+    return 'var(--medidorBajo)';
 };
 
 export const PeakMeter = memo(({
@@ -29,15 +30,15 @@ export const PeakMeter = memo(({
     const alturaR = Math.min(100, peakR * 100);
 
     return (
-        <div className="peakMeter" style={{ height: alto }}>
+        <div className="peakMeter" style={{ '--altoMedidor': `${alto}px` } as CSSProperties}>
             {/* Canal izquierdo */}
             <div className="peakMeterCanal">
                 <div
                     className="peakMeterBarra"
                     style={{
-                        height: `${alturaL}%`,
-                        backgroundColor: nivelAColor(peakL),
-                    }}
+                        '--nivelBarra': `${alturaL}%`,
+                        '--colorBarra': nivelAToken(peakL),
+                    } as CSSProperties}
                 />
             </div>
 
@@ -46,9 +47,9 @@ export const PeakMeter = memo(({
                 <div
                     className="peakMeterBarra"
                     style={{
-                        height: `${alturaR}%`,
-                        backgroundColor: nivelAColor(peakR),
-                    }}
+                        '--nivelBarra': `${alturaR}%`,
+                        '--colorBarra': nivelAToken(peakR),
+                    } as CSSProperties}
                 />
             </div>
         </div>

@@ -225,9 +225,11 @@
     z-index: 10;
     pointer-events: none;
     /*
-     * C222: Calcular left alineado al área de contenido (después de 80px de controles).
-     * Se usa --cursorPorcentaje via inline style.
+     * C222: left alineado al área de contenido (después de 80px de controles).
+     * La fracción de reproducción (0..1) llega como --cursorFraccion desde el
+     * componente; aquí vive el cálculo, que es lo que no cambia.
      */
+    left: calc(80px + (100% - 80px) * var(--cursorFraccion, 0));
 }
 
 .mezcladorCursorLinea {

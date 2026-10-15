@@ -3,6 +3,7 @@
  * Se mueve suavemente durante la reproducción, clickeable para seek
  */
 
+import type { CSSProperties } from 'react';
 import { useMezcladorStore } from '../../stores/varios-1/mezcladorStore';
 import { segundosACompases } from '../../utils/compasUtils';
 
@@ -26,7 +27,7 @@ export const CursorReproduccion = (): JSX.Element => {
     return (
         <div
             className="mezcladorCursorReproduccion"
-            style={{ left: `calc(80px + (100% - 80px) * ${fraccion})` }}
+            style={{ '--cursorFraccion': fraccion } as CSSProperties}
         >
             <div className="mezcladorCursorLinea" />
             <div className="mezcladorCursorCabeza" />
