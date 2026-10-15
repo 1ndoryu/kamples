@@ -22,7 +22,7 @@ import {SeccionAdminVersiones} from '../seccion/SeccionAdminVersiones';
 import {useGenerosModalStore} from '@app/stores/varios-2/generosModalStore';
 import {abrirEnlaceExterno} from '@app/utils/varios-1/plataforma';
 import {useReproductorStore} from '@app/stores/varios-3/reproductorStore';
-import {invalidarCacheFeed} from '@app/utils/varios-1/cacheFeedPersistente';
+import {invalidarCacheFeed} from '@app/utils/persistencia/cacheFeedPersistente';
 import {CampoTexto} from '../../ui/varios-1/CampoTexto';
 import {Input} from '../../ui/input/Input';
 import {useT} from '@app/utils/i18n';

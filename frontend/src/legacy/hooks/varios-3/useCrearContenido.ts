@@ -149,16 +149,18 @@ export const useCrearContenido = (opciones: UseCrearContenidoOpciones = {}) => {
         setReproduciendoPreview(false);
         setProgresoPreview(0);
         quitarPortada();
-        if (textareaRef.current) textareaRef.current.style.height = 'auto';
+        if (textareaRef.current) textareaRef.current.style.setProperty('--altoTextarea', 'auto');
     }, [resetearArchivos]);
 
     /* Auto-resize textarea */
     const ajustarAltura = useCallback(() => {
         const el = textareaRef.current;
         if (!el) return;
-        el.style.height = 'auto';
+        /* [15A-9] La altura la consume `.crearTextarea` (modalCrear.css) como
+         * custom property; `auto` es el estado de partida para poder medir. */
+        el.style.setProperty('--altoTextarea', 'auto');
         const linea = 20, min = linea * 2, max = linea * 6;
-        el.style.height = `${Math.min(Math.max(el.scrollHeight, min), max)}px`;
+        el.style.setProperty('--altoTextarea', `${Math.min(Math.max(el.scrollHeight, min), max)}px`);
     }, []);
 
     const manejarCambioTexto = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {

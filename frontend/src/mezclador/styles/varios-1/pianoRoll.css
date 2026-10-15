@@ -218,8 +218,10 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    /* [15A-9] El tamano lo fija `useReglaTemporal` como custom property; el
+     * 100% es solo el valor de partida antes de que corra el JS. */
+    width: var(--anchoCanvas, 100%);
+    height: var(--altoCanvas, 100%);
 }
 
 /* GRID DE NOTAS */
@@ -235,6 +237,10 @@
     position: absolute;
     top: 0;
     left: 0;
+    /* [15A-9] El tamano lo fija `usePianoRollGrid` como custom property; el
+     * 100% es solo el valor de partida antes de que corra el JS. */
+    width: var(--anchoCanvas, 100%);
+    height: var(--altoCanvas, 100%);
     pointer-events: none;
     z-index: 0;
 }
@@ -491,8 +497,10 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    /* [15A-9] El tamano lo fija `useMinimapaPianoRoll` como custom property; el
+     * 100% es solo el valor de partida antes de que corra el JS. */
+    width: var(--anchoCanvas, 100%);
+    height: var(--altoCanvas, 100%);
 }
 
 /* MENU CONTEXTUAL */

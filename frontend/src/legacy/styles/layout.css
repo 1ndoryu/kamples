@@ -163,3 +163,36 @@ body.plataformaAndroid {
     min-height: 100vh;
     margin: 0 auto;
 }
+
+/* [15A-9] Cursor de arrastre: el elemento lo pide por atributo en vez de
+ * escribir `style.cursor`/`style.userSelect` desde JS. Los pone
+ * `utils/varios-1/cursorArrastre.ts`. */
+[data-cursor-arrastre='agarrando'] {
+    cursor: grabbing;
+    user-select: none;
+}
+
+[data-cursor-arrastre='columna'] {
+    cursor: col-resize;
+    user-select: none;
+}
+
+[data-cursor-arrastre='ancho'] {
+    cursor: ew-resize;
+    user-select: none;
+}
+
+[data-cursor-arrastre='alto'] {
+    cursor: ns-resize;
+    user-select: none;
+}
+
+/* [15A-9] Textarea de un solo uso para el fallback de copiado
+ * (`services/clipboard/clipboard.ts`): fuera de pantalla y sin pintar, pero
+ * presente en el DOM y enfocable, que es lo que necesita `execCommand('copy')`. */
+.portapapelesOculto {
+    position: fixed;
+    top: -9999px;
+    left: -9999px;
+    opacity: 0;
+}

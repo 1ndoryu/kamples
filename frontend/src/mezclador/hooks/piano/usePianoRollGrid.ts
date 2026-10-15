@@ -41,8 +41,10 @@ export function usePianoRollGrid({
         const dpr = window.devicePixelRatio || 1;
         canvas.width = anchoVisible * dpr;
         canvas.height = alturaVisible * dpr;
-        canvas.style.width = `${anchoVisible}px`;
-        canvas.style.height = `${alturaVisible}px`;
+        /* [15A-9] El tamano CSS del canvas va como custom property; lo lee
+         * `.pianoRollGridCanvas` en `mezclador/styles/varios-1/pianoRoll.css`. */
+        canvas.style.setProperty('--anchoCanvas', `${anchoVisible}px`);
+        canvas.style.setProperty('--altoCanvas', `${alturaVisible}px`);
 
         const ctx = canvas.getContext('2d');
         if (!ctx) return;

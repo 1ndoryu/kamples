@@ -59,8 +59,10 @@ export const useMinimapaPianoRoll = ({
         const dpr = window.devicePixelRatio || 1;
         canvas.width = ancho * dpr;
         canvas.height = altura * dpr;
-        canvas.style.width = `${ancho}px`;
-        canvas.style.height = `${altura}px`;
+        /* [15A-9] El tamano CSS del canvas va como custom property; lo lee
+         * `.pianoRollMinimapaCanvas` en `mezclador/styles/varios-1/pianoRoll.css`. */
+        canvas.style.setProperty('--anchoCanvas', `${ancho}px`);
+        canvas.style.setProperty('--altoCanvas', `${altura}px`);
 
         const ctx = canvas.getContext('2d');
         if (!ctx) return;

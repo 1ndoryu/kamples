@@ -28,7 +28,7 @@ import { useFeedFiltros } from '@app/hooks/feed/useFeedFiltros';
 import { useFeedArrastreTags } from '@app/hooks/feed/useFeedArrastreTags';
 import { usePaginacionProgresiva } from '@app/hooks/varios-6/usePaginacionProgresiva';
 import { useFeedLikes } from '@app/hooks/feed/useFeedLikes';
-import { leerCacheFeed, guardarCacheFeed, leerTotalCacheFeed, invalidarCacheFeed as limpiarCachePersistente } from '@app/utils/varios-1/cacheFeedPersistente';
+import { leerCacheFeed, guardarCacheFeed, leerTotalCacheFeed, invalidarCacheFeed as limpiarCachePersistente } from '@app/utils/persistencia/cacheFeedPersistente';
 import { useFeedRefresco } from '@app/hooks/feed/useFeedRefresco';
 import type { SampleResumen } from '@app/types';
 import { requiereAuth } from '@app/utils/varios-1/requiereAuth';

@@ -26,9 +26,9 @@ import {
     coincideBusquedaColeccion,
     ordenarColecciones,
     construirArbolEstricto,
-} from '@app/utils/varios-1/libreriaColecciones';
+} from '@app/utils/persistencia/libreriaColecciones';
 import type { Coleccion } from '@app/types';
-import type { OrdenColecciones, VistaColecciones } from '@app/utils/varios-1/libreriaColecciones';
+import type { OrdenColecciones, VistaColecciones } from '@app/utils/persistencia/libreriaColecciones';
 
 const log = crearLogger('LibreriaIsland');
 export type { OrdenColecciones, VistaColecciones };

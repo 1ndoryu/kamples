@@ -109,8 +109,10 @@ export const useMinimapaDaw = (timelineRef: React.RefObject<HTMLDivElement>) => 
     const actualizarViewportDOM = useCallback((vLeft: number, vFrac: number) => {
         const el = viewportRef.current;
         if (!el) return;
-        el.style.left = `${vLeft * 100}%`;
-        el.style.width = `${vFrac * 100}%`;
+        /* [15A-9] `mezcladorTimeline.css` ya lee estas dos custom properties
+         * en `.minimapaViewport`: el hook solo las escribe. */
+        el.style.setProperty('--viewportIzquierda', `${vLeft * 100}%`);
+        el.style.setProperty('--viewportAncho', `${vFrac * 100}%`);
     }, []);
 
     /* Iniciar drag — lee siempre del DOM para evitar stale closures */

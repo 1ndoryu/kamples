@@ -336,9 +336,6 @@ function esperarUmbralDrag(origenX: number, origenY: number, umbral: number): Pr
             <span>${sample.titulo.length > 25 ? sample.titulo.slice(0, 25) + '...' : sample.titulo}</span>
         `;
         cuerpoDocumento().appendChild(preview);
-        preview.style.position = 'fixed';
-        preview.style.top = '-200px';
-        preview.style.left = '-200px';
         e.dataTransfer.setDragImage(preview, 20, 16);
         requestAnimationFrame(() => cuerpoDocumento().removeChild(preview));
     }, [sample]);

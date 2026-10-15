@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { BloqueMezclador } from '../../types/mezclador';
 import { anchoBloquePorc, posicionBloquePorc, snapABeat, snapConResolucion } from '../../utils/compasUtils';
 import { useMezcladorStore } from '../../stores/varios-1/mezcladorStore';
+import { activarCursorArrastre, desactivarCursorArrastre } from '@app/utils/varios-1/cursorArrastre';
 import { cuerpoDocumento } from '../../../glory-core/platform/documento';
 
 interface UseBloqueSampleParams {
@@ -62,8 +63,7 @@ export const useBloqueSample = ({
         };
         resizingRef.current = true;
         setResizing(true);
-        cuerpoDocumento().style.cursor = 'ew-resize';
-        cuerpoDocumento().style.userSelect = 'none';
+        activarCursorArrastre(cuerpoDocumento(), 'ancho');
     }, [bloque.duracionCompases, guardarSnapshot, fijarTotalExtendido]);
 
     /* Document listeners para resize */
@@ -87,8 +87,7 @@ export const useBloqueSample = ({
             setResizing(false);
             /* C296: Descongelar total extendido */
             desfijarTotalExtendido();
-            cuerpoDocumento().style.cursor = '';
-            cuerpoDocumento().style.userSelect = '';
+            desactivarCursorArrastre(cuerpoDocumento());
         };
 
         document.addEventListener('mousemove', mover);

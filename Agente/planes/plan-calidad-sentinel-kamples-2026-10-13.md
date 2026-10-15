@@ -106,7 +106,7 @@ Línea base: `Arranque gate "KAMPLES" --inicio` (hallazgos guardados en `workspa
 
 Falsos positivos y huecos de herramientas, para el final (actualizar workspace-manager/Sentinel/VarSense):
 
-- Vendorizado: hallazgos en `frontend/src/glory-core/` y `glory-css/` (no se editan).
+- ~~Vendorizado: hallazgos en `frontend/src/glory-core/` y `glory-css/` (no se editan).~~ **CORREGIDO el 2026-10-15 (15A-9): `glory-core/` no es vendorizado.** Lo importa `main.tsx:22` (alias `@`), su encabezado dice que 204A-1 adaptó las rutas a copias locales, y el theme de WordPress de origen ya no existe: es código de primera parte. Lo que bloquea sus 101 hallazgos de diseño en `constructorPaginas.css` es el render, no la procedencia. Fuente: `roadmap.md`, 15A-9.
 - `token-duplicado-cross-archivo` en `tokens.css:23-24` (`--fondoElevado2/3: var(--fondoElevado1)`): falso positivo, son alias por `var()`, no valores duplicados; la herramienta no distingue alias de literal repetido.
 - `valorHardcoded` marca `var(--x, #literal)` como literal hardcodeado: el fallback no es un valor de diseño. Falso positivo parcial; la herramienta debería ignorar el fallback.
 - `valorHardcoded` no cubre el shorthand `border:` con color hex (solo `border-color`): hueco de cobertura, no falso positivo.

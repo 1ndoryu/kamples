@@ -11,10 +11,7 @@ import { crearElemento, cuerpoDocumento } from '@/platform/documento';
 function copiarConFallback(texto: string): boolean {
     const textarea = crearElemento('textarea');
     textarea.value = texto;
-    textarea.style.position = 'fixed';
-    textarea.style.left = '-9999px';
-    textarea.style.top = '-9999px';
-    textarea.style.opacity = '0';
+    textarea.className = 'portapapelesOculto';
     cuerpoDocumento().appendChild(textarea);
     textarea.focus();
     textarea.select();

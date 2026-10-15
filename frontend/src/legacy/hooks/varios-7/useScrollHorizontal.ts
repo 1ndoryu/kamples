@@ -5,6 +5,7 @@
  */
 
 import { useRef, useState, useCallback, useEffect } from 'react';
+import { activarCursorArrastre, desactivarCursorArrastre } from '@app/utils/varios-1/cursorArrastre';
 
 export function useScrollHorizontal(cantidadScroll = 300) {
     const contenedorRef = useRef<HTMLDivElement>(null);
@@ -44,8 +45,7 @@ export function useScrollHorizontal(cantidadScroll = 300) {
         const el = contenedorRef.current;
         if (!el) return;
         arrastreRef.current = { activo: true, inicioX: clientX, scrollInicio: el.scrollLeft };
-        el.style.cursor = 'grabbing';
-        el.style.userSelect = 'none';
+        activarCursorArrastre(el, 'agarrando');
     }, []);
 
     const moverArrastre = useCallback((clientX: number) => {
@@ -60,8 +60,7 @@ export function useScrollHorizontal(cantidadScroll = 300) {
         arrastreRef.current.activo = false;
         const el = contenedorRef.current;
         if (el) {
-            el.style.cursor = '';
-            el.style.userSelect = '';
+            desactivarCursorArrastre(el);
         }
     }, []);
 

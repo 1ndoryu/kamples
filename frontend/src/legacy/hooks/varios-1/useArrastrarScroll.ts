@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useRef, type RefObject } from 'react';
+import { activarCursorArrastre, desactivarCursorArrastre } from '@app/utils/varios-1/cursorArrastre';
 
 const UMBRAL_DRAG = 5;
 
@@ -29,8 +30,7 @@ export function useArrastrarScroll<T extends HTMLElement>(): RefObject<T> {
             arrastrado = false;
             startX = clientX;
             scrollLeft = el.scrollLeft;
-            el.style.cursor = 'grabbing';
-            el.style.userSelect = 'none';
+            activarCursorArrastre(el, 'agarrando');
         };
 
         const mover = (clientX: number) => {
@@ -43,8 +43,7 @@ export function useArrastrarScroll<T extends HTMLElement>(): RefObject<T> {
         const terminar = () => {
             if (!activo) return;
             activo = false;
-            el.style.cursor = '';
-            el.style.userSelect = '';
+            desactivarCursorArrastre(el);
         };
 
         const onMouseDown = (e: MouseEvent) => {

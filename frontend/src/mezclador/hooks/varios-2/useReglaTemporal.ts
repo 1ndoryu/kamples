@@ -31,8 +31,10 @@ export const useReglaTemporal = ({
 
         canvas.width = ancho * dpr;
         canvas.height = alto * dpr;
-        canvas.style.width = `${ancho}px`;
-        canvas.style.height = `${alto}px`;
+        /* [15A-9] El tamano CSS del canvas va como custom property; lo lee
+         * `.pianoRollReglaCanvas` en `mezclador/styles/varios-1/pianoRoll.css`. */
+        canvas.style.setProperty('--anchoCanvas', `${ancho}px`);
+        canvas.style.setProperty('--altoCanvas', `${alto}px`);
 
         const ctx = canvas.getContext('2d');
         if (!ctx) return;

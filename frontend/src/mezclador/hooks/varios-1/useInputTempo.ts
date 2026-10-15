@@ -5,6 +5,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { activarCursorArrastre, desactivarCursorArrastre } from '@app/utils/varios-1/cursorArrastre';
 import { cuerpoDocumento } from '../../../glory-core/platform/documento';
 
 interface UseInputTempoParams {
@@ -56,7 +57,7 @@ export const useInputTempo = ({
             valorInicial: valor,
             shift: e.shiftKey,
         };
-        cuerpoDocumento().style.cursor = 'ns-resize';
+        activarCursorArrastre(cuerpoDocumento(), 'alto');
     }, [editando, valor]);
 
     /* Listeners globales para drag */
@@ -73,7 +74,7 @@ export const useInputTempo = ({
         const soltar = () => {
             if (dragRef.current.activo) {
                 dragRef.current.activo = false;
-                cuerpoDocumento().style.cursor = '';
+                desactivarCursorArrastre(cuerpoDocumento());
             }
         };
 

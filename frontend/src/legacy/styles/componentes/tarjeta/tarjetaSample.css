@@ -267,6 +267,11 @@
  * Se crea dinámicamente en JS y se usa con setDragImage().
  */
 .dragPreviewSample {
+    /* [15A-9] El preview de arrastre se crea fuera de pantalla en JS; su
+     * posicion vive aqui y no en `style` inline. */
+    position: fixed;
+    top: -200px;
+    left: -200px;
     display: inline-flex;
     align-items: center;
     gap: var(--espacioSm);

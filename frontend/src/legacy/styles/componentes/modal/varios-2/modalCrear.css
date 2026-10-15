@@ -108,6 +108,9 @@
     width: 100%;
     min-height: 40px;
     max-height: 120px;
+    /* [15A-9] La fija `useCrearContenido` midiendo el contenido; `auto` es el
+     * valor de partida (una linea) antes de la primera medicion. */
+    height: var(--altoTextarea, auto);
     resize: none;
     background: transparent;
     border: none;

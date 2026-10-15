@@ -8,6 +8,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePanelLateralStore } from '@app/stores/varios-2/panelLateralStore';
 import { useReproductorStore } from '@app/stores/varios-3/reproductorStore';
 import { crearLogger } from '@app/services/varios-1/logger';
+import { activarCursorArrastre, desactivarCursorArrastre } from '@app/utils/varios-1/cursorArrastre';
 import { anchoVentana } from '@/platform/ventana';
 import { cuerpoDocumento } from '@/platform/documento';
 
@@ -48,8 +49,7 @@ export const usePanelLateral = () => {
     const iniciarResize = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
         resizingRef.current = true;
-        cuerpoDocumento().style.cursor = 'col-resize';
-        cuerpoDocumento().style.userSelect = 'none';
+        activarCursorArrastre(cuerpoDocumento(), 'columna');
 
         const mover = (ev: MouseEvent) => {
             if (!resizingRef.current) return;
@@ -61,8 +61,7 @@ export const usePanelLateral = () => {
 
         const soltar = () => {
             resizingRef.current = false;
-            cuerpoDocumento().style.cursor = '';
-            cuerpoDocumento().style.userSelect = '';
+            desactivarCursorArrastre(cuerpoDocumento());
             document.removeEventListener('mousemove', mover);
             document.removeEventListener('mouseup', soltar);
             /* Guardar en localStorage */
