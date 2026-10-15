@@ -97,8 +97,8 @@ export async function reconciliarEstructuraCarpetas(): Promise<void> {
         for (const entrada of entradas) {
             if (!entrada.name || !entrada.isDirectory) continue;
             const nombreLower = entrada.name.toLowerCase();
-            if (CARPETAS_SISTEMA_SYNC.has(nombreLower)) continue;
-            if (CARPETAS_EXCLUIDAS_SCAN.has(nombreLower)) continue;
+            if (CARPETAS_SISTEMA_SYNC.includes(nombreLower)) continue;
+            if (CARPETAS_EXCLUIDAS_SCAN.includes(nombreLower)) continue;
             carpetasEnDisco.add(entrada.name);
         }
 
@@ -166,8 +166,8 @@ export async function reconciliarEstructuraCarpetas(): Promise<void> {
         for (const entrada of entradas) {
             if (!entrada.name || !entrada.isDirectory) continue;
             const nombreLower = entrada.name.toLowerCase();
-            if (CARPETAS_SISTEMA_SYNC.has(nombreLower)) continue;
-            if (CARPETAS_EXCLUIDAS_SCAN.has(nombreLower)) continue;
+            if (CARPETAS_SISTEMA_SYNC.includes(nombreLower)) continue;
+            if (CARPETAS_EXCLUIDAS_SCAN.includes(nombreLower)) continue;
 
             const padre = tracking.buscarColeccionPorCarpeta(entrada.name);
             if (!padre) continue;
@@ -183,8 +183,8 @@ export async function reconciliarEstructuraCarpetas(): Promise<void> {
             const subsEnDisco = new Set<string>();
             for (const sub of subEntradas) {
                 if (!sub.name || !sub.isDirectory) continue;
-                if (CARPETAS_SISTEMA_SYNC.has(sub.name.toLowerCase())) continue;
-                if (CARPETAS_EXCLUIDAS_SCAN.has(sub.name.toLowerCase())) continue;
+                if (CARPETAS_SISTEMA_SYNC.includes(sub.name.toLowerCase())) continue;
+                if (CARPETAS_EXCLUIDAS_SCAN.includes(sub.name.toLowerCase())) continue;
                 subsEnDisco.add(sub.name);
             }
 

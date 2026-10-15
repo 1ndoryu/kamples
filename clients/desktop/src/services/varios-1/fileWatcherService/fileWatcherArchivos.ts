@@ -43,7 +43,7 @@ export function manejarArchivoNuevo(rutaOriginal: string, rutaNormalizada: strin
      * de crear una colección con ese nombre.
      */
     const carpetas = partes.filter(
-        c => !CARPETAS_SISTEMA_NO_COLECCION.has(c.toLowerCase()),
+        c => !CARPETAS_SISTEMA_NO_COLECCION.includes(c.toLowerCase()),
     );
 
     /* Verificar si hay una eliminación pendiente con el mismo nombre */

@@ -1,11 +1,13 @@
 /*
  * Constantes del watcher de carpeta de sincronización (fileWatcherService).
  * Sin estado mutable: solo valores fijos y umbrales de debounce/gracia.
+ * Las listas de extensiones/nombres son arrays readonly (no Set ni Map):
+ * exportar un contenedor mutable permitiría a cualquier importador hacer .add().
  */
 
-export const EXTENSIONES_AUDIO = new Set([
+export const EXTENSIONES_AUDIO: readonly string[] = [
     'wav', 'mp3', 'flac', 'aiff', 'aif', 'ogg',
-]);
+];
 
 /*
  * QL62: Extensiones conocidas de archivos no-audio.
@@ -13,7 +15,7 @@ export const EXTENSIONES_AUDIO = new Set([
  * es un archivo suelto que el usuario colocó en la raíz de la carpeta sync.
  * Esto previene que "READ ME!.txt" o "PandaFX.gif" se traten como colecciones.
  */
-export const EXTENSIONES_ARCHIVO_CONOCIDAS = new Set([
+export const EXTENSIONES_ARCHIVO_CONOCIDAS: readonly string[] = [
     'txt', 'md', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'csv',
     'gif', 'png', 'jpg', 'jpeg', 'webp', 'bmp', 'svg', 'ico', 'tiff', 'psd', 'ai',
     'exe', 'msi', 'dmg', 'app', 'bat', 'sh', 'ps1', 'cmd',
@@ -24,7 +26,7 @@ export const EXTENSIONES_ARCHIVO_CONOCIDAS = new Set([
     'als', 'flp', 'logic', 'cpr', 'ptx', 'rpp',
     'torrent', 'lnk', 'url', 'desktop',
     'log', 'bak', 'old', 'orig', 'swp', 'swo',
-]);
+];
 
 /* Archivos temporales que los editores/DAWs crean durante grabación */
 export const PATRONES_TEMPORALES = [
@@ -42,20 +44,20 @@ export const PATRONES_TEMPORALES = [
  * El filtro se aplica por segmento de ruta (split('/')) para evitar falsos
  * positivos con nombres como "carpeta.papelera-mix/".
  */
-export const CARPETAS_EXCLUIDAS_TOTAL = new Set([
+export const CARPETAS_EXCLUIDAS_TOTAL: readonly string[] = [
     '.papelera',
-]);
+];
 
 /*
  * QL70: Carpetas del sistema sync que permiten subida de archivos pero NO deben
  * generar colecciones. En manejarArchivoNuevo se descartan estos nombres de
  * la lista de carpetas para que el server los trate como "sin colección".
  */
-export const CARPETAS_SISTEMA_NO_COLECCION = new Set([
+export const CARPETAS_SISTEMA_NO_COLECCION: readonly string[] = [
     'sin colección',
     'sin coleccion',
     'duplicados',
-]);
+];
 
 /* Cache de archivos recientemente procesados para ignorar eventos duplicados */
 export const DEBOUNCE_ARCHIVO_MS = 3000;
@@ -80,14 +82,14 @@ export const DELAY_CREACION_CARPETA_MS = 3000;
  * se extiende a 60s (tiempo suficiente para que el usuario renombre).
  * Si no se renombra en 60s, se ignora silenciosamente.
  */
-export const NOMBRES_CARPETA_TEMPORAL = new Set([
+export const NOMBRES_CARPETA_TEMPORAL: readonly string[] = [
     'nueva carpeta',
     'new folder',
     'nuevo directorio',
     'untitled folder',
     'sans titre',
     'neuer ordner',
-]);
+];
 export const DELAY_CARPETA_TEMPORAL_MS = 60_000;
 
 /*

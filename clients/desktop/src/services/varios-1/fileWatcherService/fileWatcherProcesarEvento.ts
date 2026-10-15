@@ -99,7 +99,7 @@ export async function procesarEvento(
         const segmentosRuta = relativa.split('/');
 
         /* Exclusión total: ignorar cualquier evento dentro de .papelera/ */
-        if (segmentosRuta.some(s => CARPETAS_EXCLUIDAS_TOTAL.has(s))) continue;
+        if (segmentosRuta.some(s => CARPETAS_EXCLUIDAS_TOTAL.includes(s))) continue;
 
         /*
          * QL70: Carpetas sistema (sin colección, duplicados) permiten CREATEs de archivos
@@ -117,9 +117,9 @@ export async function procesarEvento(
          */
         const extension = nombreArchivo.split('.').pop()?.toLowerCase() ?? '';
 
-        if (relativa && !relativa.includes('/') && !EXTENSIONES_AUDIO.has(extension)) {
+        if (relativa && !relativa.includes('/') && !EXTENSIONES_AUDIO.includes(extension)) {
             /* QL62+QL68: Archivos con extensión conocida o desconocida no son carpetas */
-            if (extension && (EXTENSIONES_ARCHIVO_CONOCIDAS.has(extension) || pareceArchivoConExtension(nombreArchivo))) {
+            if (extension && (EXTENSIONES_ARCHIVO_CONOCIDAS.includes(extension) || pareceArchivoConExtension(nombreArchivo))) {
                 logSync.warn('watcher', `Archivo no-audio ignorado en raiz sync: ${nombreArchivo}`);
                 continue;
             }
@@ -129,7 +129,7 @@ export async function procesarEvento(
             }
             /* QL70: No crear colección para carpetas de sistema (sin colección, duplicados).
              * Archivos de audio dentro de ellas sí se suben (procesados abajo). */
-            if (CARPETAS_SISTEMA_NO_COLECCION.has(relativa.toLowerCase())) {
+            if (CARPETAS_SISTEMA_NO_COLECCION.includes(relativa.toLowerCase())) {
                 continue;
             }
             /* Es un path directo bajo carpetaBase sin extensión de audio → posible carpeta */
@@ -143,8 +143,8 @@ export async function procesarEvento(
          * Ej: "MiColeccion/Kicks" → carpetaPadre="MiColeccion", nombreSub="Kicks".
          * QL62: Misma proteccion que nivel 1 — ignorar si tiene extension conocida.
          */
-        if (segmentosRuta.length === 2 && !EXTENSIONES_AUDIO.has(extension)) {
-            if (extension && (EXTENSIONES_ARCHIVO_CONOCIDAS.has(extension) || pareceArchivoConExtension(segmentosRuta[1]))) {
+        if (segmentosRuta.length === 2 && !EXTENSIONES_AUDIO.includes(extension)) {
+            if (extension && (EXTENSIONES_ARCHIVO_CONOCIDAS.includes(extension) || pareceArchivoConExtension(segmentosRuta[1]))) {
                 logSync.warn('watcher', `Archivo no-audio ignorado en subcarpeta: ${relativa}`);
                 continue;
             }
@@ -158,7 +158,7 @@ export async function procesarEvento(
         }
 
         /* Verificar extensión de audio para archivos normales */
-        if (!EXTENSIONES_AUDIO.has(extension)) continue;
+        if (!EXTENSIONES_AUDIO.includes(extension)) continue;
 
         /* Debounce por archivo: ignorar si fue procesado recientemente */
         const ahora = Date.now();
@@ -208,7 +208,7 @@ function manejarRenameNoPareado(
     if (!relativa) return;
 
     const segmentos = relativa.split('/').filter(Boolean);
-    if (segmentos.some(s => CARPETAS_EXCLUIDAS_TOTAL.has(s))) return;
+    if (segmentos.some(s => CARPETAS_EXCLUIDAS_TOTAL.includes(s))) return;
 
     if (renamePendienteNoPareado) {
         /* Segundo path — parear con el primero y re-despachar como rename pareado */
@@ -244,10 +244,10 @@ function manejarRenameNoPareado(
             const segs = rel.split('/').filter(Boolean);
             const tipoRemove = { remove: { kind: 'any' } };
 
-            if (segs.length === 1 && !EXTENSIONES_AUDIO.has(segs[0].split('.').pop()?.toLowerCase() ?? '')) {
+            if (segs.length === 1 && !EXTENSIONES_AUDIO.includes(segs[0].split('.').pop()?.toLowerCase() ?? '')) {
                 logSync.info('watcher', `Rename sin par → dispatch como eliminación carpeta: ${rel}`);
                 procesarEventoCarpeta(tipoRemove, norm, rel, pendiente.baseNormalizada);
-            } else if (segs.length === 2 && !EXTENSIONES_AUDIO.has(segs[1].split('.').pop()?.toLowerCase() ?? '')) {
+            } else if (segs.length === 2 && !EXTENSIONES_AUDIO.includes(segs[1].split('.').pop()?.toLowerCase() ?? '')) {
                 logSync.info('watcher', `Rename sin par → dispatch como eliminación subcarpeta: ${rel}`);
                 procesarEventoSubcarpeta(tipoRemove, norm, segs[1], segs[0], pendiente.baseNormalizada);
             }

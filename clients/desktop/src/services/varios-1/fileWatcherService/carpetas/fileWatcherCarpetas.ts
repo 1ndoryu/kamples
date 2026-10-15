@@ -80,7 +80,7 @@ export function procesarEventoCarpeta(
         const pendienteExistente = estadoFileWatcher.carpetasPendientesCreacion.get(claveCreacion);
         if (pendienteExistente) clearTimeout(pendienteExistente.timeout);
 
-        const esTemporal = NOMBRES_CARPETA_TEMPORAL.has(claveCreacion)
+        const esTemporal = NOMBRES_CARPETA_TEMPORAL.includes(claveCreacion)
             || /^nueva carpeta\s*\(\d+\)$/i.test(nombreCarpeta)
             || /^new folder\s*\(\d+\)$/i.test(nombreCarpeta);
         const delayMs = esTemporal ? DELAY_CARPETA_TEMPORAL_MS : DELAY_CREACION_CARPETA_MS;

@@ -113,12 +113,12 @@ export async function escanearCarpetaYEncolar(): Promise<number> {
                 const rutaEntrada = await join(rutaDirectorio, entrada.name);
 
                 if (entrada.isDirectory) {
-                    if (CARPETAS_EXCLUIDAS_SCAN.has(nombreLower)) {
+                    if (CARPETAS_EXCLUIDAS_SCAN.includes(nombreLower)) {
                         resumen.carpetasIgnoradas++;
                         continue;
                     }
 
-                    const esCarpetaSistema = CARPETAS_SISTEMA_SYNC.has(nombreLower);
+                    const esCarpetaSistema = CARPETAS_SISTEMA_SYNC.includes(nombreLower);
                     const siguienteSinColeccion = sinColeccionDesdeAqui || esCarpetaSistema;
                     const siguientesCarpetas = siguienteSinColeccion
                         ? []
@@ -129,7 +129,7 @@ export async function escanearCarpetaYEncolar(): Promise<number> {
                 }
 
                 const ext = entrada.name.split('.').pop()?.toLowerCase() ?? '';
-                if (!EXTENSIONES_AUDIO_SCAN.has(ext)) continue;
+                if (!EXTENSIONES_AUDIO_SCAN.includes(ext)) continue;
                 await procesarArchivo(rutaEntrada, entrada.name, carpetasServidor);
             }
         };

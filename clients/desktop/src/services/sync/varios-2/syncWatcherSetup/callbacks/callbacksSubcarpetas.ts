@@ -14,7 +14,7 @@ export function crearCallbacksSubcarpetas(
 ): [Parameters<RegistrarSubcarpetas>[0], Parameters<RegistrarSubcarpetas>[1]] {
     return [
         (nombreSub: string, carpetaPadre: string, rutaCompleta: string) => {
-            if (CARPETAS_SISTEMA_SYNC.has(nombreSub.toLowerCase())) return;
+            if (CARPETAS_SISTEMA_SYNC.includes(nombreSub.toLowerCase())) return;
             if (!trackingModule) {
                 logSync.warn('syncWatcherSetup', '[Sync] Subcarpeta nueva ignorada (sin tracking):', nombreSub);
                 return;
@@ -25,7 +25,7 @@ export function crearCallbacksSubcarpetas(
              * crearColeccionDesdeLocal es idempotente, así que si el watcher re-dispara
              * al detectar la carpeta nueva en root, no crea duplicados.
              */
-            if (CARPETAS_SISTEMA_SYNC.has(carpetaPadre.toLowerCase())) {
+            if (CARPETAS_SISTEMA_SYNC.includes(carpetaPadre.toLowerCase())) {
                 (async () => {
                     try {
                         const { rename, exists } = await import('@tauri-apps/plugin-fs');
@@ -70,7 +70,7 @@ export function crearCallbacksSubcarpetas(
         },
         (nombreAnterior: string, nombreNuevo: string, carpetaPadre: string, _rutaNueva: string) => {
             if (!trackingModule) return;
-            if (CARPETAS_SISTEMA_SYNC.has(nombreNuevo.toLowerCase())) return;
+            if (CARPETAS_SISTEMA_SYNC.includes(nombreNuevo.toLowerCase())) return;
 
             const sub = trackingModule.buscarSubcoleccion(carpetaPadre, nombreAnterior);
             if (sub) {

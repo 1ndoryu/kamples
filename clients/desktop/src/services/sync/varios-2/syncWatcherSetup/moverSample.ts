@@ -27,7 +27,7 @@ async function actualizarColeccionEnMovimiento(
     if (!trackingModule) return;
 
     const primaria = carpetas[0] || '';
-    const esSinColeccion = !primaria || CARPETAS_SISTEMA_SYNC.has(primaria.toLowerCase());
+    const esSinColeccion = !primaria || CARPETAS_SISTEMA_SYNC.includes(primaria.toLowerCase());
 
     /* Resolver coleccionId destino — caminar N niveles de subcollections */
     let coleccionDestinoId: number | null = null;
@@ -195,7 +195,7 @@ export async function manejarMoveLocal(
         logSync.warn('syncWatcherSetup', '[Sync] Move sin tracking previo; se trata como archivo nuevo para upload:', rutaNueva);
 
         const carpetaDestino = (carpetas[0] ?? '').trim();
-        if (carpetaDestino && !CARPETAS_SISTEMA_SYNC.has(carpetaDestino.toLowerCase())) {
+        if (carpetaDestino && !CARPETAS_SISTEMA_SYNC.includes(carpetaDestino.toLowerCase())) {
             estado.collectionModule?.crearColeccionDesdeLocal(carpetaDestino).catch(err => {
                 logSync.error('syncWatcherSetup', '[Sync] Error creando colección destino desde move no trackeado:', err);
             });

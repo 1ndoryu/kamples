@@ -40,7 +40,7 @@ export async function procesarRenamePareado(paths: string[], baseNormalizada: st
         const segmentosOrigen = relativaOrigen.split('/').filter(Boolean);
         const segmentosDestino = relativaDestino.split('/').filter(Boolean);
 
-        if (segmentosOrigen.some(s => CARPETAS_EXCLUIDAS_TOTAL.has(s)) || segmentosDestino.some(s => CARPETAS_EXCLUIDAS_TOTAL.has(s))) {
+        if (segmentosOrigen.some(s => CARPETAS_EXCLUIDAS_TOTAL.includes(s)) || segmentosDestino.some(s => CARPETAS_EXCLUIDAS_TOTAL.includes(s))) {
             return true;
         }
 
@@ -52,7 +52,7 @@ export async function procesarRenamePareado(paths: string[], baseNormalizada: st
             && !!relativaDestino
             && !relativaOrigen.includes('/')
             && !relativaDestino.includes('/')
-            && !EXTENSIONES_AUDIO.has(extensionDestino);
+            && !EXTENSIONES_AUDIO.includes(extensionDestino);
 
         if (esCarpetaNivel1Rename) {
             if (!await esDirectorioReal(destinoNorm)) {
@@ -92,7 +92,7 @@ export async function procesarRenamePareado(paths: string[], baseNormalizada: st
             segOrigenArr.length === 2
             && segDestinoArr.length === 2
             && segOrigenArr[0].toLowerCase() === segDestinoArr[0].toLowerCase()
-            && !EXTENSIONES_AUDIO.has(extensionDestino);
+            && !EXTENSIONES_AUDIO.includes(extensionDestino);
 
         if (esSubcarpetaRename) {
             if (!await esDirectorioReal(destinoNorm)) {
@@ -120,7 +120,7 @@ export async function procesarRenamePareado(paths: string[], baseNormalizada: st
         }
 
         /* Guard: solo procesar el move si el destino está dentro de la carpeta base */
-        if (EXTENSIONES_AUDIO.has(extensionDestino) && relativaDestino) {
+        if (EXTENSIONES_AUDIO.includes(extensionDestino) && relativaDestino) {
             const partesDestino = relativaDestino.split('/');
             const nombreArchivo = partesDestino.pop() ?? nombreDestino;
             const carpetas = partesDestino.slice(0, 3);

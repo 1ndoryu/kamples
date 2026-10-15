@@ -16,7 +16,7 @@ export function crearCallbacksCarpetas(
     return [
         (nombre: string, _rutaCompleta: string) => {
             /* Excluir carpetas del sistema que NO son colecciones reales */
-            if (CARPETAS_SISTEMA_SYNC.has(nombre.toLowerCase())) {
+            if (CARPETAS_SISTEMA_SYNC.includes(nombre.toLowerCase())) {
                 logSync.info('syncWatcherSetup', '[Sync] Carpeta de sistema ignorada (no es colección):', nombre);
                 return;
             }
@@ -83,7 +83,7 @@ export function crearCallbacksCarpetas(
         (nombreAnterior: string, nombreNuevo: string, _rutaNueva: string) => {
             if (!trackingModule) return;
             /* Excluir carpetas del sistema que NO son colecciones reales */
-            if (CARPETAS_SISTEMA_SYNC.has(nombreNuevo.toLowerCase())) {
+            if (CARPETAS_SISTEMA_SYNC.includes(nombreNuevo.toLowerCase())) {
                 logSync.info('syncWatcherSetup', '[Sync] Rename a carpeta de sistema ignorado:', nombreNuevo);
                 return;
             }

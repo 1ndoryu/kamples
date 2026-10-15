@@ -78,7 +78,7 @@ export function procesarEventoSubcarpeta(
         const pendienteExistente = estadoFileWatcher.subcarpetasPendientesCreacion.get(claveCompuesta);
         if (pendienteExistente) clearTimeout(pendienteExistente.timeout);
 
-        const esTemporalSub = NOMBRES_CARPETA_TEMPORAL.has(nombreSubcarpeta.toLowerCase())
+        const esTemporalSub = NOMBRES_CARPETA_TEMPORAL.includes(nombreSubcarpeta.toLowerCase())
             || /^nueva carpeta\s*\(\d+\)$/i.test(nombreSubcarpeta)
             || /^new folder\s*\(\d+\)$/i.test(nombreSubcarpeta);
         const delayMsSub = esTemporalSub ? DELAY_CARPETA_TEMPORAL_MS : DELAY_CREACION_CARPETA_MS;

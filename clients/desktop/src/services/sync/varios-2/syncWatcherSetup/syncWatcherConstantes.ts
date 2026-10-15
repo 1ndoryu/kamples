@@ -1,23 +1,25 @@
 /*
  * Constantes del escaneo y de las carpetas de sistema, compartidas por varios módulos.
  * Módulo hoja: no importa de los demás módulos de syncWatcherSetup.
+ * Las listas de extensiones/nombres son arrays readonly (no Set ni Map):
+ * exportar un contenedor mutable permitiría a cualquier importador hacer .add().
  */
 
 /* Carpetas locales del sistema que NO deben crear colecciones en el servidor.
  * QL70: Archivos dentro de estas carpetas sí se escanean y encolan para subida,
  * pero con carpetas vacías para que el server los trate como "sin colección". */
-export const CARPETAS_SISTEMA_SYNC = new Set([
+export const CARPETAS_SISTEMA_SYNC: readonly string[] = [
     'sin colecci\u00f3n',
     'sin coleccion',
     'sin colecci\u00c3\u00b3n',
     'duplicados',
-]);
+];
 
 /* Extensiones de audio reconocidas — debe mantenerse en sync con fileWatcherService.ts */
-export const EXTENSIONES_AUDIO_SCAN = new Set(['wav', 'mp3', 'flac', 'aiff', 'aif', 'ogg']);
+export const EXTENSIONES_AUDIO_SCAN: readonly string[] = ['wav', 'mp3', 'flac', 'aiff', 'aif', 'ogg'];
 
 /*
  * Carpetas totalmente excluidas del escaneo local.
  * Espeja CARPETAS_EXCLUIDAS_TOTAL de fileWatcherService.ts.
  */
-export const CARPETAS_EXCLUIDAS_SCAN = new Set(['.papelera']);
+export const CARPETAS_EXCLUIDAS_SCAN: readonly string[] = ['.papelera'];
