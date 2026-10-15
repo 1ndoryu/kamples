@@ -329,12 +329,12 @@ Vivo 421 / vendido 316 / clients 2. El árbol **vendido** (`glory-core/`, `glory
 
 ### Trabajo real pendiente (no es falso positivo)
 
-- `css-adhoc-button-style`: los 3 casos reales.
-  - `.filtroColumnaBoton` con `<button>` crudo en `FiltroColumna.tsx:43` → pasar a `<BotonBase>`.
-  - `.comentarioEdicionBotones button`: selector de elemento sobre hijos que ya son `<BotonBase>`, en `listaComentarios.css:376` → quitar el selector de elemento.
-  - `.diagSyncBoton`: CSS muerto → borrar.
-- `css-especificacion-diseno-local` (98) y `css-elemento-html-directo` (22): **bloqueado en verificación visual**. Cambian render y AGENTS §5 exige evidencia real antes y después; el backend de KAMPLES en `127.0.0.1:3001` no arranca sin `.env` y `kamples_verif` no se ha levantado desde el reinicio del PC. Sin eso, tocarlas es adivinar.
-- Árbol muerto (tarea 15A-1): borrarlo retira 13 hallazgos y una regla entera (`usestate-excesivo` solo existe ahí).
+- `css-adhoc-button-style` (41): **recontado el 2026-10-15 tras verificar el JSX — solo 1 es real.** La lista de «3 casos reales» de la primera pasada era errónea en dos de tres:
+  - **`.filtroColumnaBoton` — el único caso real.** `<button>` crudo (con un segundo `<button>` crudo, `.filtroColumnaLimpiar`, en la línea siguiente) en `FiltroColumna.tsx:43-58`, estilizado a mano en `filtroColumna.css:11-29`.
+  - `.diagSyncBoton` — **NO es CSS muerto**, como decía la primera pasada: lo importa `clients/desktop/src/components/DiagnosticoSync.tsx:17` y la clase se aplica a `<BotonBase>` en 5 sitios. Es falso positivo por la misma razón que los otros 30: la regla solo ve CSS, no el JSX. (Corregido aquí porque la anotación anterior habría llevado a borrar CSS vivo.)
+  - `.comentarioEdicionBotones button` — **no está entre los 41**: los hijos de ese `div` ya son `<BotonBase>` (`ComentarioItem.tsx:89-96`).
+- `css-especificacion-diseno-local` (98), `css-elemento-html-directo` (22) y el caso real de `css-adhoc-button-style`: **bloqueado en verificación visual**. Cambian render y AGENTS §5 exige evidencia real antes y después. El backend Rust de KAMPLES (`127.0.0.1:3001`) necesita `.env` + Postgres y en el repo solo hay `.env.example`; KAMPLES no está en el taller. Sin eso, tocarlas es adivinar.
+- Árbol muerto (tarea 15A-1): **ya borrado** en `0f6a218`; retiró 13 hallazgos y la regla entera `usestate-excesivo`.
 
 ### 15A-1: borrado del shell huérfano — HECHO (`0f6a218`)
 
