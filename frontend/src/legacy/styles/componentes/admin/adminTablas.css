@@ -322,9 +322,6 @@
     background: var(--textoTerciario);
 }
 
-/* varsense-disable */
-/* [284A-2] VarSense sigue reportando los hex previos en este bloque aunque ya
- * usa tokens (`--exito`/`--error`); build y type-check validan el CSS real. */
 .interruptorProcesoActivo .interruptorProcesoPunto {
     background: var(--exito);
 }
