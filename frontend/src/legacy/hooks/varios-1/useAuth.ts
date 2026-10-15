@@ -12,6 +12,9 @@ import { crearLogger } from '../../services/varios-1/logger';
 import { useNavigationStore } from '@/core/router/navigationStore';
 import { useGoogleAuth } from '../varios-4/useGoogleAuth';
 import { useTooltipPerfilStore } from '../../stores/varios-4/tooltipPerfilStore';
+import { useNotificacionesStore } from '../../stores/varios-2/notificacionesStore';
+import { useMensajesStore } from '../../stores/varios-2/mensajesStore';
+import { useReproducidosStore } from '../../stores/varios-3/reproducidosStore';
 import type { UsuarioAutenticado } from '../../types/varios-1/usuario';
 import { esAndroid, esCapacitor } from '../../utils/varios-1/plataforma';
 import { irAUrl } from '@/platform/ventana';
@@ -32,30 +35,20 @@ export function limpiarStoresUsuario(): void {
     useTooltipPerfilStore.getState().limpiarCache();
     useTooltipPerfilStore.getState().cancelarTodo();
 
-    /* Imports dinámicos para stores opcionales — si no están cargados, nada que limpiar */
-    try {
-        /* eslint-disable @typescript-eslint/no-require-imports */
-        const { useNotificacionesStore } = require('../../stores/varios-2/notificacionesStore') as {
-            useNotificacionesStore: { getState: () => { hidratarNotificaciones: (n: never[], s?: boolean) => void } }
-        };
-        useNotificacionesStore.getState().hidratarNotificaciones([], true);
-    } catch { /* store no cargado */ }
+    /*
+     * [15A-5] Antes esto eran tres `require(...)` dentro de try/catch. En el
+     * bundle ESM del navegador `require` no existe: lanzaba ReferenceError y el
+     * catch vacío lo tragaba, así que la limpieza de logout nunca se ejecutó.
+     * Los tres stores son locales y ya viajan en el mismo bundle, así que se
+     * importan de forma estática.
+     */
+    useNotificacionesStore.getState().hidratarNotificaciones([], true);
 
-    try {
-        const { useMensajesStore } = require('../../stores/varios-2/mensajesStore') as {
-            useMensajesStore: { getState: () => { setConversaciones: (c: never[]) => void; setMensajes: (m: never[]) => void } }
-        };
-        const s = useMensajesStore.getState();
-        s.setConversaciones([]);
-        s.setMensajes([]);
-    } catch { /* store no cargado */ }
+    const mensajes = useMensajesStore.getState();
+    mensajes.setConversaciones([]);
+    mensajes.setMensajes([]);
 
-    try {
-        const { useReproducidosStore } = require('../../stores/varios-3/reproducidosStore') as {
-            useReproducidosStore: { setState: (s: { ids: Set<number>; cargado: boolean }) => void }
-        };
-        useReproducidosStore.setState({ ids: new Set(), cargado: false });
-    } catch { /* store no cargado */ }
+    useReproducidosStore.setState({ ids: new Set(), cargado: false });
 }
 
 /*
