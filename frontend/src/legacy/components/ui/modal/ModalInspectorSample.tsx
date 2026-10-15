@@ -43,7 +43,7 @@ const Campo = ({etiqueta, valor, numerico, ancho}: {etiqueta: string; valor: str
     const valorTexto = valor === null || valor === undefined ? '—' : typeof valor === 'boolean' ? (valor ? 'Si' : 'No') : String(valor);
 
     return (
-        <div className={`inspectorCampo ${ancho ? 'inspectorCampoAncho' : ''}`}>
+        <div className={`modalCampo inspectorCampo ${ancho ? 'inspectorCampoAncho' : ''}`}>
             <span className="inspectorCampoEtiqueta">{etiqueta}</span>
             <span className={`inspectorCampoValor ${numerico ? 'inspectorNumerico' : ''}`}>{valorTexto}</span>
         </div>

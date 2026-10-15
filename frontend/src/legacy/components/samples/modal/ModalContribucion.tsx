@@ -132,7 +132,7 @@ export function ModalContribucion({
                     </fieldset>
 
                     {/* Buscar cancion relacionada */}
-                    <div className="modalContribucionCampo">
+                    <div className="modalCampo modalContribucionCampo">
                         <label className="modalContribucionLabel">
                             {modo === 'esta_samplea' ? 'Canción fuente (la original)' : 'Canción que la sampleó'}
                         </label>
@@ -184,7 +184,7 @@ export function ModalContribucion({
                     )}
 
                     {/* Tipo de relacion */}
-                    <div className="modalContribucionCampo">
+                    <div className="modalCampo modalContribucionCampo">
                         <label className="modalContribucionLabel">Tipo de relación</label>
                         <div className="modalContribucionOpciones">
                             {TIPOS_RELACION.map((t) => (

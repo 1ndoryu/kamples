@@ -56,7 +56,7 @@ export const ModalEliminarColeccion = ({
                 </p>
 
                 {/* Opción: qué hacer con los samples */}
-                <div className="modalEliminarCampo">
+                <div className="modalCampo modalEliminarCampo">
                     <span className="modalEliminarCampoEtiqueta">Samples de esta colección</span>
                     <SelectorMenu
                         opciones={opcionesSamples}
@@ -68,7 +68,7 @@ export const ModalEliminarColeccion = ({
                 {/* Opciones para subcolecciones (solo si tiene hijas) */}
                 {tieneHijas && (
                     <>
-                        <div className="modalEliminarCampo">
+                        <div className="modalCampo modalEliminarCampo">
                             <span className="modalEliminarCampoEtiqueta">
                                 Subcolecciones ({coleccion?.subcolecciones?.length ?? 0})
                             </span>
@@ -80,7 +80,7 @@ export const ModalEliminarColeccion = ({
                         </div>
 
                         {manejoHijas === 'eliminar' && (
-                            <div className="modalEliminarCampo">
+                            <div className="modalCampo modalEliminarCampo">
                                 <span className="modalEliminarCampoEtiqueta">
                                     Samples de las subcolecciones
                                     {totalSamplesHijas > 0 ? ` (${totalSamplesHijas})` : ''}

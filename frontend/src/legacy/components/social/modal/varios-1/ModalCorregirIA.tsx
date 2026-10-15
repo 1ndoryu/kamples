@@ -53,7 +53,7 @@ export const ModalCorregirIA = (): JSX.Element | null => {
                     <span className="corregirIASubtitulo">{t('metadata.actual')}</span>
                     <div className="corregirIACampos">
                         {camposActuales.map(c => (
-                            <div key={c.clave} className="corregirIACampo">
+                            <div key={c.clave} className="modalCampo corregirIACampo">
                                 <span className="corregirIACampoLabel">{c.clave}</span>
                                 <span className="corregirIACampoValor">{c.valor || '—'}</span>
                             </div>

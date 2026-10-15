@@ -82,6 +82,15 @@
     flex: 1;
 }
 
+/* [15A-10] Receta compartida del formulario y del campo de un modal. La
+ * estructura vertical la pone el sistema; cada modal solo ajusta su espaciado
+ * con la clase propia que le sigue. */
+.modalFormulario,
+.modalCampo {
+    display: flex;
+    flex-direction: column;
+}
+
 .modalPie {
     display: flex;
     align-items: center;

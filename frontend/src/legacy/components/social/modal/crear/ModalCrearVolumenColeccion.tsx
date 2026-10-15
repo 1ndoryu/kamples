@@ -41,7 +41,7 @@ export const ModalCrearVolumenColeccion = ({
                     Se creará una subcolección hija bajo <strong>{coleccion?.nombre}</strong> y se moverá aproximadamente la mitad de sus samples directos.
                 </p>
 
-                <div className="modalVolumenCampo">
+                <div className="modalCampo modalVolumenCampo">
                     <CampoTexto
                         etiqueta="Número de volumen"
                         type="number"

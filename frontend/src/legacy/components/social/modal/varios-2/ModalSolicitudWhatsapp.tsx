@@ -44,7 +44,7 @@ export const ModalSolicitudWhatsapp = (): JSX.Element | null => {
     if (!cargando && estado.limiteDiario) {
         return (
             <Modal abierto={abierto} onCerrar={cerrar} tamano="pequeno">
-                <div className="reportarErrorFormulario">
+                <div className="modalFormulario reportarErrorFormulario">
                     <p className="reportarErrorNota modalSolicitudWhatsapp-inl1">
                         {t('whatsapp.limiteDiario')}
                     </p>
@@ -60,7 +60,7 @@ export const ModalSolicitudWhatsapp = (): JSX.Element | null => {
     if (!cargando && estado.yaEnviada) {
         return (
             <Modal abierto={abierto} onCerrar={cerrar} tamano="pequeno">
-                <div className="reportarErrorFormulario">
+                <div className="modalFormulario reportarErrorFormulario">
                     <p className="reportarErrorNota modalSolicitudWhatsapp-inl2">
                         {t('whatsapp.yaEnviada')}
                     </p>
@@ -74,7 +74,7 @@ export const ModalSolicitudWhatsapp = (): JSX.Element | null => {
 
     return (
         <Modal abierto={abierto} onCerrar={cerrar} tamano="pequeno">
-            <div className="reportarErrorFormulario">
+            <div className="modalFormulario reportarErrorFormulario">
                 <p className="reportarErrorNota modalSolicitudWhatsapp-inl3">
                     {t('whatsapp.descripcionBeta')}
                 </p>

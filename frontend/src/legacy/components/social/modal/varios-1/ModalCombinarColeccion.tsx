@@ -65,7 +65,7 @@ export const ModalCombinarColeccion = ({
                     <div className="modalCombinarCargando">Cargando colecciones...</div>
                 ) : (
                     <>
-                        <div className="modalCombinarCampo">
+                        <div className="modalCampo modalCombinarCampo">
                             <span className="modalCombinarCampoEtiqueta">Combinar con</span>
                             <SelectorMenu
                                 opciones={opcionesCombinar}
@@ -77,7 +77,7 @@ export const ModalCombinarColeccion = ({
 
                         {coleccionOrigen && (
                             <>
-                                <div className="modalCombinarCampo">
+                                <div className="modalCampo modalCombinarCampo">
                                     <span className="modalCombinarCampoEtiqueta">Nombre a conservar</span>
                                     <SelectorMenu
                                         opciones={opcionesNombre}
@@ -87,7 +87,7 @@ export const ModalCombinarColeccion = ({
                                 </div>
 
                                 {opcionesImagen.length > 1 && (
-                                    <div className="modalCombinarCampo">
+                                    <div className="modalCampo modalCombinarCampo">
                                         <span className="modalCombinarCampoEtiqueta">Imagen de portada</span>
                                         <SelectorMenu
                                             opciones={opcionesImagen}
@@ -99,7 +99,7 @@ export const ModalCombinarColeccion = ({
 
                                 {/* QL120: Si la colección origen tiene subcolecciones */}
                                 {origenTieneHijas && (
-                                    <div className="modalCombinarCampo">
+                                    <div className="modalCampo modalCombinarCampo">
                                         <span className="modalCombinarCampoEtiqueta">Subcolecciones</span>
                                         <SelectorMenu
                                             opciones={opcionesManejoHijas}

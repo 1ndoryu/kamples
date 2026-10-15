@@ -39,8 +39,6 @@
 }
 
 .modalCombinarCampo {
-    display: flex;
-    flex-direction: column;
     gap: var(--espacioXs);
 }
 

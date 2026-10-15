@@ -66,7 +66,7 @@ export const ModalEditar = (): JSX.Element | null => {
 
     return (
         <Modal abierto={abierto} onCerrar={cerrar} tamano="normal">
-            <div className="editarFormulario">
+            <div className="modalFormulario editarFormulario">
                 {tipo === 'sample' && (
                     <FormularioEditarSample
                         formulario={formularioSample}

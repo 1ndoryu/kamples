@@ -6,11 +6,6 @@
  * [183A-110-D] Sin botón X — cierre por click fuera o Escape.
  */
 
-/* [183A-110-C/E] Override para modal más ancho y alto */
-.editorArticuloModal {
-    max-width: 980px;
-}
-
 .editorArticuloContenedor {
     display: flex;
     flex-direction: column;
@@ -482,10 +477,6 @@
 
 /* Responsive */
 @media (max-width: 480px) {
-    .editorArticuloModal {
-        max-width: 100%;
-    }
-
     .adjuntoColeccion {
         grid-template-columns: 60px 1fr auto;
     }

@@ -65,8 +65,6 @@ button.inspectorSeccionTitulo:hover {
 }
 
 .inspectorCampo {
-    display: flex;
-    flex-direction: column;
     gap: var(--espacioXs); /* Un poco más de aire que 2px */
 }
 

@@ -49,7 +49,7 @@ export const ModalArticulo = (): JSX.Element | null => {
 
     /* [183A-110-C] Sin titulo (sin cabecera), modal más ancho */
     return (
-        <Modal abierto={abierto} onCerrar={cerrar} tamano="grande" className="editorArticuloModal">
+        <Modal abierto={abierto} onCerrar={cerrar} tamano="grande">
             <ContenidoEditor />
         </Modal>
     );

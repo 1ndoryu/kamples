@@ -43,7 +43,7 @@ export const ModalReportar = (): JSX.Element | null => {
             onCerrar={cerrar}
             tamano="pequeno"
         >
-            <div className="reportarErrorFormulario">
+            <div className="modalFormulario reportarErrorFormulario">
                 {tipo === 'usuario' && targetNombre && (
                     <p className="reportarErrorNota modalReportar-inl1">
                         {t('reporte.reportandoA')} <strong>@{targetNombre}</strong>

@@ -60,8 +60,6 @@
 }
 
 .corregirIACampo {
-    display: flex;
-    flex-direction: column;
     gap: var(--espacio2xs);
 }
 

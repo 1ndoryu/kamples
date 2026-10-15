@@ -59,7 +59,7 @@ const FormularioLogin = ({ onCambiar }: { onCambiar: () => void }): JSX.Element 
 
             {error && <div className="authError">{error}</div>}
 
-            <form className="authFormulario" onSubmit={manejarSubmit}>
+            <form className="modalFormulario authFormulario" onSubmit={manejarSubmit}>
                 <CampoTexto
                     etiqueta={t('auth.emailOUsuario')}
                     type="text"
@@ -136,7 +136,7 @@ const FormularioRegistro = ({ onCambiar }: { onCambiar: () => void }): JSX.Eleme
 
             {error && <div className="authError">{error}</div>}
 
-            <form className="authFormulario" onSubmit={manejarSubmit}>
+            <form className="modalFormulario authFormulario" onSubmit={manejarSubmit}>
                 <CampoTexto
                     etiqueta={t('config.nombreUsuario')}
                     placeholder="tu_usuario"

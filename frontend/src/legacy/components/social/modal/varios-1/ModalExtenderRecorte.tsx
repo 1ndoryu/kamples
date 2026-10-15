@@ -54,16 +54,16 @@ export const ModalExtenderRecorte = (): JSX.Element | null => {
                 <div className="extenderRecorteInfo">
                     <span className="extenderRecorteSubtitulo">Sample actual</span>
                     <div className="extenderRecorteCampos">
-                        <div className="extenderRecorteCampo">
+                        <div className="modalCampo extenderRecorteCampo">
                             <span className="extenderRecorteCampoLabel">Título</span>
                             <span className="extenderRecorteCampoValor">{sample.titulo}</span>
                         </div>
-                        <div className="extenderRecorteCampo">
+                        <div className="modalCampo extenderRecorteCampo">
                             <span className="extenderRecorteCampoLabel">Duración</span>
                             <span className="extenderRecorteCampoValor">{duracionActual.toFixed(1)}s</span>
                         </div>
                         {sample.bpm && (
-                            <div className="extenderRecorteCampo">
+                            <div className="modalCampo extenderRecorteCampo">
                                 <span className="extenderRecorteCampoLabel">BPM</span>
                                 <span className="extenderRecorteCampoValor">{sample.bpm}</span>
                             </div>

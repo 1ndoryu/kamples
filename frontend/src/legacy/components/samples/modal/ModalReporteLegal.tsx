@@ -132,7 +132,7 @@ export function ModalReporteLegal({
                     <div className="modalReporteLegalSeccion">
                         <span className="modalReporteLegalSeccionTitulo">Detalles de la reclamacion</span>
 
-                        <div className="modalReporteLegalCampo">
+                        <div className="modalCampo modalReporteLegalCampo">
                             <label className="modalReporteLegalLabel">Tipo de derecho infringido</label>
                             <select
                                 className="modalReporteLegalSelect"
@@ -154,7 +154,7 @@ export function ModalReporteLegal({
                             placeholder="Título de la obra, número de registro, etc."
                         />
 
-                        <div className="modalReporteLegalCampo">
+                        <div className="modalCampo modalReporteLegalCampo">
                             <label className="modalReporteLegalLabel">Descripción de la infracción</label>
                             <textarea
                                 className="modalReporteLegalTextarea"

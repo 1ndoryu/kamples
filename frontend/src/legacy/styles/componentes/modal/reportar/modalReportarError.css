@@ -4,8 +4,6 @@
  */
 
 .reportarErrorFormulario {
-    display: flex;
-    flex-direction: column;
     gap: var(--espacioMd);
 }
 
