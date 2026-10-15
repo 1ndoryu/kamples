@@ -4,6 +4,7 @@
  */
 
 import { memo } from 'react';
+import type { CSSProperties } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import type { TipoControl } from '../../../types/pianoRoll';
 import { usePanelControl } from '../../../hooks/varios-2/usePanelControl';
@@ -29,7 +30,7 @@ export const PanelControl = memo((): JSX.Element | null => {
     return (
         <div
             className="pianoRollPanelControl"
-            style={{ height: controlAbierto ? vista.alturaControl + 24 : 24 }}
+            style={{ '--panelAlto': `${controlAbierto ? vista.alturaControl + 24 : 24}px` } as CSSProperties}
         >
             {/* Cabecera: toggle + tabs */}
             <div className="pianoRollPanelControlCabecera">
@@ -62,7 +63,7 @@ export const PanelControl = memo((): JSX.Element | null => {
                 <div
                     ref={cuerpoRef}
                     className="pianoRollPanelControlCuerpo"
-                    style={{ height: vista.alturaControl }}
+                    style={{ '--cuerpoAlto': `${vista.alturaControl}px` } as CSSProperties}
                 >
                     {barras}
                 </div>

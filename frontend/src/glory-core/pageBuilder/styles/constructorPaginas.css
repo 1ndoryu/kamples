@@ -295,3 +295,18 @@
     font-size: 14px;
     font-weight: 500;
 }
+
+/* PageLayout */
+
+.iconoSocial {
+    width: 18px;
+    height: 18px;
+}
+
+#page-layout {
+    background: var(--fondoPagina, #050505);
+}
+
+#main-nav {
+    background: var(--fondoNav, #050505cc);
+}

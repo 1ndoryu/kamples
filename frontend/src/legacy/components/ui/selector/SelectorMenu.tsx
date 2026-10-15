@@ -5,7 +5,7 @@
  * Cierre con Escape, click fuera o selección de opción.
  */
 
-import { type ReactNode, useState, useRef, useEffect, useCallback } from 'react';
+import { type ReactNode, type CSSProperties, useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown } from 'lucide-react';
 import { useT } from '@app/utils/i18n/useT';
@@ -117,10 +117,10 @@ export const SelectorMenu = ({
                     <div
                         className="selectorMenuDropdown"
                         style={{
-                            top: posicion.top,
-                            left: posicion.left,
-                            minWidth: posicion.width,
-                        }}
+                            '--top': `${posicion.top}px`,
+                            '--left': `${posicion.left}px`,
+                            '--anchoMin': `${posicion.width}px`,
+                        } as CSSProperties}
                         role="listbox"
                     >
                         {opciones.map(op => (

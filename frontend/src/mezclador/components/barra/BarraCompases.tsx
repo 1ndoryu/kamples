@@ -4,6 +4,7 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
+import type { CSSProperties } from 'react';
 import { useMezcladorStore } from '../../stores/varios-1/mezcladorStore';
 import { generarLabelsCompases, posicionBloquePorc } from '../../utils/compasUtils';
 
@@ -62,7 +63,10 @@ export const BarraCompases = ({ onSeek }: BarraCompasesProps): JSX.Element => {
                 <div
                     key={label}
                     className="mezcladorCompasLabel"
-                    style={{ left: `${posicionBloquePorc(i, totalCompases)}%`, width: `${100 / totalCompases}%` }}
+                    style={{
+                        '--compasIzq': `${posicionBloquePorc(i, totalCompases)}%`,
+                        '--compasAncho': `${100 / totalCompases}%`,
+                    } as CSSProperties}
                 >
                     <span className="mezcladorCompasNumero">{label}</span>
                 </div>

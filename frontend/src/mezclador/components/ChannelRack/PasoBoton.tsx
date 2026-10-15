@@ -5,6 +5,7 @@
  */
 
 import { memo, useCallback } from 'react';
+import type { CSSProperties } from 'react';
 import type { Paso } from '../../types/mezclador';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
@@ -36,10 +37,10 @@ export const PasoBoton = memo(({
     return (
         <BotonBase variante="ghost"
             className={`pasoBoton ${paso.activo ? 'pasoBotonActivo' : ''} ${esGrupoImpar ? 'pasoBotonGrupoImpar' : ''}`}
-            style={paso.activo ? {
-                backgroundColor: colorCanal,
-                opacity: 0.4 + paso.velocity * 0.6,
-            } : undefined}
+            style={{
+                '--colorPaso': paso.activo ? colorCanal : undefined,
+                '--opacidadPaso': paso.activo ? 0.4 + paso.velocity * 0.6 : undefined,
+            } as CSSProperties}
             onClick={alClick}
             onContextMenu={alContexto}
             title={paso.activo ? `Vel: ${Math.round(paso.velocity * 100)}%` : 'Inactivo'}

@@ -19,6 +19,7 @@
 
 .indicadorDescargasRelleno {
     height: 100%;
+    width: var(--porcentaje, 0%);
     background-color: var(--acento);
     border-radius: var(--radioFull);
     transition: width var(--transicionNormal);

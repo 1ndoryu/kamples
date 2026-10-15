@@ -3,6 +3,7 @@
  * Barra de progreso reutilizable para uploads y procesamiento.
  */
 
+import type { CSSProperties } from 'react';
 import '../../../styles/componentes/barra/barraProgreso.css';
 
 type EstadoProgreso = 'normal' | 'exito' | 'error' | 'indeterminado';
@@ -36,7 +37,7 @@ export const BarraProgreso = ({
             <div className="pistaProgreso">
                 <div
                     className={`rellenoProgreso ${claseEstado[estado]}`}
-                    style={estado !== 'indeterminado' ? { width: `${porcentajeReal}%` } : undefined}
+                    style={estado !== 'indeterminado' ? { '--porcentaje': `${porcentajeReal}%` } as CSSProperties : undefined}
                     role="progressbar"
                     aria-valuenow={porcentajeReal}
                     aria-valuemin={0}

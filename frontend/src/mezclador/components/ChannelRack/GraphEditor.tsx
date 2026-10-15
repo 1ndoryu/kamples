@@ -4,6 +4,7 @@
  */
 
 import { useCallback, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import type { CanalRack, Paso } from '../../types/mezclador';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
@@ -82,20 +83,20 @@ export const GraphEditor = ({
                                 <div
                                     className="graphEditorBarra graphEditorBarraBipolar"
                                     style={{
-                                        height: `${Math.abs(valor - 0.5) * 100}%`,
-                                        bottom: valor >= 0.5 ? '50%' : `${valor * 100}%`,
-                                        backgroundColor: canal.color,
-                                    }}
+                                        '--altoBarra': `${Math.abs(valor - 0.5) * 100}%`,
+                                        '--bottomBarra': valor >= 0.5 ? '50%' : `${valor * 100}%`,
+                                        '--colorBarra': canal.color,
+                                    } as CSSProperties}
                                 />
                             ) : (
                                 /* Barra unipolar: desde abajo */
                                 <div
                                     className="graphEditorBarra"
                                     style={{
-                                        height: `${valor * 100}%`,
-                                        backgroundColor: canal.color,
-                                        opacity: paso.activo ? 1 : 0.3,
-                                    }}
+                                        '--altoBarra': `${valor * 100}%`,
+                                        '--colorBarra': canal.color,
+                                        '--opacidadBarra': paso.activo ? 1 : 0.3,
+                                    } as CSSProperties}
                                 />
                             )}
                         </div>

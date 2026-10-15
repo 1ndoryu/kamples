@@ -6,9 +6,6 @@
 /* Sistema de diseno del proyecto (CSS Variables + componentes) */
 @import '../legacy-assets/init.css';
 
-/* Panel de configuracion del tema */
-@import '../glory-css/settings-panel.css';
-
 /* Estilos de prosa (contenido de artículos).
    Estilos para contenido HTML generado por IA
    y articulos de blog. Proporciona espaciado

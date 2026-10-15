@@ -54,11 +54,6 @@ export const Timeline = ({
         toggleModoCortar();
     }, [dividirBloque, toggleModoCortar]);
 
-    /* C217: El ancho del contenido se escala por nivelZoom */
-    const estiloZoom = nivelZoom !== 1
-        ? { width: `${nivelZoom * 100}%` } as React.CSSProperties
-        : undefined;
-
     return (
         <div className="mezcladorTimelineWrapper">
             {/* C285: Minimapa — control de scroll y zoom */}
@@ -66,7 +61,13 @@ export const Timeline = ({
 
             <div className="mezcladorTimeline" ref={timelineRef}>
                 {/* C217: Contenedor de zoom — scrollable horizontalmente */}
-                <div className="mezcladorTimelineZoom" style={estiloZoom}>
+                <div
+                    className="mezcladorTimelineZoom"
+                    /* C217: El ancho del contenido se escala por nivelZoom; a zoom 1
+                     * no se fija ancho y el contenedor se queda con el que le da el
+                     * layout, como antes de moverlo al CSS. */
+                    style={{ '--zoomTimeline': nivelZoom === 1 ? 'auto' : `${nivelZoom * 100}%` } as React.CSSProperties}
+                >
                     {/* Barra de compases (regla superior) */}
                     <div className="mezcladorTimelineEncabezado">
                         <div className="mezcladorPistaControlesEspaciador" />

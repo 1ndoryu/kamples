@@ -4,6 +4,7 @@
  * Misma estrategia que FL Studio: overlay de notas interactivas sobre grid estático.
  */
 
+import type { CSSProperties } from 'react';
 import { useGridNotas } from '../../../hooks/varios-1/useGridNotas';
 
 interface GridNotasProps {
@@ -34,7 +35,7 @@ export const GridNotas = ({
         <div
             ref={contenedorRef}
             className="pianoRollGrid"
-            style={{ cursor: cursorGrid() }}
+            style={{ '--cursorGrid': cursorGrid() } as CSSProperties}
             onMouseDown={handleGridMouseDown}
             onWheel={handleWheel}
         >
@@ -45,15 +46,23 @@ export const GridNotas = ({
             />
 
             {/* Highlight de fila hover */}
-            {hoverStyle && <div style={hoverStyle} />}
+            {hoverStyle && (
+                <div
+                    className="pianoRollFilaHover"
+                    style={{
+                        '--filaHoverTop': `${hoverStyle.top}px`,
+                        '--filaHoverAlto': `${hoverStyle.height}px`,
+                    } as CSSProperties}
+                />
+            )}
 
             {/* Contenedor de notas DOM */}
             <div
                 className="pianoRollNotasContenedor"
                 style={{
-                    width: anchoTotal,
-                    height: altTotal,
-                }}
+                    '--notasAncho': `${anchoTotal}px`,
+                    '--notasAlto': `${altTotal}px`,
+                } as CSSProperties}
             >
                 {notasRenderizadas}
             </div>
@@ -63,11 +72,11 @@ export const GridNotas = ({
                 <div
                     className="pianoRollMarquee"
                     style={{
-                        left: marquee.x,
-                        top: marquee.y,
-                        width: marquee.ancho,
-                        height: marquee.alto,
-                    }}
+                        '--marqueeIzq': `${marquee.x}px`,
+                        '--marqueeTop': `${marquee.y}px`,
+                        '--marqueeAncho': `${marquee.ancho}px`,
+                        '--marqueeAlto': `${marquee.alto}px`,
+                    } as CSSProperties}
                 />
             )}
         </div>

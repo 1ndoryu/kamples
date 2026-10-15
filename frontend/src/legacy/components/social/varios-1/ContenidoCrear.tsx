@@ -5,6 +5,7 @@
  * Toda la lógica reside en useCrearContenido.
  */
 
+import type { CSSProperties } from 'react';
 import { Music, Image as ImageIcon, X, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import { Avatar } from '@app/components/ui/varios-1/Avatar';
 import { Badge } from '@app/components/ui/badge/Badge';
@@ -153,7 +154,7 @@ export const ContenidoCrear = ({ autoFocus, placeholder, alCompletarPublicacion 
                                 <div
                                     key={`waveform-${i}`}
                                     className={`crearWaveformBarra ${reproducida ? 'crearWaveformBarraActiva' : ''}`}
-                                    style={{ height: `${Math.max(peak * 100, 4)}%` }}
+                                    style={{ '--altura': `${Math.max(peak * 100, 4)}%` } as CSSProperties}
                                 />
                             );
                         })}

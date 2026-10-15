@@ -37,6 +37,7 @@
 
 .reproductorTimelineRelleno {
     height: 100%;
+    width: var(--porcentaje, 0%);
     background-color: var(--acento);
     transition: width 100ms linear;
     border-radius: 0 var(--radioFull) var(--radioFull) 0;

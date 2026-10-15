@@ -4,6 +4,7 @@
  */
 
 import { useCallback } from 'react';
+import type { CSSProperties } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import type { CanalRack } from '../../types/mezclador';
 import { KnobControl } from '../varios-1/KnobControl';
@@ -56,7 +57,7 @@ export const CanalStrip = ({
                 onClick={toggleMute}
                 onContextMenu={toggleSolo}
                 title={`${canal.silenciado ? 'Unmute' : 'Mute'} | Click derecho: ${canal.solo ? 'Unsolok' : 'Solo'}`}
-                style={{ borderColor: canal.color }}
+                style={{ '--ledColor': canal.color } as CSSProperties}
             >
                 {canal.silenciado ? <VolumeX size={10} /> : <Volume2 size={10} />}
             </BotonBase>
@@ -102,7 +103,7 @@ export const CanalStrip = ({
             {/* Nombre del canal */}
             <div
                 className="canalNombre"
-                style={{ color: canal.color }}
+                style={{ '--colorCanal': canal.color } as CSSProperties}
                 title={canal.nombre}
             >
                 {canal.nombre}

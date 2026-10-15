@@ -140,18 +140,23 @@
     background: var(--colorGrisCasiNegro);
     border-right: var(--espacioMinimo) solid var(--colorGrisCarbonClaro);
     z-index: 2;
+    width: var(--tecladoAncho);
 }
 
 .pianoRollTecladoInner {
     position: absolute;
     left: 0;
     right: 0;
+    top: var(--innerTop);
+    height: var(--innerAlto);
 }
 
 .pianoRollTecla {
     position: absolute;
     left: 0;
     right: 0;
+    top: var(--teclaTop);
+    height: var(--teclaAlto);
     display: flex;
     align-items: center;
     padding-left: 4px;
@@ -223,7 +228,7 @@
     flex: 1;
     position: relative;
     overflow: hidden;
-    cursor: crosshair;
+    cursor: var(--cursorGrid);
 }
 
 .pianoRollGridCanvas {
@@ -239,12 +244,34 @@
     top: 0;
     left: 0;
     z-index: 1;
+    width: var(--notasAncho);
+    height: var(--notasAlto);
+}
+
+/* Highlight de la fila bajo el cursor */
+.pianoRollFilaHover {
+    /* Tinte de fila propio del piano roll, no del sistema de diseno */
+    --filaHoverFondo: rgba(100, 150, 255, 0.06);
+    position: absolute;
+    left: 0;
+    top: var(--filaHoverTop);
+    width: 100%;
+    height: var(--filaHoverAlto);
+    background: var(--filaHoverFondo);
+    pointer-events: none;
+    z-index: 0;
 }
 
 /* NOTA INDIVIDUAL */
 
 .pianoRollNota {
     position: absolute;
+    left: var(--notaIzq);
+    top: var(--notaTop);
+    width: var(--notaAncho);
+    height: var(--notaAlto);
+    background: var(--notaColor);
+    opacity: var(--notaOpacidad);
     border-radius: var(--radiusMezclador);
     cursor: grab;
     box-sizing: border-box;
@@ -308,6 +335,7 @@
     right: 0;
     height: 2px;
     background: var(--colorRgba-255-255-255-0_5);
+    opacity: var(--velocityOpacidad);
     pointer-events: none;
 }
 
@@ -321,6 +349,10 @@
     background: var(--colorRgba-100-150-255-0_08);
     z-index: 5;
     pointer-events: none;
+    left: var(--marqueeIzq);
+    top: var(--marqueeTop);
+    width: var(--marqueeAncho);
+    height: var(--marqueeAlto);
 }
 
 /* GHOST NOTES */
@@ -332,6 +364,11 @@
     border: var(--espacioMinimo) solid var(--colorRgba-255-255-255-0_08);
     pointer-events: none;
     z-index: 0;
+    left: var(--ghostNotaIzq);
+    top: var(--ghostNotaTop);
+    /* Ancho minimo y hairline vertical: constantes del subsistema */
+    width: max(2px, var(--ghostNotaAncho));
+    height: calc(var(--ghostNotaAlto) - 1px);
 }
 
 /* Contenedor overlay de ghost notes (se superpone al grid) */
@@ -342,11 +379,14 @@
     pointer-events: none;
     z-index: 0;
     overflow: hidden;
+    width: var(--ghostAncho);
+    height: var(--ghostAlto);
 }
 
 /* PANEL DE CONTROL INFERIOR */
 
 .pianoRollPanelControl {
+    height: var(--panelAlto);
     border-top: var(--espacioMinimo) solid var(--colorGrisCarbonClaro);
     background: var(--colorRgba-18-18-42-1);
     flex-shrink: 0;
@@ -405,6 +445,7 @@
 
 .pianoRollPanelControlCuerpo {
     flex: 1;
+    height: var(--cuerpoAlto);
     position: relative;
     overflow: hidden;
     min-height: 60px;
@@ -414,9 +455,12 @@
 .pianoRollBarraControl {
     position: absolute;
     bottom: 0;
+    left: var(--barraIzq);
+    top: var(--barraTop);
     width: 3px;
     min-width: 3px;
-    background: var(--colorRgba-252-175-62-1);
+    height: var(--barraAlto);
+    background: var(--barraColor, var(--colorRgba-252-175-62-1));
     border-radius: var(--radiusMezclador);
     cursor: ns-resize;
     transition: background 0.1s;
@@ -455,6 +499,8 @@
 
 .pianoRollMenuContextual {
     position: fixed;
+    left: var(--menuIzq);
+    top: var(--menuTop);
     z-index: 9999;
     background: var(--colorFondoAzulNoche);
     border: var(--espacioMinimo) solid var(--colorRgba-58-58-90-1);
@@ -511,6 +557,7 @@
 .pianoRollMenuContextualColor {
     width: 14px;
     height: 14px;
+    background: var(--colorMuestra);
     border-radius: var(--radiusMezclador);
     border: var(--espacioMinimo) solid var(--colorRgba-255-255-255-0_15);
     cursor: pointer;

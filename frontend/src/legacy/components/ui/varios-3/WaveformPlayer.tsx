@@ -5,6 +5,7 @@
  * Colores: played vs unplayed controlados por props.
  */
 
+import { type CSSProperties } from 'react';
 import { useWaveformPlayer } from '../../../hooks/varios-9/useWaveformPlayer';
 import { useT } from '@app/utils/i18n/useT';
 import '../../../styles/componentes/varios-7/waveform.css';
@@ -99,7 +100,7 @@ export const WaveformPlayer = ({
             {interactivo && hoverX !== null && (
                 <span
                     className="waveformTiempoFlotante"
-                    style={{ left: hoverX }}
+                    style={{ '--posicion': `${hoverX}px` } as CSSProperties}
                 >
                     {tiempoHover}
                 </span>

@@ -28,12 +28,12 @@ export const MinimapaDaw = ({ timelineRef }: MinimapaDawProps): JSX.Element => {
                     key={`${b.left}-${b.top}`}
                     className="minimapaBloque"
                     style={{
-                        left: `${b.left}%`,
-                        width: `${b.width}%`,
-                        top: `${b.top}%`,
-                        height: `${b.height}%`,
-                        backgroundColor: b.color,
-                    }}
+                        '--bloqueIzquierda': `${b.left}%`,
+                        '--bloqueAncho': `${b.width}%`,
+                        '--bloqueArriba': `${b.top}%`,
+                        '--bloqueAlto': `${b.height}%`,
+                        '--bloqueColor': b.color,
+                    } as React.CSSProperties}
                 />
             ))}
 
@@ -41,9 +41,9 @@ export const MinimapaDaw = ({ timelineRef }: MinimapaDawProps): JSX.Element => {
                 ref={viewportRef}
                 className="minimapaViewport"
                 style={{
-                    left: `${viewportLeft * 100}%`,
-                    width: `${viewportFrac * 100}%`,
-                }}
+                    '--viewportIzquierda': `${viewportLeft * 100}%`,
+                    '--viewportAncho': `${viewportFrac * 100}%`,
+                } as React.CSSProperties}
                 onMouseDown={handleViewportMouseDown}
             >
                 <div className="minimapaHandleIzq" />

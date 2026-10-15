@@ -4,6 +4,7 @@
  * Extraido de TabProcesosAdmin [183A-68] para cumplir limite de lineas.
  */
 
+import type { CSSProperties } from 'react';
 import { Loader2, Play, Square, Terminal, Server } from 'lucide-react';
 import { BotonBase } from '../../ui/boton/BotonBase';
 import { Badge } from '../../ui/badge/Badge';
@@ -70,7 +71,7 @@ export const TarjetaProceso = ({
                 <div className="procesoCardProgreso">
                     <div
                         className="procesoCardProgresoRelleno"
-                        style={{ width: `${Math.min(100, proceso.progreso)}%` }}
+                        style={{ '--porcentaje': `${Math.min(100, proceso.progreso)}%` } as CSSProperties}
                     />
                 </div>
             )}

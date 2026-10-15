@@ -5,6 +5,7 @@
  */
 
 import { memo } from 'react';
+import type { CSSProperties } from 'react';
 import type { NotaPianoRoll } from '../../../types/pianoRoll';
 import { PALETA_NOTAS, CONSTANTES_PIANO_ROLL } from '../../../types/pianoRoll';
 
@@ -49,13 +50,13 @@ export const NotaRect = memo(({
         <div
             className={clases}
             style={{
-                left: x,
-                top: y,
-                width: anchoVisible,
-                height: alto - 1,
-                background: color,
-                opacity: nota.silenciada ? undefined : opacidad,
-            }}
+                '--notaIzq': `${x}px`,
+                '--notaTop': `${y}px`,
+                '--notaAncho': `${anchoVisible}px`,
+                '--notaAlto': `${alto - 1}px`,
+                '--notaColor': color,
+                '--notaOpacidad': nota.silenciada ? undefined : opacidad,
+            } as CSSProperties}
             data-nota-id={nota.id}
             onMouseDown={(e) => {
                 e.stopPropagation();
@@ -84,7 +85,7 @@ export const NotaRect = memo(({
             {/* Indicador de velocity (barra inferior) */}
             <div
                 className="pianoRollNotaVelocity"
-                style={{ opacity: nota.velocity }}
+                style={{ '--velocityOpacidad': nota.velocity } as CSSProperties}
             />
         </div>
     );

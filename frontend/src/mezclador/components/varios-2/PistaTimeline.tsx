@@ -147,7 +147,7 @@ export const PistaTimeline = ({
                     <div
                         key={linea.posicion}
                         className={`mezcladorDivisionCompas ${linea.esPrincipal ? 'mezcladorDivisionPrincipal' : 'mezcladorDivisionSecundaria'}`}
-                        style={{ left: `${(linea.posicion / totalCompases) * 100}%` }}
+                        style={{ '--divisionIzquierda': `${(linea.posicion / totalCompases) * 100}%` } as React.CSSProperties}
                     />
                 ))}
 
@@ -176,10 +176,10 @@ export const PistaTimeline = ({
                             key={clip.id}
                             className="clipPatron"
                             style={{
-                                left: `${izquierda}%`,
-                                width: `${ancho}%`,
-                                backgroundColor: patron.color,
-                            }}
+                                '--clipIzquierda': `${izquierda}%`,
+                                '--clipAncho': `${ancho}%`,
+                                '--clipColor': patron.color,
+                            } as React.CSSProperties}
                             title={patron.nombre}
                         >
                             <span className="clipPatronNombre">{patron.nombre}</span>
@@ -192,9 +192,9 @@ export const PistaTimeline = ({
                     <div
                         className="mezcladorBloqueGhost"
                         style={{
-                            left: `${ghostIzquierda}%`,
-                            width: `${ghostAncho}%`,
-                        }}
+                            '--ghostIzquierda': `${ghostIzquierda}%`,
+                            '--ghostAncho': `${ghostAncho}%`,
+                        } as React.CSSProperties}
                     />
                 )}
 
@@ -204,9 +204,9 @@ export const PistaTimeline = ({
                         key={`ghost-sel-${i}`}
                         className="mezcladorBloqueGhost"
                         style={{
-                            left: `${g.izquierda}%`,
-                            width: `${g.ancho}%`,
-                        }}
+                            '--ghostIzquierda': `${g.izquierda}%`,
+                            '--ghostAncho': `${g.ancho}%`,
+                        } as React.CSSProperties}
                     />
                 ))}
 

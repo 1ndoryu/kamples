@@ -4,6 +4,7 @@
  */
 
 import { memo } from 'react';
+import type { CSSProperties } from 'react';
 import { Palette } from 'lucide-react';
 import { useMenuContextualPR } from '../../../hooks/varios-1/useMenuContextualPR';
 import { PALETA_NOTAS } from '../../../types/pianoRoll';
@@ -31,7 +32,7 @@ export const MenuContextualPR = memo(({
         <div
             ref={menuRef}
             className="pianoRollMenuContextual"
-            style={{ left: posX, top: posY }}
+            style={{ '--menuIzq': `${posX}px`, '--menuTop': `${posY}px` } as CSSProperties}
         >
             {opciones.map((op) => (
                 <div key={op.label}>
@@ -58,7 +59,7 @@ export const MenuContextualPR = memo(({
                             <BotonBase variante="ghost"
                                 key={color}
                                 className="pianoRollMenuContextualColor"
-                                style={{ background: color }}
+                                style={{ '--colorMuestra': color } as CSSProperties}
                                 onClick={() => handleColor(idx)}
                                 title={`Color ${idx + 1}`}
                             />

@@ -5,6 +5,7 @@
  * Extras de isla: botón seguir (+) sobre el avatar, CardPerfil, sección comentarios.
  */
 
+import type { CSSProperties } from 'react';
 import { Users, TrendingUp, Clock, Plus, RefreshCw } from 'lucide-react';
 import { TarjetaPublicacion } from '@app/components/social/tarjeta/TarjetaPublicacion';
 import { MenuContextual } from '@app/components/ui/varios-2/MenuContextual';
@@ -115,12 +116,12 @@ const ComunidadContenido = (): JSX.Element => {
                 {esMovil && (pullToRefresh.distanciaArrastre > 0 || pullToRefresh.refrescando) && (
                     <div
                         className={`feedPullIndicador ${pullToRefresh.refrescando ? 'feedPullRefrescando' : ''}`}
-                        style={{ height: pullToRefresh.distanciaArrastre }}
+                        style={{ '--alturaPull': `${pullToRefresh.distanciaArrastre}px` } as CSSProperties}
                     >
                         <RefreshCw
                             size={20}
-                            className={pullToRefresh.refrescando ? 'feedPullGirando' : ''}
-                            style={{ transform: `rotate(${pullToRefresh.distanciaArrastre * 3}deg)` }}
+                            className={`feedPullIcono ${pullToRefresh.refrescando ? 'feedPullGirando' : ''}`}
+                            style={{ '--rotacion': `${pullToRefresh.distanciaArrastre * 3}deg` } as CSSProperties}
                         />
                     </div>
                 )}

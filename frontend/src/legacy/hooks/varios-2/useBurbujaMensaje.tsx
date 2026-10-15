@@ -5,7 +5,7 @@
  * y retorna el contenido renderizado junto con las clases CSS.
  */
 
-import { useState, useRef } from 'react';
+import { useState, useRef, type CSSProperties } from 'react';
 import { Play, Pause, Music, ExternalLink } from 'lucide-react';
 import type { Mensaje, MediaMetadataSample } from '@app/types';
 import { useT } from '@app/utils/i18n/useT';
@@ -94,7 +94,7 @@ const BurbujaAudio = ({ mensaje }: { mensaje: Mensaje }): JSX.Element => {
             <div className="burbujaAudioProgreso">
                 <div
                     className="burbujaAudioBarra"
-                    style={{ width: `${progreso}%` }}
+                    style={{ '--porcentaje': `${progreso}%` } as CSSProperties}
                 />
             </div>
             {mensaje.contenido && (

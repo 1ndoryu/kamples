@@ -4,6 +4,7 @@
  */
 
 import { useMemo } from 'react';
+import type { CSSProperties } from 'react';
 import { usePianoRollStore } from '../../stores/varios-1/pianoRollStore';
 import { useNotasStore } from '../../stores/acciones/accionesNotas';
 import { ticksAPx, notaAPx, alturaTotal, anchoTotalCompases } from '../../utils/pianoRollUtils';
@@ -52,11 +53,11 @@ export const useGhostNotas = ({
                         key={`ghost-${key}-${nota.id}`}
                         className="pianoRollGhostNota"
                         style={{
-                            left: x,
-                            top: y,
-                            width: Math.max(2, ancho),
-                            height: altoPorNota - 1,
-                        }}
+                            '--ghostNotaIzq': `${x}px`,
+                            '--ghostNotaTop': `${y}px`,
+                            '--ghostNotaAncho': `${ancho}px`,
+                            '--ghostNotaAlto': `${altoPorNota}px`,
+                        } as CSSProperties}
                     />
                 );
             }

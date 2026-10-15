@@ -5,6 +5,8 @@
 
 .tooltipPerfil {
     position: fixed;
+    top: var(--top, -9999px);
+    left: var(--left, -9999px);
     z-index: 1200;
     width: 340px;
     background: var(--fondoElevado1);

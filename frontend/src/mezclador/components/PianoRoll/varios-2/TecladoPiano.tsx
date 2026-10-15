@@ -5,6 +5,7 @@
  */
 
 import { memo, useCallback } from 'react';
+import type { CSSProperties } from 'react';
 import { CONSTANTES_PIANO_ROLL } from '../../../types/pianoRoll';
 import { midiANombre, esTeclaNegra, esNotaC, notaAPx } from '../../../utils/pianoRollUtils';
 
@@ -77,9 +78,9 @@ export const TecladoPiano = memo(({
                 key={midi}
                 className={claseTecla}
                 style={{
-                    top: y,
-                    height: altoPorNota,
-                }}
+                    '--teclaTop': `${y}px`,
+                    '--teclaAlto': `${altoPorNota}px`,
+                } as CSSProperties}
                 data-midi={midi}
             >
                 {/* Solo mostrar label en C y notas no-negras cada octava */}
@@ -93,7 +94,7 @@ export const TecladoPiano = memo(({
     return (
         <div
             className="pianoRollTeclado"
-            style={{ width: anchoPiano }}
+            style={{ '--tecladoAncho': `${anchoPiano}px` } as CSSProperties}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
@@ -101,9 +102,9 @@ export const TecladoPiano = memo(({
             <div
                 className="pianoRollTecladoInner"
                 style={{
-                    height: CONSTANTES_PIANO_ROLL.TOTAL_NOTAS * altoPorNota,
-                    top: -scrollY,
-                }}
+                    '--innerAlto': `${CONSTANTES_PIANO_ROLL.TOTAL_NOTAS * altoPorNota}px`,
+                    '--innerTop': `${-scrollY}px`,
+                } as CSSProperties}
             >
                 {teclas}
             </div>

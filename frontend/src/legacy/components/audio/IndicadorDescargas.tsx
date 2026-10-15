@@ -4,6 +4,7 @@
  * Usado en SampleDetalle y Libreria.
  */
 
+import type { CSSProperties } from 'react';
 import { Download, Crown } from 'lucide-react';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import type { LimitesDescarga } from '@app/services/api/varios-2/apiDescargas';
@@ -39,7 +40,7 @@ export const IndicadorDescargas = ({
                 <div className="indicadorDescargasBarra">
                     <div
                         className="indicadorDescargasRelleno"
-                        style={{ width: `${Math.min(100, porcentaje)}%` }}
+                        style={{ '--porcentaje': `${Math.min(100, porcentaje)}%` } as CSSProperties}
                     />
                 </div>
             )}

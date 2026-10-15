@@ -4,6 +4,7 @@
  */
 
 import { memo, useCallback, useRef } from 'react';
+import type { CSSProperties } from 'react';
 
 interface BarraVelocityProps {
     notaId: string;
@@ -70,11 +71,11 @@ export const BarraVelocity = memo(({
         <div
             className={clases}
             style={{
-                left: x,
-                top: posY,
-                height: Math.max(2, altBarra),
-                background: color,
-            }}
+                '--barraIzq': `${x}px`,
+                '--barraTop': `${posY}px`,
+                '--barraAlto': `${Math.max(2, altBarra)}px`,
+                '--barraColor': color,
+            } as CSSProperties}
             onMouseDown={handleMouseDown}
             data-nota-id={notaId}
         />

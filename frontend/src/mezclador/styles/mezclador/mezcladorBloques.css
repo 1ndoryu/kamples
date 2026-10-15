@@ -5,6 +5,9 @@
     position: absolute;
     top: 3px;
     bottom: 3px;
+    /* Posición y ancho (en % del compás) los calcula el componente */
+    left: var(--izquierdaBloque);
+    width: var(--anchoBloque);
     background: color-mix(in srgb, var(--colorBloque) 20%, transparent);
     border: 1px solid var(--colorBloque);
     border-radius: var(--radiusMezclador);
@@ -45,6 +48,8 @@
     position: absolute;
     top: 3px;
     bottom: 3px;
+    left: var(--ghostIzquierda);
+    width: var(--ghostAncho);
     background: color-mix(in srgb, var(--acento) 12%, transparent);
     border: 2px dashed var(--acento);
     border-radius: var(--radiusMezclador);
@@ -193,6 +198,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
+    left: var(--lineaCorte);
     width: 2px;
     background: var(--error);
     opacity: 0.7;

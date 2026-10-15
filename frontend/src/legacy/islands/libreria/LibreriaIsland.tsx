@@ -92,7 +92,7 @@ export const LibreriaIsland = (): JSX.Element => {
         <div className="libreriaContenedor" id="seccionLibreria">
 
             {cargando ? (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 'var(--espacioMd)', padding: 'var(--espacioMd)' }}>
+                <div className="libreriaGridCargando">
                     <SkeletonTarjetaColeccion />
                     <SkeletonTarjetaColeccion />
                     <SkeletonTarjetaColeccion />

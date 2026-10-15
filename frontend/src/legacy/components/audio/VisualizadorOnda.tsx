@@ -5,6 +5,7 @@
  * Complementa a WaveformPlayer (estático) con un visualizador dinámico.
  */
 
+import type { CSSProperties } from 'react';
 import { useVisualizadorOnda } from '../../hooks/varios-9/useVisualizadorOnda';
 import '../../styles/componentes/varios-7/visualizadorOnda.css';
 
@@ -58,7 +59,7 @@ export const VisualizadorOnda = ({
         <div
             ref={contenedorRef}
             className={`contenedorVisualizador ${className}`}
-            style={{ height: alto, width: '100%', position: 'relative' }}
+            style={{ '--alto': `${alto}px` } as CSSProperties}
         >
             <canvas
                 ref={canvasRef}

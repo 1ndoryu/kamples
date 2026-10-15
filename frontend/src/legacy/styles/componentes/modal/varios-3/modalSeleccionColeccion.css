@@ -32,6 +32,13 @@
     overflow: hidden;
 }
 
+/* Modo contextual: el panel se posiciona en coordenadas del viewport */
+.seleccionColeccionOverlayContextual .seleccionColeccionPanel {
+    position: fixed;
+    top: var(--top, 8px);
+    left: var(--left, 8px);
+}
+
 /* Buscador arriba (C107) */
 .seleccionColeccionBuscador {
     display: flex;

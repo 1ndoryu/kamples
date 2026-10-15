@@ -4,7 +4,7 @@
  * Se usa en CancionDetalleIsland para mostrar la genealogía de samples.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type CSSProperties } from 'react';
 import { ArrowRight, Music, GitBranch } from 'lucide-react';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { useNavigationStore } from '@/core/router';
@@ -87,7 +87,7 @@ export const CadenaSamples = ({ slug, titulo }: CadenaSamplesProps): JSX.Element
                         <ArrowRight
                             size={12}
                             className="cadenaFlecha"
-                            style={{ marginLeft: `${(nodo.nivel - 1) * 16 + 8}px` }}
+                            style={{ '--margenIzq': `${(nodo.nivel - 1) * 16 + 8}px` } as CSSProperties}
                         />
                         <NodoCancion
                             titulo={nodo.destino_titulo}

@@ -4,6 +4,7 @@
  * Solo vista, la lógica viene del hook useAdminPanel.
  */
 
+import type { CSSProperties } from 'react';
 import {
     Users,
     Music2,
@@ -135,7 +136,7 @@ const GraficaActividad = ({ datos }: { datos: DatosActividad }): JSX.Element => 
                             <div
                                 key={p}
                                 className="adminGraficaGridLinea"
-                                style={{ bottom: `${p * 100}%` }}
+                                style={{ '--posicion': `${p * 100}%` } as CSSProperties}
                             />
                         ))}
                     </div>
@@ -169,15 +170,15 @@ const GraficaActividad = ({ datos }: { datos: DatosActividad }): JSX.Element => 
                                     <div className="adminGraficaDiaBarras">
                                         <div
                                             className="adminGraficaBarra adminGraficaBarraRegistros"
-                                            style={{ height: `${(reg / maximo) * 100}%` }}
+                                            style={{ '--altura': `${(reg / maximo) * 100}%` } as CSSProperties}
                                         />
                                         <div
                                             className="adminGraficaBarra adminGraficaBarraUploads"
-                                            style={{ height: `${(upl / maximo) * 100}%` }}
+                                            style={{ '--altura': `${(upl / maximo) * 100}%` } as CSSProperties}
                                         />
                                         <div
                                             className="adminGraficaBarra adminGraficaBarraDescargas"
-                                            style={{ height: `${(desc / maximo) * 100}%` }}
+                                            style={{ '--altura': `${(desc / maximo) * 100}%` } as CSSProperties}
                                         />
                                     </div>
                                     {/* Mostrar fecha cada 2 días o si es el último */}

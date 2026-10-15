@@ -7,6 +7,7 @@
  * [2003A-3-B] Creado para profiling detallado del query CTE del feed.
  */
 
+import type { CSSProperties } from 'react';
 import type { RegistroTiming, NodoExplain } from '@app/stores/varios-1/algoTimingStore';
 
 function claseMs(ms: number): string {
@@ -60,7 +61,7 @@ export const DesgloseExplain = ({ explain }: { explain: NonNullable<RegistroTimi
                                             <div className="algoTimingBarra">
                                                 <div
                                                     className={`algoTimingBarraRelleno ${claseMs(nodo.totalMs)}`}
-                                                    style={{ width: `${Math.min(100, pctTotal)}%` }}
+                                                    style={{ '--porcentaje': `${Math.min(100, pctTotal)}%` } as CSSProperties}
                                                 />
                                             </div>
                                         </td>
@@ -87,7 +88,7 @@ export const DesgloseExplain = ({ explain }: { explain: NonNullable<RegistroTimi
                         <tbody>
                             {operaciones.slice(0, 15).map((nodo: NodoExplain, i: number) => (
                                 <tr key={`${nodo.etiqueta}-${i}`} className={`algoTimingFila ${claseMs(nodo.exclusivoMs)}`}>
-                                    <td className="algoTimingCeldaNombre" style={{ paddingLeft: `${nodo.profundidad * 12 + 8}px` }}>
+                                    <td className="algoTimingCeldaNombre algoTimingCeldaSangria" style={{ '--sangria': `${nodo.profundidad * 12 + 8}px` } as CSSProperties}>
                                         {nodo.etiqueta}
                                     </td>
                                     <td className="algoTimingCeldaMs">{formatMs(nodo.totalMs)}</td>

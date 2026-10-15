@@ -4,6 +4,7 @@
  * Lógica extraída a useModalSeleccionColeccion (SRP).
  */
 
+import type { CSSProperties } from 'react';
 import { Check, Loader, Plus, Search, X } from 'lucide-react';
 import { obtenerImagenColor } from '@app/services/varios-1/imagenesColor';
 import { useModalSeleccionColeccion } from '@app/hooks/modal/varios-2/useModalSeleccionColeccion';
@@ -27,19 +28,16 @@ export const ModalSeleccionColeccion = (): JSX.Element | null => {
 
     if (!abierto || !sample) return null;
 
-    /* Posición contextual ajustada al viewport */
-    const estiloPanel: React.CSSProperties | undefined = posicion
-        ? {
-            position: 'fixed',
-            top: Math.max(8, Math.min(posicion.y, altoVentana() - 428)),
-            left: Math.max(8, Math.min(posicion.x, anchoVentana() - 328)),
-        }
-        : undefined;
-
     return (
         <div className={`seleccionColeccionOverlay ${posicion ? 'seleccionColeccionOverlayContextual' : ''}`}
             onClick={cerrar}>
-            <div className="seleccionColeccionPanel" style={estiloPanel} onClick={e => e.stopPropagation()}>
+            <div className="seleccionColeccionPanel"
+                /* Posición contextual ajustada al viewport */
+                style={posicion ? {
+                    '--top': `${Math.max(8, Math.min(posicion.y, altoVentana() - 428))}px`,
+                    '--left': `${Math.max(8, Math.min(posicion.x, anchoVentana() - 328))}px`,
+                } as CSSProperties : undefined}
+                onClick={e => e.stopPropagation()}>
                 <div className="seleccionColeccionBuscador">
                     <Search size={14} className="seleccionColeccionBuscadorIcono" />
                     <CampoTexto  value={busqueda} onChange={e => setBusqueda(e.target.value)}

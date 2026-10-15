@@ -76,6 +76,13 @@
     margin: auto 0;
 }
 
+/* Estado de carga: spinner centrado ocupando el panel */
+.configSyncContenidoCargando {
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
 /* Secciones individuales */
 .configSyncSeccion {
     display: flex;

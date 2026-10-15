@@ -5,7 +5,7 @@
  * [296A-1] Eliminado hardcodeo 'User ID 1'. Ahora muestra el userId real
  *   de cada medición y filtra por admin actual por defecto. */
 
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { RefreshCw, Trash2, Activity } from 'lucide-react';
 import { Modal } from '@app/components/ui/modal/Modal';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
@@ -87,7 +87,7 @@ const TabUltima = ({ registro }: { registro: RegistroTiming }): JSX.Element => {
                                     <div className="algoTimingBarra">
                                         <div
                                             className={`algoTimingBarraRelleno ${claseMs(ms)}`}
-                                            style={{ width: `${Math.min(100, pct)}%` }}
+                                            style={{ '--porcentaje': `${Math.min(100, pct)}%` } as CSSProperties}
                                         />
                                     </div>
                                 </td>

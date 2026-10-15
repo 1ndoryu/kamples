@@ -5,6 +5,7 @@
  * QQ49: Rediseño completo.
  */
 
+import { type CSSProperties } from 'react';
 import { Play, Pause, SkipBack, SkipForward, Heart, Music, X } from 'lucide-react';
 import { useReproductorGlobal } from '../../../hooks/reproductor/useReproductorGlobal';
 import { BotonBase } from '../boton/BotonBase';
@@ -49,7 +50,7 @@ export const ReproductorGlobal = (): JSX.Element | null => {
                 aria-valuenow={Math.round(progreso * 100)}
                 aria-label={t('reproductor.progreso')}
             >
-                <div className="reproductorTimelineRelleno" style={{ width: `${progreso * 100}%` }} />
+                <div className="reproductorTimelineRelleno" style={{ '--porcentaje': `${progreso * 100}%` } as CSSProperties} />
             </div>
 
             {/* [183A-52] Portada circular — click navega al sample */}

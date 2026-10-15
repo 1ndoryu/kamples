@@ -4,6 +4,7 @@
  */
 
 import { useCallback, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import type { Patron } from '../../types/mezclador';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
@@ -83,7 +84,7 @@ export const SelectorPatron = ({
                     className="selectorPatronNombre"
                     onClick={() => setListaAbierta(!listaAbierta)}
                     onDoubleClick={() => setEditando(true)}
-                    style={{ color: patronActual?.color }}
+                    style={{ '--colorPatron': patronActual?.color } as CSSProperties}
                     title="Click: lista | Doble-click: renombrar"
                 >
                     {patronActual?.nombre ?? 'Sin patrón'}
@@ -118,7 +119,7 @@ export const SelectorPatron = ({
                             <BotonBase variante="ghost"
                                 className="selectorPatronItemNombre"
                                 onClick={() => { onSeleccionar(p.id); setListaAbierta(false); }}
-                                style={{ color: p.color }}
+                                style={{ '--colorPatron': p.color } as CSSProperties}
                             >
                                 {p.nombre}
                             </BotonBase>

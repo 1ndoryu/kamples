@@ -6,6 +6,7 @@
  * Montado globalmente en LayoutPrincipal, lee estado de tooltipPerfilStore.
  */
 
+import type { CSSProperties } from 'react';
 import Avatar from '@app/components/ui/varios-1/Avatar';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { BadgeCheck } from 'lucide-react';
@@ -32,7 +33,7 @@ export function TooltipPerfil() {
         <div
             ref={tooltipRef}
             className="tooltipPerfil"
-            style={{ top: posicion.top, left: posicion.left }}
+            style={{ '--top': `${posicion.top}px`, '--left': `${posicion.left}px` } as CSSProperties}
             onMouseEnter={onTooltipMouseEnter}
             onMouseLeave={onTooltipMouseLeave}
             role="tooltip"

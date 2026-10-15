@@ -4,6 +4,7 @@
  * Props: variante (rectangulo, circulo, texto), ancho, alto, className.
  */
 
+import type { CSSProperties } from 'react';
 import '../../styles/componentes/varios-6/skeleton.css';
 
 interface SkeletonProps {
@@ -19,14 +20,13 @@ export function Skeleton({
     circulo = false,
     className = '',
 }: SkeletonProps): JSX.Element {
-    const estilo: React.CSSProperties = {};
-    if (ancho) estilo.width = typeof ancho === 'number' ? `${ancho}px` : ancho;
-    if (alto) estilo.height = typeof alto === 'number' ? `${alto}px` : alto;
-
     return (
         <div
             className={`skeleton ${circulo ? 'skeletonCirculo' : ''} ${className}`.trim()}
-            style={estilo}
+            style={{
+                '--ancho': ancho ? (typeof ancho === 'number' ? `${ancho}px` : ancho) : undefined,
+                '--alto': alto ? (typeof alto === 'number' ? `${alto}px` : alto) : undefined,
+            } as CSSProperties}
             aria-hidden="true"
         />
     );

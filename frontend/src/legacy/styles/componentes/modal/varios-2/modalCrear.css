@@ -292,6 +292,7 @@
 .crearWaveformBarra {
     flex: 1;
     min-width: 2px;
+    height: var(--altura, 4%);
     background-color: var(--acento-blanco);
     border-radius: calc(var(--espacioXs) / 4);
     opacity: 0.6;

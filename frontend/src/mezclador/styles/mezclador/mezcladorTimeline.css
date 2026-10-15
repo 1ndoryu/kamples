@@ -24,6 +24,12 @@
 /* Representación simplificada de cada bloque en el minimapa */
 .minimapaBloque {
     position: absolute;
+    /* Posición, tamaño y color de cada bloque los calcula el componente */
+    left: var(--bloqueIzquierda);
+    width: var(--bloqueAncho);
+    top: var(--bloqueArriba);
+    height: var(--bloqueAlto);
+    background-color: var(--bloqueColor);
     border-radius: var(--radiusMezclador);
     opacity: 0.5;
     pointer-events: none;
@@ -34,6 +40,8 @@
     position: absolute;
     top: 0;
     bottom: 0;
+    left: var(--viewportIzquierda);
+    width: var(--viewportAncho);
     background: var(--colorRgba-255-255-255-0_08);
     border: 1px solid var(--acento);
     border-radius: var(--radiusMezclador);
@@ -104,6 +112,8 @@
 .mezcladorTimelineZoom {
     min-width: 100%;
     position: relative;
+    /* C217: el ancho escala con el nivel de zoom, que llega del componente */
+    width: var(--zoomTimeline, auto);
 }
 
 .mezcladorTimelineEncabezado {
@@ -145,6 +155,8 @@
 .mezcladorCompasLabel {
     position: absolute;
     top: 0;
+    left: var(--compasIzq);
+    width: var(--compasAncho);
     height: 100%;
     display: flex;
     align-items: center;
@@ -308,6 +320,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
+    left: var(--divisionIzquierda);
     width: 1px;
     background: var(--bordeSutil);
     pointer-events: none;
@@ -322,4 +335,15 @@
 .mezcladorDivisionSecundaria {
     background: var(--bordeSutil);
     opacity: 0.4;
+}
+
+/* Clips de patrón en la playlist — la clase no tenía regla propia; aquí queda
+ * la geometría que el componente calculaba inline (posición, ancho y color).
+ * `position: absolute` es imprescindible: sin el, `left` no hace nada y el clip
+ * se apilaba como bloque. El contenedor, .mezcladorPistaContenido, es relative. */
+.clipPatron {
+    position: absolute;
+    left: var(--clipIzquierda);
+    width: var(--clipAncho);
+    background-color: var(--clipColor);
 }

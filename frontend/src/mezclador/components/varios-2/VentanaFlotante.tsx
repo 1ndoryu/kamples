@@ -43,11 +43,11 @@ export const VentanaFlotante = ({
             ref={ventanaRef}
             className={`ventanaFlotante ${arrastrando ? 'ventanaFlotanteArrastrando' : ''}`}
             style={{
-                left: ventana.posicion.x,
-                top: ventana.posicion.y,
-                width: ancho,
-                zIndex: ventana.zIndex,
-            }}
+                '--ventanaX': `${ventana.posicion.x}px`,
+                '--ventanaY': `${ventana.posicion.y}px`,
+                '--ventanaAncho': `${ancho}px`,
+                '--ventanaZ': ventana.zIndex,
+            } as React.CSSProperties}
             onMouseDown={(e) => {
                 e.stopPropagation();
                 enfocar(id);

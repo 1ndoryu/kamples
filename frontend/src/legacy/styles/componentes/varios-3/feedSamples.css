@@ -202,8 +202,19 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    height: var(--alturaPull, 0px);
     color: var(--textoSecundario);
     transition: height 0.15s ease-out;
+}
+
+.feedPullIcono {
+    transform: rotate(var(--rotacion, 0deg));
+}
+
+/* Espaciadores de virtualización: alto dinámico vía custom property */
+.feedSamplesEspaciador {
+    height: var(--altura, 0px);
+    flex-shrink: 0;
 }
 
 .feedPullRefrescando {

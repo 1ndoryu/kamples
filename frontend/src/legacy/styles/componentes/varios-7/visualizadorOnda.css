@@ -1,5 +1,11 @@
 /* visualizadorOnda.css — Estilos extraídos de VisualizadorOnda.tsx. */
 
+.contenedorVisualizador {
+    width: 100%;
+    height: var(--alto, 64px);
+    position: relative;
+}
+
 .visualizadorOnda-inl1 {
     width: 100%;
     height: 100%;

@@ -63,7 +63,7 @@ export function VentanaConfigSync(): JSX.Element {
                 <div className="configSyncCabecera configSyncCabeceraStandalone">
                     <span className="configSyncTitulo">Configuración de sincronización</span>
                 </div>
-                <div className="configSyncContenido" style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                <div className="configSyncContenido configSyncContenidoCargando">
                     <Loader2 size={20} className="sincPanelSpinner" />
                 </div>
             </div>

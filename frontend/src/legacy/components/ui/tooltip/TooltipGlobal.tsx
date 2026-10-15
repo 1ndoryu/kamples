@@ -8,7 +8,7 @@
  * Se renderiza UNA VEZ en LayoutPrincipal — sin wrappers, sin stores.
  */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import '../../../styles/componentes/tooltip/tooltip.css';
 import { dejarDeEscucharVentana, escucharVentana } from '@/platform/ventana';
@@ -126,7 +126,7 @@ export const TooltipGlobal = (): JSX.Element | null => {
     return createPortal(
         <div
             className={`tooltipContenido ${claseTransform}`}
-            style={{ top: estado.top, left: estado.left }}
+            style={{ '--top': `${estado.top}px`, '--left': `${estado.left}px` } as CSSProperties}
             role="tooltip"
         >
             {estado.texto}

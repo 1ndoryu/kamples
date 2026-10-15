@@ -8,3 +8,11 @@
     padding: var(--espacioLg);
     gap: var(--espacioMd);
 }
+
+/* Rejilla de esqueletos durante la carga */
+.libreriaGridCargando {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--espacioMd);
+    padding: var(--espacioMd);
+}

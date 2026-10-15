@@ -9,6 +9,7 @@
 
 import { Music, WifiOff, RefreshCw } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import type { CSSProperties } from 'react';
 import '../../styles/componentes/varios-3/feedSamples.css';
 import { TarjetaSample } from '@app/components/ui/tarjeta/TarjetaSample';
 import { useT } from '@app/utils/i18n/useT';
@@ -164,7 +165,7 @@ export const FeedSamples = ({
             {esMovil && (pullToRefresh.distanciaArrastre > 0 || pullToRefresh.refrescando) && (
                 <div
                     className={`feedPullIndicador ${pullToRefresh.refrescando ? 'feedPullRefrescando' : ''}`}
-                    style={{ height: pullToRefresh.distanciaArrastre }}
+                    style={{ '--alturaPull': `${pullToRefresh.distanciaArrastre}px` } as CSSProperties}
                 >
                     <RefreshCw
                         size={20}
@@ -209,7 +210,7 @@ export const FeedSamples = ({
                 <div className="listaDeSamples">
                     {/* Espaciador superior para virtualización */}
                     {feed.virtualizar && feed.indiceInicio > 0 && (
-                        <div style={{ height: feed.indiceInicio * feed.alturaTarjeta }} aria-hidden="true" />
+                        <div className="feedSamplesEspaciador" style={{ '--altura': `${feed.indiceInicio * feed.alturaTarjeta}px` } as CSSProperties} aria-hidden="true" />
                     )}
 
                     {feed.samplesVisibles.map(s => (
@@ -232,7 +233,8 @@ export const FeedSamples = ({
                     {/* Espaciador inferior para virtualización */}
                     {feed.virtualizar && feed.indiceInicio + feed.maxRenderizados < feed.samplesFiltrados.length && (
                         <div
-                            style={{ height: (feed.samplesFiltrados.length - feed.indiceInicio - feed.maxRenderizados) * feed.alturaTarjeta }}
+                            className="feedSamplesEspaciador"
+                            style={{ '--altura': `${(feed.samplesFiltrados.length - feed.indiceInicio - feed.maxRenderizados) * feed.alturaTarjeta}px` } as CSSProperties}
                             aria-hidden="true"
                         />
                     )}

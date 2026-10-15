@@ -3,6 +3,11 @@
 /* C287: Ventana flotante draggable (reemplaza modales fijos) */
 .ventanaFlotante {
     position: fixed;
+    /* Posición, ancho y orden de apilado los gestiona el componente */
+    left: var(--ventanaX);
+    top: var(--ventanaY);
+    width: var(--ventanaAncho);
+    z-index: var(--ventanaZ);
     background: var(--fondoElevado1);
     border: 1px solid var(--bordeSutil);
     border-radius: var(--radiusMezclador);

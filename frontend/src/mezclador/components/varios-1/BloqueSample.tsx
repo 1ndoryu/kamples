@@ -56,8 +56,8 @@ export const BloqueSample = ({
         <div
             className={`mezcladorBloque ${estaSiendoArrastrado ? 'mezcladorBloqueDragging' : ''} ${estaSeleccionado ? 'mezcladorBloqueSeleccionado' : ''} ${resizing ? 'mezcladorBloqueResizing' : ''} ${modoCortarActivo ? 'mezcladorBloqueCortando' : ''}`}
             style={{
-                left: `${izquierda}%`,
-                width: `${ancho}%`,
+                '--izquierdaBloque': `${izquierda}%`,
+                '--anchoBloque': `${ancho}%`,
                 '--colorBloque': bloque.color,
             } as React.CSSProperties}
             onMouseDown={alMouseDown}
@@ -137,7 +137,7 @@ export const BloqueSample = ({
             {modoCortarActivo && lineaCortePorc !== null && (
                 <div
                     className="mezcladorBloqueLineaCorte"
-                    style={{ left: `${lineaCortePorc}%` }}
+                    style={{ '--lineaCorte': `${lineaCortePorc}%` } as React.CSSProperties}
                 />
             )}
 

@@ -6,6 +6,7 @@
  */
 
 import { memo } from 'react';
+import type { CSSProperties } from 'react';
 import { useGhostNotas } from '../../../hooks/varios-1/useGhostNotas';
 
 interface GhostNotasProps {
@@ -32,9 +33,9 @@ export const GhostNotas = memo(({
         <div
             className="pianoRollGhostContenedor"
             style={{
-                width: anchoTotal,
-                height: altTotal,
-            }}
+                '--ghostAncho': `${anchoTotal}px`,
+                '--ghostAlto': `${altTotal}px`,
+            } as CSSProperties}
         >
             {ghostElements}
         </div>

@@ -30,6 +30,7 @@
 /* Tiempo flotante al hacer hover */
 .waveformTiempoFlotante {
     position: absolute;
+    left: var(--posicion, 0px);
     top: -24px;
     transform: translateX(-50%);
     background-color: var(--fondoElevado3);

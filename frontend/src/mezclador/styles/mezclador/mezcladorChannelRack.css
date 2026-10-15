@@ -68,7 +68,7 @@
     font-weight: 600;
     background: transparent;
     border: none;
-    color: var(--textoPrimario);
+    color: var(--colorPatron, var(--textoPrimario));
     text-align: center;
     cursor: pointer;
     text-overflow: ellipsis;
@@ -120,6 +120,11 @@
     background: var(--acentoMuted);
     color: var(--acento);
     border-left: 2px solid var(--acento);
+}
+
+/* Nombre del patrón en la lista: color propio del patrón */
+.selectorPatronItemNombre {
+    color: var(--colorPatron);
 }
 
 /* Flechas navegación patrón */
@@ -189,6 +194,11 @@
     color: var(--colorNegroPuro);
 }
 
+/* Color propio del canal: se aplica tras mute/solo, como hacia el estilo en linea */
+.canalLed {
+    border-color: var(--ledColor);
+}
+
 /* Knobs Container */
 
 /* Routing (Mixer Track) */
@@ -224,7 +234,7 @@
     align-items: center;
     justify-content: center;
     background: var(--fondoElevado2); /* Gris medio */
-    color: var(--textoPrimario);
+    color: var(--colorCanal, var(--textoPrimario));
     border-radius: var(--radiusMezclador);
     cursor: pointer;
     user-select: none;
@@ -310,7 +320,8 @@
 
 /* Pasos Activos */
 .pasoBotonActivo {
-    background: var(--acento); /* Color global de acento */
+    background: var(--colorPaso, var(--acento)); /* Color del canal o acento global */
+    opacity: var(--opacidadPaso);
     box-shadow: 0 0 6px var(--acentoMuted);
     border: var(--espacioMinimo) solid var(--colorRgba-255-255-255-0_1);
 }
@@ -330,13 +341,17 @@
 }
 
 .graphEditorBarra {
+    /* Opacidad por defecto de la barra del graph editor */
+    --opacidadBarraBase: 0.8;
     flex: 1;
     min-width: 4px;
+    height: var(--altoBarra);
+    bottom: var(--bottomBarra);
     border-radius: var(--radiusMezclador);
     cursor: ns-resize;
-    background: var(--acento);
+    background: var(--colorBarra, var(--acento));
     transition: height 0.05s;
-    opacity: 0.8;
+    opacity: var(--opacidadBarra, var(--opacidadBarraBase));
 }
 
 .graphEditorBarra:hover {

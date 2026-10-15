@@ -34,12 +34,15 @@ export const EQVisualizer = ({
      * literal. Aqui solo se publica como custom properties para que el CSS pinte
      * las etiquetas de cada banda sin duplicar los colores.
      */
-    const tokensBanda = Object.fromEntries(
-        COLORES_BANDA.map((color, i) => [`--eqBanda${i + 1}`, color]),
-    ) as CSSProperties;
-
     return (
-        <div className="eqVisualizer" style={tokensBanda}>
+        <div
+            className="eqVisualizer"
+            style={{
+                '--eqBanda1': COLORES_BANDA[0],
+                '--eqBanda2': COLORES_BANDA[1],
+                '--eqBanda3': COLORES_BANDA[2],
+            } as CSSProperties}
+        >
             <div className="eqVisualizerCabecera">
                 <span>EQ</span>
                 <BotonBase variante="ghost"

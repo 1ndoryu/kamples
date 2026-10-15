@@ -5,7 +5,7 @@
  * Se cierra al hacer click fuera, presionar Escape o botón de cierre.
  */
 
-import { type ReactNode, useEffect, useCallback, Fragment, useLayoutEffect, useRef, useState } from 'react';
+import { type ReactNode, type CSSProperties, useEffect, useCallback, Fragment, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import '../../../styles/componentes/varios-4/menuContextual.css';
 import { BotonBase } from '../boton/BotonBase';
@@ -150,7 +150,7 @@ export const MenuContextual = ({
             <div
                 className="menuContextual"
                 ref={menuRef}
-                style={{ left: posicionAjustada.left, top: posicionAjustada.top }}
+                style={{ '--left': `${posicionAjustada.left}px`, '--top': `${posicionAjustada.top}px` } as CSSProperties}
                 role="menu"
             >
                 {contenidoItems}

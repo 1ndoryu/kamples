@@ -6,6 +6,7 @@
  * C184: Soporte para modo 'mezclador' + handle de resize.
  */
 
+import type { CSSProperties } from 'react';
 import { PanelDetalleSample } from '@app/components/feed/PanelDetalleSample';
 import { PanelSugerencias } from '@app/components/feed/PanelSugerencias';
 import { PanelColeccionSamples } from '@app/components/feed/PanelColeccionSamples';
@@ -27,7 +28,7 @@ export const PanelLateral = (): JSX.Element | null => {
         <aside
             className={`panelLateral${expandido ? ' panelLateralExpandido' : ''}`}
             ref={panelRef}
-            style={expandido ? { width: '100%' } : { width: `${ancho}px` }}
+            style={{ '--anchoPanelLateral': expandido ? '100%' : `${ancho}px` } as CSSProperties}
         >
             {/* Handle de resize — borde izquierdo (oculto cuando expandido) */}
             {!expandido && (

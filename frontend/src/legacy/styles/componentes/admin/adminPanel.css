@@ -151,6 +151,7 @@
     position: absolute;
     left: 0;
     right: 0;
+    bottom: var(--posicion, 0%);
     height: 1px;
     background: var(--bordeSutil);
     opacity: 0.5;
@@ -198,6 +199,7 @@
 /* Barra individual */
 .adminGraficaBarra {
     flex: 1;
+    height: var(--altura, 0%);
     border-radius: var(--radioSm) var(--radioSm) 0 0;
     min-height: calc(var(--espacioXs) / 4);
     transition: filter 0.15s ease;

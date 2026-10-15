@@ -6,6 +6,7 @@
  * Seccion Connect extraida a SeccionConnect (SRP).
  */
 
+import type { CSSProperties } from 'react';
 import {
     DollarSign,
     Download,
@@ -82,7 +83,7 @@ const GraficaIngresos = ({ datos }: { datos: IngresosPorPeriodo[] }): JSX.Elemen
                     <div
                         key={d.fecha}
                         className="dashboardGraficaBarra"
-                        style={{ height: `${(d.monto / maxMonto) * 100}%` }}
+                        style={{ '--altura': `${(d.monto / maxMonto) * 100}%` } as CSSProperties}
                         title={`${d.fecha}: ${formatearMoneda(d.monto)}`}
                     />
                 ))}
