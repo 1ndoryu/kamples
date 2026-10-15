@@ -209,7 +209,7 @@ const PanelCola = ({cola, sampleActualId, onSeleccionar, onQuitar, onMover, onLi
     <div className="reproductorIslandCola">
         <div className="reproductorIslandColaHeader">
             <ListMusic size={18} />
-            <h3>Cola de reproducción</h3>
+            <h3 className="reproductorIslandColaTitulo">Cola de reproducción</h3>
             <span className="reproductorIslandColaCount">{cola.length}</span>
             {cola.length > 0 && (
                 <BotonBase variante="ghost" className="reproductorIslandBtn reproductorIslandBtnSm" onClick={onLimpiar} type="button" aria-label="Limpiar cola">

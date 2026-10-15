@@ -87,7 +87,7 @@ export const ComentarioItem = ({comentario, acciones, onClickAutor, renderMediaC
                     <div className="comentarioEdicion">
                         <CampoTexto ref={inputEdicionRef} value={textoEdicion} onChange={e => setTextoEdicion(e.target.value)} onKeyDown={manejarKeyEdicion} maxLength={300} autoFocus />
                         <div className="comentarioEdicionBotones">
-                            <BotonBase variante="ghost" type="button" onClick={() => acciones?.setEditandoId?.(null)}>
+                            <BotonBase variante="ghost" type="button" className="comentarioEdicionCancelar" onClick={() => acciones?.setEditandoId?.(null)}>
                                 Cancelar
                             </BotonBase>
                             <BotonBase variante="ghost" type="button" onClick={confirmarEdicion} className="comentarioEdicionGuardar">

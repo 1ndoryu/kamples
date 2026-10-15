@@ -148,7 +148,7 @@ export const FeedSamples = ({
             <div className={`feedSamplesContenedor ${className}`} id={id}>
                 <div className="feedSamplesOffline">
                     <WifiOff size={48} />
-                    <h3>{t('feed.sinConexionTitulo')}</h3>
+                    <h3 className="feedSamplesOfflineTitulo">{t('feed.sinConexionTitulo')}</h3>
                     <p>{t('feed.sinConexionDesc')}</p>
                 </div>
             </div>

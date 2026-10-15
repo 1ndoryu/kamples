@@ -43,7 +43,7 @@ const MensajesIslandBase = (): JSX.Element => {
             <div className="mensajesHeader">
                 <div className="mensajesHeaderTitulo">
                     <MessageCircle size={20} />
-                    <h1>Mensajes</h1>
+                    <h1 className="mensajesHeaderTituloTexto">Mensajes</h1>
                     {totalNoLeidos > 0 && (
                         <Badge variante="acento" tamano="xs">{totalNoLeidos}</Badge>
                     )}

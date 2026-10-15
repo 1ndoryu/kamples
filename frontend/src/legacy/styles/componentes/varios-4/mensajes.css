@@ -24,7 +24,7 @@
     color: var(--textoPrimario);
 }
 
-.mensajesHeaderTitulo h1 {
+.mensajesHeaderTituloTexto {
     font-size: var(--fuenteLg);
     font-weight: var(--pesoSemibold);
     margin: 0;

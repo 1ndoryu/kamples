@@ -81,7 +81,7 @@
     align-items: center;
 }
 
-.landingHeroBuscador button {
+.landingHeroBuscadorBtn.botonBase {
     border-radius: var(--medidaPx-100);
 }
 

@@ -49,12 +49,10 @@
     min-width: 0;
 }
 
-.tooltipPerfilTextos button {
+/* [15A-17] El boton se alinea al texto, no al centro. */
+.tooltipPerfilNombreBtn.botonBase {
     align-items: flex-start;
     justify-content: start;
-}
-
-.tooltipPerfilNombreBtn.botonBase {
     padding: 0;
     background: none;
     min-height: unset;

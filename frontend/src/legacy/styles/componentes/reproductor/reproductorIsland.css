@@ -222,7 +222,7 @@
     color: var(--textoPrimario);
 }
 
-.reproductorIslandColaHeader h3 {
+.reproductorIslandColaTitulo {
     font-size: var(--fuenteSm);
     font-weight: var(--pesoMedio);
     margin: 0;

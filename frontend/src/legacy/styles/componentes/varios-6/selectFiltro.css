@@ -11,7 +11,12 @@
     display: inline-flex;
 }
 
-.selectFiltro button {
+/* [15A-17] Los botones del filtro van con la altura de su contenido, no con los
+ * 34px de .botonBase. Se listan los tres que viven dentro de .selectFiltro: el
+ * trigger, los +/- de cada opcion y el aplicar del SelectorBPM. */
+.selectFiltroBoton,
+.selectFiltroOpcionBtn,
+.selectorBPMAplicar {
     height: unset !important;
 }
 

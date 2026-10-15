@@ -97,10 +97,6 @@
     transition: border-color var(--transicionRapida);
 }
 
-.comentarioNuevoInput button {
-    padding: unset !important;
-}
-
 .comentarioEnviarBtn {
     width: 60px;
 }
@@ -373,7 +369,9 @@ button.botonBase.varianteGhost.tamanoMd.comentarioEnviarBtn {
     justify-content: flex-end;
 }
 
-.comentarioEdicionBotones button {
+/* [15A-17] Los dos botones del pie de edicion comparten receta. */
+.comentarioEdicionCancelar.botonBase,
+.comentarioEdicionGuardar.botonBase {
     background: none;
     border: 1px solid var(--bordeSutil);
     border-radius: var(--radioSm);
@@ -384,7 +382,8 @@ button.botonBase.varianteGhost.tamanoMd.comentarioEnviarBtn {
     transition: all var(--transicionRapida);
 }
 
-.comentarioEdicionBotones button:hover {
+.comentarioEdicionCancelar.botonBase:hover,
+.comentarioEdicionGuardar.botonBase:hover {
     border-color: var(--bordeActivo);
     color: var(--textoPrimario);
 }

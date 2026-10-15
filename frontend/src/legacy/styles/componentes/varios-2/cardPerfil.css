@@ -61,12 +61,10 @@
     min-width: 0;
 }
 
-.cardPerfilTextos button {
+/* [15A-17] El boton se alinea al texto, no al centro. */
+.cardPerfilNombreBtn.botonBase {
     align-items: flex-start;
     justify-content: start;
-}
-
-.cardPerfilNombreBtn.botonBase {
     padding: 0;
     background: none;
     min-height: unset;

@@ -14,7 +14,7 @@ export const PrivacidadIsland = (): JSX.Element => (
         <p className="fechaLegal">Última actualización: Marzo 2026</p>
 
         <section className="seccionLegal">
-            <h2>1. Información que recopilamos</h2>
+            <h2 className="seccionLegalTitulo">1. Información que recopilamos</h2>
             <p>
                 Al usar Kamples, recopilamos la siguiente información:
             </p>
@@ -27,7 +27,7 @@ export const PrivacidadIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>2. Cómo usamos tu información</h2>
+            <h2 className="seccionLegalTitulo">2. Cómo usamos tu información</h2>
             <ul>
                 <li>Proporcionar y mejorar el servicio de descubrimiento de samples.</li>
                 <li>Personalizar las recomendaciones según tus gustos musicales.</li>
@@ -38,7 +38,7 @@ export const PrivacidadIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>3. Cookies y tecnologías similares</h2>
+            <h2 className="seccionLegalTitulo">3. Cookies y tecnologías similares</h2>
             <p>
                 Usamos cookies esenciales para mantener tu sesión activa y recordar tus preferencias.
                 No utilizamos cookies de seguimiento de terceros ni publicidad dirigida.
@@ -46,7 +46,7 @@ export const PrivacidadIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>4. Compartir información</h2>
+            <h2 className="seccionLegalTitulo">4. Compartir información</h2>
             <p>
                 No vendemos ni compartimos tu información personal con terceros, excepto:
             </p>
@@ -58,7 +58,7 @@ export const PrivacidadIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>5. Tus derechos</h2>
+            <h2 className="seccionLegalTitulo">5. Tus derechos</h2>
             <p>
                 Puedes en cualquier momento:
             </p>
@@ -71,7 +71,7 @@ export const PrivacidadIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>6. Seguridad</h2>
+            <h2 className="seccionLegalTitulo">6. Seguridad</h2>
             <p>
                 Protegemos tu información mediante cifrado en tránsito (HTTPS/TLS),
                 contraseñas hasheadas, y acceso restringido a datos personales.
@@ -81,7 +81,7 @@ export const PrivacidadIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>7. Contacto</h2>
+            <h2 className="seccionLegalTitulo">7. Contacto</h2>
             <p>
                 Para consultas sobre privacidad, contáctanos en: <strong>privacy@kamples.com</strong>
             </p>

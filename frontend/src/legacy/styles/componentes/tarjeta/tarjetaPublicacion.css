@@ -93,14 +93,11 @@
     flex-shrink: 0;
 }
 
-.tarjetaPubAccionesHeader button {
-    padding: 0 !important;
-}
-
 /* Menú 3 puntos: oculto hasta hacer hover en la tarjeta (igual que comunidad) */
+/* [15A-17] Sin padding: el area de pulsacion la da el icono. */
 .tarjetaPubMenuBtn {
     color: var(--textoTerciario);
-    padding: var(--espacioXs);
+    padding: 0;
     opacity: 1;
     transition: opacity 0.15s, color 0.15s;
     background: none;

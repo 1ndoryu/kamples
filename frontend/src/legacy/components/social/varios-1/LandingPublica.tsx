@@ -80,7 +80,7 @@ export const LandingPublica = (): JSX.Element => {
                         onKeyDown={manejarTecla}
                         aria-label={t('landing.buscar')}
                     />
-                    <BotonBase variante="primario" tamano="sm" onClick={irADescubrir} type="button">
+                    <BotonBase variante="primario" tamano="sm" className="landingHeroBuscadorBtn" onClick={irADescubrir} type="button">
                         {t('landing.buscar')}
                     </BotonBase>
                 </div>

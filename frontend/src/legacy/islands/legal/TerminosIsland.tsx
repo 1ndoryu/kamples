@@ -14,7 +14,7 @@ export const TerminosIsland = (): JSX.Element => (
         <p className="fechaLegal">Última actualización: Marzo 2026</p>
 
         <section className="seccionLegal">
-            <h2>1. Aceptación de los términos</h2>
+            <h2 className="seccionLegalTitulo">1. Aceptación de los términos</h2>
             <p>
                 Al acceder o utilizar Kamples, aceptas estar sujeto a estos términos.
                 Si no estás de acuerdo, no utilices la plataforma.
@@ -22,7 +22,7 @@ export const TerminosIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>2. Descripción del servicio</h2>
+            <h2 className="seccionLegalTitulo">2. Descripción del servicio</h2>
             <p>
                 Kamples es una plataforma de descubrimiento y compartición de samples de audio.
                 Los usuarios pueden explorar, subir, descargar y organizar samples musicales,
@@ -31,7 +31,7 @@ export const TerminosIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>3. Cuentas de usuario</h2>
+            <h2 className="seccionLegalTitulo">3. Cuentas de usuario</h2>
             <ul>
                 <li>Debes tener al menos 13 años para crear una cuenta.</li>
                 <li>Eres responsable de mantener la seguridad de tu cuenta y contraseña.</li>
@@ -41,7 +41,7 @@ export const TerminosIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>4. Contenido del usuario</h2>
+            <h2 className="seccionLegalTitulo">4. Contenido del usuario</h2>
             <p>
                 Al subir contenido a Kamples:
             </p>
@@ -55,7 +55,7 @@ export const TerminosIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>5. Propiedad intelectual y DMCA</h2>
+            <h2 className="seccionLegalTitulo">5. Propiedad intelectual y DMCA</h2>
             <p>
                 Kamples respeta la propiedad intelectual. Los recortes de audio están
                 disponibles con fines educativos y de referencia para la comunidad de productores.
@@ -80,7 +80,7 @@ export const TerminosIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>6. Uso aceptable</h2>
+            <h2 className="seccionLegalTitulo">6. Uso aceptable</h2>
             <p>Queda prohibido:</p>
             <ul>
                 <li>Usar la plataforma para distribuir malware o spam.</li>
@@ -92,7 +92,7 @@ export const TerminosIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>7. Limitación de responsabilidad</h2>
+            <h2 className="seccionLegalTitulo">7. Limitación de responsabilidad</h2>
             <p>
                 Kamples se proporciona &quot;tal cual&quot; sin garantías de ningún tipo.
                 No nos hacemos responsables de daños indirectos, incidentales o consecuentes
@@ -102,7 +102,7 @@ export const TerminosIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>8. Modificaciones</h2>
+            <h2 className="seccionLegalTitulo">8. Modificaciones</h2>
             <p>
                 Podemos actualizar estos términos periódicamente. Los cambios sustanciales
                 se notificarán a través de la plataforma. El uso continuado después de
@@ -111,7 +111,7 @@ export const TerminosIsland = (): JSX.Element => (
         </section>
 
         <section className="seccionLegal">
-            <h2>9. Contacto</h2>
+            <h2 className="seccionLegalTitulo">9. Contacto</h2>
             <p>
                 Para consultas legales: <strong>legal@kamples.com</strong>
             </p>

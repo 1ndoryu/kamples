@@ -110,7 +110,7 @@ const DashboardIslandBase = (): JSX.Element => {
             <div className="dashboardHeader">
                 <div className="dashboardHeaderTitulo">
                     <BarChart3 size={20} />
-                    <h1>{t('comun.dashboard')}</h1>
+                    <h1 className="dashboardHeaderTituloTexto">{t('comun.dashboard')}</h1>
                 </div>
                 <BotonBase variante="secundario" tamano="sm" onClick={() => navegar('/libreria/')}>
                     {t('comun.irALibreria')}

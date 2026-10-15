@@ -144,17 +144,14 @@ ul.vincularSampleLista button {
     gap: var(--espacioSm);
 }
 
-.vincularSampleSelectorOpciones button {
-    height: unset !important;
-    padding: var(--espacioLg) !important;
-}
-
+/* [15A-17] El boton necesita mas aire que el padding por defecto: antes lo
+ * forzaba un `.vincularSampleSelectorOpciones button` con !important. */
 .vincularSampleSelectorBtn {
     display: flex;
     align-items: center;
     gap: var(--espacioMd);
     width: 100%;
-    padding: var(--espacioMd);
+    padding: var(--espacioLg);
     border: 1px solid var(--bordeSutil);
     border-radius: var(--radioMd);
     background: var(--fondoElevado1);

@@ -31,7 +31,7 @@
     margin-bottom: var(--espacio2xl);
 }
 
-.seccionLegal h2 {
+.seccionLegalTitulo {
     font-size: var(--fuenteLg);
     font-weight: 600;
     color: var(--blanco);
