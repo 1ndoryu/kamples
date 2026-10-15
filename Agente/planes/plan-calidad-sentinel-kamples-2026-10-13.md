@@ -273,6 +273,28 @@ valorHardcoded                        0 /  0 / 107
 
 **Nada de esto se ha silenciado**: no hay `sentinel-disable-*`, ni exclusiones nuevas en `sentinel.config.json`, ni clases renombradas para esquivar un patrón. Cada punto de abajo es un defecto de la herramienta, con la evidencia mínima para reproducirlo.
 
+**Estado tras ejecutar 15A-1 y 15A-1b: 739 hallazgos** (era 1075 con VarSense contando los 336 tokens fantasma; el resto del delta es el shell muerto). Reparto por zona del análisis vigente (`zona.mjs`), contando la base nueva:
+
+```
+regla                                VIVO  VENDIDO  CLIENTS   OTRO
+claseHuerfana                          29      112        0      0
+valorHardcoded                          0      107        0      0
+css-especificacion-diseno-local        98        3        0      0
+cssInlineReact                         74        6        0      0
+css-hardcoded-value                     0       75        1      0
+inline-style-prohibido                 67        0        1      0
+css-adhoc-button-style                 33        8        0      0
+cssInlineScript                        40        0        0      0
+modal-estructura-no-canonica           29        0        0      0
+css-elemento-html-directo              22        5        0      0
+modal-semantica-no-canonica            12        0        0      0
+modal-con-titulo                        8        0        0      0
+window-reference-outside-platform       5        0        0      0
+modal-acciones-no-canonico              4        0        0      0
+```
+
+Vivo 421 / vendido 316 / clients 2. El árbol **vendido** (`glory-core/`, `glory-css/`) no se edita (línea 19): sus 316 son deuda de terceros, no de KAMPLES.
+
 ### Defectos de regla confirmados (a corregir en Sentinel/VarSense)
 
 1. **`css-especificacion-diseno-local` (98) — la regla se contradice con su propio mensaje.** En `src/analyzers/static/staticCssRules.ts`, `PROPIEDADES_DISENO_CSS` cuenta como "especificación visual" propiedades que son layout o estado: `padding`, `border`, `border-radius`, `text-align`, `opacity`, `transition`, `line-height`, `letter-spacing`. Pero el mensaje pide *"deja aquí solo layout contextual"*. Un bloque que solo tenga esas propiedades alcanza el umbral (`bloqueDefineEspecificacionDisenoLocal` corta con `length < 2`) y se marca, aunque el mensaje diga justo lo contrario. Ejemplo mínimo: `.adminHistorialItem` señalada por `(border-radius, padding, transition)`. A esto se suma `PATRONES_ROL_INTERACTIVO_LOCAL`, que casa **cualquier** clase terminada en `Trigger|Opcion|Option|Dropdown|Desplegable|SubMenu|Submenu|Menu|Panel|Lista|Item`, de modo que dispara sobre componentes de layout corrientes. *Arreglo:* sacar `padding`, `transition`, `opacity`, `text-align`, `line-height`, `letter-spacing` de la lista, o exigir al menos una propiedad de identidad visual (`color`, `background`, `font-family`, `box-shadow`) para llegar al umbral.
@@ -314,15 +336,26 @@ valorHardcoded                        0 /  0 / 107
 - `css-especificacion-diseno-local` (98) y `css-elemento-html-directo` (22): **bloqueado en verificación visual**. Cambian render y AGENTS §5 exige evidencia real antes y después; el backend de KAMPLES en `127.0.0.1:3001` no arranca sin `.env` y `kamples_verif` no se ha levantado desde el reinicio del PC. Sin eso, tocarlas es adivinar.
 - Árbol muerto (tarea 15A-1): borrarlo retira 13 hallazgos y una regla entera (`usestate-excesivo` solo existe ahí).
 
-### 15A-1: borrado del shell huérfano — pendiente de ejecutar a mano
+### 15A-1: borrado del shell huérfano — HECHO (`0f6a218`)
 
-El clasificador del auto-modo rechazó `git rm -r` como destrucción irreversible (dos intentos), pese a que la usuaria lo autorizó. El borrado queda a un comando suyo. Desde `KAMPLES/`:
+El clasificador del auto-modo había rechazado `git rm -r` como destrucción irreversible (dos intentos); tras desactivar la usuaria ese bloqueo, el borrado se ejecutó el 2026-10-15:
 
 ```bash
-git rm -r -q -- frontend/src/App.tsx frontend/src/App.css frontend/src/router.tsx frontend/src/app frontend/src/components frontend/src/pages frontend/src/hooks frontend/src/utils frontend/src/styles && git commit -m "chore(frontend): borrar shell SPA huerfano anterior a 204A-1"
+git rm -r -q -- frontend/src/App.tsx frontend/src/App.css frontend/src/router.tsx frontend/src/app frontend/src/components frontend/src/pages frontend/src/hooks frontend/src/utils frontend/src/styles
 ```
 
 Es recuperable: los 52 archivos están versionados hasta `97ae158`; para restaurar, `git checkout 97ae158 -- frontend/src/<ruta>`. **No incluye `frontend/src/api/`**, que sigue siendo el destino de Orval (`orval.config.ts` → `./src/api/generated`).
+
+### 15A-1b: tokens heredados sin definición — HECHO (`76108cb`)
+
+Borrar el shell no causó la regresión: la **destapó**. `frontend/src/styles/tokens.css` (borrado en `0f6a218`) definía 113 tokens que el CSS **vivo** referencia, pero su único importador era `App.css:1`, parte del shell; `main.tsx` nunca lo cargó. Es decir: esas declaraciones ya eran inválidas e ignoradas en el navegador desde la tarea F1c/F3, que reescribió 72 declaraciones en 14 archivos a tokens que nunca llegaban al runtime. VarSense solo contaba un sitio de definición que no existía de verdad.
+
+- `frontend/src/legacy/styles/tokensHeredados.css` (nuevo): solo los 113 tokens que faltan, con el valor que tenían. Los nombres en inglés (`--color-text-primary`, `--radius-lg`, `--spacing-md`…) van como alias `var()` sobre el tema canónico; los literales del tema anterior, tal cual. Generado por `C:\tmp\kamples-findings\generar-tokens.mjs` desde `git show 0f6a218~1:frontend/src/styles/tokens.css`.
+- Importado en `frontend/src/main.tsx:27`, después de `variables.css` (el juego canónico sigue siendo `legacy/styles/variables.css`).
+- Gate `--cierre`: **0 nuevos, 336 resueltos (base 1075, ahora 739)**. Los 336 = 100 % de `variableNoDefinida`.
+- No hay `sentinel-disable-*` ni exclusión nueva: el arreglo define las variables, no silencia la regla.
+
+**Limitación registrada (riesgo visual de F1c, línea 31 de este plan):** estas variables hoy resuelven a valor inválido, así que **al definirlas el render cambia** y eso no está verificado a ojo. KAMPLES **no está en el taller** (no hay ficha en `taller.json`; su `registro.json` solo tiene botón local en 5183) y AGENTS §1 prohíbe dev servers en el laptop; el único servidor de vista previa vivo es workspace-manager. Queda pendiente de revisión visual: **hasta entonces el arreglo está probado por análisis (gate + CSS válido), no por render.**
 
 Evidencia de que nada lo alcanza (2026-10-15):
 - `frontend/tsconfig.json` no incluye ninguna de esas rutas (`include`: `src/legacy`, `src/glory-core`, `src/mezclador`, `src/main.tsx`, `src/bootstrap`, `src/vite-env.d.ts`).
