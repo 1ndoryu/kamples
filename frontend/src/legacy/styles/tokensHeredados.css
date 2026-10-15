@@ -20,7 +20,6 @@
  * El juego canonico del SPA sigue siendo `legacy/styles/variables.css`.
  */
 :root {
-  --aspect-ratio: 1 / 1;
   --color-accent-hover: var(--acentoHover);
   --color-accent-primary: var(--acento);
   --color-bg-secondary: var(--fondoElevado1);

@@ -155,7 +155,7 @@
 }
 
 /*
- * [15A-4] El fader no tenia hoja de estilo: todo su aspecto vivia en estilos
+ * [15A-4] El fader no tenia hoja de estilo: su aspecto entero vivia en estilos
  * inline del componente. Aqui queda lo que no cambia (medidas, formas) y los
  * valores que calcula el componente llegan como custom properties:
  *   --altoFader  alto del recorrido en px
