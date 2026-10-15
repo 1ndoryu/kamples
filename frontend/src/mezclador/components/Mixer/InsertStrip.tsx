@@ -4,6 +4,7 @@
  */
 
 import { useCallback } from 'react';
+import type { CSSProperties } from 'react';
 import { VolumeX } from 'lucide-react';
 import type { InsertMixer } from '../../types/mezclador';
 import { KnobControl } from '../varios-1/KnobControl';
@@ -39,7 +40,7 @@ export const InsertStrip = ({
     return (
         <div
             className={`insertStrip ${seleccionado ? 'insertStripSeleccionado' : ''} ${insert.silenciado ? 'insertStripSilenciado' : ''}`}
-            style={{ borderTopColor: insert.color }}
+            style={{ '--colorInsert': insert.color } as CSSProperties}
         >
             {/* Nombre del insert */}
             <BotonBase variante="ghost"

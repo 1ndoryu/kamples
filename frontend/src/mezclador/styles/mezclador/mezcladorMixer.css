@@ -47,7 +47,9 @@
     padding: 4px;
     min-width: 44px;
     max-width: 52px;
-    border-top: 3px solid transparent;
+    /* [15A-7] El color es dato del insert, no del sistema de diseno: llega como
+     * custom property. Sin color asignado, la franja no se pinta. */
+    border-top: 3px solid var(--colorInsert, transparent);
     border-radius: var(--radiusMezclador);
     background: var(--fondoElevado2);
     transition: background 0.1s;
@@ -247,6 +249,11 @@
     padding: 6px;
     background: var(--fondoElevado2);
     border-radius: var(--radiusMezclador);
+    /*
+     * [15A-7] La paleta de bandas llega como custom properties desde el
+     * componente, que es donde vive COLORES_BANDA porque el canvas del hook
+     * necesita los literales. Aqui solo se consume: una sola fuente.
+     */
 }
 
 .eqVisualizerCabecera {
@@ -296,6 +303,12 @@
     font-size: var(--fuenteMini);
     font-weight: 700;
 }
+
+/* [15A-7] Un color por banda. Son tres y fijas (LOW/MID/HIGH), igual que la
+ * paleta; si algun dia cambia el numero hay que anadir la regla que falte. */
+.eqVisualizerBanda:nth-child(1) { color: var(--eqBanda1); }
+.eqVisualizerBanda:nth-child(2) { color: var(--eqBanda2); }
+.eqVisualizerBanda:nth-child(3) { color: var(--eqBanda3); }
 
 .eqVisualizerBandaValor {
     font-size: var(--fuenteMicro);
@@ -419,6 +432,8 @@
     height: 14px;
     border-radius: var(--radiusMezclador);
     border: 1px solid transparent;
+    /* [15A-7] Muestra de la paleta: el color concreto llega como custom property. */
+    background: var(--colorInsert);
     cursor: pointer;
     padding: 0;
 }

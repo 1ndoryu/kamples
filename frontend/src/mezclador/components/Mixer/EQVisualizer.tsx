@@ -3,6 +3,7 @@
  * Componente de vista. Lógica en useEQVisualizer.
  */
 
+import type { CSSProperties } from 'react';
 import { useEQVisualizer, COLORES_BANDA, NOMBRES_BANDA } from '../../hooks/varios-1/useEQVisualizer';
 import type { BandaEQ } from '../../types/mezclador';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
@@ -28,8 +29,17 @@ export const EQVisualizer = ({
         bandas, activo, onCambioBanda, ancho, alto,
     });
 
+    /*
+     * [15A-7] La paleta vive en COLORES_BANDA porque el canvas la necesita como
+     * literal. Aqui solo se publica como custom properties para que el CSS pinte
+     * las etiquetas de cada banda sin duplicar los colores.
+     */
+    const tokensBanda = Object.fromEntries(
+        COLORES_BANDA.map((color, i) => [`--eqBanda${i + 1}`, color]),
+    ) as CSSProperties;
+
     return (
-        <div className="eqVisualizer">
+        <div className="eqVisualizer" style={tokensBanda}>
             <div className="eqVisualizerCabecera">
                 <span>EQ</span>
                 <BotonBase variante="ghost"
@@ -51,7 +61,7 @@ export const EQVisualizer = ({
             />
             <div className="eqVisualizerBandas">
                 {bandas.map((banda, i) => (
-                    <div key={NOMBRES_BANDA[i]} className="eqVisualizerBanda" style={{ color: COLORES_BANDA[i] }}>
+                    <div key={NOMBRES_BANDA[i]} className="eqVisualizerBanda">
                         <span className="eqVisualizerBandaNombre">{NOMBRES_BANDA[i]}</span>
                         <span className="eqVisualizerBandaValor">{banda.frecuencia}Hz</span>
                         <span className="eqVisualizerBandaValor">{banda.ganancia > 0 ? '+' : ''}{banda.ganancia}dB</span>

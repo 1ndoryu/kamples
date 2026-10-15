@@ -4,6 +4,7 @@
  */
 
 import { useCallback } from 'react';
+import type { CSSProperties } from 'react';
 import type { InsertMixer, BandaEQ } from '../../types/mezclador';
 import { EQVisualizer } from './EQVisualizer';
 import { SlotEfectoUI } from './SlotEfectoUI';
@@ -73,7 +74,7 @@ export const PanelDetalleInsert = ({
                         <BotonBase variante="ghost"
                             key={color}
                             className={`panelDetalleInsertColor ${insert.color === color ? 'panelDetalleInsertColorActivo' : ''}`}
-                            style={{ backgroundColor: color }}
+                            style={{ '--colorInsert': color } as CSSProperties}
                             onClick={() => onCambioColor(insert.id, color)}
                         />
                     ))}
