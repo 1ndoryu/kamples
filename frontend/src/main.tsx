@@ -23,6 +23,8 @@ import './glory-core/index.css';
 
 /* Estilos del legacy que LayoutPrincipal espera ya cargados. */
 import './legacy/styles/variables.css';
+/* [15A-1] Tokens heredados que el CSS portado referencia y nadie definia. */
+import './legacy/styles/tokensHeredados.css';
 import './legacy/styles/reset.css';
 import './legacy/styles/tipografia.css';
 import './legacy/styles/layout.css';
