@@ -11,6 +11,7 @@ import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { useT } from '@app/utils/i18n';
 import { useCerrarAlClickFuera } from '@app/hooks/menu/useCerrarAlClickFuera';
 import '../../styles/componentes/barra/barraControlFeed.css';
+import '../../styles/componentes/menu/menuOrden.css';
 
 export type TipoOrdenFeed = 'recientes' | 'nombre' | 'populares' | 'bpm' | 'posicion';
 
@@ -87,12 +88,12 @@ export const BarraControlFeed = ({
                         <ChevronDown size={12} />
                     </BotonBase>
                     {menuAbierto && (
-                        <div className="barraControlFeedOrdenMenu">
+                        <div className="menuOrden">
                             {opciones.map(opcion => (
                                 <BotonBase
                                     key={opcion.valor}
                                     variante="ghost"
-                                    className={ordenActual === opcion.valor ? 'barraControlFeedOrdenActivo' : ''}
+                                    className={ordenActual === opcion.valor ? 'menuOrdenActivo' : ''}
                                     onClick={() => { onOrdenCambiar(opcion.valor); setMenuAbierto(false); }}
                                     type="button"
                                 >

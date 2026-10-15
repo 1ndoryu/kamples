@@ -1,0 +1,42 @@
+/*
+ * menuOrden.css — Kamples
+ * Receta compartida del menu "ordenar por": panel anclado al boton de orden y
+ * sus opciones. Unifica las tres copias identicas que vivian en
+ * barraControlFeed.css, libreria.css e inicio.css.
+ */
+
+.menuOrden {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: var(--espacioXs);
+    background: var(--fondoElevado2);
+    border: 1px solid var(--bordeSutil);
+    border-radius: var(--radioMd);
+    padding: var(--espacioXs);
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+    min-width: 140px;
+}
+
+/* Las opciones son <BotonBase variante="ghost">: tipografia, padding, alto y
+ * colores los pone el sistema de botones; aqui solo el layout de la lista.
+ * Se apunta a la clase del componente, no a `button`, para no atarlo al
+ * elemento que renderice BotonBase. */
+.menuOrden .botonBase {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: none;
+    border-radius: var(--radioSm);
+}
+
+.menuOrden .botonBase:hover {
+    background: var(--fondoElevado3);
+    color: var(--textoPrimario);
+}
+
+.menuOrdenActivo {
+    color: var(--acento) !important;
+}

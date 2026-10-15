@@ -22,6 +22,7 @@ import { EstadoVacio } from '@app/components/ui/varios-1/EstadoVacio';
 import { useT } from '@app/utils/i18n';
 import '../../styles/componentes/libreria/libreria.css';
 import '../../styles/componentes/libreria/libreriaIsland.css';
+import '../../styles/componentes/menu/menuOrden.css';
 
 const TABS_LIBRERIA = [
     { id: 'explorar', etiqueta: 'panel.libreria.explorar' },
@@ -119,10 +120,10 @@ export const LibreriaIsland = (): JSX.Element => {
                                 </BotonBase>
 
                                 {menuOrdenAbierto && (
-                                    <div className="libreriaOrdenMenu">
+                                    <div className="menuOrden">
                                         {OPCIONES_ORDEN.map(opcion => (
                                             <BotonBase key={opcion.id} variante="ghost"
-                                                className={orden === opcion.id ? 'libreriaOrdenActivo' : ''}
+                                                className={orden === opcion.id ? 'menuOrdenActivo' : ''}
                                                 onClick={() => { setOrden(opcion.id); setMenuOrdenAbierto(false); }}
                                                 type="button"
                                             >

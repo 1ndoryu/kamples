@@ -17,6 +17,7 @@ import { useReproductorStore } from '@app/stores/varios-3/reproductorStore';
 import { obtenerSampleAleatorio } from '@app/services/api/varios-3/apiSamples';
 import { useT } from '@app/utils/i18n';
 import '../../styles/componentes/varios-4/inicio.css';
+import '../../styles/componentes/menu/menuOrden.css';
 
 export const DescubrirIsland = (): JSX.Element => {
     const { t } = useT();
@@ -77,30 +78,30 @@ export const DescubrirIsland = (): JSX.Element => {
                         </BotonBase>
 
                         {menuOrdenamiento && (
-                            <div className="inicioOrdenamientoMenu">
+                            <div className="menuOrden">
                                 <BotonBase variante="ghost"
-                                    className={ordenamiento === 'inteligente' ? 'inicioOrdenamientoActivo' : ''}
+                                    className={ordenamiento === 'inteligente' ? 'menuOrdenActivo' : ''}
                                     onClick={() => { setOrdenamiento('inteligente'); setMenuOrdenamiento(false); }}
                                     type="button"
                                 >
                                     {t('feed.orden.inteligente')}
                                 </BotonBase>
                                 <BotonBase variante="ghost"
-                                    className={ordenamiento === 'recientes' ? 'inicioOrdenamientoActivo' : ''}
+                                    className={ordenamiento === 'recientes' ? 'menuOrdenActivo' : ''}
                                     onClick={() => { setOrdenamiento('recientes'); setMenuOrdenamiento(false); }}
                                     type="button"
                                 >
                                     {t('feed.orden.recientes')}
                                 </BotonBase>
                                 <BotonBase variante="ghost"
-                                    className={ordenamiento === 'destacados' && periodoDestacados === 'semana' ? 'inicioOrdenamientoActivo' : ''}
+                                    className={ordenamiento === 'destacados' && periodoDestacados === 'semana' ? 'menuOrdenActivo' : ''}
                                     onClick={() => { setOrdenamiento('destacados'); setPeriodoDestacados('semana'); setMenuOrdenamiento(false); }}
                                     type="button"
                                 >
                                     {t('feed.orden.topSemanal')}
                                 </BotonBase>
                                 <BotonBase variante="ghost"
-                                    className={ordenamiento === 'destacados' && periodoDestacados === 'mes' ? 'inicioOrdenamientoActivo' : ''}
+                                    className={ordenamiento === 'destacados' && periodoDestacados === 'mes' ? 'menuOrdenActivo' : ''}
                                     onClick={() => { setOrdenamiento('destacados'); setPeriodoDestacados('mes'); setMenuOrdenamiento(false); }}
                                     type="button"
                                 >
