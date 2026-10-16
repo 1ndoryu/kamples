@@ -36,10 +36,8 @@
     font-family: monospace;
 }
 
-.algoTimingAcciones {
-    display: flex;
-    gap: var(--espacioSm);
-}
+/* [15A-25] Retirada .algoTimingAcciones: era copia literal de .modalAcciones
+ * (`display:flex; gap: var(--espacioSm)`); el grupo usa <ModalAcciones>. */
 
 .algoTimingTabs {
     display: flex;

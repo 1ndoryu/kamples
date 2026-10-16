@@ -8,6 +8,7 @@
 import { useState, type CSSProperties } from 'react';
 import { RefreshCw, Trash2, Activity } from 'lucide-react';
 import { Modal } from '@app/components/ui/modal/Modal';
+import { ModalAcciones } from '@app/components/ui/modal/ModalAcciones';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { useAlgoTimingStore, type RegistroTiming } from '@app/stores/varios-1/algoTimingStore';
 import { DesgloseExplain } from '@app/components/ui/varios-1/DesgloseExplain';
@@ -262,7 +263,7 @@ export const ModalAlgoTiming = (): JSX.Element | null => {
                         <span>Rendimiento del algoritmo</span>
                         <span className="algoTimingSubtitulo">User ID {ultima?.userId ?? '—'}</span>
                     </div>
-                    <div className="algoTimingAcciones">
+                    <ModalAcciones>
                         <BotonBase
                             variante="ghost"
                             tamano="sm"
@@ -282,7 +283,7 @@ export const ModalAlgoTiming = (): JSX.Element | null => {
                             <Trash2 size={12} />
                             Limpiar
                         </BotonBase>
-                    </div>
+                    </ModalAcciones>
                 </div>
 
                 {error && <p className="algoTimingError">{error}</p>}
