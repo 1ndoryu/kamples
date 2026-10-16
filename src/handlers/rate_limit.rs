@@ -59,6 +59,11 @@ pub struct Limitador {
 }
 
 impl Limitador {
+    /* [16A-8] Atajo para el cableado: `handlers/mod.rs` pasa la config tal cual. */
+    pub fn desde(config: &crate::config::RateLimitConfig) -> Arc<Self> {
+        Self::nuevo(config.peticiones_por_segundo, config.rafaga)
+    }
+
     pub fn nuevo(por_segundo: f64, rafaga: f64) -> Arc<Self> {
         Arc::new(Self {
             cubos: Mutex::new(HashMap::new()),

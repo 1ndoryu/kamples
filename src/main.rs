@@ -163,7 +163,7 @@ fn emit_openapi_if_requested() -> Result<bool, AppError> {
         .get(idx + 1)
         .cloned()
         .unwrap_or_else(|| "openapi.json".to_string());
-    let doc = handlers::ApiDoc::openapi();
+    let doc = handlers::openapi::ApiDoc::openapi();
     let json = serde_json::to_string_pretty(&doc)?;
     std::fs::write(&path, json)?;
     println!("OpenAPI schema escrito en {path}");
