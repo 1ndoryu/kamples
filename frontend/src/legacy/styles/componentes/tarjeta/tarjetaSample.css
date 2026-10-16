@@ -246,15 +246,8 @@
 
 /* Duración y stats */
 
-/* Badge premium */
-.tarjetaPremium {
-    font-size: var(--fuenteXs);
-    font-weight: var(--pesoSemibold);
-    color: var(--advertencia);
-    background-color: var(--advertenciaMuted);
-    padding: calc(var(--espacioXs) / 4) calc(var(--espacioXs) * 1.5);
-    border-radius: var(--radioFull);
-}
+/* [15A-25] Retirada .tarjetaPremium: el badge PRO esta desactivado en
+ * TarjetaSample.tsx y ningun componente aplicaba la clase. */
 
 /* C178: Icono verificado junto al titulo */
 .tarjetaVerificado {

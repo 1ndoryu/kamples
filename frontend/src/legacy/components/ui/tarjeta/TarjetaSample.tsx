@@ -160,7 +160,9 @@ export const TarjetaSample = (props: TarjetaSampleProps): JSX.Element => {
                     </a>
                     {noReproducido && <span className="tarjetaPuntoRojo" aria-label={t('sample.noReproducido')} />}
                     {sample.verificado && <BadgeCheck size={14} className="tarjetaVerificado" />}
-                    {/* [193A-104] Pendiente: badge PRO desactivado. Restaurar: {sample.esPremium && <span className="tarjetaPremium">PRO</span>} */}
+                    {/* [193A-104] Badge PRO desactivado. Para restaurarlo hay que reintroducir
+                        tambien la clase .tarjetaPremium en tarjetaSample.css, retirada en
+                        [15A-25] por no tener ningun consumidor. */}
                     {sample.scoreDebug && <BadgeDebugScore debug={sample.scoreDebug} />}
                 </div>
 

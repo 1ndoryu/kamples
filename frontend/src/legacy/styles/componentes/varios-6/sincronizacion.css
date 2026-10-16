@@ -614,45 +614,11 @@
     gap: var(--espacio2xs);
 }
 
-.sincPanelHistorialDescMinimal {
-    color: var(--textoPrimario);
-    font-size: var(--fuenteSm);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-/* Etiqueta de estado debajo del nombre del archivo */
-.sincPanelHistorialEstadoLabel {
-    color: var(--textoTerciario);
-    font-size: var(--fuenteXs);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.sincPanelHistorialEstadoLabel.sincPanelEstadoError {
-    color: var(--error);
-}
-
-.sincPanelHistorialEstadoLabel.sincPanelEstadoProgreso {
-    color: var(--acento);
-}
-
-.sincPanelHistorialEstadoLabel.sincPanelEstadoOk {
-    color: var(--exito);
-}
-
-/* Flecha de navegacion: visible solo en hover del item clickable */
-
-.sincPanelHistorialEstadoFinal {
-    width: 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--textoSecundario);
-    flex-shrink: 0;
-}
+/* [15A-25] Retiradas .sincPanelHistorialDescMinimal,
+ * .sincPanelHistorialEstadoLabel (+ sus modificadores --Error/--Progreso/--Ok)
+ * y .sincPanelHistorialEstadoFinal: ningun componente las aplica, el markup del
+ * historial (SincPanelTabs.tsx:292-301) usa Desc/Tiempo/Icono y el estado va en
+ * `.sincPanelIndicador--${estado}`. */
 
 .sincPanelFooterMinimal {
     height: 38px;
