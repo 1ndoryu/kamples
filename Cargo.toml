@@ -52,7 +52,7 @@ thiserror = "2"
 anyhow = "1"
 
 # Auth
-jsonwebtoken = "9"
+jsonwebtoken = "10"
 argon2 = "0.5"
 
 # HTTP cliente externo (Stripe, Groq, OpenAI, FCM, OAuth Google) — añadiremos features según fase
@@ -96,7 +96,7 @@ ndarray = "0.16"
 
 # Image processing (on-demand optimization, 104A-5)
 image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp", "gif"] }
-webp = { version = "0.2", default-features = false }
+webp = { version = "0.3", default-features = false }
 
 # Concurrencia
 dashmap = "6"
