@@ -20,5 +20,8 @@
         "@capacitor/filesystem": "^6.0.4",
         "@capacitor/push-notifications": "^6.0.5",
         "@capacitor/share": "^6.0.4"
+    },
+    "overrides": {
+        "tar": "^7.5.22"
     }
 }
