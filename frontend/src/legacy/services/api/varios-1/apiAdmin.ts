@@ -120,11 +120,12 @@ export const listarUsuariosAdmin = async (
     busqueda = '',
     plan = '',
     orden = 'fecha'
-): Promise<RespuestaApi<{ data: UsuarioAdmin[]; total: number; page: number }>> => {
-    return apiGet<{ data: UsuarioAdmin[]; total: number; page: number }>(
-        '/admin/usuarios',
-        { page, busqueda, plan, orden }
-    );
+/* [15A-29] `apiPeticion` ya desenvuelve `json.data` y sube `total` a la raiz de
+ * `RespuestaApi`. Declarar aqui el sobre `{data,total,page}` obligaba al
+ * consumidor a hacer `res.data.data`, que siempre era `undefined`: la tabla de
+ * usuarios salia vacia aunque la API devolviese 200 con filas. */
+): Promise<RespuestaApi<UsuarioAdmin[]>> => {
+    return apiGet<UsuarioAdmin[]>('/admin/usuarios', { page, busqueda, plan, orden });
 };
 
 export const actualizarUsuarioAdmin = async (

@@ -61,7 +61,7 @@ const copiarErrorRespuesta = <T>(resp: RespuestaApi<unknown>): RespuestaApi<T> =
 });
 
 const normalizarRespuestaListaSamples = (
-    resp: RespuestaApi<RespuestaListaSamplesRaw>,
+    resp: RespuestaApi<RespuestaListaSamplesRaw | unknown[]>,
     fallbackPerPage: number,
     fallbackPage: number
 ): RespuestaApi<RespuestaListaSamples> => {
@@ -69,16 +69,30 @@ const normalizarRespuestaListaSamples = (
         return copiarErrorRespuesta(resp);
     }
 
-    const pagination = resp.data.pagination ?? {
-        page: fallbackPage,
-        per_page: fallbackPerPage,
-        total: normalizarListaSamples(resp.data.data).length,
-        pages: 1,
+    /*
+     * [15A-29] `apiPeticion` ya desenvuelve `json.data`, y las dos familias de
+     * endpoints llegan con formas distintas:
+     *  - `/samples` responde plano `{data:[...], pagination}` → aquí es el array,
+     *    y la paginación viaja levantada en `resp.pagination`.
+     *  - la biblioteca (`/me/favoritos`, `/me/descargas`) responde anidado
+     *    `{data:{data:[...], pagination}}` → aquí es el objeto.
+     * Leer siempre `resp.data.data` dejaba la lista vacía en `/samples`.
+     */
+    const crudo = resp.data as RespuestaListaSamplesRaw;
+    const esArray = Array.isArray(resp.data);
+    const items = esArray ? (resp.data as unknown[]) : (crudo.data ?? []);
+    const paginacionCruda = esArray ? resp.pagination : crudo.pagination;
+
+    const pagination: PaginacionSamples = {
+        page: paginacionCruda?.page ?? fallbackPage,
+        per_page: paginacionCruda?.per_page ?? fallbackPerPage,
+        total: paginacionCruda?.total ?? items.length,
+        pages: paginacionCruda?.pages ?? 1,
     };
 
     return {
         ...copiarMetaRespuesta(resp, {
-            data: normalizarListaSamples(resp.data.data),
+            data: normalizarListaSamples(items),
             pagination,
         }),
         total: resp.total ?? pagination.total,

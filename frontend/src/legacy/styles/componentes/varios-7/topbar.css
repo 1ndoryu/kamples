@@ -153,6 +153,15 @@
         display: none;
     }
 
+    /* [15A-29] `topbarBusquedaOcculta` es solo un relleno de la celda central
+     * (panel de admin, que no tiene buscador). Aqui la rejilla baja a 2
+     * columnas: si el relleno sigue ocupando celda, `topbarAcciones` cae a una
+     * segunda fila, la rejilla desborda su alto y los tabs quedan cortados por
+     * arriba (medido: tabs en top -11,4 px con el topbar a 0). */
+    .topbarBusquedaOcculta {
+        display: none;
+    }
+
     .topbarBusquedaMovil {
         display: flex;
     }

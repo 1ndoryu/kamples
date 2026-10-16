@@ -91,8 +91,9 @@ export function useAdminPanel() {
                 'fecha'
             );
             if (res.ok && res.data) {
-                setUsuarios(res.data.data ?? []);
-                setTotalUsuarios(res.data.total ?? 0);
+                /* [15A-29] `res.data` ya es el array; `total` va en la raiz. */
+                setUsuarios(res.data ?? []);
+                setTotalUsuarios(res.total ?? 0);
             }
         } catch (err) {
             log.error('Error cargando usuarios admin', err);

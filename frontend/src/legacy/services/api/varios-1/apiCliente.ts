@@ -23,6 +23,17 @@ export interface RespuestaApi<T> {
     hayMas?: boolean;
     /* QK66: Conteo de registros por estado (admin tables) */
     estadosCuenta?: Record<string, number>;
+    /* [15A-29] Paginación que el servidor manda en la raíz de la respuesta
+     * (p. ej. GET /samples → {data:[...], pagination:{...}}). Sin levantarla
+     * aquí, el objeto se perdía al desenvolver `json.data`. */
+    pagination?: PaginacionServidor;
+}
+
+export interface PaginacionServidor {
+    page?: number;
+    per_page?: number;
+    total?: number;
+    pages?: number;
 }
 
 interface OpcionesPeticion {
@@ -332,6 +343,9 @@ export const apiPeticion = async <T>(
                     : {}),
             ...(json.estadosCuenta && typeof json.estadosCuenta === 'object'
                 ? { estadosCuenta: json.estadosCuenta as Record<string, number> }
+                : {}),
+            ...(json.pagination && typeof json.pagination === 'object'
+                ? { pagination: json.pagination as PaginacionServidor }
                 : {}),
         };
     } catch (err) {
