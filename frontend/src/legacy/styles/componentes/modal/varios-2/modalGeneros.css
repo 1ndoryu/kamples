@@ -11,23 +11,6 @@
     gap: var(--espacioLg);
 }
 
-.generosTitulo {
-    font-size: var(--fuenteXl);
-    font-weight: var(--pesoSemibold);
-    color: var(--textoPrimario);
-    text-align: center;
-    margin: 0;
-}
-
-.generosSubtitulo {
-    font-size: var(--fuenteSm);
-    color: var(--textoSecundario);
-    text-align: center;
-    margin: 0;
-    max-width: 400px;
-    line-height: 1.5;
-}
-
 .generosGrid {
     display: flex;
     flex-wrap: wrap;

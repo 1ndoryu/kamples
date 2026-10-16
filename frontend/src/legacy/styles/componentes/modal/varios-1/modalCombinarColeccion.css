@@ -9,20 +9,6 @@
     gap: var(--espacioLg);
 }
 
-.modalCombinarIcono {
-    display: flex;
-    justify-content: center;
-    color: var(--textoTerciario);
-}
-
-.modalCombinarTitulo {
-    margin: 0;
-    text-align: center;
-    font-size: var(--fuenteLg);
-    font-weight: var(--pesoSemibold);
-    color: var(--textoPrimario);
-}
-
 .modalCombinarDescripcion {
     margin: 0;
     text-align: center;

@@ -1,0 +1,72 @@
+/*
+ * cabeceraModal.css — Cabecera de héroe compartida por los modales.
+ * [16A-4, por que] Antes cada modal tenía su propia cabecera (corregirIACabecera,
+ * extenderRecorteCabecera, sugerenciasLikeHeader, modalCombinarIcono,
+ * modalEliminarIcono, modalVolumenIcono, modalVersionIcono…) con valores ya
+ * divergentes. Aquí viven las dos variantes y nada más.
+ */
+
+.cabeceraModal {
+    display: flex;
+}
+
+/* Icono al lado del título, alineado a la izquierda. */
+.cabeceraModal--fila {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--espacioSm);
+}
+
+/* Icono destacado encima del título, todo centrado. */
+.cabeceraModal--centrada {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--espacioXs);
+}
+
+.cabeceraModalIcono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--acento);
+}
+
+/* Solo en 'centrada' el icono lleva el disco de fondo: en 'fila' va suelto. */
+.cabeceraModal--centrada .cabeceraModalIcono {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radioFull);
+    background: color-mix(in srgb, currentColor 15%, transparent);
+}
+
+.cabeceraModalIcono--error {
+    color: var(--error);
+}
+
+/* Neutro = sin carga semántica, pero legible: `--textoSecundario` es el único
+ * de los tres grises que cambia con el tema. Con `--colorTexto` (el que usaba
+ * el modal de volumen) el icono quedaba casi blanco sobre blanco en modo claro. */
+.cabeceraModalIcono--neutro {
+    color: var(--textoSecundario);
+}
+
+.cabeceraModalTitulo {
+    font-size: var(--fuenteLg);
+    font-weight: var(--pesoSemibold);
+    color: var(--textoPrimario);
+    margin: 0;
+}
+
+.cabeceraModalTitulo--grande {
+    font-size: var(--fuenteXl);
+}
+
+.cabeceraModalSubtitulo {
+    font-size: var(--fuenteSm);
+    color: var(--textoSecundario);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 400px;
+}

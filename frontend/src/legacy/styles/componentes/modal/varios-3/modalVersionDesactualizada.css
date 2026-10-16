@@ -8,26 +8,6 @@
     max-width: 360px;
 }
 
-.modalVersionIcono {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radioFull);
-    background: color-mix(in srgb, var(--acento) 15%, transparent);
-    color: var(--acento);
-    align-self: center;
-}
-
-.modalVersionTitulo {
-    font-size: var(--fuenteLg);
-    font-weight: var(--pesoBold);
-    color: var(--textoPrimario);
-    text-align: center;
-    margin: 0;
-}
-
 .modalVersionVersiones {
     display: flex;
     flex-direction: column;

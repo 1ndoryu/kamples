@@ -7,6 +7,7 @@ import { Trash2, AlertTriangle } from 'lucide-react';
 import { Modal } from '@app/components/ui/modal/Modal';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { ModalAcciones } from '@app/components/ui/modal/ModalAcciones';
+import { CabeceraModal } from '@app/components/ui/modal/CabeceraModal';
 import { SelectorMenu } from '@app/components/ui/selector/SelectorMenu';
 import { useModalEliminarColeccion } from '@app/hooks/modal/varios-1/useModalEliminarColeccion';
 import type { Coleccion } from '@app/types';
@@ -44,11 +45,13 @@ export const ModalEliminarColeccion = ({
     return (
         <Modal abierto={abierto} onCerrar={onCerrar} tamano="pequeno">
             <div className="modalEliminarContenido">
-                <div className="modalEliminarIcono">
-                    <Trash2 size={32} />
-                </div>
+                <CabeceraModal
+                    variante="centrada"
+                    tonoIcono="error"
+                    icono={<Trash2 size={24} />}
+                    titulo="Eliminar colección"
+                />
 
-                <h3 className="modalEliminarTitulo">Eliminar colección</h3>
                 <p className="modalEliminarDescripcion">
                     Vas a eliminar <strong>{coleccion?.nombre}</strong>
                     {coleccion?.totalSamples ? ` (${coleccion.totalSamples} samples)` : ''}.

@@ -7,6 +7,7 @@
 
 import { useEffect, type KeyboardEvent } from 'react';
 import { Modal } from '../../../ui/modal/Modal';
+import { CabeceraModal } from '../../../ui/modal/CabeceraModal';
 import { BotonBase } from '../../../ui/boton/BotonBase';
 import { Plus } from 'lucide-react';
 import { useModalGeneros, GENEROS_DISPONIBLES } from '@app/hooks/modal/varios-1/useModalGeneros';
@@ -49,12 +50,12 @@ export const ModalGeneros = (): JSX.Element => {
     return (
         <Modal abierto={abierto} onCerrar={cerrar} tamano="grande">
             <div className="generosContenido">
-                <h2 className="generosTitulo">
-                    ¿Cuáles son tus géneros favoritos?
-                </h2>
-                <p className="generosSubtitulo">
-                    Elige al menos 1 género para personalizar tu feed. Puedes cambiarlo después.
-                </p>
+                <CabeceraModal
+                    variante="centrada"
+                    tamanoTitulo="grande"
+                    titulo="¿Cuáles son tus géneros favoritos?"
+                    subtitulo="Elige al menos 1 género para personalizar tu feed. Puedes cambiarlo después."
+                />
 
                 <div className="generosGrid">
                     {GENEROS_DISPONIBLES.map((genero) => {

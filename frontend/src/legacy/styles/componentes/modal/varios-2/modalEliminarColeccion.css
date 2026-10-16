@@ -9,20 +9,6 @@
     gap: var(--espacioLg);
 }
 
-.modalEliminarIcono {
-    display: flex;
-    justify-content: center;
-    color: var(--error, var(--colorRgba-229-83-83-1));
-}
-
-.modalEliminarTitulo {
-    margin: 0;
-    text-align: center;
-    font-size: var(--fuenteLg);
-    font-weight: var(--pesoSemibold);
-    color: var(--textoPrimario);
-}
-
 .modalEliminarDescripcion {
     margin: 0;
     text-align: center;

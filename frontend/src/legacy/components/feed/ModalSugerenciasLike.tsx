@@ -9,6 +9,7 @@ import { useCallback } from 'react';
 import { X, Sparkles } from 'lucide-react';
 import { TarjetaSample } from '@app/components/ui/tarjeta/TarjetaSample';
 import { Modal } from '@app/components/ui/modal/Modal';
+import { CabeceraModal } from '@app/components/ui/modal/CabeceraModal';
 import { useSugerenciasLikeStore } from '@app/stores/varios-3/sugerenciasLikeStore';
 import { useNavigationStore } from '@/core/router';
 import { darLike } from '@app/services/api/varios-3/apiSocial';
@@ -37,15 +38,14 @@ export const ModalSugerenciasLike = (): JSX.Element | null => {
         <Modal abierto={abierto} onCerrar={cerrar} titulo="" tamano="pequeno">
             <div className="sugerenciasLikeContenedor">
                 <div className="sugerenciasLikeHeader">
-                    <div className="sugerenciasLikeIcono">
-                        <Sparkles size={20} />
-                    </div>
-                    <h3 className="sugerenciasLikeTitulo">{t('sugerencias.titulo')}</h3>
-                    {sampleOrigen && (
-                        <p className="sugerenciasLikeSubtitulo">
-                            Basado en tu like a &ldquo;{sampleOrigen.titulo}&rdquo;
-                        </p>
-                    )}
+                    <CabeceraModal
+                        variante="centrada"
+                        icono={<Sparkles size={24} />}
+                        titulo={t('sugerencias.titulo')}
+                        subtitulo={sampleOrigen
+                            ? <>Basado en tu like a &ldquo;{sampleOrigen.titulo}&rdquo;</>
+                            : undefined}
+                    />
                     <BotonBase variante="ghost"
                         className="sugerenciasLikeCerrar"
                         onClick={cerrar}

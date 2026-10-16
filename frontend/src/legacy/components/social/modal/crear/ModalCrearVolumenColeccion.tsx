@@ -3,6 +3,7 @@ import { Modal } from '@app/components/ui/modal/Modal';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { CampoTexto } from '@app/components/ui/varios-1/CampoTexto';
 import { ModalAcciones } from '@app/components/ui/modal/ModalAcciones';
+import { CabeceraModal } from '@app/components/ui/modal/CabeceraModal';
 import { useModalCrearVolumenColeccion } from '@app/hooks/modal/varios-1/useModalCrearVolumenColeccion';
 import type { Coleccion } from '@app/types';
 import '../../../../styles/componentes/modal/varios-3/modalVolumenColeccion.css';
@@ -32,11 +33,13 @@ export const ModalCrearVolumenColeccion = ({
     return (
         <Modal abierto={abierto} onCerrar={onCerrar} tamano="pequeno">
             <div className="modalVolumenContenido">
-                <div className="modalVolumenIcono">
-                    <Layers3 size={32} />
-                </div>
+                <CabeceraModal
+                    variante="centrada"
+                    tonoIcono="neutro"
+                    icono={<Layers3 size={24} />}
+                    titulo="Crear volumen"
+                />
 
-                <h3 className="modalVolumenTitulo">Crear volumen</h3>
                 <p className="modalVolumenDescripcion">
                     Se creará una subcolección hija bajo <strong>{coleccion?.nombre}</strong> y se moverá aproximadamente la mitad de sus samples directos.
                 </p>

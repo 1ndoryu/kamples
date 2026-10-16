@@ -9,24 +9,6 @@
     gap: var(--espacioMd);
 }
 
-.extenderRecorteCabecera {
-    display: flex;
-    align-items: center;
-    gap: var(--espacioSm);
-}
-
-.extenderRecorteIcono {
-    color: var(--acento);
-    flex-shrink: 0;
-}
-
-.extenderRecorteTitulo {
-    font-size: var(--fuenteLg);
-    font-weight: var(--pesoBold);
-    color: var(--textoPrimario);
-    margin: 0;
-}
-
 .extenderRecorteDescripcion {
     font-size: var(--fuenteSm);
     color: var(--textoSecundario);

@@ -12,6 +12,7 @@
 
 import { ArrowUpCircle } from 'lucide-react';
 import { Modal } from './Modal';
+import { CabeceraModal } from './CabeceraModal';
 import { ModalAcciones } from './ModalAcciones';
 import { BotonBase } from '../boton/BotonBase';
 import { useVersionStore, type PlataformaApp } from '@app/stores/varios-4/versionStore';
@@ -53,13 +54,11 @@ export const ModalVersionDesactualizada = (): JSX.Element | null => {
             tamano="pequeno"
         >
             <div className="modalVersion">
-                <div className="modalVersionIcono">
-                    <ArrowUpCircle size={24} />
-                </div>
-
-                <h2 className="modalVersionTitulo">
-                    {t('modal.actualizacion.titulo')}
-                </h2>
+                <CabeceraModal
+                    variante="centrada"
+                    icono={<ArrowUpCircle size={24} />}
+                    titulo={t('modal.actualizacion.titulo')}
+                />
 
                 <div className="modalVersionVersiones">
                     <div className="modalVersionFila">

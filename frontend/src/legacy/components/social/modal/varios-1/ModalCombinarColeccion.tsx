@@ -8,6 +8,7 @@ import { Combine } from 'lucide-react';
 import { Modal } from '@app/components/ui/modal/Modal';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { ModalAcciones } from '@app/components/ui/modal/ModalAcciones';
+import { CabeceraModal } from '@app/components/ui/modal/CabeceraModal';
 import { SelectorMenu } from '@app/components/ui/selector/SelectorMenu';
 import { useModalCombinarColeccion } from '@app/hooks/modal/varios-1/useModalCombinarColeccion';
 import type { Coleccion } from '@app/types';
@@ -51,11 +52,13 @@ export const ModalCombinarColeccion = ({
     return (
         <Modal abierto={abierto} onCerrar={onCerrar} tamano="pequeno">
             <div className="modalCombinarContenido">
-                <div className="modalCombinarIcono">
-                    <Combine size={32} />
-                </div>
+                <CabeceraModal
+                    variante="centrada"
+                    tonoIcono="neutro"
+                    icono={<Combine size={24} />}
+                    titulo="Combinar colecciones"
+                />
 
-                <h3 className="modalCombinarTitulo">Combinar colecciones</h3>
                 <p className="modalCombinarDescripcion">
                     Fusiona otra colección con <strong>{coleccion?.nombre}</strong>.
                     Los samples se unirán y la colección seleccionada desaparecerá.

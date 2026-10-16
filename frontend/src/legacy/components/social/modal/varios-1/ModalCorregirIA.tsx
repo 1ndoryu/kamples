@@ -8,6 +8,7 @@
 import { Modal } from '@app/components/ui/modal/Modal';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { ModalAcciones } from '@app/components/ui/modal/ModalAcciones';
+import { CabeceraModal } from '@app/components/ui/modal/CabeceraModal';
 import { Badge } from '@app/components/ui/badge/Badge';
 import { useCorregirIAStore } from '@app/stores/varios-1/corregirIAStore';
 import { useCorregirIA } from '@app/hooks/varios-3/useCorregirIA';
@@ -39,10 +40,10 @@ export const ModalCorregirIA = (): JSX.Element | null => {
     return (
         <Modal abierto={abierto} onCerrar={cerrar} tamano="normal">
             <div className="corregirIAContenedor">
-                <div className="corregirIACabecera">
-                    <Sparkles size={20} className="corregirIAIcono" />
-                    <h3 className="corregirIATitulo">{t('metadata.corregirIaTitle')}</h3>
-                </div>
+                <CabeceraModal
+                    icono={<Sparkles size={20} />}
+                    titulo={t('metadata.corregirIaTitle')}
+                />
 
                 <p className="corregirIADescripcion">
                     {t('metadata.corregirIaDesc')}

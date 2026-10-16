@@ -10,35 +10,10 @@
     padding: var(--espacioSm) 0;
 }
 
+/* Solo el contexto de posicion del boton de cierre: la cabecera en si la pinta
+ * CabeceraModal. */
 .sugerenciasLikeHeader {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--espacioXs);
-    text-align: center;
     position: relative;
-}
-
-.sugerenciasLikeIcono {
-    color: var(--acento);
-    margin-bottom: var(--espacioXs);
-}
-
-.sugerenciasLikeTitulo {
-    font-size: var(--fuenteLg);
-    font-weight: 600;
-    color: var(--textoPrimario);
-    margin: 0;
-}
-
-.sugerenciasLikeSubtitulo {
-    font-size: var(--fuenteXs);
-    color: var(--textoSecundario);
-    margin: 0;
-    max-width: 280px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .sugerenciasLikeCerrar {

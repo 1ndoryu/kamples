@@ -9,6 +9,7 @@
 import { Modal } from '@app/components/ui/modal/Modal';
 import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { ModalAcciones } from '@app/components/ui/modal/ModalAcciones';
+import { CabeceraModal } from '@app/components/ui/modal/CabeceraModal';
 import { CampoTexto } from '@app/components/ui/varios-1/CampoTexto';
 import { Badge } from '@app/components/ui/badge/Badge';
 import { useExtenderRecorteStore } from '@app/stores/varios-2/extenderRecorteStore';
@@ -40,10 +41,7 @@ export const ModalExtenderRecorte = (): JSX.Element | null => {
     return (
         <Modal abierto={abierto} onCerrar={cerrar} tamano="normal">
             <div className="extenderRecorteContenedor">
-                <div className="extenderRecorteCabecera">
-                    <Scissors size={20} className="extenderRecorteIcono" />
-                    <h3 className="extenderRecorteTitulo">Extender recorte</h3>
-                </div>
+                <CabeceraModal icono={<Scissors size={20} />} titulo="Extender recorte" />
 
                 <p className="extenderRecorteDescripcion">
                     Re-descarga el audio de YouTube y genera un nuevo recorte con timing extendido.

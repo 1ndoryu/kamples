@@ -4,26 +4,12 @@
     gap: 16px;
 }
 
-.modalVolumenIcono {
-    width: 56px;
-    height: 56px;
-    border-radius: var(--espacioLg);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--fondoElevado2);
-    color: var(--colorTexto);
-}
-
-.modalVolumenTitulo {
-    margin: 0;
-    font-size: var(--medidaPx-22);
-    font-weight: 700;
-}
-
+/* [16A-4] `--colorTextoSuave` y `--colorTexto` son de la familia heredada y
+ * no cambian con el tema: en modo claro el nombre previsto del volumen quedaba
+ * casi blanco sobre blanco. Los tokens de `variables.css` sí son por tema. */
 .modalVolumenDescripcion {
     margin: 0;
-    color: var(--colorTextoSuave);
+    color: var(--textoSecundario);
     line-height: 1.5;
 }
 
@@ -35,7 +21,7 @@
     padding: 12px 14px;
     border-radius: var(--fuenteBase);
     background: var(--fondoElevado2);
-    color: var(--colorTexto);
+    color: var(--textoPrimario);
 }
 
 .modalVolumenResumenError {
