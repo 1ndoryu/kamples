@@ -179,6 +179,24 @@
     position: relative;
 }
 
+/* [15A-21] Etiqueta del overlay de desarrollo (glory-core/core/DevOverlay.tsx):
+ * antes era un style={{}} inline con estos mismos valores literales. */
+.devOverlayEtiqueta {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--colorRgba-0-0-0-0_8);
+    color: var(--colorRgba-34-211-238-1);
+    padding: 2px 8px;
+    font-size: var(--fuente2xs);
+    font-family: monospace;
+    z-index: 99999;
+    border-radius: 0 0 0 var(--medidaPx-6);
+    line-height: 1.4;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
 .gloryCargando {
     padding: var(--espacioMd);
     text-align: center;
@@ -197,4 +215,54 @@
 
 .gloryPaginaOculta {
     display: none;
+}
+
+/* [15A-21] Respaldo de error de las islas (glory-core/core/ErrorBoundary.tsx):
+ * los mismos valores que llevaba en style={{}}. Aqui y no en el kit de UI a
+ * proposito: si lo que ha reventado es el kit, esta pantalla tiene que seguir
+ * pintandose, y sus colores tienen que leerse aunque falle un chunk de CSS. */
+.islaError {
+    padding: 16px;
+    border: 2px solid var(--error);
+    border-radius: var(--medidaPx-8);
+    background: var(--colorRgba-254-242-242-1);
+    color: var(--colorRgba-153-27-27-1);
+    font-family: monospace;
+    font-size: var(--fuenteMd);
+}
+
+.islaErrorDetalle {
+    margin: 8px 0 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: var(--fuenteSm);
+}
+
+.islaErrorReintentar {
+    margin-top: 8px;
+    padding: 4px 12px;
+    border: 1px solid var(--colorRgba-220-38-38-1);
+    border-radius: var(--radioSm);
+    background: var(--colorRgba-254-226-226-1);
+    color: var(--colorRgba-153-27-27-1);
+    cursor: pointer;
+    font-size: var(--fuenteSm);
+}
+
+.islaErrorVacio {
+    padding: 12px;
+    text-align: center;
+    color: var(--colorRgba-107-114-128-1);
+    font-size: var(--fuenteBase);
+}
+
+.islaErrorVacioReintentar {
+    margin-top: 8px;
+    padding: 4px 12px;
+    border: 1px solid var(--colorRgba-75-85-99-1);
+    border-radius: var(--radioSm);
+    background: transparent;
+    color: var(--colorRgba-156-163-175-1);
+    cursor: pointer;
+    font-size: var(--fuenteSm);
 }

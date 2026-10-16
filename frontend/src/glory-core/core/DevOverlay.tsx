@@ -19,21 +19,7 @@ export function DevOverlay({ islandName, props, children }: DevOverlayProps): JS
     return (
         <div className="devOverlay">
             <div
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                    background: 'rgba(0, 0, 0, 0.8)',
-                    color: '#22d3ee',
-                    padding: '2px 8px',
-                    fontSize: '10px',
-                    fontFamily: 'monospace',
-                    zIndex: 99999,
-                    borderRadius: '0 0 0 6px',
-                    lineHeight: '1.4',
-                    pointerEvents: 'none',
-                    whiteSpace: 'nowrap',
-                }}
+                className="devOverlayEtiqueta"
                 title={`Props: ${propsResumen}`}
             >
                 {islandName}

@@ -61,40 +61,14 @@ export class IslandErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
         /* En desarrollo: mostrar detalles del error */
         if (import.meta.env.DEV) {
             return (
-                <div
-                    style={{
-                        padding: '16px',
-                        border: '2px solid #ef4444',
-                        borderRadius: '8px',
-                        background: '#fef2f2',
-                        color: '#991b1b',
-                        fontFamily: 'monospace',
-                        fontSize: '13px',
-                    }}
-                >
+                <div className="islaError">
                     <strong>Error en isla &quot;{this.props.islandName}&quot;</strong>
-                    <pre
-                        style={{
-                            margin: '8px 0 0',
-                            whiteSpace: 'pre-wrap',
-                            wordBreak: 'break-word',
-                            fontSize: '12px',
-                        }}
-                    >
+                    <pre className="islaErrorDetalle">
                         {this.state.error?.message}
                     </pre>
                     <button
+                        className="islaErrorReintentar"
                         onClick={() => this.setState({ hasError: false, error: null })}
-                        style={{
-                            marginTop: '8px',
-                            padding: '4px 12px',
-                            border: '1px solid #dc2626',
-                            borderRadius: '4px',
-                            background: '#fee2e2',
-                            color: '#991b1b',
-                            cursor: 'pointer',
-                            fontSize: '12px',
-                        }}
                     >
                         Reintentar
                     </button>
@@ -104,28 +78,12 @@ export class IslandErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoun
 
         /* En produccion: fallback limpio con boton reintentar */
         return (
-            <div
-                style={{
-                    padding: '12px',
-                    textAlign: 'center',
-                    color: '#6b7280',
-                    fontSize: '14px',
-                }}
-            >
+            <div className="islaErrorVacio">
                 Contenido no disponible
                 <br />
                 <button
+                    className="islaErrorVacioReintentar"
                     onClick={() => this.setState({ hasError: false, error: null })}
-                    style={{
-                        marginTop: '8px',
-                        padding: '4px 12px',
-                        border: '1px solid #4b5563',
-                        borderRadius: '4px',
-                        background: 'transparent',
-                        color: '#9ca3af',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                    }}
                 >
                     Reintentar
                 </button>
