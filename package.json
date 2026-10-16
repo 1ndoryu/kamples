@@ -29,6 +29,8 @@
     "dev:clean": "npm run clean:cargo:hard && npm run dev",
     "tauri:dev": "node scripts/launch-tauri.mjs",
     "tauri:build": "npm --prefix clients/desktop run tauri:build",
-    "tauri:type-check": "npm --prefix clients/desktop run type-check"
+    "tauri:type-check": "npm --prefix clients/desktop run type-check",
+    "bd:test": "bash scripts/lib/dump-postgres.test.sh && bash scripts/lib/migraciones.test.sh",
+    "bd:guardia": "bash scripts/guardia-migraciones.sh"
   }
 }

@@ -44,8 +44,8 @@ El deploy anterior era PHP (WordPress). Hay que limpiarlo preservando los upload
 | Paso | Acción | Riesgo |
 |---|---|---|
 | 1.1 | Verificar qué existe: `docker ps --filter "name=kamples"` y `ls -la /data/kamples/` | Diagnóstico |
-| 1.2 | Backup de uploads: `tar czf /data/kamples/uploads-backup-$(date +%Y%m%d).tar.gz -C /data/kamples uploads/` | Bajo |
-| 1.3 | Backup de BD (si existe PostgreSQL de kamples): `pg_dump` manual | Bajo |
+| 1.2 | Backup de uploads: `./scripts/backup-uploads.sh pre-migracion` (verifica el tar antes de darlo por bueno) | Bajo |
+| 1.3 | Backup de BD (si existe PostgreSQL de kamples): `./scripts/backup-postgres.sh pre-migracion` | Bajo |
 | 1.4 | Parar stack PHP: `docker compose -f <ruta> down` (**SIN `-v`**) | Medio — verificar que no toca otros stacks |
 | 1.5 | Eliminar contenedores/images PHP (NO volúmenes ni bind-mounts) | Bajo |
 | 1.6 | Verificar que `/data/kamples/uploads/` sigue intacto | Diagnóstico |
@@ -150,16 +150,29 @@ El deploy anterior era PHP (WordPress). Hay que limpiarlo preservando los upload
 | **Catástrofe total** | Ver "Procedimiento de escape" abajo | ~15 min |
 
 ### Restore de base de datos
-```powershell
-# Listar dumps disponibles
-& $cm exec --name kamples --target postgres -- ls -lt /dumps/
 
-# Restaurar el más reciente
-& $cm exec --name kamples --target postgres -- pg_restore --clean --if-exists -U kamples -d kamples /dumps/<archivo>.dump
+**NO se restaura con `pg_restore --clean --if-exists` a mano.** Esa línea
+estuvo aquí y es exactamente lo que dejó una base vacía: si el dump está vacío
+o truncado, `--clean` borra la base actual y luego no repone nada. Usa el
+script, que verifica el dump antes de tocar nada, saca copia previa verificada
+y restaura en una sola transacción:
 
-# Reiniciar app para reconectar
-& $cm restart --name kamples
+```bash
+# Ver qué hay (solo lectura)
+cm exec --name kamples --target postgres -- ls -lt /dumps/
+
+# Simulación: verifica el dump y dice qué haría, sin tocar nada
+PG_EXEC='cm exec --name kamples --target postgres --' \
+    ./scripts/restore-postgres.sh /data/kamples/db_dumps/<archivo>.dump
+
+# Restaurar de verdad
+PG_EXEC='cm exec --name kamples --target postgres --' \
+    ./scripts/restore-postgres.sh /data/kamples/db_dumps/<archivo>.dump --aplicar
 ```
+
+Luego reinicia la app para reconectar: `cm restart --name kamples`.
+
+Detalle y garantías: `Agente/documentacion/deploy/proteccion-datos-2026-10-16.md`.
 
 ### Procedimiento de escape (catástrofe total)
 Si nada funciona y hay que revertir todo:
@@ -260,6 +273,9 @@ Después de CADA operación que toque el servidor:
 6. **`restart: unless-stopped`** — no reinicia si se detuvo manualmente
 7. **Toda operación en servidor:** verificar studio + nakomi después
 8. **Si hay duda:** parar y preguntar al usuario
+9. **Migraciones:** solo con `scripts/migrar.sh` (guardia + copia verificada + una transacción). El `psql` a mano no para ante un error.
+10. **Restaurar:** solo con `scripts/restore-postgres.sh`. **NUNCA** `pg_restore --clean` directo sobre un dump sin verificar.
+11. **Uploads:** copia con `scripts/backup-uploads.sh`. La base de datos NO contiene los archivos físicos.
 
 ---
 

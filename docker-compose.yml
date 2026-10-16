@@ -175,6 +175,9 @@ services:
     volumes:
       - /data/kamples/db_dumps:/dumps
       - ./scripts/backup-postgres-loop.sh:/usr/local/bin/backup-loop.sh:ro
+      # [150] Reglas de verificación de dumps, compartidas con el script manual
+      # del host: el camino automático y el manual NO deben poder divergir.
+      - ./scripts/lib/dump-postgres.sh:/usr/local/bin/dump-postgres.sh:ro
     entrypoint: ["/bin/sh", "/usr/local/bin/backup-loop.sh"]
 
 volumes:

@@ -1,0 +1,16 @@
+# Migraciones con SQL destructivo declarado a propósito.
+#
+# Formato:  <nombre-de-archivo>|<motivo>
+#
+# Añadir una línea aquí NO es un trámite: es la constancia de que alguien
+# decidió borrar datos y por qué. Antes de aplicar una migración de esta lista,
+# copia de seguridad verificada:  ./scripts/backup-postgres.sh pre-migracion
+#
+# Lo revisa:  ./scripts/guardia-migraciones.sh
+#
+# ---------------------------------------------------------------------------
+# [174A-66] El DROP es intencionado y va seguido del CREATE de la tabla nueva:
+# la tabla legacy tenía `coleccion_id INT`, incompatible con `colecciones.id
+# BIGINT`. No es un borrado de datos en producción, es un cambio de esquema de
+# una tabla que se estaba introduciendo en ese mismo commit.
+20260418000031_colecciones_guardadas.up.sql|DROP + CREATE de la misma tabla en la misma migración: cambio de tipo INT->BIGINT de una tabla legacy (174A-66)

@@ -37,6 +37,13 @@ desktop.ini
 !/scripts/quality/
 !/scripts/lib/
 !/scripts/lib/*.mjs
+# [150] Protección de datos: el resto de la lista blanca son las herramientas
+# que hay que versionar. Sin estas líneas, `/scripts/*` las deja fuera del repo
+# en silencio (los `.sh` de `lib/` ya entran por `!/scripts/lib/`).
+!/scripts/restore-postgres.sh
+!/scripts/backup-uploads.sh
+!/scripts/migrar.sh
+!/scripts/guardia-migraciones.sh
 /prerendered/
 /node_modules/
 /cliente/
