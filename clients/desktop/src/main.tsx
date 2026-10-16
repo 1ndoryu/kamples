@@ -27,6 +27,15 @@ escucharVentana('unhandledrejection', (e) => {
 /* CSS del framework Glory (index.css incluye tailwind y resets) */
 import '@/index.css';
 
+/* [16A-5] Los mismos tokens heredados que carga la web (`frontend/src/main.tsx`).
+ * El escritorio pinta el mismo arbol legacy, asi que sin esta hoja los `var()`
+ * de la familia `--colorRgba-*` / `--medidaPx-*` caian al valor inicial: el
+ * respaldo de error de las islas salia sin fondo ni color, `.prose` (contenido
+ * inyectado desde la BD) sin color de texto y los bloques de codigo sin fondo.
+ * `variables.css` ya llegaba por `config.tsx` / `sync.tsx`; esta era la que
+ * faltaba. */
+import '@app/styles/tokensHeredados.css';
+
 /* Core de Glory: registry, hydration */
 import { islandRegistry } from '@/core';
 import { initializeIslands } from '@/core/hydration';

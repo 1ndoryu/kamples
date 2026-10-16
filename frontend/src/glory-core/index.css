@@ -183,19 +183,22 @@
     position: relative;
 }
 
-/* [15A-21] Etiqueta del overlay de desarrollo (glory-core/core/DevOverlay.tsx):
- * antes era un style={{}} inline con estos mismos valores literales. */
+/* [16A-5] Etiqueta del overlay de desarrollo (glory-core/core/DevOverlay.tsx):
+ * antes era un style={{}} inline con estos mismos valores literales. Los tokens
+ * `--colorRgba-*` y `--medidaPx-*` son de `tokensHeredados.css`, que **no** carga
+ * el cliente de escritorio: alli la etiqueta salia sin fondo y sin radio. Los de
+ * `variables.css` los carga entero. */
 .devOverlayEtiqueta {
     position: absolute;
     top: 0;
     right: 0;
-    background: var(--colorRgba-0-0-0-0_8);
-    color: var(--colorRgba-34-211-238-1);
+    background: var(--overlayFuerte);
+    color: var(--info);
     padding: 2px 8px;
     font-size: var(--fuente2xs);
     font-family: monospace;
     z-index: 99999;
-    border-radius: 0 0 0 var(--medidaPx-6);
+    border-radius: 0 0 0 var(--radioSm);
     line-height: 1.4;
     pointer-events: none;
     white-space: nowrap;
@@ -204,7 +207,7 @@
 .gloryCargando {
     padding: var(--espacioMd);
     text-align: center;
-    color: var(--colorRgba-156-163-175-1);
+    color: var(--textoSecundario);
     font-size: var(--fuenteBase);
 }
 
@@ -221,16 +224,21 @@
     display: none;
 }
 
-/* [15A-21] Respaldo de error de las islas (glory-core/core/ErrorBoundary.tsx):
- * los mismos valores que llevaba en style={{}}. Aqui y no en el kit de UI a
- * proposito: si lo que ha reventado es el kit, esta pantalla tiene que seguir
- * pintandose, y sus colores tienen que leerse aunque falle un chunk de CSS. */
+/* [16A-5] Respaldo de error de las islas (glory-core/core/ErrorBoundary.tsx).
+ * Aqui y no en el kit de UI a proposito: si lo que ha reventado es el kit, esta
+ * pantalla tiene que seguir pintandose. Eso exige que sus colores vengan de una
+ * hoja que **carguen los dos clientes**, y esa es `variables.css`: la familia
+ * `--colorRgba-*` vive en `tokensHeredados.css`, que el cliente de escritorio no
+ * importa (alli el respaldo salia sin fondo, sin color y sin radio), y ademas no
+ * cambia con `data-theme`, asi que en tema oscuro pintaba una tarjeta casi
+ * blanca. El borde ya usaba `var(--error)`, de `variables.css`; el resto se
+ * alinea con el. */
 .islaError {
     padding: 16px;
     border: 2px solid var(--error);
-    border-radius: var(--medidaPx-8);
-    background: var(--colorRgba-254-242-242-1);
-    color: var(--colorRgba-153-27-27-1);
+    border-radius: var(--radioMd);
+    background: var(--errorMuted);
+    color: var(--error);
     font-family: monospace;
     font-size: var(--fuenteMd);
 }
@@ -242,13 +250,15 @@
     font-size: var(--fuenteSm);
 }
 
+/* Sin relleno: el fondo de la tarjeta ya es `--errorMuted`, asi que un boton
+ * relleno del mismo tono desaparecia. Contorno + texto en `--error`. */
 .islaErrorReintentar {
     margin-top: 8px;
     padding: 4px 12px;
-    border: 1px solid var(--colorRgba-220-38-38-1);
+    border: 1px solid var(--error);
     border-radius: var(--radioSm);
-    background: var(--colorRgba-254-226-226-1);
-    color: var(--colorRgba-153-27-27-1);
+    background: transparent;
+    color: var(--error);
     cursor: pointer;
     font-size: var(--fuenteSm);
 }
@@ -256,17 +266,17 @@
 .islaErrorVacio {
     padding: 12px;
     text-align: center;
-    color: var(--colorRgba-107-114-128-1);
+    color: var(--textoSecundario);
     font-size: var(--fuenteBase);
 }
 
 .islaErrorVacioReintentar {
     margin-top: 8px;
     padding: 4px 12px;
-    border: 1px solid var(--colorRgba-75-85-99-1);
+    border: 1px solid var(--textoTerciario);
     border-radius: var(--radioSm);
     background: transparent;
-    color: var(--colorRgba-156-163-175-1);
+    color: var(--textoSecundario);
     cursor: pointer;
     font-size: var(--fuenteSm);
 }

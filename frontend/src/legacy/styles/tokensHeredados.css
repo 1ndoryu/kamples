@@ -25,6 +25,15 @@
  * `variables.css` porque el juego canonico no tiene equivalente identico: los
  * tres radios del tema son 4px y estos colores no estan en la paleta. El valor
  * es el literal exacto que habia inline, asi que el pintado no cambia.
+ *
+ * [16A-5] Aquellos nueve ya no existen: glory-core (respaldo de error de las
+ * islas, etiqueta del DevOverlay, `.prose`) paso a tokens de `variables.css`
+ * porque los heredados no cambian con `data-theme` y en tema oscuro pintaban
+ * una tarjeta casi blanca sobre fondo negro. Con ellos se van `--colorTexto`,
+ * `--colorTextoSuave` y `--medidaPx-22`, que quedaron sin lector al unificar
+ * las cabeceras de modal (16A-4). Solo sobreviven de aquel lote
+ * `--colorRgba-0-0-0-0_8` y `--colorRgba-156-163-175-1`, con lector vivo.
+ * La regla `token-unused` del gate es la que vigila esto.
  */
 :root {
   --color-accent-hover: var(--acentoHover);
@@ -69,18 +78,15 @@
   --colorRgba-10-10-10-1: rgba(10, 10, 10, 1);
   --colorRgba-100-150-255-0_08: rgba(100, 150, 255, 0.08);
   --colorRgba-100-150-255-0_7: rgba(100, 150, 255, 0.7);
-  --colorRgba-107-114-128-1: rgba(107, 114, 128, 1);
   --colorRgba-108-99-255-0_3: rgba(108, 99, 255, 0.3);
   --colorRgba-108-99-255-0_5: rgba(108, 99, 255, 0.5);
   --colorRgba-138-226-52-0_08: rgba(138, 226, 52, 0.08);
   --colorRgba-138-226-52-0_3: rgba(138, 226, 52, 0.3);
   --colorRgba-14-14-30-1: rgba(14, 14, 30, 1);
-  --colorRgba-153-27-27-1: rgba(153, 27, 27, 1);
   --colorRgba-156-163-175-1: rgba(156, 163, 175, 1);
   --colorRgba-16-185-129-0_2: rgba(16, 185, 129, 0.2);
   --colorRgba-18-18-42-1: rgba(18, 18, 42, 1);
   --colorRgba-217-119-6-1: rgba(217, 119, 6, 1);
-  --colorRgba-220-38-38-1: rgba(220, 38, 38, 1);
   --colorRgba-239-68-68-0_1: rgba(239, 68, 68, 0.1);
   --colorRgba-239-68-68-0_15: rgba(239, 68, 68, 0.15);
   --colorRgba-239-68-68-0_2: rgba(239, 68, 68, 0.2);
@@ -88,8 +94,6 @@
   --colorRgba-245-158-11-0_15: rgba(245, 158, 11, 0.15);
   --colorRgba-245-158-11-1: rgba(245, 158, 11, 1);
   --colorRgba-252-175-62-1: rgba(252, 175, 62, 1);
-  --colorRgba-254-226-226-1: rgba(254, 226, 226, 1);
-  --colorRgba-254-242-242-1: rgba(254, 242, 242, 1);
   --colorRgba-255-255-255-0_02: rgba(255, 255, 255, 0.02);
   --colorRgba-255-255-255-0_08: rgba(255, 255, 255, 0.08);
   --colorRgba-255-255-255-0_1: rgba(255, 255, 255, 0.1);
@@ -104,22 +108,15 @@
   --colorRgba-26-26-26-1: rgba(26, 26, 26, 1);
   --colorRgba-34-197-94-0_2: rgba(34, 197, 94, 0.2);
   --colorRgba-34-197-94-1: rgba(34, 197, 94, 1);
-  --colorRgba-34-211-238-1: rgba(34, 211, 238, 1);
   --colorRgba-34-34-34-1: rgba(34, 34, 34, 1);
   --colorRgba-42-42-58-1: rgba(42, 42, 58, 1);
   --colorRgba-58-58-90-1: rgba(58, 58, 90, 1);
-  --colorRgba-75-85-99-1: rgba(75, 85, 99, 1);
   --colorRgba-79-195-247-0_05: rgba(79, 195, 247, 0.05);
   --colorRgba-90-90-138-1: rgba(90, 90, 138, 1);
   --colorRgba-92-130-255-1: rgba(92, 130, 255, 1);
   --colorRojoError: #ef4444;
-  --colorTexto: #f3fbf7;
-  --colorTextoSuave: #9cb8b5;
   --colorVerdeTerminal: #8ae234;
   --medidaEm-0_9: 0.9em;
   --medidaEm-1: 1em;
   --medidaPx-100: 100px;
-  --medidaPx-22: 22px;
-  --medidaPx-6: 6px;
-  --medidaPx-8: 8px;
 }
