@@ -29,19 +29,45 @@ Lo que hay que auditar antes de empezar:
 
 ## Fases
 
-### Fase 0 — Fork y exploracion del upstream (manual del usuario + investigacion)
-**Bloqueante manual:** el agente NO tiene credenciales de GitHub para crear el fork. El usuario debe:
-1. Ir a https://github.com/andremichelle/opendaw y darle "Fork" -> destino `1ndoryu/opendaw`.
-2. Confirmar al agente que el fork existe; el agente continua desde ahi.
+### Fase 0 — Fork y exploracion del upstream — **CERRADA (2026-10-16)**
 
-Mientras tanto, en investigacion (NO bloqueante):
-- 0.1 Clonar localmente `andremichelle/opendaw` en `Repos-vivos/opendaw/` (fuera de glory-rust-template) y leer:
-  - `package.json`, `vite.config.ts`, dependencias.
-  - Estructura de modulos (motor de audio, UI, tracks, plugins).
-  - Como se monta como aplicacion standalone vs. como libreria embebible.
-- 0.2 Identificar el "API publico" de opendaw: ¿exporta un componente React montable? ¿es app standalone con su propia raiz? ¿carga proyectos via JSON?
-- 0.3 Revisar la licencia (GPL? MIT?) y compatibilidad con kamples.
-- 0.4 Identificar puntos de integracion para "drag-drop sample" — buscar handlers de file drop, file import, asset library.
+**El bloqueante que figuraba aquí era falso.** Decía «el agente NO tiene
+credenciales de GitHub para crear el fork»; `gh` está autenticado como
+`1ndoryu` con scope `repo`, y el fork ya existe:
+**https://github.com/1ndoryu/openDAW** (verificado: `isFork: true`, padre
+`andremichelle/openDAW`, rama `main`).
+
+**BLOQUEO REAL, y no es técnico: la licencia.** opendaw es
+**AGPL-3.0-or-later** (`LICENSE`, `package.json:5`). La AGPL es copyleft e
+incluye el **uso por red** (§13): un servicio en red que incorpore el código
+cuenta como distribución. Incrustarlo en KAMPLES —que es cerrado y cobra—
+obliga a liberar el código correspondiente bajo AGPL **o** a comprar la
+licencia comercial del autor. **Esto lo decide la usuaria; ninguna fase
+posterior tiene sentido hasta entonces.**
+
+Exploración hecha sobre el clon en `C:\tmp\opendaw\openDAW` (commit `98efab8`):
+
+- 0.1 **Estructura**: monorepo npm workspaces + turbo (build) + lerna (publish).
+  `packages/studio/*` es el dominio del DAW, `packages/lib/*` son librerías
+  genéricas, `packages/app/studio` es la app principal
+  (`@opendaw/app-studio`, `private: true`, no publicada). Node ≥23, TS ^5.9.
+- 0.2 **API pública**: **no hay forma de embeber la UI.** Cero coincidencias de
+  `customElements.define`, de un `mount()` exportado y de API de iframe;
+  `boot()` (`packages/app/studio/src/boot.ts:45`) es interno de la app privada.
+  Lo consumible es `@opendaw/studio-sdk` (meta-instalador) y, headless,
+  `@opendaw/studio-core` (Project/ProjectApi/Engine/Mixer). **La UI propia no se
+  reutiliza: habría que construirla contra el core, o hacer fork y merge.**
+- 0.3 **Licencia**: AGPL-3.0-or-later (arriba). Algunos paquetes son LGPL-3.0
+  (icons, markdown, scrollbars, manual) o ISC.
+- 0.4 **Drag & drop**: viene de serie y es lo que la usuaria pedía.
+  `DragAndDrop.ts:22-24` detecta `"Files"`; `TimelineDragAndDrop.ts:59-66` hace
+  `sampleService.importFiles(data.files)`; también en `SampleSelector.ts:147`,
+  `ChopTrigger.ts:54` y `ResourceBrowser.tsx:187`.
+- **Condicionante técnico añadido**: el motor exige **COOP/COEP +
+  SharedArrayBuffer** (`packages/studio/sdk/README.md:23`). Servir la app de
+  KAMPLES con esas cabeceras rompe la mayoría de embeds de terceros.
+- **Sin medir**: el tamaño del build (no hay `dist/` en el repo; compilar
+  requiere Rust ≥1.82 nightly + binaryen).
 
 ### Fase 1 — Auditoria del Mezclador actual (1 sesion)
 - 1.1 Diff entre `frontend/src/mezclador/` y `frontend/src/features/mezclador/`. Decidir cual es la version "buena" y borrar la otra.
@@ -89,9 +115,11 @@ Documentar en `Agente/documentacion/daw/estrategia-opendaw-{fecha}.md`.
 
 ## Estado actual (2026-04-25)
 - Plan inicial escrito.
-- BLOQUEANTE FASE 0: el usuario debe hacer el fork manualmente en su cuenta `1ndoryu`.
+- ~~BLOQUEANTE FASE 0: el usuario debe hacer el fork manualmente~~ — resuelto el 2026-10-16: el fork existe en `1ndoryu/openDAW`.
+- **BLOQUEANTE NUEVO: la licencia AGPL-3.0-or-later de opendaw.** Decisión de la usuaria. Sin ella no se avanza a la fase 1.
 - Agente puede avanzar en investigacion del upstream (clonar, leer codigo) sin bloqueante.
 - No hay deadline; se prioriza despues de las tareas mas chicas del roadmap.
 
 ## Bitacora
 - 2026-04-25: plan creado. Sin bloqueante de aclaracion del usuario, pero fork pendiente como accion manual.
+- 2026-10-16: fork creado por el agente (`1ndoryu/openDAW`); el bloqueante declarado era falso. Fase 0.1–0.4 completada sobre el clon. **Aparece el bloqueo real: AGPL-3.0-or-later** — incompatible con un producto cerrado de pago salvo licencia comercial o liberación del código. Fase 0 cerrada a la espera de esa decisión.
