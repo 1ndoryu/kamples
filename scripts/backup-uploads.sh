@@ -1,18 +1,25 @@
 #!/usr/bin/env bash
-# [150] Backup de los ARCHIVOS FÍSICOS (uploads). La base de datos no es el
-# único dato que debe perdurar: los samples, avatares y portadas viven en
-# /data/kamples/uploads y no están en ningún dump de PostgreSQL. Hasta ahora
-# solo existía un `tar czf` manual escrito en un runbook, así que en la
-# práctica no había copia.
+# [150 / 16A-7] Copia de los ARCHIVOS FÍSICOS (uploads). La base de datos no es
+# el único dato que debe perdurar: los samples, avatares y portadas viven en
+# /data/kamples/uploads y no están en ningún dump de PostgreSQL.
 #
-# Uso (desde el host del servidor, en el directorio del stack Coolify):
+# Uso (desde el host del servidor, en el directorio del stack):
 #   ./scripts/backup-uploads.sh [etiqueta]
 #
-# Sale un .tar.gz en /data/kamples/uploads_dumps/. Igual que el dump de la
-# base, se escribe a .partial, se VERIFICA y solo entonces se renombra: un tar
-# a medias es peor que ninguno, porque parece una copia.
+# Sale un .tar.gz en $UPLOADS_DUMPS_DIR. Igual que el dump de la base, se
+# escribe a .partial, se VERIFICA y solo entonces se renombra: un tar a medias
+# es peor que ninguno, porque parece una copia.
+#
+# [16A-7] Las reglas de verificación viven en scripts/lib/tar-uploads.sh y las
+# comparte el sidecar `uploads-backup` de docker-compose.yml. Este script es la
+# vía manual; el sidecar, la automática. Ninguna de las dos decide por su cuenta
+# si una copia sirve.
 
 set -euo pipefail
+
+AQUI=$(cd "$(dirname "$0")" && pwd)
+# shellcheck source=lib/tar-uploads.sh
+. "$AQUI/lib/tar-uploads.sh"
 
 LABEL="${1:-manual}"
 ORIGEN="${UPLOADS_DIR:-/data/kamples/uploads}"
@@ -39,29 +46,21 @@ trap limpiar EXIT
 
 # Cuántos archivos hay que esperar del otro lado. Se mide antes para poder
 # comparar después: un tar que se corta a medias sigue siendo un tar válido.
-ESPERADOS=$(find "$ORIGEN" -type f 2>/dev/null | wc -l | tr -d ' ')
+ESPERADOS=$(uploads_contar "$ORIGEN")
 
 echo "[backup-uploads] empaquetando $ORIGEN ($ESPERADOS archivos) -> $OUT"
 
-# -C al directorio padre para no guardar rutas absolutas dentro del tar.
-tar czf "$PARCIAL" -C "$(dirname "$ORIGEN")" "$(basename "$ORIGEN")"
+uploads_empaquetar "$ORIGEN" "$PARCIAL"
+uploads_listar "$PARCIAL" "$LISTA"
+uploads_verificar "$PARCIAL" "$LISTA" "$ESPERADOS"
 
-# Verificación: el tar debe listarse sin error y traer el mismo número de
-# archivos que había en el origen. Un tar legible pero incompleto es la copia
-# que falla justo cuando la necesitas.
-tar tzf "$PARCIAL" > "$LISTA"
-
-INCLUIDOS=$(grep -vc '/$' "$LISTA" || true)
-if [ "$INCLUIDOS" -ne "$ESPERADOS" ]; then
-    echo "[backup-uploads] RECHAZADO: el tar trae ${INCLUIDOS} archivos y el origen tiene ${ESPERADOS}" >&2
-    exit 1
-fi
-
-BYTES=$(stat -c '%s' "$PARCIAL" 2>/dev/null || stat -f '%z' "$PARCIAL")
+BYTES=$(uploads_tamano "$PARCIAL")
 mv "$PARCIAL" "$OUT"
-echo "[backup-uploads] OK $OUT (${BYTES} bytes, ${INCLUIDOS} archivos)"
+echo "[backup-uploads] OK $OUT (${BYTES} bytes, ${ESPERADOS} archivos)"
 
-# Rotación, conservando siempre el más reciente aunque supere la retención.
+# Rotación, conservando siempre el más reciente aunque supere la retención: si
+# el backup lleva días fallando, borrar el último bueno dejaría los archivos sin
+# ninguna copia, que es justo el escenario que esto evita.
 MAS_NUEVO=$(ls -1t "$DESTINO"/uploads-*.tar.gz 2>/dev/null | head -n1 || true)
 if [ -n "$MAS_NUEVO" ]; then
     find "$DESTINO" -maxdepth 1 -name 'uploads-*.tar.gz' -type f \

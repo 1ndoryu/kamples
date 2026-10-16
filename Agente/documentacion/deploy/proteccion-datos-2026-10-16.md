@@ -55,7 +55,9 @@ el tamaño: es no tener ninguna entrada `TABLE DATA`.
 | `scripts/backup-postgres.sh [etiqueta]` | Volcado manual. Escribe a `.partial`, verifica y solo entonces renombra. Un fallo no deja nada que parezca un backup. |
 | `scripts/backup-postgres-loop.sh` | Sidecar cada 6 h. Verifica antes de aceptar, avisa tras 3 fallos seguidos y si el último bueno tiene más de dos intervalos. La rotación **conserva siempre el más reciente**, aunque supere la retención. |
 | `scripts/restore-postgres.sh <dump> [--aplicar] [--forzar]` | La única vía sancionada de restaurar. Sin `--aplicar` es simulación. |
-| `scripts/backup-uploads.sh [etiqueta]` | Copia de `/data/kamples/uploads`. Comprueba que el tar trae el mismo número de archivos que el origen. |
+| `scripts/backup-uploads.sh [etiqueta]` | Copia manual de `/data/kamples/uploads`. Comprueba que el tar trae el mismo número de archivos que el origen. |
+| `scripts/backup-uploads-loop.sh` | Sidecar cada 24 h de los **archivos físicos**. Mismas garantías que el loop de la base: verifica antes de aceptar, avisa tras 3 fallos y si el último bueno tiene más de dos intervalos, y rota conservando siempre el más reciente. Monta los uploads en **solo lectura**. |
+| `scripts/lib/tar-uploads.sh` | Reglas de verificación de las copias de uploads, compartidas por el script manual y el sidecar para que los dos caminos no puedan divergir. |
 | `scripts/migrar.sh <archivo.up.sql>…` | Guardia → copia verificada → aplicar. |
 | `scripts/guardia-migraciones.sh [archivos…]` | Se niega a dar por bueno SQL destructivo no declarado. |
 
@@ -114,6 +116,44 @@ se acepta (sin falso positivo).
 `npm run bd:guardia` — sobre las 24 migraciones reales: 1 destructiva, ya
 declarada; **ninguna de las otras 23 da falso positivo**.
 
+`npm run archivos:test` — 30 casos sobre `tar`/`find` reales, sin base de datos:
+
+- `uploads_verificar`: acepta un tar completo y un origen vacío legítimo;
+  rechaza inexistente, 0 bytes, **truncado a la mitad** (el caso que importa: un
+  gzip cortado no se puede listar), un tar al que le falta un archivo, bytes
+  cualesquiera y el umbral de tamaño subido.
+- `uploads_nombre_valido`: acepta `uploads-*.tar.gz` y rechaza un dump, un
+  `.partial` y un tar ajeno, para que un `find -delete` no se lleve por delante
+  algo que no es nuestro.
+- `backup-uploads.sh`: copia en verde sin dejar `.partial`, fallo loud con origen
+  inexistente sin tocar las copias anteriores, fallo sin restos si el destino no
+  es escribible, y rotación que borra las vencidas **conservando la más
+  reciente**.
+- `backup-uploads-loop.sh`: ejecutado de verdad con `/bin/sh` y directorios
+  temporales — deja copias verificadas, escribe la marca de última copia buena,
+  **no da aviso de ranciedad estando sano** (la regresión del umbral) y muere si
+  no existe el origen.
+
+**Lo que estas pruebas NO cubren.** La 89 no tiene Docker, así que el sidecar
+**no se ha ejecutado dentro del contenedor**: se ejecutó el mismo script con
+`/bin/sh` sobre directorios temporales. Queda sin probar busybox (frente a GNU
+coreutils), el montaje `:ro` y que la imagen `postgres:16-alpine` traiga los
+binarios que el loop usa. Se argumenta por construcción —POSIX sh y juego de
+herramientas busybox—, no por ejecución.
+
+`npm run compose:test` — guarda contra un fallo que apareció al hacer esto:
+`.gitignore` tiene `/scripts/*` con lista blanca, así que un script nuevo queda
+**fuera del repo en silencio** salvo que se le añada su `!`. A
+`backup-uploads-loop.sh` le pasó: el compose lo montaba y el repo no lo llevaba,
+de modo que en un clon limpio el sidecar no arrancaría y —como el resto del
+stack sigue en pie— **parecería que hay copias cuando no hay ninguna**. La guarda
+saca del compose real las rutas `./scripts/…`, exige que existan y, donde hay
+git, que estén versionadas. Incluye testigo: si el barrido no encuentra ninguna
+ruta (el compose cambió de forma), falla en vez de pasar por vacío.
+
+`npm run scripts:test` — las tres suites seguidas (`bd:test`, `archivos:test`,
+`compose:test`).
+
 ## Lo que sigue faltando
 
 - **Copia off-site.** Hoy todo vive en `/data/kamples` del mismo servidor: si se
@@ -124,8 +164,26 @@ declarada; **ninguna de las otras 23 da falso positivo**.
 - **Ejercicio de restauración real.** Los scripts están probados por partes y
   contra `pg_dump` real, pero nunca se ha hecho un restore completo contra el
   stack de producción. Requiere autorización por operación (producción).
-- **Copias automáticas de uploads.** `backup-uploads.sh` es manual; el sidecar
-  solo cubre la base.
 - **Migraciones sin `.down.sql`.** De 24 migraciones, solo una tiene su
   reverso (`20260703000000_fix_colecciones_schema.down.sql`). No hay plan de
   vuelta para el resto.
+
+## Copias de los archivos físicos
+
+Cerrado el 2026-10-16 (16A-7). Hasta entonces **la base se copiaba cada 6 h pero
+los uploads solo tenían script manual**, así que en la práctica los samples,
+avatares y portadas podían llevar meses sin copia: el sidecar cubría una sola de
+las dos cosas que hay que preservar.
+
+- El tar se empaqueta con `-C` al padre del directorio de uploads, así que
+  **dentro no hay rutas absolutas** y se extrae donde haga falta:
+  `tar xzf uploads-….tar.gz -C <padre-de-uploads>`.
+- El sidecar monta `/data/kamples/uploads` en **solo lectura**: empaqueta, nunca
+  escribe ni borra en el directorio de uploads.
+- Se reutiliza la imagen `postgres:16-alpine` a propósito, para no añadir otra
+  imagen al stack: trae busybox con `tar`/`find`/`stat`, que es todo lo que
+  necesita el loop.
+- El umbral de ranciedad se redondea **hacia arriba** a minutos enteros. Con
+  `INTERVAL/60*2` y un intervalo corto daba 0, y `find -mmin +0` es cierto para
+  casi todo: el aviso quedaba encendido siempre y no avisaba de nada. Mismo
+  defecto corregido en `backup-postgres-loop.sh`, que lo tenía igual.

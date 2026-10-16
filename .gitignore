@@ -42,6 +42,10 @@ desktop.ini
 # en silencio (los `.sh` de `lib/` ya entran por `!/scripts/lib/`).
 !/scripts/restore-postgres.sh
 !/scripts/backup-uploads.sh
+# [16A-7] El loop del sidecar de uploads. Faltaba: docker-compose.yml lo monta,
+# pero sin esta línea el repo no lo llevaba y el sidecar no arrancaba en un clon
+# limpio — sin copias y sin que nada lo dijera.
+!/scripts/backup-uploads-loop.sh
 !/scripts/migrar.sh
 !/scripts/guardia-migraciones.sh
 /prerendered/

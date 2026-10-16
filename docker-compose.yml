@@ -27,6 +27,8 @@
 #  - redis:    Redis 7 para cache/locks. Volumen NAMED (para AOF persistente).
 #  - app:      backend Rust Axum (este repo).
 #  - web:      frontend Vite servido por nginx, proxy /api/ -> app.
+#  - postgres-backup / uploads-backup: sidecars de copia automática (la base y
+#    los archivos físicos). Los dos verifican antes de aceptar y rotan.
 #
 # === Networking ===
 #  - postgres y redis NO están expuestos al host (sin `ports:`). Solo
@@ -179,6 +181,32 @@ services:
       # del host: el camino automático y el manual NO deben poder divergir.
       - ./scripts/lib/dump-postgres.sh:/usr/local/bin/dump-postgres.sh:ro
     entrypoint: ["/bin/sh", "/usr/local/bin/backup-loop.sh"]
+
+  # [16A-7] Sidecar de backup de los ARCHIVOS FÍSICOS. Faltaba: la base se
+  # copiaba cada 6 h, pero los uploads solo tenían un script manual, así que en
+  # la práctica podían llevar meses sin copia.
+  #
+  # Monta /data/kamples/uploads en SOLO LECTURA: este servicio empaqueta, nunca
+  # escribe ni borra en el directorio de uploads. Se reutiliza la imagen de
+  # postgres a propósito, para no añadir otra imagen al stack: trae busybox con
+  # tar/find/stat, que es todo lo que necesita el loop, y las reglas de
+  # verificación viven en el mismo sitio que las del dump.
+  uploads-backup:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      UPLOADS_DIR: /uploads
+      UPLOADS_DUMPS_DIR: /uploads_dumps
+      UPLOADS_INTERVAL_SECONDS: ${UPLOADS_INTERVAL_SECONDS:-86400}  # 24h
+      UPLOADS_RETENTION_DAYS: ${UPLOADS_RETENTION_DAYS:-14}
+    volumes:
+      - /data/kamples/uploads:/uploads:ro
+      - /data/kamples/uploads_dumps:/uploads_dumps
+      - ./scripts/backup-uploads-loop.sh:/usr/local/bin/uploads-loop.sh:ro
+      # [16A-7] Reglas de verificación de copias, compartidas con el script
+      # manual del host: el camino automático y el manual NO deben poder divergir.
+      - ./scripts/lib/tar-uploads.sh:/usr/local/bin/tar-uploads.sh:ro
+    entrypoint: ["/bin/sh", "/usr/local/bin/uploads-loop.sh"]
 
 volumes:
   postgres_data:

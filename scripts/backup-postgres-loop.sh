@@ -24,7 +24,11 @@ RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-14}"
 PATRON="${PGDATABASE}-*.dump"
 # Umbral de ranciedad: dos intervalos sin un dump bueno es una avería, no una
 # espera normal.
-RANCIEDAD_MIN=$(( INTERVAL / 60 * 2 ))
+# Dos intervalos, redondeando HACIA ARRIBA: `find -mmin` cuenta minutos
+# enteros, así que con un intervalo corto (pruebas) `INTERVAL/60*2` daba 0 y
+# `-mmin +0` es cierto para casi todo, o sea un aviso permanente que no avisa
+# de nada. Redondeando arriba el umbral nunca es 0.
+RANCIEDAD_MIN=$(( (INTERVAL * 2 + 59) / 60 ))
 FALLOS=0
 MARCA_OK="$DUMP_DIR/.ultimo-backup-ok"
 
