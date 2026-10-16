@@ -75,18 +75,19 @@
     padding: var(--espacio2xl) 0;
 }
 
-.landingHeroAcciones {
-    display: flex;
-    gap: var(--landingEspacioAcciones);
-    align-items: center;
-}
-
 .landingHeroBuscadorBtn.botonBase {
     border-radius: var(--medidaPx-100);
 }
 
+/* [183A-18] El hero enseña el buscador, así que los accesos a registro y
+ * descarga quedan ocultos. Una sola regla: antes estaba partida en dos y la
+ * segunda (`display: none`) pisaba el `display` de la primera, que era el
+ * duplicado real. Se conservan `gap` y `align-items` para que la fila siga
+ * maquetada si algún día se vuelve a mostrar. */
 .landingHeroAcciones {
     display: none;
+    gap: var(--landingEspacioAcciones);
+    align-items: center;
 }
 
 /* [183A-18] Buscador en el hero del landing para usuarios no autenticados */
