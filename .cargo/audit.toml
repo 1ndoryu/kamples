@@ -4,11 +4,17 @@
 [advisories]
 ignore = [
     # RUSTSEC-2023-0071 (rsa 0.9.10, Marvin Attack, sin parche).
-    # Motivo: `rsa` solo entra por `sqlx-mysql`, dependencia opcional de sqlx que nunca se compila
-    # (KAMPLES usa solo Postgres). Cargo la incluye en Cargo.lock aunque no esté activa, así que
-    # cargo-audit la ve; cambiar features o subir sqlx a 0.9 no la elimina (rsa 0.10.0-rc.18 también
-    # está sin parche). El backend no hace operaciones RSA.
+    # Motivo: `rsa` solo entra por `sqlx-mysql`, dependencia opcional de sqlx que ya NO se activa
+    # ([16A-4], 2026-10-16: `default-features = false` en los dos Cargo.toml quitó la feature `any`;
+    # `cargo tree -i rsa` y `cargo tree -i sqlx-mysql` dicen "nothing to print" y
+    # `cargo check --all-targets` compila en verde sin ellos). El backend no hace operaciones RSA.
+    # Pero siguen en Cargo.lock: el lock es independiente de features y cargo los vuelve a añadir al
+    # re-resolver (probado: borrarlos del lock, incluso con sus aristas, y cargo los repone), así que
+    # no se pueden podar a mano. Regenerar el lock desde cero tampoco se puede hoy: 134 de las 136
+    # versiones publicadas de `zip` están *yanked* (solo 9.0.3 y 9.0.4 quedan) y ningún
+    # `utoipa-swagger-ui` publicado acepta `zip ^9` (8.x→^2, 9.0.2→^3.0, 10.x→^8.6). Mientras el
+    # lock no se pueda regenerar, cargo-audit seguirá viendo la entrada y esta excepción sigue haciendo falta.
     # Decidido: excepción de 1 mes (2026-10-12). VENCE 2026-11-12.
-    # Al vencer: quitar la entrada si hay parche o sqlx-mysql sale del lock; si no, renovar con fecha nueva.
+    # Al vencer: renovar con fecha nueva; solo se puede quitar cuando el lock se regenere (ver [16A-4]).
     "RUSTSEC-2023-0071",
 ]

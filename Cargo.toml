@@ -23,7 +23,14 @@ serde_with = "3"
 json5 = "0.4"
 
 # Database
-sqlx = { version = "0.8", features = ["runtime-tokio", "tls-rustls", "postgres", "migrate", "uuid", "chrono", "json", "macros", "ipnetwork"] }
+# `default-features = false` quita la feature `any` de sqlx, que era la única que
+# activaba los drivers MySQL y SQLite. KAMPLES usa solo Postgres, y `sqlx-mysql`
+# traía `rsa` (RUSTSEC-2023-0071, sin parche): sin `any`, ninguno de los dos entra
+# ya en el grafo de compilación (`cargo tree -i rsa` → "nothing to print").
+# OJO: `Cargo.lock` es independiente de features y los sigue listando, y no se
+# pueden podar a mano porque cargo los vuelve a añadir al re-resolver. Por eso la
+# excepción de `.cargo/audit.toml` SIGUE vigente. Evidencia: [16A-4] en roadmap.md.
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "tls-rustls", "postgres", "migrate", "uuid", "chrono", "json", "macros", "ipnetwork"] }
 pgvector = { version = "0.4", features = ["sqlx"] }
 
 # Cache / Redis
