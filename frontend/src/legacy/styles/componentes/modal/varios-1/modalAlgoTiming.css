@@ -37,7 +37,14 @@
 }
 
 /* [15A-25] Retirada .algoTimingAcciones: era copia literal de .modalAcciones
- * (`display:flex; gap: var(--espacioSm)`); el grupo usa <ModalAcciones>. */
+ * (`display:flex; gap: var(--espacioSm)`); el grupo usa <ModalAcciones>.
+ * La receta canonica es de PIE de modal y reparte el ancho a partes iguales
+ * entre los botones (`.modalAcciones > .botonBase { flex: 1 }`). Aqui el grupo
+ * va en la CABECERA, a la derecha del titulo, y los dos botones deben quedarse
+ * a su ancho natural. */
+.algoTimingCabecera .modalAcciones > .botonBase {
+    flex: 0 0 auto;
+}
 
 .algoTimingTabs {
     display: flex;
