@@ -1,14 +1,14 @@
 /*
  * Componente: BotonBase
  * Boton reutilizable con variantes y tamaños.
- * Variantes: primario, secundario, ghost, peligro
+ * Variantes: primario, secundario, ghost, peligro, ninguno (sin color ni fondo propios)
  * Tamaños: sm, md, ninguno (sin padding/height forzado)
  */
 
 import { type ReactNode, type ButtonHTMLAttributes } from 'react';
 import '../../../styles/componentes/boton/botonBase.css';
 
-type VarianteBoton = 'primario' | 'secundario' | 'ghost' | 'peligro';
+type VarianteBoton = 'primario' | 'secundario' | 'ghost' | 'peligro' | 'ninguno';
 type TamanoBoton = 'sm' | 'md' | 'ninguno';
 
 interface BotonBaseProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -25,6 +25,7 @@ const mapaVariante: Record<VarianteBoton, string> = {
     secundario: 'varianteSecundario',
     ghost: 'varianteGhost',
     peligro: 'variantePeligro',
+    ninguno: '',
 };
 
 const mapaTamano: Record<TamanoBoton, string> = {

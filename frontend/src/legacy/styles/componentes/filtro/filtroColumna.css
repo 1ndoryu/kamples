@@ -8,7 +8,14 @@
     position: relative;
 }
 
-.filtroColumnaBoton {
+/*
+ * Piel del boton del sistema: `.botonBase.<piel>` (0,2,0) gana a `.botonBase` (0,1,0)
+ * sin depender del orden en que se carguen las hojas. Se usa con
+ * <BotonBase variante="ninguno" tamano="ninguno" className="filtroColumna ...">.
+ * `line-height: inherit` conserva el render del <button> nativo (el reset le daba
+ * `font: inherit`, linea 1,5).
+ */
+.botonBase.filtroColumna {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,19 +23,25 @@
     background: none;
     border: none;
     color: var(--textoTerciario);
-    cursor: pointer;
     border-radius: var(--radioSm);
     transition: color var(--transicionRapida), background var(--transicionRapida);
     opacity: 0.5;
+    line-height: inherit;
 }
 
-.filtroColumnaBoton:hover {
+/* El icono mide 10px y `.botonBase svg` lo forzaria a 12px */
+.botonBase.filtroColumna svg {
+    min-width: 0;
+    min-height: 0;
+}
+
+.botonBase.filtroColumna:hover {
     color: var(--textoPrimario);
     background: var(--fondoElevado2);
     opacity: 1;
 }
 
-.filtroColumnaActivo {
+.botonBase.filtroColumnaActivo {
     color: var(--acento);
     opacity: 1;
 }

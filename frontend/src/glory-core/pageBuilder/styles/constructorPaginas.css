@@ -51,40 +51,56 @@
     align-items: center;
 }
 
-.botonControlBloque {
+/*
+ * Pieles del boton del sistema para los controles del constructor.
+ * Se escriben como `.botonBase.<piel>` (0,2,0) para que ganen a `.botonBase` (0,1,0)
+ * sin depender del orden en que se carguen las hojas, y se usan con
+ * <BotonBase variante="ninguno" tamano="ninguno" className="<piel>">.
+ * `line-height: inherit` y `transition: none` conservan el render del <button>
+ * nativo: el reset ya le daba `font: inherit` (linea 1,5) y no tenia transicion.
+ */
+.botonBase.controlBloque {
     background: transparent;
     border: none;
     color: var(--colorBlancoPuro);
-    cursor: pointer;
     padding: 4px 8px;
     border-radius: var(--radioSm);
     font-size: var(--fuenteBase);
+    line-height: inherit;
+    transition: none;
 }
 
-.botonControlBloque:disabled {
+/* Se repiten fondo y borde para ganar al estado :disabled de `.botonBase` (0,2,0) */
+.botonBase.controlBloque:disabled {
+    background: transparent;
+    border: none;
     color: #444;
     cursor: not-allowed;
+    opacity: 1;
+    pointer-events: auto;
 }
 
-.botonEditarBloque {
+.botonBase.editarBloque {
     background: var(--info);
     border: none;
     color: var(--colorBlancoPuro);
-    cursor: pointer;
     padding: 4px 12px;
     border-radius: var(--radioSm);
     font-size: var(--fuenteSm);
     font-weight: 500;
+    line-height: inherit;
+    transition: none;
 }
 
-.botonEliminarBloque {
+.botonBase.eliminarBloque {
     background: transparent;
     border: none;
     color: var(--colorRojoError);
-    cursor: pointer;
     padding: 4px 8px;
     border-radius: var(--radioSm);
     font-size: var(--fuenteBase);
+    line-height: inherit;
+    transition: none;
 }
 
 .bloquesVacio {
@@ -141,12 +157,15 @@
     color: var(--colorGrisMedio);
 }
 
-.botonEliminarItem {
+.botonBase.eliminarItem {
     background: transparent;
     border: none;
     color: var(--colorRojoError);
-    cursor: pointer;
     padding: 4px;
+    /* El <button> nativo no tenia radio propio */
+    border-radius: 0;
+    line-height: inherit;
+    transition: none;
 }
 
 .campoArrayItemCampos {
@@ -163,7 +182,7 @@
     text-transform: uppercase;
 }
 
-.botonAgregarItem {
+.botonBase.agregarItem {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -173,8 +192,8 @@
     border: 1px dashed rgba(255, 255, 255, 0.2);
     border-radius: 6px;
     color: var(--colorGrisMedio);
-    cursor: pointer;
     font-size: var(--fuenteMd);
+    line-height: inherit;
     transition: all 0.2s;
 }
 
@@ -234,12 +253,15 @@
     color: var(--colorBlancoPuro);
 }
 
-.botonCerrarModal {
+.botonBase.cerrarModal {
     background: transparent;
     border: none;
     color: var(--colorGrisMedio);
-    cursor: pointer;
     padding: 4px;
+    /* El <button> nativo no tenia radio propio */
+    border-radius: 0;
+    line-height: inherit;
+    transition: none;
 }
 
 .modalCuerpo {
@@ -275,25 +297,27 @@
     border-top: 1px solid var(--colorRgba-255-255-255-0_1);
 }
 
-.botonCancelar {
+.botonBase.cancelarModal {
     padding: 10px 20px;
     border-radius: 8px;
     border: 1px solid var(--colorRgba-255-255-255-0_1);
     background: transparent;
     color: var(--colorGrisMedio);
-    cursor: pointer;
     font-size: var(--fuenteBase);
+    line-height: inherit;
+    transition: none;
 }
 
-.botonGuardar {
+.botonBase.guardarModal {
     padding: 10px 24px;
     border-radius: 8px;
     border: none;
     background: var(--info);
     color: var(--colorBlancoPuro);
-    cursor: pointer;
     font-size: var(--fuenteBase);
     font-weight: 500;
+    line-height: inherit;
+    transition: none;
 }
 
 /* PageLayout */

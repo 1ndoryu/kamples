@@ -7,6 +7,7 @@
 import { useState, useRef } from 'react';
 import { Filter } from 'lucide-react';
 import { Checkbox } from './Checkbox';
+import { BotonBase } from '../boton/BotonBase';
 import { useCerrarAlClickFuera } from '@app/hooks/menu/useCerrarAlClickFuera';
 import '../../../styles/componentes/filtro/filtroColumna.css';
 
@@ -40,14 +41,16 @@ export const FiltroColumna = ({ opciones, activos, onChange }: FiltroColumnaProp
 
     return (
         <div className="filtroColumnaContenedor" ref={refContenedor}>
-            <button
+            <BotonBase
                 type="button"
-                className={`filtroColumnaBoton ${tieneActivos ? 'filtroColumnaActivo' : ''}`}
+                variante="ninguno"
+                tamano="ninguno"
+                className={`filtroColumna ${tieneActivos ? 'filtroColumnaActivo' : ''}`}
                 onClick={(e) => { e.stopPropagation(); setAbierto(prev => !prev); }}
                 title="Filtrar columna"
             >
                 <Filter size={10} />
-            </button>
+            </BotonBase>
             {abierto && (
                 <div className="filtroColumnaDropdown">
                     <button

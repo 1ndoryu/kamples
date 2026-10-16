@@ -11,6 +11,7 @@ import {X, Plus, Trash2} from 'lucide-react';
 import {BlockRegistry} from './BlockRegistry';
 import type {EditableField} from './types';
 import './styles/constructorPaginas.css';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 
 interface BlockEditorModalProps {
     /** Si el modal esta abierto */
@@ -119,12 +120,14 @@ function ArrayFieldRenderer({field, value, onChange}: ArrayFieldRendererProps): 
                 <div key={`array-item-${index}`} className="campoArrayItem">
                     <div className="campoArrayItemCabecera">
                         <span className="campoArrayItemNumero">Item {index + 1}</span>
-                        <button
+                        <BotonBase
                             type="button"
+                            variante="ninguno"
+                            tamano="ninguno"
                             onClick={() => handleRemoveItem(index)}
-                            className="botonEliminarItem">
+                            className="eliminarItem">
                             <Trash2 size={14} />
-                        </button>
+                        </BotonBase>
                     </div>
 
                     <div className="campoArrayItemCampos">
@@ -140,13 +143,15 @@ function ArrayFieldRenderer({field, value, onChange}: ArrayFieldRendererProps): 
                 </div>
             ))}
 
-            <button
+            <BotonBase
                 type="button"
+                variante="ninguno"
+                tamano="ninguno"
                 onClick={handleAddItem}
-                className="botonAgregarItem">
+                className="agregarItem">
                 <Plus size={14} />
                 Agregar item
-            </button>
+            </BotonBase>
         </div>
     );
 }
@@ -213,12 +218,14 @@ export function BlockEditorModal({isOpen, blockType, blockData, onSave, onClose}
                     <h2 className="modalTitulo">
                         Editar: {definition.label}
                     </h2>
-                    <button
+                    <BotonBase
                         type="button"
+                        variante="ninguno"
+                        tamano="ninguno"
                         onClick={onClose}
-                        className="botonCerrarModal">
+                        className="cerrarModal">
                         <X size={20} />
-                    </button>
+                    </BotonBase>
                 </div>
 
                 {/* Body - Campos */}
@@ -241,18 +248,22 @@ export function BlockEditorModal({isOpen, blockType, blockData, onSave, onClose}
 
                 {/* Footer */}
                 <div className="modalPie">
-                    <button
+                    <BotonBase
                         type="button"
+                        variante="ninguno"
+                        tamano="ninguno"
                         onClick={onClose}
-                        className="botonCancelar">
+                        className="cancelarModal">
                         Cancelar
-                    </button>
-                    <button
+                    </BotonBase>
+                    <BotonBase
                         type="button"
+                        variante="ninguno"
+                        tamano="ninguno"
                         onClick={handleSave}
-                        className="botonGuardar">
+                        className="guardarModal">
                         Guardar
-                    </button>
+                    </BotonBase>
                 </div>
             </div>
         </div>

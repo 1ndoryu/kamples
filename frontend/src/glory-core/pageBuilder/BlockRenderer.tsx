@@ -12,6 +12,7 @@
 import {BlockRegistry} from './BlockRegistry';
 import type {BlockData} from './types';
 import './styles/constructorPaginas.css';
+import { BotonBase } from '@app/components/ui/boton/BotonBase';
 import { logger } from "../utils/logger";
 
 interface BlockRendererProps {
@@ -98,9 +99,11 @@ function renderBlock(
                         {definition.label}
                     </span>
 
-                    <button
+                    <BotonBase
                         type="button"
-                        className="botonControlBloque"
+                        variante="ninguno"
+                        tamano="ninguno"
+                        className="controlBloque"
                         onClick={e => {
                             e.stopPropagation();
                             callbacks.onMoveUp?.();
@@ -109,11 +112,13 @@ function renderBlock(
                         title="Mover arriba"
                         aria-label="Mover bloque arriba">
                         ↑
-                    </button>
+                    </BotonBase>
 
-                    <button
+                    <BotonBase
                         type="button"
-                        className="botonControlBloque"
+                        variante="ninguno"
+                        tamano="ninguno"
+                        className="controlBloque"
                         onClick={e => {
                             e.stopPropagation();
                             callbacks.onMoveDown?.();
@@ -122,22 +127,26 @@ function renderBlock(
                         title="Mover abajo"
                         aria-label="Mover bloque abajo">
                         ↓
-                    </button>
+                    </BotonBase>
 
-                    <button
+                    <BotonBase
                         type="button"
-                        className="botonEditarBloque"
+                        variante="ninguno"
+                        tamano="ninguno"
+                        className="editarBloque"
                         onClick={e => {
                             e.stopPropagation();
                             callbacks.onEdit?.();
                         }}
                         title="Editar bloque">
                         Editar
-                    </button>
+                    </BotonBase>
 
-                    <button
+                    <BotonBase
                         type="button"
-                        className="botonEliminarBloque"
+                        variante="ninguno"
+                        tamano="ninguno"
+                        className="eliminarBloque"
                         onClick={e => {
                             e.stopPropagation();
                             callbacks.onDelete?.();
@@ -145,7 +154,7 @@ function renderBlock(
                         title="Eliminar bloque"
                         aria-label="Eliminar bloque">
                         X
-                    </button>
+                    </BotonBase>
                 </div>
             )}
 
