@@ -68,7 +68,7 @@ export function ConfiguracionSync({ abierto, onCerrar }: ConfiguracionSyncProps)
     return (
         /* sentinel-disable-next-line componente-artesanal — Modal usa createPortal al body; aquí necesitamos overlay inline dentro del panel Tauri */
         <div className="configSyncOverlay" onClick={manejarClickOverlay} role="dialog" aria-modal="true">
-            <div className="configSyncPanel" ref={panelRef}>
+            <div className="configSyncPanel panelFlotante" ref={panelRef}>
                 <div className="configSyncCabecera">
                     <span className="configSyncTitulo">Configuración de sincronización</span>
                     <BotonBase variante="ghost" className="configSyncCerrar" onClick={onCerrar} type="button" aria-label="Cerrar">

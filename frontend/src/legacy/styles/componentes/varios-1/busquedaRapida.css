@@ -4,20 +4,19 @@
  * QL31: Lista unificada plana, sin agrupación por tipo. Ordenada por relevancia.
  */
 
+/* [15A-27] Piel de .panelFlotante. */
 .busquedaRapidaDropdown {
+    --panelFondo: var(--fondoBase);
+    --panelSombra: var(--sombraFlotante);
     position: absolute;
     top: 100%;
     left: 50%;
     transform: translateX(-50%);
     width: 450px;
     margin-top: var(--espacio3xs);
-    background: var(--fondoBase);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
     max-height: 420px;
     overflow-y: auto;
     z-index: var(--zMenu);
-    box-shadow: var(--sombraFlotante);
     padding: var(--espacioXs) 0;
 }
 
@@ -58,20 +57,13 @@
     font-size: var(--fuenteSm);
 }
 
-.busquedaRapidaItem {
+/* [15A-27] Resultado de la busqueda rapida: boton del sistema, el selector lo nombra. */
+.botonBase.busquedaRapidaItem {
     display: flex;
     align-items: center;
     gap: var(--espacioSm);
     width: 100%;
-    padding: var(--espacioXs) var(--espacioMd);
-    background: none;
-    border: none;
-    cursor: pointer;
     text-align: left;
-    color: var(--textoPrimario);
-    font-family: var(--fuentePrincipal);
-    font-size: var(--fuenteSm);
-    transition: background var(--transicionRapida);
 }
 
 .busquedaRapidaItem:hover {
@@ -167,13 +159,13 @@
 }
 
 /* Dentro de modal movil: dropdown inline, sin posicion absoluta */
+/* [15A-27] Dentro del modal movil el panel no flota: solo cambia su elevacion. */
 .topbarBusquedaModalContenido .busquedaRapidaDropdown {
+    --panelSombra: none;
     position: static;
     left: auto;
     transform: none;
     width: 100%;
     margin-top: var(--espacioSm);
     max-height: 300px;
-    box-shadow: none;
-    border: 1px solid var(--bordeSutil);
 }

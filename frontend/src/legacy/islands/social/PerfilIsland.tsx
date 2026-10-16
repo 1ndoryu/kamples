@@ -132,13 +132,13 @@ export const PerfilIsland = ({ username: usernameProp }: PerfilIslandProps): JSX
                         {/* Metadata dinámica del perfil — datos reales del backend */}
                         <div className="perfilMetadata">
                             {usuario.ubicacion && (
-                                <span className="perfilMetaItem">
+                                <span className="filaOperable perfilMetaItem">
                                     <MapPin size={14} />
                                     {usuario.ubicacion}
                                 </span>
                             )}
                             {usuario.sitioWeb && (
-                                <a className="perfilMetaItem perfilMetaLink" href={usuario.sitioWeb} target="_blank" rel="noopener">
+                                <a className="filaOperable perfilMetaItem perfilMetaLink" href={usuario.sitioWeb} target="_blank" rel="noopener">
                                     <LinkIcon size={14} />
                                     {usuario.sitioWeb.replace(/^https?:\/\//, '').replace(/\/$/, '').slice(0, 40)}
                                 </a>

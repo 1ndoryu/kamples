@@ -70,7 +70,7 @@ export const BotonDevTools = (): JSX.Element | null => {
 
             {/* Panel de opciones */}
             {panelVisible && (
-                <div className="devToolsPanel">
+                <div className="devToolsPanel panelFlotante">
                     <div className="devToolsHeader">
                         <span>Cambiar Modo</span>
                         <BotonBase variante="ghost" onClick={togglePanel} type="button" className="devToolsCerrar">

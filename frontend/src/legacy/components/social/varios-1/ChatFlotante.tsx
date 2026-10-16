@@ -65,7 +65,7 @@ const VentanaChat = ({ chat }: { chat: ChatFlotanteInfo }): JSX.Element => {
                             <MoreVertical size={12} />
                         </BotonBase>
                         {menuAbierto && (
-                            <div className="chatFlotanteMenu">
+                            <div className="chatFlotanteMenu panelFlotante">
                                 <BotonBase variante="ghost" className="chatFlotanteMenuItem" onClick={verPerfil} type="button">
                                     <User size={14} /><span>{t('comun.verPerfil')}</span>
                                 </BotonBase>

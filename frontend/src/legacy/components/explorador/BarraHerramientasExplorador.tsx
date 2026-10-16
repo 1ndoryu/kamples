@@ -48,7 +48,7 @@ export const BarraHerramientasExplorador = ({
                             {seg.label}
                         </BotonBase>
                     ) : (
-                        <span className="exploradorBreadcrumbItem exploradorBreadcrumbActivo">
+                        <span className="exploradorBreadcrumbActivo">
                             {seg.label}
                         </span>
                     )}

@@ -84,31 +84,25 @@
     margin: 0;
 }
 
-/* Item de carpeta */
-.exploradorCarpetaItem {
+/* Item de carpeta. [15A-27] El selector nombra .botonBase porque la fila ES un boton
+ * del sistema: sin nombrarlo, estas reglas describirian un boton paralelo. Lo que ya
+ * aporta la receta (padding, tipografia, color, fondo, radio, cursor, transicion) no se
+ * repite aqui: estaba muerto detras de .varianteGhost/.tamanoMd y solo revivia al subir
+ * la especificidad. Queda el layout propio de la fila y sus estados. */
+.botonBase.exploradorCarpetaItem {
     display: flex;
     align-items: center;
     gap: var(--espacioSm);
-    padding: var(--espacioXs) var(--espacioSm);
-    border-radius: var(--radioSm);
-    cursor: pointer;
-    font-size: var(--fuenteSm);
-    color: var(--textoSecundario);
-    transition:
-        background-color 0.15s ease,
-        color 0.15s ease;
-    border: none;
-    background: none;
     width: 100%;
     text-align: left;
 }
 
-.exploradorCarpetaItem:hover {
+.botonBase.exploradorCarpetaItem:hover {
     background-color: var(--fondoElevado1);
     color: var(--textoPrimario);
 }
 
-.exploradorCarpetaItem.carpetaActiva {
+.botonBase.exploradorCarpetaItem.carpetaActiva {
     background-color: var(--acento);
     color: var(--fondoBase);
     font-weight: 600;
@@ -135,30 +129,21 @@
     padding-left: var(--espacioMd);
 }
 
-.exploradorSubcarpetaItem {
+/* [15A-27] Misma plegadura que .exploradorCarpetaItem: el selector nombra la receta. */
+.botonBase.exploradorSubcarpetaItem {
     display: flex;
     align-items: center;
     gap: var(--espacioXs);
-    padding: 2px var(--espacioSm);
-    border-radius: var(--radioSm);
-    cursor: pointer;
-    font-size: var(--fuenteXs);
-    color: var(--textoTerciario);
-    transition:
-        background-color 0.15s ease,
-        color 0.15s ease;
-    border: none;
-    background: none;
     width: 100%;
     text-align: left;
 }
 
-.exploradorSubcarpetaItem:hover {
+.botonBase.exploradorSubcarpetaItem:hover {
     background-color: var(--fondoElevado1);
     color: var(--textoSecundario);
 }
 
-.exploradorSubcarpetaItem.subcarpetaActiva {
+.botonBase.exploradorSubcarpetaItem.subcarpetaActiva {
     background-color: var(--fondoElevado1);
     color: var(--acento);
     font-weight: 500;
@@ -447,35 +432,28 @@
     color: var(--textoSecundario);
 }
 
-.exploradorBreadcrumbItem {
+/* [15A-27] El segmento navegable es un boton del sistema: su selector lo nombra y solo
+ * conserva lo que la receta no da (el gap entre segmentos). El ultimo segmento NO es un
+ * boton, es texto: lleva su propio layout en .exploradorBreadcrumbActivo. */
+.botonBase.exploradorBreadcrumbItem {
     display: flex;
     align-items: center;
     gap: calc(var(--espacioXs) / 2);
-    border: none;
-    background: none;
-    color: var(--textoSecundario);
-    cursor: pointer;
-    padding: calc(var(--espacioXs) / 2) var(--espacioXs);
-    border-radius: var(--radioSm);
-    font-size: var(--fuenteSm);
-    transition:
-        background-color 0.15s ease,
-        color 0.15s ease;
 }
 
-.exploradorBreadcrumbItem:hover {
+.botonBase.exploradorBreadcrumbItem:hover {
     background-color: var(--fondoElevado1);
     color: var(--textoPrimario);
 }
 
 .exploradorBreadcrumbActivo {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--espacioXs) / 2);
+    padding: calc(var(--espacioXs) / 2) var(--espacioXs);
     color: var(--textoPrimario);
     font-weight: 600;
     cursor: default;
-}
-
-.exploradorBreadcrumbActivo:hover {
-    background: none;
 }
 
 .exploradorBreadcrumbSeparador {

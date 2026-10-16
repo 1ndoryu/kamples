@@ -33,14 +33,12 @@
     position: relative;
 }
 
+/* [15A-27] La piel la pone .panelFlotante; aqui queda solo donde se coloca. */
 .adminColumnasDropdown {
     position: absolute;
     top: 100%;
     right: 0;
     z-index: 20;
-    background: var(--fondoElevado1);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
     padding: var(--espacioSm);
     min-width: 160px;
     display: flex;
@@ -49,15 +47,14 @@
 }
 
 .adminColumnasOpcion {
+    --filaFuente: var(--fuenteXs);
+    --filaColor: var(--textoPrimario);
+    --filaRadio: var(--radioSm);
+    --filaTransicion: background 0.15s;
     display: flex;
     align-items: center;
     gap: var(--espacioSm);
-    font-size: var(--fuenteXs);
-    color: var(--textoPrimario);
     cursor: pointer;
-    padding: var(--espacioXs) var(--espacioSm);
-    border-radius: var(--radioSm);
-    transition: background 0.15s;
 }
 
 .adminColumnasOpcion:hover {

@@ -1,0 +1,71 @@
+/*
+ * filaOperable.css — Kamples
+ * Receta compartida de FILA OPERABLE: la opción de una lista, la entrada de un
+ * menú, el ítem de la barra lateral. Son la misma pieza —una fila que se pulsa—
+ * y doce hojas declaraban la misma receta visual (tipografía, color, fondo,
+ * borde, radio, transición, relleno) cada una por su cuenta, con valores
+ * distintos y con la particularidad de cada una escondida entre las repeticiones.
+ * [15A-27]
+ *
+ * Aquí vive la PIEL, una sola vez. Cada uso aporta solo sus diferencias por
+ * token `--fila*` y conserva en su hoja el LAYOUT contextual —`display`,
+ * `align-items`, `gap`, `cursor`, ancho, alto—, que no es piel: dos filas con la
+ * misma piel pueden ser una fila de bloque, una fila en línea o un contenedor
+ * que no se pulsa, y forzar esos valores cambiaría el comportamiento del ratón
+ * y la colocación de los hijos.
+ *
+ * Los valores por defecto de `font-family`, `font-size`, `color` y `transition`
+ * son los heredados y no un literal: una fila que no declara el token se
+ * comporta como si la receta no dijera nada. `padding`, `background`, `border`
+ * y `border-radius` sí llevan valor propio porque no son propiedades heredadas
+ * y no hay forma de decir "no opines" sobre ellas; los valores elegidos son los
+ * del uso más común (la fila de una lista desplegable).
+ */
+.filaOperable {
+    font-family: var(--filaFamilia, inherit);
+    font-size: var(--filaFuente, inherit);
+    color: var(--filaColor, inherit);
+    background: var(--filaFondo, none);
+    border: var(--filaBorde, none);
+    border-bottom: var(--filaBordeInferior, var(--filaBorde, none));
+    border-radius: var(--filaRadio, 0);
+    transition: var(--filaTransicion, none);
+    padding: var(--filaPadding, var(--espacioXs) var(--espacioSm));
+}
+
+/*
+ * Hay dos clases base que una fila puede llevar por debajo, y las dos declaran
+ * parte de la misma piel más abajo en el orden de hojas: `.botonBase` fija
+ * borde, radio y transición, y `.editarCheckbox` fija tipografía y color. Una
+ * fila que además sea un control del sistema tiene que poder decir su palabra
+ * sobre eso, y para eso hace falta nombrar el par —el `.filaOperable` solo no
+ * gana a la clase base.
+ *
+ * Los valores por defecto vuelven a ser los de la clase base, de modo que una
+ * fila que no declare el token se comporta exactamente como se comportaba con
+ * la clase base sola.
+ */
+.botonBase.filaOperable {
+    border: var(--filaBorde, 1px solid transparent);
+    border-bottom: var(--filaBordeInferior, var(--filaBorde, 1px solid transparent));
+    border-radius: var(--filaRadio, var(--radioMd));
+    transition: var(--filaTransicion, all var(--transicionRapida));
+}
+
+.editarCheckbox.filaOperable {
+    font-size: var(--filaFuente, inherit);
+    color: var(--filaColor, inherit);
+}
+
+/* El resalte al pasar el ratón también es receta: dos hojas lo declaraban por su
+ * cuenta con valores distintos. Por defecto el resalte no cambia nada —repite el
+ * fondo y el color de la propia fila—, así que una fila que no declara los
+ * tokens `Hover` se comporta igual que antes de plegarse.
+ *
+ * Esta regla es `:hover` a secas a propósito: las hojas de cada fila van después
+ * en el orden de hojas, así que un resalte propio de una fila (el último mensaje
+ * sin leer, la opción incluida en un filtro) sigue mandando sobre esta. */
+.filaOperable:hover {
+    background: var(--filaFondoHover, var(--filaFondo, none));
+    color: var(--filaColorHover, var(--filaColor, inherit));
+}

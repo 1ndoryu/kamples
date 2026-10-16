@@ -47,19 +47,7 @@ export function AddBlockPanel({onAddBlock, title = 'Agregar Bloque', allowedType
                         key={blockType.type}
                         type="button"
                         onClick={() => onAddBlock(blockType.type)}
-                        style={{
-                            background: '#1a1a1a',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            color: '#fff',
-                            padding: '10px 16px',
-                            borderRadius: '8px',
-                            fontSize: '13px',
-                            cursor: 'pointer',
-                            transition: 'background 0.2s, border-color 0.2s',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '6px'
-                        }}>
+                        className="botonBase pageBuilderTipoBoton">
                         <span className="pageBuilderTipoMas">+</span>
                         {blockType.label}
                     </button>

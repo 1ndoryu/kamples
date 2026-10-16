@@ -437,16 +437,16 @@
 }
 
 /* Ventana standalone de sincronizacion (popup Tauri sin decoraciones) */
+/* [15A-27] Piel de .panelFlotante. */
 .ventanaSincPanel {
+    --panelFondo: var(--fondoBase);
+    --panelRadio: var(--radioLg);
+    --panelSombra: 0 var(--espacioSm) var(--espacio2xl) var(--colorRgba-0-0-0-0_45), 0 var(--espacio2xs) var(--espacioSm) var(--colorRgba-0-0-0-0_3);
     width: 100%;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: var(--fondoBase);
     overflow: hidden;
-    border-radius: var(--radioLg);
-    border: 1px solid var(--bordeSutil);
-    box-shadow: 0 var(--espacioSm) var(--espacio2xl) var(--colorRgba-0-0-0-0_45), 0 var(--espacio2xs) var(--espacioSm) var(--colorRgba-0-0-0-0_3);
 }
 
 /* Barra superior draggable (reemplaza titlebar del OS) */

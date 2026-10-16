@@ -48,16 +48,15 @@
 }
 
 /* Panel desplegable */
+/* [15A-27] Piel de .panelFlotante. */
 .devToolsPanel {
+    --panelFondo: var(--fondoElevado2);
+    --panelSombra: 0 var(--espacioSm) calc(var(--espacioXs) * 6) rgba(0, 0, 0, 0.3);
     position: fixed;
     bottom: calc(50% + 20px);
     right: 12px;
     z-index: calc(var(--zModal) + 10);
     width: 180px;
-    background: var(--fondoElevado2);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
-    box-shadow: 0 var(--espacioSm) calc(var(--espacioXs) * 6) rgba(0, 0, 0, 0.3);
     overflow: hidden;
 }
 
@@ -96,21 +95,15 @@
     padding: var(--espacioXs) 0;
 }
 
-.devToolsOpcion {
+/* [15A-27] Opcion del panel de devtools: boton del sistema, el selector lo nombra. */
+.botonBase.devToolsOpcion {
     display: flex;
     align-items: center;
     gap: var(--espacioSm);
-    padding: var(--espacioXs) var(--espacioSm);
-    border: none;
-    background: none;
-    color: var(--textoSecundario);
-    font-size: var(--fuenteXs);
-    cursor: pointer;
-    transition: all var(--transicionRapida);
     text-align: left;
 }
 
-.devToolsOpcion:hover {
+.botonBase.devToolsOpcion:hover {
     background: var(--fondoElevado3);
     color: var(--textoPrimario);
 }

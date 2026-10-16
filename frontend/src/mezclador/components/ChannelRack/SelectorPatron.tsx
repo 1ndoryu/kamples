@@ -110,7 +110,7 @@ export const SelectorPatron = ({
 
             {/* Lista desplegable */}
             {listaAbierta && (
-                <div className="selectorPatronLista">
+                <div className="selectorPatronLista panelFlotante">
                     {patrones.map(p => (
                         <div
                             key={p.id}

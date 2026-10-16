@@ -13,6 +13,7 @@
 /* Variables + estilos de UI reutilizados */
 import '@app/styles/variables.css';
 import '@app/styles/componentes/boton/botonBase.css';
+import '@app/styles/componentes/panelFlotante.css';
 import '@app/styles/componentes/varios-6/sincronizacion.css';
 
 /* CSS shell de la ventana sync */

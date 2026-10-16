@@ -30,7 +30,7 @@ const ItemToast = ({ toast: t }: { toast: Toast }): JSX.Element => {
 
     return (
         <div
-            className={`toastItem toastItem${t.tipo.charAt(0).toUpperCase() + t.tipo.slice(1)} ${t.eliminando ? 'toastItemSaliendo' : ''}`}
+            className={`panelFlotante toastItem toastItem${t.tipo.charAt(0).toUpperCase() + t.tipo.slice(1)} ${t.eliminando ? 'toastItemSaliendo' : ''}`}
             role="alert"
         >
             <div className="toastContenido">

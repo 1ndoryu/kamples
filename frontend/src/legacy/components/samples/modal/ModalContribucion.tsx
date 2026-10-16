@@ -195,7 +195,7 @@ export function ModalContribucion({
                                     checked={tipoRelacion === t.valor}
                                     onChange={() => setTipoRelacion(t.valor)}
                                     label={t.etiqueta}
-                                    className={`modalContribucionOpcion${tipoRelacion === t.valor ? ' activo' : ''}`}
+                                    className={`filaOperable modalContribucionOpcion${tipoRelacion === t.valor ? ' activo' : ''}`}
                                 />
                             ))}
                         </div>

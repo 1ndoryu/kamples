@@ -163,11 +163,11 @@ export const TabScrapersAdmin = (): JSX.Element => {
                             <Columns size={14} />
                         </BotonBase>
                         {menuColumnasAbierto && (
-                            <div className="adminColumnasDropdown">
+                            <div className="adminColumnasDropdown panelFlotante">
                                 {COLUMNAS.map(col => (
                                     <Checkbox
                                         key={col.id}
-                                        className="adminColumnasOpcion"
+                                        className="filaOperable adminColumnasOpcion"
                                         checked={columnaVisible(col.id)}
                                         onChange={() => tab.toggleColumna(col.id)}
                                         label={col.etiqueta}

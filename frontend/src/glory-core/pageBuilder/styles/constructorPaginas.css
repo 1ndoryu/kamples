@@ -6,22 +6,36 @@
  * Nomenclatura: español + camelCase
  */
 
+/*
+ * Escala propia del constructor. El sistema global tiene un solo radio (4px en
+ * Sm/Md/Lg) y el constructor venia con 6/8/12/16px sin nombre. Se nombran aqui,
+ * con el valor exacto que ya tenian, para no dejarlos como numeros sueltos y
+ * sin tocar el pintado. Mismo criterio para la sombra del boton flotante.
+ */
+:root {
+    --pbRadioControl: 6px;
+    --pbRadioBloque: 8px;
+    --pbRadioAlerta: 12px;
+    --pbRadioModal: 16px;
+    --pbSombraFlotante: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
 /* BlockRenderer */
 
 .bloqueError {
     padding: 20px;
-    background: rgba(239, 68, 68, 0.1);
+    background: var(--colorRgba-239-68-68-0_1);
     border: 1px dashed var(--colorRojoError);
-    border-radius: 8px;
+    border-radius: var(--pbRadioBloque);
     color: var(--colorRojoError);
     text-align: center;
 }
 
 .bloqueEditable {
     position: relative;
-    outline: 1px dashed rgba(255, 255, 255, 0.2);
+    outline: 1px dashed var(--colorRgba-255-255-255-0_2);
     outline-offset: 4px;
-    border-radius: 8px;
+    border-radius: var(--pbRadioBloque);
     cursor: pointer;
     transition: outline 0.2s ease;
 }
@@ -38,7 +52,7 @@
     gap: 4px;
     background: var(--colorRgba-26-26-26-1);
     padding: 6px 8px;
-    border-radius: 6px;
+    border-radius: var(--pbRadioControl);
     border: 1px solid var(--colorRgba-255-255-255-0_1);
     z-index: 100;
 }
@@ -74,7 +88,7 @@
 .botonBase.controlBloque:disabled {
     background: transparent;
     border: none;
-    color: #444;
+    color: var(--colorGrisPizarra);
     cursor: not-allowed;
     opacity: 1;
     pointer-events: auto;
@@ -116,7 +130,7 @@
     padding: 10px 12px;
     background: var(--colorRgba-26-26-26-1);
     border: 1px solid var(--colorRgba-255-255-255-0_1);
-    border-radius: 6px;
+    border-radius: var(--pbRadioControl);
     color: var(--colorBlancoPuro);
     font-size: var(--fuenteBase);
     outline: none;
@@ -139,9 +153,9 @@
 }
 
 .campoArrayItem {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--colorRgba-255-255-255-0_02);
     border: 1px solid var(--hoverSutil);
-    border-radius: 8px;
+    border-radius: var(--pbRadioBloque);
     padding: 12px;
 }
 
@@ -189,8 +203,8 @@
     gap: 6px;
     padding: 10px;
     background: var(--hoverSutil);
-    border: 1px dashed rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
+    border: 1px dashed var(--colorRgba-255-255-255-0_2);
+    border-radius: var(--pbRadioControl);
     color: var(--colorGrisMedio);
     font-size: var(--fuenteMd);
     line-height: inherit;
@@ -222,13 +236,13 @@
 .modalError {
     background: var(--colorGrisCasiNegro);
     padding: 24px;
-    border-radius: 12px;
+    border-radius: var(--pbRadioAlerta);
     color: var(--colorRojoError);
 }
 
 .modalContenido {
     background: var(--colorRgba-10-10-10-1);
-    border-radius: 16px;
+    border-radius: var(--pbRadioModal);
     border: 1px solid var(--colorRgba-255-255-255-0_1);
     width: 100%;
     max-width: 600px;
@@ -299,7 +313,7 @@
 
 .botonBase.cancelarModal {
     padding: 10px 20px;
-    border-radius: 8px;
+    border-radius: var(--pbRadioBloque);
     border: 1px solid var(--colorRgba-255-255-255-0_1);
     background: transparent;
     color: var(--colorGrisMedio);
@@ -310,7 +324,7 @@
 
 .botonBase.guardarModal {
     padding: 10px 24px;
-    border-radius: 8px;
+    border-radius: var(--pbRadioBloque);
     border: none;
     background: var(--info);
     color: var(--colorBlancoPuro);
@@ -401,4 +415,88 @@
 
 .pageBuilderContenidoEnEdicion {
     padding-top: var(--espacio3xl);
+}
+
+/*
+ * [15A-27] Los tres controles que aun llevaban style={{...}} pasan a clase.
+ * Cada declaracion repite el literal exacto que tenia en el JSX. Son botones,
+ * asi que van plegados a la clase base del sistema —igual que el resto de
+ * botones de esta hoja (\`.botonBase.controlBloque\`, \`.botonBase.agregarItem\`...)—:
+ * el JSX lleva \`botonBase\` y aqui queda solo lo que se aparta de la base.
+ */
+
+.botonBase.pageBuilderTipoBoton {
+    background: var(--colorRgba-26-26-26-1);
+    border: 1px solid var(--colorRgba-255-255-255-0_1);
+    color: var(--colorBlancoPuro);
+    padding: 10px 16px;
+    border-radius: var(--pbRadioBloque);
+    font-size: var(--fuenteMd);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.botonBase.pageBuilderToggleEdicion {
+    position: fixed;
+    z-index: 50;
+    background: var(--colorBlancoPuro);
+    color: var(--colorNegroPuro);
+    padding: 12px 20px;
+    border-radius: var(--radioFull);
+    border: none;
+    font-size: var(--fuenteBase);
+    font-weight: var(--pesoSemibold);
+    cursor: pointer;
+    box-shadow: var(--pbSombraFlotante);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.pageBuilderToggleEdicion--abajoDerecha { bottom: 24px; right: 24px; }
+.pageBuilderToggleEdicion--abajoIzquierda { bottom: 24px; left: 24px; }
+.pageBuilderToggleEdicion--arribaDerecha { top: 80px; right: 24px; }
+.pageBuilderToggleEdicion--arribaIzquierda { top: 80px; left: 24px; }
+
+.pageBuilderToolbar {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    background: var(--colorRgba-10-10-10-0_95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--colorRgba-255-255-255-0_1);
+    padding: 12px 24px;
+}
+
+.botonBase.pageBuilderToolbarSalir {
+    background: transparent;
+    border: none;
+    color: var(--colorGrisMedio);
+    cursor: pointer;
+    font-size: var(--fuenteBase);
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.botonBase.pageBuilderToolbarGuardar {
+    background: var(--colorBlancoPuro);
+    border: none;
+    color: var(--colorNegroPuro);
+    padding: 10px 20px;
+    border-radius: var(--pbRadioBloque);
+    font-size: var(--fuenteBase);
+    font-weight: var(--pesoSemibold);
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+.botonBase.pageBuilderToolbarGuardar:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }

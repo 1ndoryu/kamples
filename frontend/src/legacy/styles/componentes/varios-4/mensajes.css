@@ -42,18 +42,19 @@
 }
 
 .mensajesItem {
+    --filaFuente: inherit;
+    --filaColor: var(--textoPrimario);
+    --filaFondo: none;
+    --filaBorde: none;
+    --filaBordeInferior: 1px solid var(--bordeSutil);
+    --filaTransicion: background var(--transicionRapida);
+    --filaPadding: var(--espacioMd);
     display: flex;
     align-items: center;
     gap: var(--espacioMd);
-    padding: var(--espacioMd);
-    background: none;
-    border: none;
-    border-bottom: 1px solid var(--bordeSutil);
     cursor: pointer;
-    text-align: left;
     width: 100%;
-    transition: background var(--transicionRapida);
-    color: var(--textoPrimario);
+    text-align: left;
 }
 
 .mensajesItem:hover {

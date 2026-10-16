@@ -391,13 +391,11 @@
     overflow-y: auto;
 }
 
-.adjuntarModalItem {
+/* [15A-27] Fila del modal de adjuntar: boton del sistema, el selector lo nombra. */
+.botonBase.adjuntarModalItem {
     display: flex;
     align-items: center;
     gap: var(--espacioSm);
-    padding: var(--espacioSm) var(--espacioMd);
-    cursor: pointer;
-    transition: background-color var(--transicionRapida);
     width: 100%;
     text-align: left;
 }

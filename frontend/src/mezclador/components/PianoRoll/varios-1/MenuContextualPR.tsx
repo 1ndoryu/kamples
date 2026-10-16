@@ -37,7 +37,7 @@ export const MenuContextualPR = memo(({
             {opciones.map((op) => (
                 <div key={op.label}>
                     <BotonBase variante="ghost"
-                        className="pianoRollMenuContextualItem"
+                        className="filaOperable pianoRollMenuContextualItem"
                         onClick={op.onClick}
                     >
                         {op.icono && <op.icono size={12} />}
@@ -50,7 +50,7 @@ export const MenuContextualPR = memo(({
             {/* Sub-sección: Color */}
             {haySeleccion && (
                 <>
-                    <div className="pianoRollMenuContextualItem pianoRollMenuContextualTitulo">
+                    <div className="filaOperable pianoRollMenuContextualItem pianoRollMenuContextualTitulo">
                         <Palette size={12} />
                         <span>Color</span>
                     </div>
@@ -72,7 +72,7 @@ export const MenuContextualPR = memo(({
             {/* Sub-sección: Velocity presets */}
             {haySeleccion && (
                 <>
-                    <div className="pianoRollMenuContextualItem pianoRollMenuContextualTitulo">
+                    <div className="filaOperable pianoRollMenuContextualItem pianoRollMenuContextualTitulo">
                         <span>Velocity</span>
                     </div>
                     <div className="pianoRollMenuContextualVelocity">

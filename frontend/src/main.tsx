@@ -28,6 +28,14 @@ import './legacy/styles/tokensHeredados.css';
 import './legacy/styles/reset.css';
 import './legacy/styles/tipografia.css';
 import './legacy/styles/layout.css';
+import './legacy/styles/componentes/panelFlotante.css';
+/* [15A-27] Receta compartida de FILA OPERABLE: la opcion de una lista, la entrada
+ * de un menu, el item de la barra lateral. Va aqui, con las demas hojas de receta
+ * y ANTES de las hojas de componente: la receta aporta la piel y cada hoja se
+ * queda su layout, asi que el orden natural es receta -> componente. Los dos
+ * sitios donde la clase base de un control (.botonBase, .editarCheckbox) declara
+ * la misma piel se resuelven dentro de la propia receta, nombrando el par. */
+import './legacy/styles/componentes/filaOperable.css';
 
 import { islandRegistry } from './glory-core/core';
 import { initializeIslands } from './glory-core/core/hydration';

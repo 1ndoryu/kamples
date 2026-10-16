@@ -12,6 +12,7 @@
    adecuado entre elementos de texto.
 */
 
+/* sentinel-disable-next-line claseHuerfana — la clase la pone el HTML inyectado desde la BD, no el arbol estatico. */
 .prose {
     line-height: 1.75;
     color: var(--color-text-primary);
@@ -135,6 +136,7 @@
 }
 
 /* Variante compacta para modales */
+/* sentinel-disable-next-line claseHuerfana — idem: variante de la prosa inyectada. */
 .prose-sm {
     font-size: var(--fuenteProsaCompacta);
     line-height: 1.7;
@@ -158,12 +160,14 @@
 }
 
 /* Estilos para single posts */
+/* sentinel-disable-next-line claseHuerfana — idem: contenedor de la entrada inyectada. */
 .single-post-container {
     max-width: 48rem;
     margin-left: auto;
     margin-right: auto;
 }
 
+/* sentinel-disable-next-line claseHuerfana — idem: imagen destacada de la entrada inyectada. */
 .single-post-featured-image {
     width: 100%;
     height: auto;

@@ -164,11 +164,14 @@
 }
 
 .perfilMetaItem {
+    --filaFuente: var(--fuenteSm);
+    --filaColor: var(--textoTerciario);
+    --filaPadding: 0;
     display: inline-flex;
     align-items: center;
     gap: var(--espacioXs);
-    font-size: var(--fuenteSm);
-    color: var(--textoTerciario);
+    --filaRadio: 0;
+    --filaTransicion: none;
 }
 
 .perfilMetaLink {

@@ -83,15 +83,14 @@
 }
 
 /* Lista desplegable del selector */
+/* [15A-27] Piel de .panelFlotante. */
 .selectorPatronLista {
+    --panelRadio: var(--radiusMezclador);
+    --panelSombra: 0 var(--espacioSm) var(--fuenteXl) var(--colorRgba-0-0-0-0_5);
     position: absolute;
     top: 105%;
     left: 0;
     z-index: 100;
-    background: var(--fondoElevado1);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radiusMezclador);
-    box-shadow: 0 var(--espacioSm) var(--fuenteXl) var(--colorRgba-0-0-0-0_5);
     max-height: 250px;
     overflow-y: auto;
     min-width: 180px;

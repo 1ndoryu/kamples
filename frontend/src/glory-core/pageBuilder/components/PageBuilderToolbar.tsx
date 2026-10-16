@@ -34,34 +34,13 @@ export function PageBuilderToolbar({onExit, onSave, isSaving = false, title = 'E
     return (
         <div
             id="page-builder-toolbar"
-            className="pb-toolbar"
-            style={{
-                position: 'fixed',
-                top: '64px',
-                left: 0,
-                right: 0,
-                zIndex: 40,
-                background: 'rgba(10, 10, 10, 0.95)',
-                backdropFilter: 'blur(12px)',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-                padding: '12px 24px'
-            }}>
+            className="pb-toolbar pageBuilderToolbar">
             <div className="pageBuilderToolbarFila">
                 <div className="pageBuilderToolbarIzquierda">
                     <button
                         type="button"
                         onClick={onExit}
-                        style={{
-                            background: 'transparent',
-                            border: 'none',
-                            color: '#888',
-                            cursor: 'pointer',
-                            fontSize: '14px',
-                            padding: '8px 0',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '4px'
-                        }}>
+                        className="botonBase pageBuilderToolbarSalir">
                         ← {exitText}
                     </button>
                     <span className="pageBuilderToolbarTitulo">
@@ -73,18 +52,7 @@ export function PageBuilderToolbar({onExit, onSave, isSaving = false, title = 'E
                     type="button"
                     onClick={onSave}
                     disabled={isSaving}
-                    style={{
-                        background: '#fff',
-                        border: 'none',
-                        color: '#000',
-                        padding: '10px 20px',
-                        borderRadius: '8px',
-                        fontSize: '14px',
-                        fontWeight: 500,
-                        cursor: isSaving ? 'not-allowed' : 'pointer',
-                        opacity: isSaving ? 0.5 : 1,
-                        transition: 'opacity 0.2s'
-                    }}>
+                    className="botonBase pageBuilderToolbarGuardar">
                     {isSaving ? savingText : saveText}
                 </button>
             </div>

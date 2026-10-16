@@ -521,18 +521,18 @@
 }
 
 .pianoRollMenuContextualItem {
+    --filaFuente: var(--fuenteXs);
+    --filaColor: var(--colorGrisPerla);
+    --filaFondo: transparent;
+    --filaBorde: none;
+    --filaTransicion: background 0.08s;
+    --filaPadding: 5px 12px;
     display: flex;
     align-items: center;
     gap: 8px;
-    width: 100%;
-    padding: 5px 12px;
-    border: none;
-    background: transparent;
-    color: var(--colorGrisPerla);
-    font-size: var(--fuenteXs);
     cursor: pointer;
+    width: 100%;
     text-align: left;
-    transition: background 0.08s;
 }
 
 .pianoRollMenuContextualItem:hover {

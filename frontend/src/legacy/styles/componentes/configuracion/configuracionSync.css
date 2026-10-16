@@ -21,17 +21,14 @@
     to { opacity: 1; }
 }
 
-/* Panel central */
+/* Panel central. [15A-27] Piel de .panelFlotante. */
 .configSyncPanel {
-    background: var(--fondoElevado1);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
+    --panelAnim: configSyncSlideIn 150ms ease;
     width: 340px;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    animation: configSyncSlideIn 150ms ease;
 }
 
 @keyframes configSyncSlideIn {

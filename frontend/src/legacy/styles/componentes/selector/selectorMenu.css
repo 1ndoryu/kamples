@@ -13,20 +13,20 @@
 
 /* Trigger: el boton que abre el dropdown */
 .selectorMenuTrigger {
+    --filaFuente: var(--fuenteSm);
+    --filaFamilia: var(--fuentePrincipal);
+    --filaColor: var(--textoPrimario);
+    --filaFondo: var(--fondoElevado1);
+    --filaBorde: 1px solid var(--bordeSutil);
+    --filaRadio: var(--radioMd);
+    --filaTransicion: border-color var(--transicionRapida);
+    --filaPadding: var(--espacioSm) var(--espacioMd);
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: var(--espacioSm);
-    width: 100%;
-    padding: var(--espacioSm) var(--espacioMd);
-    font-size: var(--fuenteSm);
-    font-family: var(--fuentePrincipal);
-    color: var(--textoPrimario);
-    background: var(--fondoElevado1);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
     cursor: pointer;
-    transition: border-color var(--transicionRapida);
+    width: 100%;
+    justify-content: space-between;
     text-align: left;
     line-height: 1.4;
     min-height: 32px;
@@ -73,42 +73,41 @@
 }
 
 /* Dropdown: lista de opciones */
+/* [15A-27] Piel de .panelFlotante. */
 .selectorMenuDropdown {
+    --panelSombra: var(--sombraElevada);
+    --panelAnim: fadeInSelectorMenu var(--transicionRapida) ease;
     position: fixed;
     top: var(--top);
     left: var(--left);
     min-width: var(--anchoMin);
-    background-color: var(--fondoElevado1);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
-    box-shadow: var(--sombraElevada);
     padding: var(--espacioXs) 0;
     z-index: var(--zMenuPortal);
-    animation: fadeInSelectorMenu var(--transicionRapida) ease;
     max-height: 240px;
     overflow-y: auto;
 }
 
 /* Cada opción */
 .selectorMenuOpcion {
+    --filaFuente: var(--fuenteSm);
+    --filaFamilia: var(--fuentePrincipal);
+    --filaColor: var(--textoSecundario);
+    --filaFondo: none;
+    --filaBorde: none;
+    --filaRadio: 0;
+    --filaTransicion: all var(--transicionRapida);
+    --filaPadding: var(--espacioSm) var(--espacioMd);
     display: flex;
     align-items: center;
     gap: var(--espacioSm);
-    width: 100%;
-    padding: var(--espacioSm) var(--espacioMd);
-    font-size: var(--fuenteSm);
-    font-family: var(--fuentePrincipal);
-    color: var(--textoSecundario);
     cursor: pointer;
-    transition: all var(--transicionRapida);
-    background: none;
-    border: none;
+    width: 100%;
     text-align: left;
 }
 
 .selectorMenuOpcion:hover {
-    background: var(--fondoElevado2);
-    color: var(--textoPrimario);
+    --filaFondoHover: var(--fondoElevado2);
+    --filaColorHover: var(--textoPrimario);
 }
 
 .selectorMenuOpcionActiva {
@@ -128,16 +127,16 @@
 
 /* Variante compacta: sin borde, solo texto+chevron (para inline en tablas) */
 .selectorMenuCompacto .selectorMenuTrigger {
-    padding: var(--espacioXs) var(--espacioSm);
-    border-color: transparent;
-    background: transparent;
+    --filaFuente: var(--fuenteXs);
+    --filaFondo: transparent;
+    --filaBorde: 1px solid transparent;
+    --filaPadding: var(--espacioXs) var(--espacioSm);
     min-height: unset;
-    font-size: var(--fuenteXs);
 }
 
 .selectorMenuCompacto .selectorMenuTrigger:hover {
-    border-color: var(--bordeSutil);
-    background: var(--fondoElevado2);
+    --filaBorde: 1px solid var(--bordeSutil);
+    --filaFondoHover: var(--fondoElevado2);
 }
 
 @keyframes fadeInSelectorMenu {

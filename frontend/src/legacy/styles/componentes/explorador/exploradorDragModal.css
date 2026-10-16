@@ -133,30 +133,25 @@
     max-height: 50vh;
 }
 
-.exploradorModalItem {
+/* [15A-27] Fila de carpeta del modal: boton del sistema, el selector lo nombra. */
+.botonBase.exploradorModalItem {
     display: flex;
     align-items: center;
     gap: var(--espacioSm);
-    padding: var(--espacioSm) var(--espacioMd);
-    border: none;
-    background: none;
-    color: var(--textoPrimario);
-    font-size: var(--fuenteSm);
-    cursor: pointer;
-    border-radius: var(--radioSm);
-    text-align: left;
     width: 100%;
-    transition: background-color var(--transicionRapida);
+    text-align: left;
 }
 
 .exploradorModalItem:hover {
     background-color: var(--fondoElevado2);
 }
 
-.exploradorModalSubItem {
+/* [15A-27] La sangria es lo unico propio del sub-item. Estaba MUERTA: a (0,1,0) perdia
+ * contra el `padding` de .botonBase.tamanoMd, asi que las subcarpetas salian sin
+ * indentar. Al nombrar la receta en el selector (0,2,0) la sangria vuelve a aplicarse:
+ * es el arreglo de un defecto de cascada, no un rediseno. */
+.botonBase.exploradorModalSubItem {
     padding-left: calc(var(--espacioMd) + var(--espacioLg));
-    color: var(--textoSecundario);
-    font-size: var(--fuenteXs);
 }
 
 .exploradorModalCerrar {

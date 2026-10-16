@@ -98,7 +98,7 @@ export const SelectorMenu = ({
             <button
                 ref={triggerRef}
                 type="button"
-                className={`selectorMenuTrigger ${abierto ? 'selectorMenuTriggerAbierto' : ''}`}
+                className={`filaOperable selectorMenuTrigger ${abierto ? 'selectorMenuTriggerAbierto' : ''}`}
                 onClick={abierto ? cerrar : abrir}
                 disabled={disabled}
             >
@@ -115,7 +115,7 @@ export const SelectorMenu = ({
                 <>
                     <div className="selectorMenuOverlay" onClick={cerrar} />
                     <div
-                        className="selectorMenuDropdown"
+                        className="selectorMenuDropdown panelFlotante"
                         style={{
                             '--top': `${posicion.top}px`,
                             '--left': `${posicion.left}px`,
@@ -127,7 +127,7 @@ export const SelectorMenu = ({
                             <button
                                 key={op.valor}
                                 type="button"
-                                className={`selectorMenuOpcion ${op.valor === valor ? 'selectorMenuOpcionActiva' : ''}`}
+                                className={`filaOperable selectorMenuOpcion ${op.valor === valor ? 'selectorMenuOpcionActiva' : ''}`}
                                 onClick={() => seleccionar(op.valor)}
                                 role="option"
                                 aria-selected={op.valor === valor}

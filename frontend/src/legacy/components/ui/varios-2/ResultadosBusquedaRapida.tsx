@@ -44,7 +44,7 @@ export const ResultadosBusquedaRapidaDropdown = ({
     const sinResultados = todos.length === 0;
 
     return (
-        <div className="busquedaRapidaDropdown" ref={contenedorRef} role="listbox">
+        <div className="busquedaRapidaDropdown panelFlotante" ref={contenedorRef} role="listbox">
             {cargando && (
                 <div className="busquedaRapidaCargando">
                     <Loader2 size={16} className="busquedaRapidaSpinner" />

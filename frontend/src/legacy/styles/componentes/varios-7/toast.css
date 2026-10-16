@@ -37,17 +37,15 @@
     }
 }
 
+/* [15A-27] Piel de .panelFlotante. El radio y la entrada son propios del toast. */
 .toastItem {
+    --panelFondo: var(--fondoElevado2);
+    --panelRadio: calc(var(--espacioXs) * 2.5);
+    --panelSombra: var(--sombraElevada);
+    --panelAnim: toastEntrar 0.3s ease-out;
+    --panelTransicion: opacity 0.3s, transform 0.3s;
     pointer-events: auto;
-    background: var(--fondoElevado2);
-    border: 1px solid var(--bordeSutil);
-    border-radius: calc(var(--espacioXs) * 2.5);
     padding: 12px calc(var(--espacioXs) * 3.5);
-    box-shadow: var(--sombraElevada);
-    animation: toastEntrar 0.3s ease-out;
-    transition:
-        opacity 0.3s,
-        transform 0.3s;
     min-width: 300px;
 }
 

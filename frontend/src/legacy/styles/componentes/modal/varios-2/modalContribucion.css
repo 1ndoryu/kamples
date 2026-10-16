@@ -90,16 +90,16 @@
 }
 
 .modalContribucionOpcion {
+    --filaFuente: var(--fuenteMd);
+    --filaColor: var(--textoSecundario);
+    --filaRadio: var(--radioMd);
+    --filaBorde: 1px solid var(--bordeSutil);
+    --filaTransicion: border-color 0.15s, color 0.15s;
+    --filaPadding: var(--espacioSm) var(--espacioMd);
     display: flex;
     align-items: center;
     gap: var(--espacioXs);
-    padding: var(--espacioSm) var(--espacioMd);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
-    font-size: var(--fuenteMd);
-    color: var(--textoSecundario);
     cursor: pointer;
-    transition: border-color 0.15s, color 0.15s;
 }
 
 .modalContribucionOpcion.activo {

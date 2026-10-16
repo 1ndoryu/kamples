@@ -19,16 +19,13 @@
     background-color: transparent;
 }
 
-/* Panel sin cabecera */
+/* Panel sin cabecera. [15A-27] Piel de .panelFlotante. */
 .seleccionColeccionPanel {
+    --panelSombra: var(--sombraElevada);
     width: 320px;
     max-height: 420px;
     display: flex;
     flex-direction: column;
-    background-color: var(--fondoElevado1);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
-    box-shadow: var(--sombraElevada);
     overflow: hidden;
 }
 
@@ -128,16 +125,11 @@
 }
 
 /* Item colección: imagen + nombre (sin icono, sin contador — C106) */
-.seleccionColeccionItem {
+/* [15A-27] Fila de seleccion de coleccion: boton del sistema, el selector lo nombra. */
+.botonBase.seleccionColeccionItem {
     display: flex;
     align-items: center;
     gap: var(--espacioSm);
-    padding: var(--espacioSm) var(--espacioMd);
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--textoPrimario);
-    transition: background-color var(--transicionRapida);
     text-align: left;
 }
 

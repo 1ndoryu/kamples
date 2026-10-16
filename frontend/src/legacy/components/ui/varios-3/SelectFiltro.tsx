@@ -69,14 +69,14 @@ export const SelectFiltro = ({
             </BotonBase>
 
             {abierto && (
-                <div className="selectFiltroMenu" role="listbox">
+                <div className="selectFiltroMenu panelFlotante" role="listbox">
                     {opciones.map((opcion) => {
                         const incluido = tagsIncluidos.includes(opcion);
                         const excluido = tagsExcluidos.includes(opcion);
                         return (
                             <div
                                 key={opcion}
-                                className={`selectFiltroOpcion ${incluido ? 'selectFiltroOpcionIncluida' : ''} ${excluido ? 'selectFiltroOpcionExcluida' : ''}`}
+                                className={`filaOperable selectFiltroOpcion ${incluido ? 'selectFiltroOpcionIncluida' : ''} ${excluido ? 'selectFiltroOpcionExcluida' : ''}`}
                                 role="option"
                                 aria-selected={incluido}
                                 onClick={() => manejarClickOpcion(opcion)}

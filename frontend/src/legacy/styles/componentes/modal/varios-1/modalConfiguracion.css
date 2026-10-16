@@ -46,23 +46,18 @@
     gap: calc(var(--espacioXs) / 2);
 }
 
-.configNavItem {
+/* [15A-27] Entrada del menu lateral de configuracion: boton del sistema. Lo que la
+ * receta ya da (padding, tipografia, color, fondo, radio, cursor, transicion) no se
+ * repite: estaba muerto detras de .varianteGhost/.tamanoMd. */
+.botonBase.configNavItem {
     display: flex;
     align-items: center;
     gap: var(--espacioSm);
-    padding: var(--espacioSm) var(--espacioMd);
-    background: none;
-    border: none;
-    border-radius: var(--radioSm);
-    color: var(--textoSecundario);
-    font-size: var(--fuenteSm);
-    cursor: pointer;
-    transition: all var(--transicionRapida);
     text-align: left;
     width: 100%;
 }
 
-.configNavItem:hover {
+.botonBase.configNavItem:hover {
     color: var(--textoPrimario);
     background-color: var(--fondoElevado3);
 }
@@ -411,9 +406,9 @@ nav.configNavLista button {
     gap: 0;
 }
 
-.configMovilNav .configNavItem {
-    padding: var(--espacioMd) var(--espacioLg);
-    font-size: var(--fuenteSm);
+/* [15A-27] La barra movil solo anula el radio y fija la altura tactil: el padding y la
+ * tipografia que declaraba aqui ya perdian contra la receta. */
+.configMovilNav .botonBase.configNavItem {
     border-radius: 0;
     min-height: 48px;
 }

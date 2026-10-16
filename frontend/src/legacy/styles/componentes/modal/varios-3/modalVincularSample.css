@@ -50,24 +50,17 @@ ul.vincularSampleLista button {
     max-height: 300px;
     overflow-y: auto;
 }
-.vincularSampleItem {
+/* [15A-27] Fila del modal de vincular sample: boton del sistema. El borde y el fondo
+ * que declaraba aqui ya perdian contra .varianteGhost; el resalte de hover si es propio. */
+.botonBase.vincularSampleItem {
     display: flex;
     align-items: center;
     gap: var(--espacioSm);
     width: 100%;
-    padding: var(--espacioSm) var(--espacioMd);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioSm);
-    background: var(--fondoElevado1);
-    color: var(--textoPrimario);
-    cursor: pointer;
-    transition: all var(--transicionRapida);
     text-align: left;
-    font-family: inherit;
-    font-size: var(--fuenteSm);
 }
 
-.vincularSampleItem:hover {
+.botonBase.vincularSampleItem:hover {
     border-color: var(--bordeActivo);
     background: var(--fondoElevado2);
 }

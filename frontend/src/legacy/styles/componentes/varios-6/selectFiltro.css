@@ -84,7 +84,9 @@
 }
 
 /* Menu desplegable — inspired by MenuContextual */
+/* [15A-27] Piel de .panelFlotante. */
 .selectFiltroMenu {
+    --panelAnim: fadeInSelectFiltro var(--transicionRapida) ease;
     position: absolute;
     top: calc(100% + 4px);
     left: 0;
@@ -92,27 +94,24 @@
     max-width: 260px;
     max-height: 280px;
     overflow-y: auto;
-    background-color: var(--fondoElevado1);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
     padding: var(--espacioXs) 0;
     z-index: var(--zMenu);
-    animation: fadeInSelectFiltro var(--transicionRapida) ease;
     scrollbar-width: thin;
     scrollbar-color: var(--bordeSutil) transparent;
 }
 
 /* Cada opción */
 .selectFiltroOpcion {
+    --filaFuente: var(--fuenteSm);
+    --filaColor: var(--textoSecundario);
+    --filaRadio: 0;
+    --filaTransicion: color var(--transicionRapida);
+    --filaPadding: var(--espacioXs) var(--espacioMd);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: var(--espacioXs) var(--espacioMd);
-    font-size: var(--fuenteSm);
-    color: var(--textoSecundario);
-    cursor: pointer;
-    transition: color var(--transicionRapida);
     gap: var(--espacioSm);
+    cursor: pointer;
+    justify-content: space-between;
 }
 
 .selectFiltroOpcion:hover {

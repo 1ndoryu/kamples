@@ -143,7 +143,7 @@ export const Sidebar = ({
                         <a
                             key={item.id}
                             href={item.ruta || '/'}
-                            className={`sidebarItem ${activa === item.id ? 'sidebarItemActivo' : ''}`}
+                            className={`filaOperable tooltipFlotante sidebarItem ${activa === item.id ? 'sidebarItemActivo' : ''}`}
                             data-tooltip={traducirEtiqueta(item.etiqueta)}
                             onClick={irA(item.ruta)}
                             aria-label={traducirEtiqueta(item.etiqueta)}
@@ -157,7 +157,7 @@ export const Sidebar = ({
                             <div className="sidebarItemWrapper">
                                 <BotonBase
                                     variante="ghost"
-                                    className={`sidebarItem${totalMsgsNoLeidos > 0 ? ' sidebarItemConBadge' : ''}`}
+                                    className={`filaOperable sidebarItem${totalMsgsNoLeidos > 0 ? ' sidebarItemConBadge' : ''}`}
                                     onClick={alternarMsgsMovil}
                                     type="button"
                                     aria-label={t('config.notif.mensajes')}
@@ -171,7 +171,7 @@ export const Sidebar = ({
                             <div className="sidebarItemWrapper">
                                 <BotonBase
                                     variante="ghost"
-                                    className={`sidebarItem${totalNotisNoLeidas > 0 ? ' sidebarItemConBadge' : ''}`}
+                                    className={`filaOperable sidebarItem${totalNotisNoLeidas > 0 ? ' sidebarItemConBadge' : ''}`}
                                     onClick={alternarNotisMovil}
                                     type="button"
                                     aria-label={t('config.notificaciones')}
@@ -184,8 +184,9 @@ export const Sidebar = ({
 
                             <a
                                 href={`/perfil/${usuario?.username}/`}
-                                className={`sidebarItem ${activa === 'perfil' ? 'sidebarItemActivo' : ''}`}
+                                className={`filaOperable tooltipFlotante sidebarItem ${activa === 'perfil' ? 'sidebarItemActivo' : ''}`}
                                 onClick={irA(`/perfil/${usuario?.username}/`)}
+                                data-tooltip={t('config.perfil')}
                                 aria-label={t('config.perfil')}
                             >
                                 <Avatar
@@ -224,7 +225,7 @@ export const Sidebar = ({
                         return (
                             <BotonBase variante="ghost"
                                 key={item.id}
-                                className={`sidebarItem ${activa === item.id ? 'sidebarItemActivo' : ''}`}
+                                className={`filaOperable tooltipFlotante sidebarItem ${activa === item.id ? 'sidebarItemActivo' : ''}`}
                                 data-tooltip={traducirEtiqueta(item.etiqueta)}
                                 onClick={() => {
                                     onNavegar ? onNavegar(item.ruta) : navegar(item.ruta);
@@ -242,7 +243,7 @@ export const Sidebar = ({
                         <a
                             key={item.id}
                             href={item.ruta || '/'}
-                            className={`sidebarItem ${activa === item.id ? 'sidebarItemActivo' : ''}`}
+                            className={`filaOperable tooltipFlotante sidebarItem ${activa === item.id ? 'sidebarItemActivo' : ''}`}
                             data-tooltip={traducirEtiqueta(item.etiqueta)}
                             onClick={irA(item.ruta)}
                             aria-label={traducirEtiqueta(item.etiqueta)}
@@ -257,7 +258,7 @@ export const Sidebar = ({
                 <div className="sidebarSeparador" />
                 {/* [223A-4] Botón descubrimiento canción aleatoria */}
                 <BotonBase variante="ghost"
-                    className="sidebarItem"
+                    className="filaOperable tooltipFlotante sidebarItem"
                     data-tooltip="Descubrir canción"
                     onClick={() => cancionAleatoria.abrir()}
                     type="button"
@@ -266,7 +267,7 @@ export const Sidebar = ({
                     <Dice5 size={20} />
                 </BotonBase>
                 <BotonBase variante="ghost"
-                    className="sidebarItem"
+                    className="filaOperable tooltipFlotante sidebarItem"
                     data-tooltip="Reportar error"
                     onClick={() => abrirReporte('error_plataforma')}
                     type="button"
@@ -275,7 +276,7 @@ export const Sidebar = ({
                     <Bug size={20} />
                 </BotonBase>
                 <BotonBase variante="ghost"
-                    className="sidebarItem"
+                    className="filaOperable tooltipFlotante sidebarItem"
                     data-tooltip="Configuración"
                     onClick={() => abrirConfiguracion()}
                     type="button"

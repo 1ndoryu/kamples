@@ -31,7 +31,7 @@ export const ModalSeleccionColeccion = (): JSX.Element | null => {
     return (
         <div className={`seleccionColeccionOverlay ${posicion ? 'seleccionColeccionOverlayContextual' : ''}`}
             onClick={cerrar}>
-            <div className="seleccionColeccionPanel"
+            <div className="seleccionColeccionPanel panelFlotante"
                 /* Posición contextual ajustada al viewport */
                 style={posicion ? {
                     '--top': `${Math.max(8, Math.min(posicion.y, altoVentana() - 428))}px`,

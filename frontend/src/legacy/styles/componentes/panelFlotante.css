@@ -1,0 +1,39 @@
+/*
+ * panelFlotante.css — Kamples
+ * Receta canonica de superficie flotante: dropdown, menu, panel y toast.
+ * [15A-27]
+ *
+ * Una superficie flotante se reconoce por su piel, no por su nombre: fondo propio,
+ * borde, radio, elevacion y animacion de entrada. Eso vivia repetido en cada
+ * superficie —doce copias del mismo borde— con la particularidad de cada una
+ * escondida entre las repeticiones, asi que ninguna se leia como parte de un
+ * sistema.
+ *
+ * Aqui vive la piel una sola vez. Cada superficie declara su posicionamiento y,
+ * como mucho, sus valores propios como tokens --panel*: sigue siendo ella misma
+ * (cada una conserva su fondo, su sombra y su radio) sin re-declarar la receta.
+ * Cambiar la piel de TODAS las superficies flotantes es cambiar este bloque.
+ *
+ * Los tokens llevan nombre en español a proposito: `--panelFondo` no se confunde
+ * con la propiedad `background`, y deja claro que son valores de la receta.
+ */
+
+/* La cara de tooltip es la misma superficie, pero colgada de un pseudo-elemento
+ * del elemento que la dispara: no puede llevar la clase, asi que el elemento
+ * dueño la lleva por ella (`tooltipFlotante`) y la receta se aplica al `::after`.
+ * Los cuatro tokens de contenido son neutros por defecto (sin relleno, heredando
+ * tipografia y color, opaca), de modo que una superficie normal no los nota. */
+.panelFlotante,
+.tooltipFlotante::after {
+    background-color: var(--panelFondo, var(--fondoElevado1));
+    /* El borde es el mismo en las doce superficies: no lleva token propio. */
+    border: var(--panelBorde, 1px solid var(--bordeSutil));
+    border-radius: var(--panelRadio, var(--radioMd));
+    box-shadow: var(--panelSombra, none);
+    animation: var(--panelAnim, none);
+    transition: var(--panelTransicion, none);
+    padding: var(--panelPadding, 0);
+    color: var(--panelTexto, inherit);
+    font-size: var(--panelFuente, inherit);
+    opacity: var(--panelOpacidad, 1);
+}

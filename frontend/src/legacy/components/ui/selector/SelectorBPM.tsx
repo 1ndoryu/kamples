@@ -53,7 +53,7 @@ export const SelectorBPM = ({
             </BotonBase>
 
             {abierto && (
-                <div className="selectFiltroMenu selectorBPMMenu">
+                <div className="selectFiltroMenu selectorBPMMenu panelFlotante">
                     <div className="selectorBPMCampos">
                         <label className="selectorBPMLabel">
                             <span>Min</span>

@@ -239,36 +239,30 @@
     position: relative;
 }
 
+/* [15A-27] Piel de .panelFlotante; aqui, donde se coloca y sus valores propios. */
 .chatFlotanteMenu {
+    --panelFondo: var(--fondoElevado2);
+    --panelSombra: 0 var(--espacioXs) var(--espacioLg) var(--colorRgba-0-0-0-0_25);
     position: absolute;
     top: 100%;
     right: 0;
     margin-top: var(--espacioXs);
     min-width: 140px;
-    background-color: var(--fondoElevado2);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
-    box-shadow: 0 var(--espacioXs) var(--espacioLg) var(--colorRgba-0-0-0-0_25);
     z-index: 10;
     padding: var(--espacioXs) 0;
 }
 
-.chatFlotanteMenuItem {
+/* [15A-27] Fila de menu del chat: es un boton del sistema, y el selector lo dice. Solo
+ * conserva lo que la receta no aporta (justify-content propio, ancho completo). */
+.botonBase.chatFlotanteMenuItem {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: var(--espacioSm);
     width: 100%;
-    padding: var(--espacioXs) var(--espacioSm);
-    border: none;
-    background: none;
-    color: var(--textoSecundario);
-    font-size: var(--fuenteXs);
-    cursor: pointer;
-    transition: background-color var(--transicionRapida);
 }
 
-.chatFlotanteMenuItem:hover {
+.botonBase.chatFlotanteMenuItem:hover {
     background-color: var(--fondoElevado3);
     color: var(--textoPrimario);
 }

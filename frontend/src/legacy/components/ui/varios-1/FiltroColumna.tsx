@@ -52,7 +52,7 @@ export const FiltroColumna = ({ opciones, activos, onChange }: FiltroColumnaProp
                 <Filter size={10} />
             </BotonBase>
             {abierto && (
-                <div className="filtroColumnaDropdown">
+                <div className="filtroColumnaDropdown panelFlotante">
                     <button
                         type="button"
                         className="filtroColumnaLimpiar"
@@ -63,7 +63,7 @@ export const FiltroColumna = ({ opciones, activos, onChange }: FiltroColumnaProp
                     {opciones.map(op => (
                         <Checkbox
                             key={op.valor}
-                            className="filtroColumnaOpcion"
+                            className="filaOperable filtroColumnaOpcion"
                             checked={activos.size === 0 || activos.has(op.valor)}
                             onChange={() => toggleOpcion(op.valor)}
                             label={op.etiqueta}

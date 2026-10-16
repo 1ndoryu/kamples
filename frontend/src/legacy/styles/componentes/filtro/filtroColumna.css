@@ -46,16 +46,15 @@
     opacity: 1;
 }
 
+/* [15A-27] Piel de .panelFlotante. */
 .filtroColumnaDropdown {
+    --panelSombra: var(--sombraElevada);
+    --panelAnim: fadeInFiltroCol var(--transicionRapida) ease;
     position: absolute;
     top: 100%;
     left: 0;
     z-index: var(--zMenuPortal);
     min-width: 160px;
-    background: var(--fondoElevado1);
-    border: 1px solid var(--bordeSutil);
-    border-radius: var(--radioMd);
-    box-shadow: var(--sombraElevada);
     padding: var(--espacioXs);
     display: flex;
     flex-direction: column;
@@ -81,9 +80,9 @@
 }
 
 .filtroColumnaOpcion {
-    font-size: var(--fuenteXs);
-    padding: var(--espacioXs) var(--espacioSm);
-    border-radius: var(--radioSm);
+    --filaColor: var(--textoSecundario);
+    --filaFuente: var(--fuenteXs);
+    --filaRadio: var(--radioSm);
 }
 
 .filtroColumnaOpcion:hover {

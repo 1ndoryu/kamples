@@ -39,18 +39,19 @@
 }
 
 .sidebarItem {
-    position: relative;
+    --filaFuente: inherit;
+    --filaColor: var(--textoSecundario);
+    --filaFondo: none;
+    --filaBorde: none;
+    --filaRadio: var(--radioMd);
+    --filaTransicion: all var(--transicionRapida);
     display: flex;
     align-items: center;
+    cursor: pointer;
+    position: relative;
     justify-content: center;
     width: 40px;
     height: 40px;
-    border-radius: var(--radioMd);
-    color: var(--textoSecundario);
-    cursor: pointer;
-    transition: all var(--transicionRapida);
-    background: none;
-    border: none;
     padding: 0 !important;
 }
 
@@ -66,22 +67,25 @@
     color: var(--blanco);
 }
 
-/* Tooltip al hacer hover */
+/* Tooltip al hacer hover. La piel la pone la receta de superficie flotante
+ * (`.tooltipFlotante::after` en panelFlotante.css); aqui queda solo donde se
+ * cuelga y con que valores propios. */
 .sidebarItem::after {
+    --panelFondo: var(--fondoElevado3);
+    --panelBorde: none;
+    --panelRadio: var(--radioSm);
+    --panelTexto: var(--textoPrimario);
+    --panelFuente: var(--fuenteXs);
+    --panelPadding: var(--espacioXs) var(--espacioSm);
+    --panelOpacidad: 0;
+    --panelTransicion: opacity var(--transicionRapida);
     content: attr(data-tooltip);
     position: absolute;
     left: calc(100% + 8px);
     top: 50%;
     transform: translateY(-50%);
-    padding: var(--espacioXs) var(--espacioSm);
-    background-color: var(--fondoElevado3);
-    color: var(--textoPrimario);
-    font-size: var(--fuenteXs);
-    border-radius: var(--radioSm);
     white-space: nowrap;
-    opacity: 0;
     pointer-events: none;
-    transition: opacity var(--transicionRapida);
     z-index: var(--zMenu);
 }
 
@@ -148,15 +152,15 @@
     }
 
     .sidebarItem {
+        --filaFuente: var(--fuenteXs);
+        --filaColor: var(--textoSecundario);
+        --filaRadio: 0;
         flex: 1;
         width: auto;
         height: 100%;
         min-height: 48px;
-        border-radius: 0;
         flex-direction: column;
         gap: var(--espacio2xs);
-        font-size: var(--fuenteXs);
-        color: var(--textoSecundario);
     }
 
     /* QL16: Wrapper para items con dropdown (mensajes, notificaciones) */

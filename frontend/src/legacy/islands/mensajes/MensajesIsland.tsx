@@ -72,7 +72,7 @@ const MensajesIslandBase = (): JSX.Element => {
                     {filtradas.map((conv) => (
                         <BotonBase variante="ghost"
                             key={conv.id}
-                            className={`mensajesItem ${conv.noLeidos > 0 ? 'mensajesItemNoLeido' : ''}`}
+                            className={`filaOperable mensajesItem ${conv.noLeidos > 0 ? 'mensajesItemNoLeido' : ''}`}
                             onClick={() => abrirConversacion(conv)}
                             type="button"
                         >

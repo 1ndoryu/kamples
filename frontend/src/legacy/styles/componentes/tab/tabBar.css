@@ -16,21 +16,13 @@
     display: none;
 }
 
-.tabItem {
+/* [15A-27] Pestana: boton del sistema. Solo conserva el contexto propio (position
+ * relative para el subrayado, el gap y el reparto de la fila). */
+.botonBase.tabItem {
     position: relative;
     display: flex;
     align-items: center;
     gap: var(--espacioSm);
-    padding: var(--espacioMd) var(--espacioLg);
-    font-size: var(--fuenteMd);
-    font-weight: var(--pesoMedio);
-    color: var(--textoTerciario);
-    cursor: pointer;
-    transition: color var(--transicionRapida);
-    white-space: nowrap;
-    background: none;
-    border: none;
-    font-family: var(--fuentePrincipal);
 }
 
 .tabItem:hover {
@@ -42,7 +34,7 @@
 }
 
 /* Línea indicadora inferior */
-.tabItem.tabActivo::after {
+.botonBase.tabItem.tabActivo::after {
     content: '';
     position: absolute;
     bottom: -1px;

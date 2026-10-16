@@ -78,7 +78,7 @@ export const PanelBrowserDaw = ({
                                     {samples.map(sample => (
                                         <div
                                             key={sample.id}
-                                            className="browserDawSampleItem"
+                                            className="filaOperable browserDawSampleItem"
                                             draggable
                                             onDragStart={(e) => iniciarDragSample(e, sample)}
                                             title={sample.titulo}

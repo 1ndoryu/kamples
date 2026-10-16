@@ -62,7 +62,7 @@ export function VentanaSincPanel(): JSX.Element {
 
     return (
         <>
-            <div className="ventanaSincPanel ventanaSincPanelMinimal">
+            <div className="ventanaSincPanel ventanaSincPanelMinimal panelFlotante">
             <div className="sincPanelMinimalTop" data-tauri-drag-region>
                 <div className="sincPanelPerfilBloque">
                     {avatarUsuario ? (
