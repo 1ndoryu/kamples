@@ -226,3 +226,62 @@ impl AuthService {
         .map_err(|_| AppError::Unauthorized)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /*
+     * [15A-28] Regresión: `jsonwebtoken` 10 ya no trae crypto propio. Sin elegir
+     * proveedor en `Cargo.toml`, `encode`/`decode` hacen panic y la autenticación
+     * entera queda rota, aunque `cargo check` pase. Este test firma y valida un
+     * token de verdad; es el testigo que faltaba al subir de la 9 a la 10.
+     */
+    #[test]
+    fn firma_y_valida_un_token() {
+        let secret = "secreto-de-prueba";
+        let ahora = chrono::Utc::now().timestamp();
+        let claims = Claims {
+            sub: 1,
+            exp: ahora + 3600,
+            iat: ahora,
+            jti: Uuid::now_v7().to_string(),
+            plan: "free".into(),
+            rol: "usuario".into(),
+        };
+
+        let token = encode(
+            &Header::default(),
+            &claims,
+            &EncodingKey::from_secret(secret.as_bytes()),
+        )
+        .expect("firmar el token no debe fallar");
+
+        let verificado = AuthService::verify_token(&token, secret).expect("el token debe validar");
+        assert_eq!(verificado.sub, claims.sub);
+        assert_eq!(verificado.jti, claims.jti);
+        assert_eq!(verificado.rol, claims.rol);
+    }
+
+    /* Un secreto distinto no debe validar: si esto pasara, la firma no se estaría
+     * comprobando de verdad y el test anterior no probaría nada. */
+    #[test]
+    fn un_secreto_distinto_no_valida() {
+        let claims = Claims {
+            sub: 1,
+            exp: chrono::Utc::now().timestamp() + 3600,
+            iat: chrono::Utc::now().timestamp(),
+            jti: Uuid::now_v7().to_string(),
+            plan: "free".into(),
+            rol: "usuario".into(),
+        };
+        let token = encode(
+            &Header::default(),
+            &claims,
+            &EncodingKey::from_secret(b"secreto-bueno"),
+        )
+        .expect("firmar el token no debe fallar");
+
+        assert!(AuthService::verify_token(&token, "secreto-malo").is_err());
+    }
+}

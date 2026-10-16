@@ -52,7 +52,11 @@ thiserror = "2"
 anyhow = "1"
 
 # Auth
-jsonwebtoken = "10"
+# [15A-28] Desde la 10.x `jsonwebtoken` no trae crypto propio: hay que elegir
+# proveedor o cualquier `encode`/`decode` hace panic. Se usa `aws_lc_rs` porque
+# esa misma version ya esta en el arbol (async-stripe/rustls) y `main.rs` ya
+# instala ese provider para TLS; `rust_crypto` arrastraria `rsa`.
+jsonwebtoken = { version = "10", features = ["aws_lc_rs"] }
 argon2 = "0.5"
 
 # HTTP cliente externo (Stripe, Groq, OpenAI, FCM, OAuth Google) — añadiremos features según fase
