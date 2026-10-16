@@ -62,7 +62,6 @@
 8. Cero parches: si el diseño PHP era subóptimo, rediseñar — no portar deuda técnica.
 
 ## Pendiente
-## Pendiente
 
 Cola real. El detalle de los bloques **ya cerrados** (15A-1…15A-29, 16A-4…16A-7, 13AA-1 y el resto del trabajo de calidad) se ha movido a `Agente/completados/` y a `## Historial de calidad`, más abajo: esta sección había llegado a 84 KB y 50 viñetas, casi todas de trabajo terminado, así que no se podía leer como cola ni vaciar nunca. **No se ha borrado nada**; el historial está íntegro debajo. Cada punto abierto lleva su bloqueo, nombrado.
 
