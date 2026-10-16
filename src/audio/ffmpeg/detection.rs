@@ -24,7 +24,7 @@ fn executable_name(name: &str) -> String {
 fn search_path(executable: &str) -> Option<PathBuf> {
     env::var_os("PATH").and_then(|paths| {
         env::split_paths(&paths)
-            .map(|entry| entry.join(executable))
+            .map(|entry| entry.join(executable)) // sentinel-disable path-join-sin-canonicalize — executable es el nombre del binario (ffmpeg/ffprobe), no una ruta
             .find(|candidate| candidate.is_file())
     })
 }
@@ -59,12 +59,12 @@ fn windows_candidates(executable: &str) -> Vec<PathBuf> {
     ];
 
     if let Some(local_app_data) = local_app_data {
-        candidates.push(local_app_data.join("ffmpeg").join("bin").join(executable));
+        candidates.push(local_app_data.join("ffmpeg").join("bin").join(executable)); // sentinel-disable path-join-sin-canonicalize — executable es el nombre del binario (ffmpeg/ffprobe), no una ruta
     }
 
     if let Some(user_profile) = user_profile {
-        candidates.push(user_profile.join("ffmpeg").join("bin").join(executable));
-        candidates.push(user_profile.join("scoop").join("shims").join(executable));
+        candidates.push(user_profile.join("ffmpeg").join("bin").join(executable)); // sentinel-disable path-join-sin-canonicalize — executable es el nombre del binario (ffmpeg/ffprobe), no una ruta
+        candidates.push(user_profile.join("scoop").join("shims").join(executable)); // sentinel-disable path-join-sin-canonicalize — executable es el nombre del binario (ffmpeg/ffprobe), no una ruta
     }
 
     candidates
@@ -90,7 +90,7 @@ fn search_windows_winget(executable: &str) -> Option<PathBuf> {
 
         for package_entry in std::fs::read_dir(vendor_entry.path()).ok()? {
             let package_entry = package_entry.ok()?;
-            let candidate = package_entry.path().join("bin").join(executable);
+            let candidate = package_entry.path().join("bin").join(executable); // sentinel-disable path-join-sin-canonicalize — executable es el nombre del binario (ffmpeg/ffprobe), no una ruta
             if candidate.is_file() {
                 matches.push(candidate);
             }

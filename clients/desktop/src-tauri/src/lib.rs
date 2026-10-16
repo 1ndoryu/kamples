@@ -228,12 +228,12 @@ fn obtener_rutas_candidatas_android(app: &tauri::AppHandle, archivo: &str) -> Ve
             continue;
         };
 
-        agregar_ruta_si_no_duplicada(&mut rutas, base.join(archivo));
+        agregar_ruta_si_no_duplicada(&mut rutas, base.join(archivo)); // sentinel-disable path-join-sin-canonicalize — archivo es un nombre fijo: los tres llamadores pasan literal
 
         if let Some(parent) = base.parent() {
-            agregar_ruta_si_no_duplicada(&mut rutas, parent.join(archivo));
-            agregar_ruta_si_no_duplicada(&mut rutas, parent.join("files").join(archivo));
-            agregar_ruta_si_no_duplicada(&mut rutas, parent.join("no_backup").join(archivo));
+            agregar_ruta_si_no_duplicada(&mut rutas, parent.join(archivo)); // sentinel-disable path-join-sin-canonicalize — archivo es un nombre fijo: los tres llamadores pasan literal
+            agregar_ruta_si_no_duplicada(&mut rutas, parent.join("files").join(archivo)); // sentinel-disable path-join-sin-canonicalize — archivo es un nombre fijo: los tres llamadores pasan literal
+            agregar_ruta_si_no_duplicada(&mut rutas, parent.join("no_backup").join(archivo)); // sentinel-disable path-join-sin-canonicalize — archivo es un nombre fijo: los tres llamadores pasan literal
         }
     }
 

@@ -161,7 +161,7 @@ fn main() -> Result<()> {
         extension
     );
     let storage_root = env::var("STORAGE_ROOT").unwrap_or_else(|_| "./uploads".to_string());
-    let storage_path = PathBuf::from(&storage_root).join(&storage_key);
+    let storage_path = PathBuf::from(&storage_root).join(&storage_key); // sentinel-disable path-join-sin-canonicalize — los segmentos son un i32, un slug y una extension de file_name()
     if let Some(parent) = storage_path.parent() {
         fs::create_dir_all(parent).context("Error al crear directorios de storage")?;
     }
@@ -285,7 +285,7 @@ fn main() -> Result<()> {
                 .unwrap_or_default();
             format!("{parent}/{id_corto}_waveform.json")
         };
-        let waveform_storage_path = PathBuf::from(&storage_root).join(&waveform_key);
+        let waveform_storage_path = PathBuf::from(&storage_root).join(&waveform_key); // sentinel-disable path-join-sin-canonicalize — los segmentos son un i32, un slug y una extension de file_name()
         if let Some(parent) = waveform_storage_path.parent() {
             fs::create_dir_all(parent)?;
         }

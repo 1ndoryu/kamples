@@ -102,8 +102,8 @@ pub fn cache_path(original_path: &str, params: &OptimizeParams) -> PathBuf {
     }
 
     PathBuf::from(CACHE_DIR)
-        .join(cache_subdir)
-        .join(cached_name)
+        .join(cache_subdir) // sentinel-disable path-join-sin-canonicalize — original_path viene ya validado por el proxy de imagenes
+        .join(cached_name) // sentinel-disable path-join-sin-canonicalize — original_path viene ya validado por el proxy de imagenes
 }
 
 /* Procesa una imagen: redimensiona y/o comprime según los parámetros.

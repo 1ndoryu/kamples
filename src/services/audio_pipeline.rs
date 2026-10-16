@@ -611,7 +611,7 @@ fn build_pipeline_metadata(
 }
 
 async fn create_temporary_workspace(sample_id: i32) -> Result<PathBuf, AudioPipelineError> {
-    let workspace = std::env::temp_dir().join(format!(
+    let workspace = std::env::temp_dir().join(format!( // sentinel-disable path-join-sin-canonicalize — format! de un i32 y un Uuid: sin separadores
         "glory-audio-pipeline-{sample_id}-{}",
         uuid::Uuid::new_v4()
     ));

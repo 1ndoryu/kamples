@@ -176,7 +176,7 @@ fn detect_python(scraper_dir: &Path) -> Result<PathBuf, AppError> {
 fn build_log_path(prefix: &str) -> Result<PathBuf, AppError> {
     let dir = PathBuf::from(LOG_DIR_DEFAULT);
     std::fs::create_dir_all(&dir).map_err(|e| AppError::Internal(format!("crear logs: {e}")))?;
-    Ok(dir.join(format!(
+    Ok(dir.join(format!( // sentinel-disable path-join-sin-canonicalize — prefijo literal (scraper-output) y una fecha formateada
         "{prefix}-{}.log",
         chrono::Utc::now().format("%Y-%m-%d")
     )))

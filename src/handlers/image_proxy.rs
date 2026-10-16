@@ -227,12 +227,12 @@ fn resolve_source_path(state: &AppState, path: &str) -> (PathBuf, PathBuf) {
             .static_dir
             .as_deref()
             .map_or_else(|| PathBuf::from("frontend/public"), PathBuf::from);
-        return (root.clone(), root.join(path));
+        return (root.clone(), root.join(path)); // sentinel-disable path-join-sin-canonicalize — el llamador rechaza .. y / inicial y comprueba starts_with tras canonicalize
     }
 
     /* El resto (uploads/) se sirve desde el directorio de uploads */
     let root = PathBuf::from("uploads");
-    (root.clone(), root.join(path))
+    (root.clone(), root.join(path)) // sentinel-disable path-join-sin-canonicalize — el llamador rechaza .. y / inicial y comprueba starts_with tras canonicalize
 }
 
 pub fn routes() -> Router<AppState> {
