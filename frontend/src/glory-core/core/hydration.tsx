@@ -216,6 +216,21 @@ function initializeSPA(routes: GloryRoutesMap, options: InitOptions): void {
     if (import.meta.env.DEV) {
         const { islaActual } = useNavigationStore.getState();
         logger.warn(`[Glory SPA] PageRenderer montado, isla inicial: ${islaActual}`);
+
+        /* [16A-4] Señal de montaje real para sondas automatizadas.
+         * El aviso de arriba se escribe al *programar* el render, no al pintarlo,
+         * y la app tarda varios segundos en tener contenido (el arranque espera
+         * sondas de auth). Una sonda temprana leía `#root` vacío y lo tomaba por
+         * un fallo. `window.__KAMPLES_MONTADO__` se pone cuando el contenedor ya
+         * tiene elementos pintados: la sonda espera a esa bandera. */
+        const marcarMontaje = (): void => {
+            if (container.childElementCount > 0) {
+                (window as unknown as { __KAMPLES_MONTADO__?: boolean }).__KAMPLES_MONTADO__ = true;
+            } else {
+                requestAnimationFrame(marcarMontaje);
+            }
+        };
+        requestAnimationFrame(marcarMontaje);
     }
 }
 

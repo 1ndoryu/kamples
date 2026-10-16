@@ -7,7 +7,7 @@
 
 import { type ReactNode, type CSSProperties, useEffect, useCallback, Fragment, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import '../../../styles/componentes/varios-4/menuContextual.css';
+import '../../../styles/componentes/menu/menuContextual.css';
 import { BotonBase } from '../boton/BotonBase';
 import { useEsMovil } from '@app/hooks/varios-4/useEsMovil';
 import { altoVentana, anchoVentana, dejarDeEscucharVentana, escucharVentana } from '@/platform/ventana';
