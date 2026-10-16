@@ -5,9 +5,11 @@
  * router hacian que el archivo rozara el umbral de god-object y escondian
  * el cableado real entre cientos de entradas de catalogo.
  *
- * sentinel-disable-file limite-lineas god-object-rs — registro
- * declarativo: su tamano lo fija el numero de endpoints, no la
- * complejidad. Partirlo por dominio no aporta nada. */
+ * sentinel-disable-file limite-lineas — registro declarativo: su tamano lo
+ * fija el numero de endpoints, no la complejidad. Partirlo por dominio no
+ * aporta nada. (`god-object-rs` ya no hace falta: desde glory-sentinel
+ * 16A-9 el recuento ignora las lineas dentro de un atributo, y 602 de estas
+ * 645 lo estan.) */
 #![allow(clippy::needless_for_each)] // Generado por utoipa OpenApi derive
 
 /* Los `paths(...)` de abajo nombran los modulos hermanos sin prefijo; esta
