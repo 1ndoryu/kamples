@@ -452,6 +452,10 @@ mod tests {
             scraper_secret: None,
             stripe: crate::config::StripeConfig::default(),
             allow_duplicate_uploads: false,
+            rate_limit: crate::config::RateLimitConfig {
+                peticiones_por_segundo: 10.0,
+                rafaga: 40.0,
+            },
         }
     }
 

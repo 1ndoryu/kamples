@@ -139,7 +139,13 @@ async fn main() -> Result<(), AppError> {
         algo_planner,
     );
     let listener = tokio::net::TcpListener::bind(&addr).await?;
-    axum::serve(listener, app).await?;
+    /* [16A-8] `with_connect_info` es lo que da al rate limit la IP del peer
+     * cuando el proxy no deja cabecera (ver `handlers/rate_limit.rs`). */
+    axum::serve(
+        listener,
+        app.into_make_service_with_connect_info::<std::net::SocketAddr>(),
+    )
+    .await?;
 
     Ok(())
 }

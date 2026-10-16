@@ -34,6 +34,7 @@ mod payments;
 mod plays;
 mod posts;
 mod push;
+mod rate_limit;
 mod reports;
 mod sample_catalog;
 mod samples;
@@ -699,6 +700,12 @@ pub fn create_router(
     let ws_public_url = config.ws_public_url.clone();
     let redis_url = config.redis_url.clone();
     let storage_root = config.storage_root.clone();
+    /* [16A-8] El limitador se crea aquí y se cablea sobre todo /api. Ver
+     * `handlers/rate_limit.rs`. */
+    let limitador = rate_limit::Limitador::nuevo(
+        config.rate_limit.peticiones_por_segundo,
+        config.rate_limit.rafaga,
+    );
     let ws_hub = std::sync::Arc::new(glory_rs::websocket::WebSocketHub::new(
         glory_rs::websocket::HubConfig::default(),
     ));
@@ -763,7 +770,7 @@ pub fn create_router(
         )
         .nest_service("/uploads", ServeDir::new(storage_root))
         .merge(seo::routes())
-        .nest("/api", api_routes())
+        .nest("/api", api_routes(limitador))
         .fallback_service(ServeDir::new(&static_dir).fallback(ServeFile::new(index_path)))
         .layer(axum::middleware::from_fn(
             crate::middleware::request_id_middleware,
@@ -776,7 +783,7 @@ pub fn create_router(
         .with_state(state)
 }
 
-fn api_routes() -> Router<AppState> {
+fn api_routes(limitador: std::sync::Arc<rate_limit::Limitador>) -> Router<AppState> {
     Router::new()
         .merge(image_proxy::routes())
         .merge(health::routes())
@@ -822,4 +829,10 @@ fn api_routes() -> Router<AppState> {
         .merge(admin_duplicados::routes())
         .merge(admin_experiments::routes())
         .merge(admin_moderacion::routes())
+        /* [16A-8] Última capa: cubre todas las rutas de arriba. Solo actúa
+         * sobre POST/PUT/PATCH/DELETE (ver `rate_limit::limitar`). */
+        .layer(axum::middleware::from_fn_with_state(
+            limitador,
+            rate_limit::limitar,
+        ))
 }

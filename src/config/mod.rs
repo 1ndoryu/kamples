@@ -6,6 +6,8 @@ pub enum ConfigError {
     MissingEnvVar(String),
     #[error("Número inválido en configuración: {0}")]
     InvalidNumber(#[from] std::num::ParseIntError),
+    #[error("Número inválido en configuración: {0}")]
+    InvalidFloat(#[from] std::num::ParseFloatError),
 }
 
 #[derive(Debug, Clone)]
@@ -87,6 +89,18 @@ pub struct AppConfig {
      * que check-duplicate devuelva possible_duplicate=true. Nunca habilitar
      * en producción — evita duplicados en el catálogo. */
     pub allow_duplicate_uploads: bool,
+    /* [16A-8] Tope por IP de las rutas mutantes. Ver `handlers/rate_limit.rs`. */
+    pub rate_limit: RateLimitConfig,
+}
+
+/* [16A-8] Cubo de fichas por IP: `rafaga` es cuánto se puede gastar de golpe y
+ * `peticiones_por_segundo` la recarga sostenida. Los valores por defecto son
+ * deliberadamente holgados — una sesión normal de la app no los roza — y
+ * están pensados para frenar fuerza bruta y abuso, no para repartir caudal. */
+#[derive(Debug, Clone, Copy)]
+pub struct RateLimitConfig {
+    pub peticiones_por_segundo: f64,
+    pub rafaga: f64,
 }
 
 impl AppConfig {
@@ -143,7 +157,19 @@ impl AppConfig {
             allow_duplicate_uploads: std::env::var("ALLOW_DUPLICATE_UPLOADS").is_ok_and(|v| {
                 matches!(v.trim().to_ascii_lowercase().as_str(), "1" | "true" | "yes")
             }),
+            rate_limit: RateLimitConfig {
+                peticiones_por_segundo: env_f64("RATE_LIMIT_RPS", 10.0)?,
+                rafaga: env_f64("RATE_LIMIT_RAFAGA", 40.0)?,
+            },
         })
+    }
+}
+
+/* [16A-8] Número decimal opcional por entorno, con defecto. */
+fn env_f64(nombre: &str, defecto: f64) -> Result<f64, ConfigError> {
+    match first_env(&[nombre]) {
+        Some(valor) => Ok(valor.parse()?),
+        None => Ok(defecto),
     }
 }
 
