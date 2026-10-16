@@ -250,7 +250,8 @@ fn build_generated_title(
 
     if let Some(bpm) = sample.bpm.filter(|value| *value > 0) {
         title.push(' ');
-        write!(&mut title, "{bpm}bpm").expect("writing bpm into title should not fail");
+        /* `write!` sobre un `String` no puede fallar; se descarta el Result. */
+        let _ = write!(&mut title, "{bpm}bpm");
     }
 
     if let Some(music_key) = sample

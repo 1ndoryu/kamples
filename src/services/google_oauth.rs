@@ -62,10 +62,19 @@ impl GoogleVerifier {
         Self {
             client_ids,
             cache: Arc::new(RwLock::new(None)),
-            http: reqwest::Client::builder()
+            /* La config es estatica, asi que solo falla si el backend TLS del
+             * proceso esta roto. Se sigue con un cliente sin timeout antes que
+             * tumbar el arranque, y queda en el log. */
+            http: match reqwest::Client::builder()
                 .timeout(Duration::from_secs(8))
                 .build()
-                .expect("reqwest client"),
+            {
+                Ok(cliente) => cliente,
+                Err(error) => {
+                    tracing::error!(error = %error, "no se pudo construir el cliente HTTP de Google");
+                    reqwest::Client::new()
+                }
+            },
         }
     }
 

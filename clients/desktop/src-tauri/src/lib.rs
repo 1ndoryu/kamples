@@ -413,13 +413,12 @@ fn configurar_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
 
     let menu = Menu::with_items(app, &[&sincronizacion, &mostrar, &ocultar, &salir])?;
 
-    let icon = app
-        .default_window_icon()
-        .cloned()
-        .expect("No se encontro icono de la app");
+    /* El icono del tray sale del de la ventana. Si el bundle no lo trae se
+     * avisa y el tray queda sin imagen: un panic aqui dejaria la app sin
+     * arrancar por un icono. */
+    let icono = app.default_window_icon().cloned();
 
-    let _tray = TrayIconBuilder::new()
-        .icon(icon)
+    let mut tray = TrayIconBuilder::new()
         .menu(&menu)
         .tooltip("Kamples")
         .on_menu_event(|app, event| match event.id.as_ref() {
@@ -452,8 +451,11 @@ fn configurar_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
             {
                 mostrar_ventana_sync(tray.app_handle());
             }
-        })
-        .build(app)?;
+        });
+    if let Some(icono) = icono {
+        tray = tray.icon(icono);
+    }
+    let _tray = tray.build(app)?;
 
     Ok(())
 }
@@ -599,7 +601,10 @@ pub fn run() {
     #[cfg(not(desktop))]
     let builder = builder.setup(|_app| Ok(()));
 
-    builder
-        .run(tauri::generate_context!())
-        .expect("Error al iniciar Kamples");
+    /* El bucle de eventos solo termina con error: no hay nada a lo que
+     * volver, asi que se deja dicho y se sale con codigo distinto de cero. */
+    if let Err(error) = builder.run(tauri::generate_context!()) {
+        eprintln!("Error al iniciar Kamples: {error}");
+        std::process::exit(1);
+    }
 }

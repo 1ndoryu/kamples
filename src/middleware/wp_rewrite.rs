@@ -44,11 +44,12 @@ pub async fn wp_rewrite_middleware(mut req: Request, next: Next) -> Response {
             "WP-JSON rewrite applied"
         );
 
-        // Reescribir el URI en el request
-        *req.uri_mut() = new_uri.parse().unwrap_or_else(|_| {
-            tracing::error!("Failed to parse rewritten URI: {new_uri}");
-            "/api".parse().unwrap()
-        });
+        /* Reescribir el URI en el request. Si no parsea se deja el original y
+         * se registra: mandar la peticion a /api seria enrutarla a otro sitio. */
+        match new_uri.parse() {
+            Ok(uri) => *req.uri_mut() = uri,
+            Err(error) => tracing::error!(%new_uri, %error, "no se pudo parsear el URI reescrito"),
+        }
     }
 
     next.run(req).await

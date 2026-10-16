@@ -188,7 +188,11 @@ fn merge_corrected_metadata(
     instructions: &str,
 ) -> Value {
     let mut corrected_value = serde_json::to_value(corrected).unwrap_or_else(|_| json!({}));
-    let corrected_object = corrected_value.as_object_mut().expect("metadata is object");
+    /* `corrected` es un struct, asi que serializa a objeto. Si algun dia no lo
+     * fuera se devuelve tal cual, sin los campos preservados, en vez de reventar. */
+    let Some(corrected_object) = corrected_value.as_object_mut() else {
+        return corrected_value;
+    };
 
     /* Preservar campos del pipeline que la IA no genera. */
     if let Some(original_obj) = original.as_object() {

@@ -152,16 +152,17 @@ pub async fn serve_socket(socket: WebSocket, hub: Arc<WebSocketHub>, user_id: i3
         user_id,
         connection_id: connection.connection_id,
     };
-    if let Err(error) = authenticated.to_message() {
-        tracing::error!(user_id, error = %error, "no se pudo serializar mensaje authenticated websocket");
-        hub.unregister(connection);
-        return;
-    }
-    if sender
-        .send(authenticated.to_message().expect("validated above"))
-        .await
-        .is_err()
-    {
+    /* Se serializa una sola vez: la version anterior validaba con una llamada
+     * y enviaba el resultado de otra. */
+    let mensaje = match authenticated.to_message() {
+        Ok(mensaje) => mensaje,
+        Err(error) => {
+            tracing::error!(user_id, error = %error, "no se pudo serializar mensaje authenticated websocket");
+            hub.unregister(connection);
+            return;
+        }
+    };
+    if sender.send(mensaje).await.is_err() {
         hub.unregister(connection);
         return;
     }
