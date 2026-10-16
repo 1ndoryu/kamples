@@ -93,12 +93,12 @@
 }
 
 .showcaseEspaciadoBloque {
-    /* --tamano se define inline en el HTML para la demo */
+    /* --tamano lo define inline la demo; sin el, el bloque usa el espaciado base */
     background-color: var(--acentoMuted);
     border: 1px solid var(--acento);
     border-radius: var(--radioSm);
-    width: var(--espacioMd);
-    height: var(--espacioMd);
+    width: var(--tamano, var(--espacioMd));
+    height: var(--tamano, var(--espacioMd));
 }
 
 /* Tipografía */
@@ -164,6 +164,6 @@
 
 /* Texto de tipografía con tamaño dinámico via custom property */
 .showcaseTextoTipografia {
-    /* --tamanoFuente se define inline en el HTML */
-    font-size: var(--fuenteMd);
+    /* --tamanoFuente lo define inline la demo; sin el, cae al tamano base */
+    font-size: var(--tamanoFuente, var(--fuenteMd));
 }
