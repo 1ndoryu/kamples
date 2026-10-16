@@ -31,7 +31,7 @@
 }
 
 .prose h2 {
-    font-size: 1.5em;
+    font-size: var(--fuenteProsaTitulo);
     font-weight: 700;
     margin-top: 2em;
     margin-bottom: 1em;
@@ -40,7 +40,7 @@
 }
 
 .prose h3 {
-    font-size: 1.25em;
+    font-size: var(--fuenteProsaSubtitulo);
     font-weight: 600;
     margin-top: 1.6em;
     margin-bottom: 0.6em;
@@ -49,7 +49,7 @@
 }
 
 .prose h4 {
-    font-size: 1.1em;
+    font-size: var(--fuenteProsaApartado);
     font-weight: 600;
     margin-top: 1.5em;
     margin-bottom: 0.5em;
@@ -107,10 +107,10 @@
 
 .prose code {
     font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-    font-size: 0.875em;
+    font-size: var(--fuenteProsaCodigo);
     background-color: var(--color-bg-secondary);
     padding: 0.2em 0.4em;
-    border-radius: 0.25rem;
+    border-radius: var(--radioProsaCodigo);
 }
 
 .prose pre {
@@ -118,7 +118,7 @@
     margin-bottom: 1.5em;
     padding: 1em;
     background-color: var(--color-bg-secondary);
-    border-radius: 0.5rem;
+    border-radius: var(--radioProsaBloque);
     overflow-x: auto;
 }
 
@@ -136,7 +136,7 @@
 
 /* Variante compacta para modales */
 .prose-sm {
-    font-size: 0.875rem;
+    font-size: var(--fuenteProsaCompacta);
     line-height: 1.7;
 }
 
@@ -146,13 +146,13 @@
 }
 
 .prose-sm h2 {
-    font-size: 1.25em;
+    font-size: var(--fuenteProsaSubtitulo);
     margin-top: 1.5em;
     margin-bottom: 0.75em;
 }
 
 .prose-sm h3 {
-    font-size: 1.1em;
+    font-size: var(--fuenteProsaApartado);
     margin-top: 1.25em;
     margin-bottom: 0.5em;
 }
@@ -167,7 +167,7 @@
 .single-post-featured-image {
     width: 100%;
     height: auto;
-    border-radius: 1rem;
+    border-radius: var(--radioProsaImagen);
     object-fit: cover;
 }
 

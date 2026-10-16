@@ -115,6 +115,22 @@
     /* [193A-51] Colores de waveform — cambian en light mode */
     --colorWaveformNoReproducido: #d2c8a7;
     --colorWaveformReproducido: #4a665b;
+
+    /* [15A-22] Escala relativa del contenido inyectado (`.prose` de
+     * `glory-core/index.css`): ese HTML viene de la BD y debe escalar con su
+     * contenedor, así que no puede usar la escala en px de arriba. Van en este
+     * fichero y no en `tokensHeredados.css` porque esa hoja no la carga el
+     * escritorio, que sí carga `glory-core/index.css`; allí la declaración
+     * quedaría sin resolver y el tamaño se perdería. El valor de cada token es
+     * el literal exacto que ya había en la hoja, así que el pintado no cambia. */
+    --fuenteProsaTitulo: 1.5em;
+    --fuenteProsaSubtitulo: 1.25em;
+    --fuenteProsaApartado: 1.1em;
+    --fuenteProsaCodigo: 0.875em;
+    --fuenteProsaCompacta: 0.875rem;
+    --radioProsaCodigo: 0.25rem;
+    --radioProsaBloque: 0.5rem;
+    --radioProsaImagen: 1rem;
 }
 
 :root[data-theme='light'] {
