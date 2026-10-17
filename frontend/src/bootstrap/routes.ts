@@ -34,7 +34,10 @@ export const ROUTES: GloryRoutesMap = {
     '/reproductor/': { island: 'ReproductorIsland', props: {}, title: 'Reproductor' },
     '/descubrir/': { island: 'DescubrirIsland', props: {}, title: 'Descubrir' },
     '/colecciones/': { island: 'ColeccionesIsland', props: {}, title: 'Colecciones' },
-    '/planes/': { island: 'PlanesIsland', props: {}, title: 'Planes' },
+    /* Sin ruta /planes/: los planes se abren con el modal de `planesModalStore`, que sustituyo a
+     * la navegacion (ver el comentario del store). `PlanesIsland` sigue montada por
+     * `LayoutPrincipal`, pero como isla de ruta devolvia `<></>` — `abierto` nace en false — y la
+     * pagina quedaba en blanco sin decir nada. La landing de precios es `/precios/`. */
     '/precios/': { island: 'PreciosLandingIsland', props: {}, title: 'Precios' },
     '/comunidad/': { island: 'ComunidadIsland', props: {}, title: 'Comunidad' },
 
