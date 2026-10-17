@@ -150,7 +150,13 @@ export function usePerfilIsland({ usernameProp }: PerfilParams) {
     /* Cargar perfil con AbortController */
     useEffect(() => {
         if (!username && authCargando) return;
-        if (!username) return;
+        if (!username) {
+            /* Sin username no hay perfil que pedir (p. ej. /perfil/ a secas). Se apaga el
+             * cargando para que la isla muestre "Usuario no encontrado": si no, el esqueleto
+             * se queda para siempre porque `cargando` nace en true y nadie lo baja. */
+            setCargando(false);
+            return;
+        }
 
         const controller = new AbortController();
         const cargar = async () => {
