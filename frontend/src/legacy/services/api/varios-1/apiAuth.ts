@@ -68,7 +68,10 @@ export const login = async (email: string, password: string) => {
 
 /*
  * Registro de nuevo usuario.
- * Endpoint: POST /kamples/v1/auth/registro
+ * Endpoint: POST /api/auth/register (`src/handlers/auth.rs:97`). Estaba como
+ * `/auth/registro`, que no existe: el registro devolvia 405 y no se podia crear cuenta.
+ * El backend espera `nombre_visible` (snake_case, `src/models/user.rs:53`); con
+ * `nombreVisible` serde lo ignoraba en silencio y el nombre visible nunca se guardaba.
  */
 export const registrar = async (datos: {
     username: string;
@@ -76,9 +79,14 @@ export const registrar = async (datos: {
     password: string;
     nombreVisible: string;
 }) => {
-    return apiPeticion<{ token: string; usuario: UsuarioAutenticado }>('/auth/registro', {
+    return apiPeticion<{ token: string; usuario: UsuarioAutenticado }>('/auth/register', {
         method: 'POST',
-        body: datos,
+        body: {
+            username: datos.username,
+            email: datos.email,
+            password: datos.password,
+            nombre_visible: datos.nombreVisible,
+        },
         omitirNonce: true,
     });
 };
