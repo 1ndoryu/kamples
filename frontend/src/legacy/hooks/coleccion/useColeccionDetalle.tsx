@@ -116,7 +116,14 @@ export function useColeccionDetalle({ propSlug }: ColeccionDetalleParams) {
      * Se incluye `activa` en deps para re-fetch al reactivar la isla
      * (evita estado stuck si el fetch anterior fue abortado por keep-alive). */
     useEffect(() => {
-        if (!segmento || !activa) return;
+        if (!segmento) {
+            /* Sin slug no hay nada que cargar. Se apaga el cargando para que la isla
+             * muestre "Colección no encontrada": si no, el esqueleto se queda para
+             * siempre porque `cargando` nace en true y nadie lo baja. */
+            setCargando(false);
+            return;
+        }
+        if (!activa) return;
         const controller = new AbortController();
 
         const cargar = async () => {
