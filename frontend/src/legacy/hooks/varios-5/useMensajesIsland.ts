@@ -80,7 +80,7 @@ export const useMensajesIsland = () => {
             } catch {
                 /* Fallo al marcar leída no bloquea la navegación */
             }
-            navegar(`/mensajes/${conv.id}/`);
+            navegar(`/mensajes/chat/${conv.id}/`);
         },
         [navegar]
     );

@@ -49,7 +49,10 @@ export const ROUTES: GloryRoutesMap = {
     '/coleccion/': { island: 'ColeccionDetalleIsland', props: {}, title: 'Coleccion', params: ':coleccionSlug' },
 
     '/mensajes/': { island: 'MensajesIsland', props: {}, title: 'Mensajes' },
-    '/mensajes/chat/': { island: 'ChatIsland', props: {}, title: 'Chat' },
+    /* Chat individual: /mensajes/chat/:conversacionId. Sin `params` la ruta no recibia el id
+     * y el chat no abria; `/mensajes/<id>/` tampoco vale: el router lo resuelve por prefijo
+     * a `/mensajes/` y vuelve a pintar la lista. */
+    '/mensajes/chat/': { island: 'ChatIsland', props: { conversacionId: '' }, title: 'Chat', params: ':conversacionId' },
 
     '/admin/dashboard/': { island: 'DashboardCreadorIsland', props: {}, title: 'Dashboard' },
     '/admin/panel/': { island: 'AdminPanelIsland', props: {}, title: 'Admin' },

@@ -78,19 +78,24 @@ export const useChatIsland = ({ conversacionId: propId }: UseChatIslandParams) =
 
     const miId = usuario?.id ?? 1;
 
-    /* Obtener ID de conversación de la URL si no viene por props */
-    const conversacionId = propId
-        ? parseInt(propId, 10)
-        : (() => {
-              const path = rutaActual();
-              const partes = path.split('/').filter(Boolean);
-              const idx = partes.indexOf('mensajes');
-              return idx >= 0 && partes[idx + 1] ? parseInt(partes[idx + 1], 10) : null;
-          })();
+    /* ID de conversación: prop de la ruta o el segmento que sigue a `chat`
+     * (/mensajes/chat/<id>/). Se valida con Number.isInteger porque parseInt('chat')
+     * devuelve NaN y NaN es falso: la ruta sin id se colaba como "sin conversación"
+     * y la isla se quedaba cargando para siempre. */
+    const conversacionId = (() => {
+        const crudo = propId ?? rutaActual().split('/').filter(Boolean)[2] ?? '';
+        const id = parseInt(crudo, 10);
+        return Number.isInteger(id) && id > 0 ? id : null;
+    })();
 
     /* Cargar conversación y mensajes más recientes — con cleanup */
     useEffect(() => {
-        if (!conversacionId) return;
+        /* Sin id no hay nada que cargar: se apaga el cargando para que la isla pueda
+         * explicarlo, en vez de dejar el esqueleto para siempre. */
+        if (!conversacionId) {
+            setCargando(false);
+            return;
+        }
         let activo = true;
 
         const cargar = async () => {
@@ -271,7 +276,7 @@ export const useChatIsland = ({ conversacionId: propId }: UseChatIslandParams) =
 
     return {
         mensajes, gruposMensajes, textoMensaje, setTextoMensaje,
-        enviando, cargando, conversacion, miId,
+        enviando, cargando, conversacion, miId, conversacionId,
         hayMas, cargandoMas, manejarScroll,
         mensajesRef, inputRef, archivoRef,
         navegar, manejarEnviar, manejarArchivo, manejarKeyDown,

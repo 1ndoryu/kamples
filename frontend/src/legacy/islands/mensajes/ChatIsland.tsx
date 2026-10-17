@@ -24,7 +24,7 @@ interface ChatIslandProps {
 const ChatIslandBase = ({ conversacionId: propId }: ChatIslandProps): JSX.Element => {
     const {
         gruposMensajes, textoMensaje, setTextoMensaje,
-        enviando, cargando, conversacion, miId, mensajes,
+        enviando, cargando, conversacion, miId, mensajes, conversacionId,
         cargandoMas, manejarScroll,
         mensajesRef, inputRef, archivoRef,
         navegar, manejarEnviar, manejarArchivo, manejarKeyDown,
@@ -69,6 +69,9 @@ const ChatIslandBase = ({ conversacionId: propId }: ChatIslandProps): JSX.Elemen
                             <Skeleton key={`chat-skeleton-${i}`} ancho={i % 2 === 0 ? '60%' : '45%'} alto={36} className={i % 2 === 0 ? '' : 'skeleton'} />
                         ))}
                     </div>
+                ) : !conversacionId ? (
+                    /* Ruta sin id: se explica en vez de dejar el esqueleto cargando. */
+                    <EstadoVacio mensaje="No se especificó una conversación" />
                 ) : mensajes.length === 0 ? (
                     <EstadoVacio mensaje="Inicia la conversación" />
                 ) : (
