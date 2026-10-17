@@ -70,8 +70,12 @@
     --radioMd: 4px;
     --radioLg: 4px;
     --radioFull: 9999px;
-    --sombraElevada: unset;
-    --sombraModal: unset;
+    /* [por que] `none` y no `unset`: `unset` sobre una custom property la deja
+     * inválida de verdad, así que `box-shadow: var(--sombraElevada, X)` se caía al
+     * fallback X en vez de no poner sombra, y `--panelSombra: var(--sombraElevada)`
+     * quedaba inválido en cascada. El tema es plano: la intención es «sin sombra». */
+    --sombraElevada: none;
+    --sombraModal: none;
     --overlayFuerte: rgba(0, 0, 0, 0.85);
     --overlayOscuro: rgba(0, 0, 0, 0.7);
     --overlaySuave: rgba(0, 0, 0, 0.4);

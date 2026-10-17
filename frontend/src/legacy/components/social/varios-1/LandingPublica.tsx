@@ -104,7 +104,11 @@ export const LandingPublica = (): JSX.Element => {
                     className="landingSeccionSync"
                     width={SVG_W}
                     height={SVG_H}
-                    fetchPriority="high"
+                    /* [por que] en minúscula: React 18 no conoce `fetchPriority` en
+                     * camelCase, así que avisaba por consola y NO ponía el atributo
+                     * (la imagen del hero perdía la prioridad de descarga). Mismo
+                     * criterio que OptimizedImage.tsx:62. */
+                    {...({ fetchpriority: 'high' } as Record<string, string>)}
                     decoding="async"
                 />
             </section>

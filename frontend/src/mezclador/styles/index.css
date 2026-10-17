@@ -1,7 +1,11 @@
 /* index.css — Punto de entrada de estilos del Mezclador (C293) */
 
-
-
+/* [por que] `variables.css` declara `--radiusMezclador` y `--colorPista` en :root
+ * y nadie lo importaba: el fichero quedaba muerto desde el primer commit. Sus dos
+ * tokens se referencian 73 y 2 veces desde los parciales de abajo, así que sin este
+ * @import el `border-radius` de 73 reglas y el `background` de la regla temporal
+ * (mezcladorTimeline.css:245,247) quedaban inválidos y se caían a su valor inicial. */
+@import './variables.css';
 @import './mezclador/mezcladorBase.css';
 @import './mezclador/mezcladorTimeline.css';
 @import './mezclador/mezcladorBloques.css';
