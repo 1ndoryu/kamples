@@ -151,9 +151,11 @@ const DescargasBase = (): JSX.Element => {
                         <span className="coleccionStats">
                             {tabActiva === 'ideas'
                                 ? t('feed.sugerenciasPersonalizadas')
-                                : totalHeader > 0
-                                    ? `${totalHeader} ${t(totalHeader === 1 ? 'feed.sample' : 'feed.samples')}`
-                                    : t('common.cargando')
+                                /* Se muestra el conteo aunque sea 0: usarlo como señal de
+                                 * "cargando" dejaba el header en "Cargando..." para siempre
+                                 * en una cuenta sin coleccionados, mientras el cuerpo ya
+                                 * explicaba el vacío. El cuerpo ya tiene su esqueleto. */
+                                : `${totalHeader} ${t(totalHeader === 1 ? 'feed.sample' : 'feed.samples')}`
                             }
                         </span>
                     </div>
