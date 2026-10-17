@@ -1,7 +1,8 @@
 {
   "variableFiles": [
-    "frontend/src/styles/tokens.css",
-    "frontend/src/legacy/styles/variables.css"
+    "frontend/src/legacy/styles/variables.css",
+    "frontend/src/legacy/styles/tokensHeredados.css",
+    "frontend/src/mezclador/styles/variables.css"
   ],
   "includePatterns": [
     "frontend/src/**/*.css",

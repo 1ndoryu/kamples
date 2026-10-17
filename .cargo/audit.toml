@@ -10,10 +10,14 @@ ignore = [
     # `cargo check --all-targets` compila en verde sin ellos). El backend no hace operaciones RSA.
     # Pero siguen en Cargo.lock: el lock es independiente de features y cargo los vuelve a añadir al
     # re-resolver (probado: borrarlos del lock, incluso con sus aristas, y cargo los repone), así que
-    # no se pueden podar a mano. Regenerar el lock desde cero tampoco se puede hoy: 134 de las 136
-    # versiones publicadas de `zip` están *yanked* (solo 9.0.3 y 9.0.4 quedan) y ningún
-    # `utoipa-swagger-ui` publicado acepta `zip ^9` (8.x→^2, 9.0.2→^3.0, 10.x→^8.6). Mientras el
-    # lock no se pueda regenerar, cargo-audit seguirá viendo la entrada y esta excepción sigue haciendo falta.
+    # no se pueden podar a mano. [corregido 16AA-19] Aquí decía que regenerar el lock era imposible
+    # porque `zip` estaba *yanked* salvo 9.0.3/9.0.4: es falso. Comprobado contra crates.io el
+    # 2026-10-16, quedan 9 versiones sin yanked (9.0.4, 9.0.3, 8.6.0, 7.4.0, 6.0.0, 5.1.1, 4.6.1,
+    # 3.0.0, 2.6.1), y `zip 8.6.0` sí satisface a `utoipa-swagger-ui` 10.x (que pide ^8.6), así que
+    # el lock se puede regenerar. Da igual: regenerarlo NO quitaría `rsa`, porque el lock lista las
+    # dependencias opcionales y `rsa` entra por `sqlx-mysql 0.8.6` (Cargo.lock:4472), que está en el
+    # lock aunque la feature `any` de sqlx esté apagada. Es decir, `zip` nunca fue el motivo de que
+    # esta excepción siga haciendo falta; el motivo real es que el lock no se poda.
     # Decidido: excepción de 1 mes (2026-10-12). VENCE 2026-11-12.
     # Al vencer: renovar con fecha nueva; solo se puede quitar cuando el lock se regenere (ver [16A-4]).
     "RUSTSEC-2023-0071",
