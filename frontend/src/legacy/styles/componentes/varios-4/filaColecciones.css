@@ -70,7 +70,9 @@
     justify-content: space-between;
     gap: var(--espacioSm);
     padding: var(--espacioMd);
-    background: linear-gradient(to top, var(--overlayOscuro) 0%, rgba(0, 0, 0, 0.55) 36%, rgba(0, 0, 0, 0.08) 100%);
+    /* El degradado se arma con tokens, no con negro en crudo: si no, el scrim quedaba
+     * igual de oscuro en tema claro y oscuro (el token baja de 0.7 a 0.24 al aclarar). */
+    background: linear-gradient(to top, var(--overlayOscuro) 0%, var(--overlaySuave) 36%, transparent 100%);
 }
 
 .filaColeccionAutor {
