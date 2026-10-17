@@ -52,7 +52,7 @@ impl BlockRepository {
     pub async fn list(pool: &PgPool, blocker_id: i32) -> Result<Vec<BlockedUser>, AppError> {
         let rows = sqlx::query_as!(
             BlockedUser,
-            "SELECT b.id, b.bloqueado_id, u.username, b.razon, b.created_at AS \"created_at!\" \
+            "SELECT b.id, b.bloqueado_id, u.username AS \"username?\", b.razon, b.created_at AS \"created_at!\" \
              FROM bloqueos b \
              LEFT JOIN usuarios_ext u ON u.id = b.bloqueado_id \
              WHERE b.bloqueador_id = $1 \

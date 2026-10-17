@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT b.id, b.bloqueado_id, u.username, b.razon, b.created_at AS \"created_at!\" FROM bloqueos b LEFT JOIN usuarios_ext u ON u.id = b.bloqueado_id WHERE b.bloqueador_id = $1 ORDER BY b.created_at DESC",
+  "query": "SELECT b.id, b.bloqueado_id, u.username AS \"username?\", b.razon, b.created_at AS \"created_at!\" FROM bloqueos b LEFT JOIN usuarios_ext u ON u.id = b.bloqueado_id WHERE b.bloqueador_id = $1 ORDER BY b.created_at DESC",
   "describe": {
     "columns": [
       {
@@ -15,7 +15,7 @@
       },
       {
         "ordinal": 2,
-        "name": "username",
+        "name": "username?",
         "type_info": "Varchar"
       },
       {
@@ -42,5 +42,5 @@
       false
     ]
   },
-  "hash": "e5a4d09105608ce06ef7e8ab8f3c9b22de16ae8ff7f8354885fdda32774d6386"
+  "hash": "bfc3c12c2a3bd9b630f1b28bf2eca4a1020f5548ed4cc26bddabee0f7a5570d7"
 }

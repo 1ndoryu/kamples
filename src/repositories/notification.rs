@@ -73,9 +73,9 @@ impl NotificationRepository {
                       COALESCE(n.leida, FALSE) AS "leida!",
                       n.enlace AS "enlace",
                       n.created_at AS "creada_at!: chrono::DateTime<chrono::Utc>",
-                      u.username AS "actor_username",
-                      COALESCE(u.nombre_visible, u.username) AS "actor_display_name",
-                      u.avatar_url AS "actor_avatar_url"
+                      u.username AS "actor_username?",
+                      COALESCE(u.nombre_visible, u.username) AS "actor_display_name?",
+                      u.avatar_url AS "actor_avatar_url?"
                FROM notificaciones n
                LEFT JOIN usuarios_ext u
                  ON u.id = n.actor_id
