@@ -123,10 +123,13 @@ async function main() {
 
     /* Arrancar backend Rust en background */
     console.log(`[launch-tauri] Iniciando backend Rust (puerto ${backendPort})...`);
-    backendProc = spawn('cargo run --bin glory-backend', {
+    /* Programa y argumentos por separado: con la cadena entera y `shell: isWin`, en Linux
+     * (shell:false) Node buscaba un ejecutable llamado literalmente "cargo run --bin
+     * glory-backend" y moria con ENOENT. Desde que el portatil no lleva toolchain de Rust,
+     * el unico sitio que compila el cliente es la 89, asi que el wrapper tiene que correr ahi. */
+    backendProc = spawn(cmdName('cargo'), ['run', '--bin', 'glory-backend'], {
         cwd: projectRoot,
         stdio: 'inherit',
-        shell: isWin,
         env: { ...process.env },
     });
 
