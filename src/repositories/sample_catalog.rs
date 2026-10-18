@@ -9,6 +9,7 @@ mod scoring;
 mod similar;
 
 pub use aggregates::{TagAggregateFilters, TagAggregateItem, TagAggregatesResult};
+pub use scoring::CriterioScoring;
 
 use query::{
     push_auto_hide_filter, push_guardado_en_coleccion_select, push_public_filters,

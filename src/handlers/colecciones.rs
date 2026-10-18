@@ -29,8 +29,8 @@ use crate::errors::AppError;
 use crate::middleware::{CurrentUser, OptionalUser};
 use crate::models::SampleSummary;
 use crate::repositories::{
-    Coleccion, ColeccionSample, ColeccionesRepository, SampleContextRow, SampleRepository,
-    SavedColeccion, SavedCollectionsRepository,
+    Coleccion, ColeccionSample, ColeccionesRepository, CriterioScoring, SampleContextRow,
+    SampleRepository, SavedColeccion, SavedCollectionsRepository,
 };
 use crate::services::build_sample_summary;
 use crate::AppState;
@@ -457,12 +457,15 @@ pub async fn sugerencias_coleccion(
     let exclude = ColeccionesRepository::ids_muestras(&state.pool, id).await?;
     let (top_tags, avg_bpm, dominant_key) = aggregate_coleccion_context(&contexto);
 
+    let criterio = CriterioScoring {
+        top_tags: &top_tags,
+        avg_bpm,
+        dominant_key: dominant_key.as_deref(),
+        exclude_ids: &exclude,
+    };
     let records = SampleRepository::find_samples_by_aggregated_scoring(
         &state.pool,
-        &top_tags,
-        avg_bpm,
-        dominant_key.as_deref(),
-        &exclude,
+        criterio,
         per_page,
         offset,
         viewer_id,

@@ -19,18 +19,29 @@ use super::{SampleCatalogSummaryRecord, SampleRepository};
 
 const MAX_SCORING_TAGS: usize = 10;
 
+/// Perfil agregado (tags, BPM y tonalidad dominantes) contra el que se puntúan los samples.
+#[derive(Clone, Copy)]
+pub struct CriterioScoring<'a> {
+    pub top_tags: &'a [String],
+    pub avg_bpm: i32,
+    pub dominant_key: Option<&'a str>,
+    pub exclude_ids: &'a [i32],
+}
+
 impl SampleRepository {
-    #[allow(clippy::too_many_arguments)]
     pub async fn find_samples_by_aggregated_scoring(
         pool: &PgPool,
-        top_tags: &[String],
-        avg_bpm: i32,
-        dominant_key: Option<&str>,
-        exclude_ids: &[i32],
+        criterio: CriterioScoring<'_>,
         limit: i64,
         offset: i64,
         viewer_id: Option<i32>,
     ) -> Result<Vec<SampleCatalogSummaryRecord>, sqlx::Error> {
+        let CriterioScoring {
+            top_tags,
+            avg_bpm,
+            dominant_key,
+            exclude_ids,
+        } = criterio;
         let mut builder = QueryBuilder::<Postgres>::new(SAMPLE_SUMMARY_SELECT);
         push_guardado_en_coleccion_select(&mut builder, viewer_id);
         push_reaccion_select(&mut builder, viewer_id);

@@ -137,7 +137,8 @@ pub use sample::{
     SaveAudioAssetsParams,
 };
 pub use sample_catalog::{
-    OwnedSampleRecord, SampleCatalogDetailRecord, SampleCatalogSummaryRecord, SampleListFilters,
+    CriterioScoring, OwnedSampleRecord, SampleCatalogDetailRecord, SampleCatalogSummaryRecord,
+    SampleListFilters,
     SampleListResult, SampleSortOrder, SampleTextSearch, TagAggregateFilters, TagAggregateItem,
     TagAggregatesResult, UpdateSamplePatch,
 };

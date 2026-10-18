@@ -23,7 +23,9 @@ use utoipa::{IntoParams, ToSchema};
 use crate::errors::AppError;
 use crate::middleware::CurrentUser;
 use crate::models::SampleSummary;
-use crate::repositories::{BibliotecaRepository, SampleContextRow, SampleRepository};
+use crate::repositories::{
+    BibliotecaRepository, CriterioScoring, SampleContextRow, SampleRepository,
+};
 use crate::services::build_sample_summary;
 use crate::AppState;
 
@@ -92,12 +94,15 @@ pub async fn sugerencias_descargas(
     let (top_tags, avg_bpm, dominant_key) = aggregate_context(&contexto);
 
     /* 4. Scoring + fetch. */
+    let criterio = CriterioScoring {
+        top_tags: &top_tags,
+        avg_bpm,
+        dominant_key: dominant_key.as_deref(),
+        exclude_ids: &exclude,
+    };
     let records = SampleRepository::find_samples_by_aggregated_scoring(
         &state.pool,
-        &top_tags,
-        avg_bpm,
-        dominant_key.as_deref(),
-        &exclude,
+        criterio,
         limite,
         offset,
         Some(user.user_id),
@@ -142,12 +147,15 @@ pub async fn sugerencias_favoritos(
     let exclude = BibliotecaRepository::ids_favoritos(&state.pool, user.user_id).await?;
     let (top_tags, avg_bpm, dominant_key) = aggregate_context(&contexto);
 
+    let criterio = CriterioScoring {
+        top_tags: &top_tags,
+        avg_bpm,
+        dominant_key: dominant_key.as_deref(),
+        exclude_ids: &exclude,
+    };
     let records = SampleRepository::find_samples_by_aggregated_scoring(
         &state.pool,
-        &top_tags,
-        avg_bpm,
-        dominant_key.as_deref(),
-        &exclude,
+        criterio,
         limite,
         offset,
         Some(user.user_id),

@@ -12,7 +12,7 @@ use crate::models::{
     AuthResponse, GoogleAuthRequest, GooglePkceRequest, LoginRequest, LogoutRequest,
     RefreshRequest, RegisterRequest,
 };
-use crate::services::{AuthService, EmailNotificationService};
+use crate::services::{AuthService, EmailNotificationService, PkceExchange};
 use crate::AppState;
 
 #[utoipa::path(post, path = "/api/auth/register", request_body = RegisterRequest,
@@ -137,14 +137,17 @@ pub async fn google_pkce(
 ) -> Result<Json<AuthResponse>, AppError> {
     req.validate()
         .map_err(|e| AppError::Validation(e.to_string()))?;
+    let pkce = PkceExchange {
+        code: &req.code,
+        code_verifier: &req.code_verifier,
+        redirect_uri: &req.redirect_uri,
+        client_id_hint: req.client_id.as_deref(),
+    };
     let resp = AuthService::google_pkce_login(
         &state.pool,
         &state.redis,
         &state.google,
-        &req.code,
-        &req.code_verifier,
-        &req.redirect_uri,
-        req.client_id.as_deref(),
+        pkce,
         &state.jwt_secret,
     )
     .await?;

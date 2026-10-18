@@ -116,16 +116,14 @@ pub async fn correct_sample_metadata(
         cambios.insert("descripcion".into(), Value::String(desc.clone()));
     }
 
-    apply_correction_update(
-        pool,
-        row.id,
-        &merged_metadata,
-        &new_type,
-        title_and_slug.as_ref(),
-        new_tags.as_deref(),
-        new_description.as_deref(),
-    )
-    .await?;
+    let campos = CambiosCorreccion {
+        metadata: &merged_metadata,
+        new_type: &new_type,
+        title_and_slug: title_and_slug.as_ref(),
+        new_tags: new_tags.as_deref(),
+        new_description: new_description.as_deref(),
+    };
+    apply_correction_update(pool, row.id, campos).await?;
 
     Ok(CorrectionOutcome {
         ok: true,
@@ -298,16 +296,27 @@ fn pick_new_description(metadata: &AudioCreativeMetadata) -> Option<String> {
     }
 }
 
-#[allow(clippy::too_many_arguments)]
+/// Campos que la corrección IA reescribe en `samples`; agrupados para no alargar la firma.
+struct CambiosCorreccion<'a> {
+    metadata: &'a Value,
+    new_type: &'a str,
+    title_and_slug: Option<&'a (String, String)>,
+    new_tags: Option<&'a [String]>,
+    new_description: Option<&'a str>,
+}
+
 async fn apply_correction_update(
     pool: &PgPool,
     sample_id: i32,
-    metadata: &Value,
-    new_type: &str,
-    title_and_slug: Option<&(String, String)>,
-    new_tags: Option<&[String]>,
-    new_description: Option<&str>,
+    cambios: CambiosCorreccion<'_>,
 ) -> Result<(), AppError> {
+    let CambiosCorreccion {
+        metadata,
+        new_type,
+        title_and_slug,
+        new_tags,
+        new_description,
+    } = cambios;
     /* [254A-8a lesson] Usar push_bind_unseparated tras push("col = ") para
      * que el separador (", ") solo aparezca entre asignaciones, no entre
      * "col = " y su bind. */

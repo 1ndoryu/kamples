@@ -44,7 +44,7 @@ pub use audio_pipeline::{
     AudioPipelineError, AudioPipelineRequest, AudioPipelineResult, AudioPipelineService,
     AudioPipelineStage, AudioTechnicalAnalysis, GeneratedAudioAssets,
 };
-pub use auth::{AuthService, Claims};
+pub use auth::{AuthService, Claims, PkceExchange};
 pub use email::{
     EmailDeliveryRuntime, EmailDeliveryRuntimeError, EmailNotificationService,
     NotificationOptInEmailInput, PurchaseConfirmationEmailInput,

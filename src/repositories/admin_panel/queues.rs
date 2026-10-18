@@ -60,13 +60,15 @@ impl AdminPanelRepository {
         Ok(AdminExtractionQueueResponse {
             data: fetch_extraction_queue(
                 pool,
-                search_like.as_deref(),
-                &states,
-                &sides,
-                sort_column,
-                sort_dir,
-                per_page,
-                offset,
+                PaginaCola {
+                    search_like: search_like.as_deref(),
+                    states: &states,
+                    sides: &sides,
+                    sort_column,
+                    sort_dir,
+                    limit: per_page,
+                    offset,
+                },
             )
             .await?,
             total: count_extraction_queue(pool, search_like.as_deref(), &states, &sides).await?,
@@ -173,17 +175,31 @@ async fn count_extraction_queue(
     Ok(row.total)
 }
 
-#[allow(clippy::too_many_arguments)] // builder paginado con filtros + orden + paginación; refactor a struct excede esta tarea
-async fn fetch_extraction_queue(
-    pool: &PgPool,
-    search_like: Option<&str>,
-    states: &[&'static str],
-    sides: &[&'static str],
+/// Filtros, orden y página de la cola de extracción: agrupa lo que `fetch_extraction_queue` necesita.
+#[derive(Clone, Copy)]
+struct PaginaCola<'a> {
+    search_like: Option<&'a str>,
+    states: &'a [&'static str],
+    sides: &'a [&'static str],
     sort_column: &'static str,
     sort_dir: &'static str,
     limit: i64,
     offset: i64,
+}
+
+async fn fetch_extraction_queue(
+    pool: &PgPool,
+    pagina: PaginaCola<'_>,
 ) -> Result<Vec<AdminExtractionQueueItem>, AppError> {
+    let PaginaCola {
+        search_like,
+        states,
+        sides,
+        sort_column,
+        sort_dir,
+        limit,
+        offset,
+    } = pagina;
     let mut builder = QueryBuilder::<Postgres>::new(
         r"SELECT
                 c.id,

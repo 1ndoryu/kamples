@@ -15,6 +15,15 @@ use crate::services::{GoogleVerifier, TokenStore};
 
 /* [174A-18+174A-20] JWT claims sobre `usuarios_ext`.
  * jti = identificador unico del access token (para revocacion via blacklist). */
+/// Datos del intercambio PKCE con Google: código, verificador, redirect y client_id opcional.
+#[derive(Clone, Copy)]
+pub struct PkceExchange<'a> {
+    pub code: &'a str,
+    pub code_verifier: &'a str,
+    pub redirect_uri: &'a str,
+    pub client_id_hint: Option<&'a str>,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
     pub sub: i32,
@@ -162,17 +171,19 @@ impl AuthService {
 
     /// [174A-22] PKCE flow para clientes desktop: intercambia code+verifier por
     /// id_token con Google, lo verifica y reusa la logica de google_login.
-    #[allow(clippy::too_many_arguments)]
     pub async fn google_pkce_login(
         pool: &PgPool,
         redis: &Option<RedisPool>,
         google: &GoogleVerifier,
-        code: &str,
-        code_verifier: &str,
-        redirect_uri: &str,
-        client_id_hint: Option<&str>,
+        pkce: PkceExchange<'_>,
         jwt_secret: &str,
     ) -> Result<AuthResponse, AppError> {
+        let PkceExchange {
+            code,
+            code_verifier,
+            redirect_uri,
+            client_id_hint,
+        } = pkce;
         let id_token = google
             .exchange_pkce(code, code_verifier, redirect_uri, client_id_hint)
             .await?;
