@@ -8,9 +8,8 @@ use sqlx::PgPool;
  * metadata_extraccion para que pipeline.py decida cómo tratarla
  * (extender, generar_siguiente, restaurar).
  *
- * Las consultas usan macros query!/query_as!/query_scalar! (validadas en
- * compilacion y cacheadas en .sqlx). Solo `find_by_sample_id` usa la forma
- * con turbofish, que el escaner no marca. */
+ * Todas las consultas usan macros query!/query_as!/query_scalar! (validadas en
+ * compilacion y cacheadas en .sqlx). */
 
 pub struct ColaExtraccionRepository;
 
@@ -70,10 +69,11 @@ impl ColaExtraccionRepository {
         pool: &PgPool,
         sample_id: i32,
     ) -> Result<Option<ColaExtraccionRow>, sqlx::Error> {
-        sqlx::query_as::<_, ColaExtraccionRow>(
-            "SELECT
-                id,
-                relacion_id,
+        sqlx::query_as!(
+            ColaExtraccionRow,
+            r#"SELECT
+                id AS "id!",
+                relacion_id AS "relacion_id!",
                 youtube_id,
                 compas_inicio_seg::DOUBLE PRECISION AS compas_inicio_seg,
                 compas_fin_seg::DOUBLE PRECISION    AS compas_fin_seg,
@@ -81,9 +81,9 @@ impl ColaExtraccionRepository {
                 sample_id
              FROM cola_extraccion_samples
              WHERE sample_id = $1
-             LIMIT 1",
+             LIMIT 1"#,
+            sample_id
         )
-        .bind(sample_id)
         .fetch_optional(pool)
         .await
     }
@@ -267,6 +267,88 @@ impl ColaExtraccionRepository {
         )
         .execute(pool)
         .await?;
+        Ok(())
+    }
+
+    /* [294A-6] Canciones (fuente, destino) de una relación; None si no existe. */
+    pub async fn canciones_de_relacion(
+        pool: &PgPool,
+        relacion_id: i32,
+    ) -> Result<Option<(i32, i32)>, sqlx::Error> {
+        let fila = sqlx::query!(
+            r#"SELECT cancion_fuente_id AS "cancion_fuente_id!",
+                      cancion_destino_id AS "cancion_destino_id!"
+               FROM relaciones_sample
+               WHERE id = $1"#,
+            relacion_id
+        )
+        .fetch_optional(pool)
+        .await?;
+        Ok(fila.map(|f| (f.cancion_fuente_id, f.cancion_destino_id)))
+    }
+
+    /* [294A-6] Vincula el sample al lado fuente o destino de la relación y fija
+     * samples.relacion_sampleo_id / cancion_origen_id. El UPDATE de la relación
+     * es una sola sentencia: la columna del otro lado queda igual a sí misma. */
+    pub async fn vincular_lado(
+        pool: &PgPool,
+        relacion_id: i32,
+        sample_id: i32,
+        es_fuente: bool,
+        cancion_id: i32,
+    ) -> Result<(), sqlx::Error> {
+        sqlx::query!(
+            "UPDATE relaciones_sample
+             SET sample_fuente_id  = CASE WHEN $3 THEN $2 ELSE sample_fuente_id END,
+                 sample_destino_id = CASE WHEN $3 THEN sample_destino_id ELSE $2 END,
+                 updated_at        = NOW()
+             WHERE id = $1",
+            relacion_id,
+            sample_id,
+            es_fuente
+        )
+        .execute(pool)
+        .await?;
+
+        sqlx::query!(
+            "UPDATE samples
+             SET relacion_sampleo_id = $2,
+                 cancion_origen_id   = $3
+             WHERE id = $1",
+            sample_id,
+            relacion_id,
+            cancion_id
+        )
+        .execute(pool)
+        .await?;
+        Ok(())
+    }
+
+    /* [294A-6] Hereda canciones.imagen_url al sample (paridad con
+     * PublicadorExtraccion::publicarItem PHP). Solo si el sample no tiene imagen
+     * y la canción la tiene no vacía. */
+    pub async fn heredar_imagen(
+        pool: &PgPool,
+        sample_id: i32,
+        cancion_id: i32,
+    ) -> Result<(), sqlx::Error> {
+        let imagen: Option<String> = sqlx::query_scalar!(
+            "SELECT imagen_url FROM canciones WHERE id = $1",
+            cancion_id
+        )
+        .fetch_optional(pool)
+        .await?
+        .flatten();
+
+        if let Some(url) = imagen.filter(|v| !v.trim().is_empty()) {
+            sqlx::query!(
+                "UPDATE samples SET imagen_url = $2 WHERE id = $1 AND imagen_url IS NULL",
+                sample_id,
+                url
+            )
+            .execute(pool)
+            .await?;
+        }
         Ok(())
     }
 }

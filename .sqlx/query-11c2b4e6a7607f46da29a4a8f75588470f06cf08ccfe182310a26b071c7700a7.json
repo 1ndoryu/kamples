@@ -1,0 +1,162 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT c.id,\n                      c.titulo,\n                      c.slug,\n                      c.artista_id,\n                      c.album,\n                      c.sello,\n                      c.anio,\n                      c.duracion_segundos,\n                      c.genero,\n                      c.youtube_id,\n                      c.spotify_id,\n                      c.imagen_url,\n                      c.whosampled_url,\n                      c.bpm,\n                      c.tonalidad,\n                      COALESCE(c.metadata, '{}'::jsonb) AS \"metadata!: serde_json::Value\",\n                      COALESCE(c.total_sampleada, 0) AS \"total_sampleada!\",\n                      COALESCE(c.total_samplea, 0) AS \"total_samplea!\",\n                      COALESCE(c.total_likes, 0) AS \"total_likes!\",\n                      COALESCE(c.total_comentarios, 0) AS \"total_comentarios!\",\n                      c.created_at AS \"created_at!\",\n                      c.updated_at AS \"updated_at!\",\n                      a.nombre AS \"artista_nombre!\",\n                      a.slug AS \"artista_slug!\"\n               FROM canciones c\n               INNER JOIN artistas_musicales a ON a.id = c.artista_id\n               WHERE (cardinality($1::text[]) = 0 OR c.genero = ANY($1::text[]))\n                 AND (cardinality($2::smallint[]) = 0 OR EXISTS (\n                       SELECT 1 FROM unnest($2::smallint[], $3::smallint[]) AS r(ini, fin)\n                        WHERE c.anio >= r.ini AND c.anio < r.fin))\n               ORDER BY RANDOM()\n               LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "titulo",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "slug",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "artista_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "album",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "sello",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "anio",
+        "type_info": "Int2"
+      },
+      {
+        "ordinal": 7,
+        "name": "duracion_segundos",
+        "type_info": "Int2"
+      },
+      {
+        "ordinal": 8,
+        "name": "genero",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 9,
+        "name": "youtube_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "spotify_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 11,
+        "name": "imagen_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 12,
+        "name": "whosampled_url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 13,
+        "name": "bpm",
+        "type_info": "Int2"
+      },
+      {
+        "ordinal": 14,
+        "name": "tonalidad",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 15,
+        "name": "metadata!: serde_json::Value",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 16,
+        "name": "total_sampleada!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 17,
+        "name": "total_samplea!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 18,
+        "name": "total_likes!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 19,
+        "name": "total_comentarios!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 20,
+        "name": "created_at!",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 21,
+        "name": "updated_at!",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 22,
+        "name": "artista_nombre!",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 23,
+        "name": "artista_slug!",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "TextArray",
+        "Int2Array",
+        "Int2Array"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      null,
+      null,
+      null,
+      null,
+      null,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "11c2b4e6a7607f46da29a4a8f75588470f06cf08ccfe182310a26b071c7700a7"
+}

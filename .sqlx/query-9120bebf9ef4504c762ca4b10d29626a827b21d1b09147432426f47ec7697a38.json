@@ -1,0 +1,35 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO samples (\n                creador_id, titulo, slug, id_corto, descripcion,\n                formato, tamano, tags, audio_hash,\n                estado, ruta_original,\n                permitir_descarga, licencia_libre, es_premium,\n                precio, mostrar_en_comunidad, metadata,\n                bpm, key, tipo, duracion\n            )\n            VALUES ($1, $2, $3, $4, $5,\n                    $6, $7, $8, $9,\n                    'activo', $10,\n                    true, false, false,\n                    0.0, true, $11,\n                    $12, $13, $14, 0.0)\n            RETURNING id AS \"id!\"\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Text",
+        "Varchar",
+        "Int8",
+        "TextArray",
+        "Varchar",
+        "Text",
+        "Jsonb",
+        "Int4",
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "9120bebf9ef4504c762ca4b10d29626a827b21d1b09147432426f47ec7697a38"
+}

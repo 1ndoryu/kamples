@@ -1,0 +1,71 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT u.id, u.username, u.email, u.nombre_visible, u.password_hash,\n                    u.plan, u.rol, u.estado, u.created_at\n             FROM usuarios_ext u\n             JOIN usuarios_ext_oauth o ON o.user_id = u.id\n             WHERE o.provider = $1 AND o.provider_sub = $2 LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "email",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "nombre_visible",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "password_hash",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "plan",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "rol",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "estado",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 8,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "7fa3b96096f6b001b0ff88d4ccd61424f31e9d1e876264ddc4637ea25faba48e"
+}

@@ -1,4 +1,3 @@
-use serde_json::Value as JsonValue;
 use sqlx::PgPool;
 
 use crate::errors::AppError;
@@ -6,10 +5,6 @@ use crate::models::{UpdateProfileRequest, UserProfile};
 
 /* [174A-24] Repositorio de perfil sobre `usuarios_ext`. */
 pub struct ProfileRepository;
-
-const PROFILE_COLS: &str = "id, username, email, nombre_visible, bio, avatar_url, portada_url, \
-    sitio_web, generos_favoritos, plan, rol, verificado, total_seguidores, total_seguidos, \
-    total_samples, total_descargas, estado, created_at";
 
 impl ProfileRepository {
     /// Perfiles básicos (id, username, nombre visible, avatar) de varios usuarios
@@ -31,100 +26,81 @@ impl ProfileRepository {
     }
 
     pub async fn find_by_id(pool: &PgPool, id: i32) -> Result<Option<UserProfile>, sqlx::Error> {
-        let sql = format!("SELECT {PROFILE_COLS} FROM usuarios_ext WHERE id = $1");
-        sqlx::query_as::<_, UserProfile>(&sql)
-            .bind(id)
-            .fetch_optional(pool)
-            .await
+        sqlx::query_as!(
+            UserProfile,
+            "SELECT id, username, email, nombre_visible, bio, avatar_url, portada_url, sitio_web,
+                    generos_favoritos, plan, rol, verificado, total_seguidores, total_seguidos,
+                    total_samples, total_descargas, estado, created_at
+             FROM usuarios_ext WHERE id = $1",
+            id
+        )
+        .fetch_optional(pool)
+        .await
     }
 
     pub async fn find_by_username(
         pool: &PgPool,
         username: &str,
     ) -> Result<Option<UserProfile>, sqlx::Error> {
-        let sql = format!("SELECT {PROFILE_COLS} FROM usuarios_ext WHERE username = $1");
-        sqlx::query_as::<_, UserProfile>(&sql)
-            .bind(username)
-            .fetch_optional(pool)
-            .await
+        sqlx::query_as!(
+            UserProfile,
+            "SELECT id, username, email, nombre_visible, bio, avatar_url, portada_url, sitio_web,
+                    generos_favoritos, plan, rol, verificado, total_seguidores, total_seguidos,
+                    total_samples, total_descargas, estado, created_at
+             FROM usuarios_ext WHERE username = $1",
+            username
+        )
+        .fetch_optional(pool)
+        .await
     }
 
-    /// Aplica patch parcial. Solo actualiza columnas con `Some(_)`.
+    /// Aplica patch parcial. Solo actualiza columnas con `Some(_)`: `COALESCE($n, col)`
+    /// conserva el valor actual cuando el campo llega vacío, sin SQL dinámico.
     pub async fn update(
         pool: &PgPool,
         user_id: i32,
         patch: &UpdateProfileRequest,
     ) -> Result<UserProfile, AppError> {
-        let mut idx = 1usize;
-        let mut clauses: Vec<String> = Vec::new();
-        let mut binders: Vec<Binder> = Vec::new();
-        if let Some(v) = &patch.nombre_visible {
-            clauses.push(format!("nombre_visible = ${}", {
-                idx += 1;
-                idx - 1
-            }));
-            binders.push(Binder::Str(v.clone()));
-        }
-        if let Some(v) = &patch.bio {
-            clauses.push(format!("bio = ${}", {
-                idx += 1;
-                idx - 1
-            }));
-            binders.push(Binder::Str(v.clone()));
-        }
-        if let Some(v) = &patch.avatar_url {
-            clauses.push(format!("avatar_url = ${}", {
-                idx += 1;
-                idx - 1
-            }));
-            binders.push(Binder::Str(v.clone()));
-        }
-        if let Some(v) = &patch.portada_url {
-            clauses.push(format!("portada_url = ${}", {
-                idx += 1;
-                idx - 1
-            }));
-            binders.push(Binder::Str(v.clone()));
-        }
-        if let Some(v) = &patch.sitio_web {
-            clauses.push(format!("sitio_web = ${}", {
-                idx += 1;
-                idx - 1
-            }));
-            binders.push(Binder::Str(v.clone()));
-        }
-        if let Some(v) = &patch.generos_favoritos {
-            clauses.push(format!("generos_favoritos = ${}", {
-                idx += 1;
-                idx - 1
-            }));
-            binders.push(Binder::Json(v.clone()));
-        }
-
-        if clauses.is_empty() {
+        // Sin campos que cambiar no hay UPDATE: se devuelve el perfil tal cual.
+        if sin_cambios(patch) {
             return Self::find_by_id(pool, user_id)
                 .await?
                 .ok_or(AppError::NotFound("Usuario".into()));
         }
 
-        let sql = format!(
-            "UPDATE usuarios_ext SET {set_clause} WHERE id = ${id_pos} RETURNING {PROFILE_COLS}",
-            set_clause = clauses.join(", "),
-            id_pos = idx,
-        );
-        let mut q = sqlx::query_as::<_, UserProfile>(&sql);
-        for b in &binders {
-            q = match b {
-                Binder::Str(s) => q.bind(s),
-                Binder::Json(j) => q.bind(j),
-            };
-        }
-        q = q.bind(user_id);
-        Ok(q.fetch_one(pool).await?)
+        let perfil = sqlx::query_as!(
+            UserProfile,
+            "UPDATE usuarios_ext SET
+                nombre_visible    = COALESCE($1, nombre_visible),
+                bio               = COALESCE($2, bio),
+                avatar_url        = COALESCE($3, avatar_url),
+                portada_url       = COALESCE($4, portada_url),
+                sitio_web         = COALESCE($5, sitio_web),
+                generos_favoritos = COALESCE($6, generos_favoritos)
+             WHERE id = $7
+             RETURNING id, username, email, nombre_visible, bio, avatar_url, portada_url, sitio_web,
+                       generos_favoritos, plan, rol, verificado, total_seguidores, total_seguidos,
+                       total_samples, total_descargas, estado, created_at",
+            patch.nombre_visible.as_deref(),
+            patch.bio.as_deref(),
+            patch.avatar_url.as_deref(),
+            patch.portada_url.as_deref(),
+            patch.sitio_web.as_deref(),
+            patch.generos_favoritos.clone(),
+            user_id
+        )
+        .fetch_one(pool)
+        .await?;
+        Ok(perfil)
     }
 }
 
-enum Binder {
-    Str(String),
-    Json(JsonValue),
+/// `true` cuando el patch no trae ningún campo: no hace falta tocar la fila.
+fn sin_cambios(patch: &UpdateProfileRequest) -> bool {
+    patch.nombre_visible.is_none()
+        && patch.bio.is_none()
+        && patch.avatar_url.is_none()
+        && patch.portada_url.is_none()
+        && patch.sitio_web.is_none()
+        && patch.generos_favoritos.is_none()
 }

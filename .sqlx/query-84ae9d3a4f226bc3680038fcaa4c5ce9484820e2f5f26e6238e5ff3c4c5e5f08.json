@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT creador_id AS \"creador_id!\", slug AS \"slug!\"\n               FROM samples WHERE id = $1 AND eliminado_en IS NULL",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "creador_id!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "slug!",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "84ae9d3a4f226bc3680038fcaa4c5ce9484820e2f5f26e6238e5ff3c4c5e5f08"
+}

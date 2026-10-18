@@ -36,10 +36,9 @@ impl PrecomputeService {
     /// migration). Si la vista nunca se ha poblado (primer arranque) cae a
     /// REFRESH no-concurrente.
     pub async fn refresh(pool: &PgPool) -> Result<(), AppError> {
-        /* REFRESH MATERIALIZED VIEW es DDL de mantenimiento — PostgreSQL no soporta
-         * su preparacion via extended query protocol. query!() macro no aplica aqui.
-         * Fase3-sqlx: no convertible — DDL no preparable. */
-        match sqlx::query("REFRESH MATERIALIZED VIEW CONCURRENTLY mv_trending_samples")
+        /* Literales fijos: sqlx ya envía REFRESH por el protocolo extendido, así
+         * que la macro lo valida contra la BD en compilación como cualquier otra. */
+        match sqlx::query!("REFRESH MATERIALIZED VIEW CONCURRENTLY mv_trending_samples")
             .execute(pool)
             .await
         {
@@ -50,8 +49,8 @@ impl PrecomputeService {
                  * cuando la MV no se ha populado nunca. En ese caso lo único
                  * válido es un refresh no-concurrente. */
                 if msg.contains("has not been populated") || msg.contains("must be populated") {
-                    /* Fallback no-concurrente: misma razon de no conversion que el CONCURRENT arriba. */
-                    sqlx::query("REFRESH MATERIALIZED VIEW mv_trending_samples")
+                    /* Fallback no-concurrente: primer refresh, la vista aún no tiene datos. */
+                    sqlx::query!("REFRESH MATERIALIZED VIEW mv_trending_samples")
                         .execute(pool)
                         .await?;
                     Ok(())

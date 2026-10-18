@@ -1,0 +1,19 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE samples\n             SET ruta_original = $2,\n                 audio_hash    = $3,\n                 tamano        = $4,\n                 formato       = $5,\n                 estado        = 'procesando',\n                 ruta_optimizada = NULL,\n                 ruta_waveform   = NULL,\n                 metadata = COALESCE(metadata, '{}'::jsonb) || $6\n             WHERE id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text",
+        "Varchar",
+        "Int8",
+        "Varchar",
+        "Jsonb"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f7b570ea695aac68b5bcb8b58c5a1e413a329809715073d77328cfff17b365b1"
+}

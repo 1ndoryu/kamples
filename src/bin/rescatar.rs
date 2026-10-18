@@ -218,8 +218,9 @@ fn main() -> Result<()> {
         let tipo_sample = metadata.tipo.as_deref().map_or("loop", map_tipo);
 
         // INSERT con todos los campos relevantes
-        let row: (i32,) = sqlx::query_as(
-            r"
+        // Los argumentos son tipados por la columna: bpm INT, key VARCHAR(3), tamano BIGINT
+        let fila_id = sqlx::query_scalar!(
+            r#"
             INSERT INTO samples (
                 creador_id, titulo, slug, id_corto, descripcion,
                 formato, tamano, tags, audio_hash,
@@ -234,32 +235,32 @@ fn main() -> Result<()> {
                     true, false, false,
                     0.0, true, $11,
                     $12, $13, $14, 0.0)
-            RETURNING id
-            ",
+            RETURNING id AS "id!"
+            "#,
+            args.creador_id,
+            titulo,
+            slug,
+            id_corto,
+            "Sample rescatado del servidor",
+            formato,
+            tamano,
+            &tags,
+            audio_hash,
+            storage_key,
+            meta,
+            metadata.bpm,
+            metadata.key.as_deref(),
+            tipo_sample
         )
-        .bind(args.creador_id)
-        .bind(&titulo)
-        .bind(&slug)
-        .bind(&id_corto)
-        .bind("Sample rescatado del servidor") // descripcion
-        .bind(&formato)
-        .bind(tamano)
-        .bind(&tags)
-        .bind(&audio_hash)
-        .bind(&storage_key)
-        .bind(&meta)
-        .bind(metadata.bpm) // Option<i32>
-        .bind(metadata.key.as_deref()) // Option<&str>
-        .bind(tipo_sample)
         .fetch_one(&pool)
         .await
         .context("Error al insertar sample en BD")?;
 
         // Actualizar contador en usuarios_ext
-        sqlx::query(
+        sqlx::query!(
             "UPDATE usuarios_ext SET total_samples = COALESCE(total_samples, 0) + 1 WHERE id = $1",
+            args.creador_id
         )
-        .bind(args.creador_id)
         .execute(&pool)
         .await
         .context("Error al actualizar contador de samples del usuario")?;
@@ -295,8 +296,9 @@ fn main() -> Result<()> {
 
         // Actualizar sample con duración, ruta_optimizada (mismo archivo, ya es MP3),
         // waveform y publicado_at para que aparezca primero en "Recientes"
-        sqlx::query(
-            r"
+        // duracion es REAL en BD: el f32 de inspect_audio_file encaja sin conversión
+        sqlx::query!(
+            r#"
             UPDATE samples
             SET duracion = $1,
                 ruta_optimizada = $2,
@@ -304,28 +306,28 @@ fn main() -> Result<()> {
                 publicado_at = $4,
                 formato = $5
             WHERE id = $6
-            ",
+            "#,
+            duracion,
+            storage_key, // ruta_optimizada = misma que original (ya es MP3)
+            waveform_key,
+            Utc::now(),
+            formato,
+            fila_id
         )
-        .bind(duracion)
-        .bind(&storage_key) // ruta_optimizada = misma que original (ya es MP3)
-        .bind(&waveform_key)
-        .bind(Utc::now())
-        .bind(&formato)
-        .bind(row.0)
         .execute(&pool)
         .await
         .context("Error al actualizar análisis de audio en BD")?;
 
         // Encolar análisis IA técnico (cola_procesamiento_ia) para workers
         // que procesan embedding vectorial cuando estén habilitados.
-        sqlx::query(
-            r"
+        sqlx::query!(
+            r#"
             INSERT INTO cola_procesamiento_ia (tipo, entidad_id, operacion, metadata)
             VALUES ('sample', $1, 'analisis_audio', $2)
-            ",
+            "#,
+            fila_id,
+            serde_json::json!({"prioridad": "baja", "origen": "rescate"})
         )
-        .bind(row.0)
-        .bind(serde_json::json!({"prioridad": "baja", "origen": "rescate"}))
         .execute(&pool)
         .await
         .context("Error al encolar análisis IA técnico")?;
@@ -335,21 +337,21 @@ fn main() -> Result<()> {
         // Esto salta el pipeline técnico (rescatar ya hizo duración/waveform/BPM/key).
         // Usamos ON CONFLICT sobre el índice parcial para no duplicar si ya existe
         // una entrada activa para este sample.
-        sqlx::query(
-            r"
+        sqlx::query!(
+            r#"
             INSERT INTO ia_queue (sample_id, status, metadata)
             VALUES ($1, 'pending', $2)
             ON CONFLICT (sample_id) WHERE status IN ('pending', 'processing', 'retry_scheduled')
             DO NOTHING
-            ",
+            "#,
+            fila_id,
+            serde_json::json!({"origen": "rescate"})
         )
-        .bind(row.0)
-        .bind(serde_json::json!({"origen": "rescate"}))
         .execute(&pool)
         .await
         .context("Error al encolar metadata creativa IA")?;
 
-        Ok::<i32, anyhow::Error>(row.0)
+        Ok::<i32, anyhow::Error>(fila_id)
     })?;
 
     // ─── 10. Resultado final ────────────────────────────────────────────────

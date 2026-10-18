@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT c.id AS \"id!\", c.titulo AS \"titulo!\", a.nombre AS \"nombre!\"\n          FROM canciones c\n          INNER JOIN artistas_musicales a ON a.id = c.artista_id\n         WHERE (c.imagen_url IS NULL OR TRIM(c.imagen_url) = '')\n           AND COALESCE(\n                 (c.metadata->>'imagen_lookup_at')::timestamptz,\n                 'epoch'::timestamptz\n               ) < NOW() - make_interval(days => $1)\n         ORDER BY c.total_sampleada DESC NULLS LAST, c.id ASC\n         LIMIT 1\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "titulo!",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "nombre!",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "dddd3615d6f7eb2c96787d8f75cf9ae98da3c215d49844d8c005daf4769f1ff8"
+}

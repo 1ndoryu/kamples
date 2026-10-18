@@ -1,0 +1,100 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO algoritmo_estado (usuario_id, cnt_likes, cnt_reproducciones, cnt_completas, cnt_descargas, cnt_follows, cnt_comentarios, cnt_likes_preciso, cnt_reproducciones_preciso, cnt_completas_preciso, cnt_descargas_preciso, cnt_follows_preciso, cnt_comentarios_preciso, ultima_actividad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW()) ON CONFLICT (usuario_id) DO UPDATE SET cnt_likes = algoritmo_estado.cnt_likes + $2, cnt_reproducciones = algoritmo_estado.cnt_reproducciones + $3, cnt_completas = algoritmo_estado.cnt_completas + $4, cnt_descargas = algoritmo_estado.cnt_descargas + $5, cnt_follows = algoritmo_estado.cnt_follows + $6, cnt_comentarios = algoritmo_estado.cnt_comentarios + $7, cnt_likes_preciso = algoritmo_estado.cnt_likes_preciso + $8, cnt_reproducciones_preciso = algoritmo_estado.cnt_reproducciones_preciso + $9, cnt_completas_preciso = algoritmo_estado.cnt_completas_preciso + $10, cnt_descargas_preciso = algoritmo_estado.cnt_descargas_preciso + $11, cnt_follows_preciso = algoritmo_estado.cnt_follows_preciso + $12, cnt_comentarios_preciso = algoritmo_estado.cnt_comentarios_preciso + $13, ultima_actividad = NOW() RETURNING cnt_likes, cnt_reproducciones, cnt_completas, cnt_descargas, cnt_follows, cnt_comentarios, cnt_likes_preciso, cnt_reproducciones_preciso, cnt_completas_preciso, cnt_descargas_preciso, cnt_follows_preciso, cnt_comentarios_preciso",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "cnt_likes",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "cnt_reproducciones",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "cnt_completas",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "cnt_descargas",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "cnt_follows",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "cnt_comentarios",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "cnt_likes_preciso",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "cnt_reproducciones_preciso",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 8,
+        "name": "cnt_completas_preciso",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 9,
+        "name": "cnt_descargas_preciso",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 10,
+        "name": "cnt_follows_preciso",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 11,
+        "name": "cnt_comentarios_preciso",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "52829ae8eef818e71c26ef5da265504099671094f86b87aa18ea13f25d0f10d7"
+}

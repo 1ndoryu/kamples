@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT s.id AS \"id!\"\n             FROM samples s\n            WHERE s.estado = 'activo'\n              AND s.publicado_at > NOW() - $1::text::interval\n              AND s.creador_id <> ALL($2::int[])\n            ORDER BY (s.total_likes * 2 + s.total_reproducciones + s.total_descargas * 3) DESC\n            LIMIT $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int4Array",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "a7b91f5688ac1732c2d15caaf8d110fd1ee037a57949a69d2a52afd6fd5f2b16"
+}

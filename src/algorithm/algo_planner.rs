@@ -41,17 +41,21 @@ pub enum InteractionKind {
 }
 
 impl InteractionKind {
-    /// Columna fast (sufijo vacío) y precise (sufijo `_preciso`) en
-    /// `algoritmo_estado`.
-    const fn columns(self) -> (&'static str, &'static str) {
-        match self {
-            Self::Like => ("cnt_likes", "cnt_likes_preciso"),
-            Self::Reproduccion => ("cnt_reproducciones", "cnt_reproducciones_preciso"),
-            Self::Completa => ("cnt_completas", "cnt_completas_preciso"),
-            Self::Descarga => ("cnt_descargas", "cnt_descargas_preciso"),
-            Self::Follow => ("cnt_follows", "cnt_follows_preciso"),
-            Self::Comentario => ("cnt_comentarios", "cnt_comentarios_preciso"),
-        }
+    /// Incremento de cada una de las 12 columnas de `CounterRow` (6 fast y
+    /// luego 6 precise): 1 en la fast y la precise de este tipo, 0 en el resto.
+    fn incrementos(self) -> [i32; 12] {
+        let i = match self {
+            Self::Like => 0,
+            Self::Reproduccion => 1,
+            Self::Completa => 2,
+            Self::Descarga => 3,
+            Self::Follow => 4,
+            Self::Comentario => 5,
+        };
+        let mut delta = [0; 12];
+        delta[i] = 1;
+        delta[i + 6] = 1;
+        delta
     }
 }
 
@@ -147,25 +151,66 @@ impl AlgoPlanner {
         user_id: i32,
         kind: InteractionKind,
     ) -> Result<Triggered, AppError> {
-        let (col_fast, col_precise) = kind.columns();
+        let d = kind.incrementos();
 
-        /* Upsert + increment atómico en una sola roundtrip. La query usa
-         * `format!` solo para nombres de columna whitelisted (no es
-         * inyección — `kind.columns()` retorna constantes hardcodeadas). */
-        let sql = format!(
-            "INSERT INTO algoritmo_estado (usuario_id, {col_fast}, {col_precise}, ultima_actividad) \
-             VALUES ($1, 1, 1, NOW()) \
+        /* Upsert + incremento atómico en una sola roundtrip. Consulta estática:
+         * cada columna suma su delta (0 o 1). Las columnas no tocadas suman 0,
+         * igual que su DEFAULT 0, así que el resultado es el mismo que antes. */
+        let fila = sqlx::query!(
+            "INSERT INTO algoritmo_estado (usuario_id, cnt_likes, cnt_reproducciones, \
+                 cnt_completas, cnt_descargas, cnt_follows, cnt_comentarios, \
+                 cnt_likes_preciso, cnt_reproducciones_preciso, cnt_completas_preciso, \
+                 cnt_descargas_preciso, cnt_follows_preciso, cnt_comentarios_preciso, \
+                 ultima_actividad) \
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW()) \
              ON CONFLICT (usuario_id) DO UPDATE SET \
-                 {col_fast} = algoritmo_estado.{col_fast} + 1, \
-                 {col_precise} = algoritmo_estado.{col_precise} + 1, \
+                 cnt_likes = algoritmo_estado.cnt_likes + $2, \
+                 cnt_reproducciones = algoritmo_estado.cnt_reproducciones + $3, \
+                 cnt_completas = algoritmo_estado.cnt_completas + $4, \
+                 cnt_descargas = algoritmo_estado.cnt_descargas + $5, \
+                 cnt_follows = algoritmo_estado.cnt_follows + $6, \
+                 cnt_comentarios = algoritmo_estado.cnt_comentarios + $7, \
+                 cnt_likes_preciso = algoritmo_estado.cnt_likes_preciso + $8, \
+                 cnt_reproducciones_preciso = algoritmo_estado.cnt_reproducciones_preciso + $9, \
+                 cnt_completas_preciso = algoritmo_estado.cnt_completas_preciso + $10, \
+                 cnt_descargas_preciso = algoritmo_estado.cnt_descargas_preciso + $11, \
+                 cnt_follows_preciso = algoritmo_estado.cnt_follows_preciso + $12, \
+                 cnt_comentarios_preciso = algoritmo_estado.cnt_comentarios_preciso + $13, \
                  ultima_actividad = NOW() \
              RETURNING cnt_likes, cnt_reproducciones, cnt_completas, cnt_descargas, \
                        cnt_follows, cnt_comentarios, \
                        cnt_likes_preciso, cnt_reproducciones_preciso, cnt_completas_preciso, \
-                       cnt_descargas_preciso, cnt_follows_preciso, cnt_comentarios_preciso"
+                       cnt_descargas_preciso, cnt_follows_preciso, cnt_comentarios_preciso",
+            user_id,
+            d[0],
+            d[1],
+            d[2],
+            d[3],
+            d[4],
+            d[5],
+            d[6],
+            d[7],
+            d[8],
+            d[9],
+            d[10],
+            d[11]
+        )
+        .fetch_one(pool)
+        .await?;
+        let row: CounterRow = (
+            fila.cnt_likes,
+            fila.cnt_reproducciones,
+            fila.cnt_completas,
+            fila.cnt_descargas,
+            fila.cnt_follows,
+            fila.cnt_comentarios,
+            fila.cnt_likes_preciso,
+            fila.cnt_reproducciones_preciso,
+            fila.cnt_completas_preciso,
+            fila.cnt_descargas_preciso,
+            fila.cnt_follows_preciso,
+            fila.cnt_comentarios_preciso,
         );
-
-        let row: CounterRow = sqlx::query_as(&sql).bind(user_id).fetch_one(pool).await?;
 
         let mut triggered = Triggered::default();
         if self.fast_threshold_hit(&row) {
@@ -347,7 +392,7 @@ mod tests {
     }
 
     #[test]
-    fn interaction_kind_columns_unique() {
+    fn interaction_kind_incrementos_unicos() {
         let kinds = [
             InteractionKind::Like,
             InteractionKind::Reproduccion,
@@ -356,12 +401,19 @@ mod tests {
             InteractionKind::Follow,
             InteractionKind::Comentario,
         ];
-        let mut seen = std::collections::HashSet::new();
+        // Cada tipo suma 1 en exactamente dos contadores (fast y precise) y no se solapa con otro.
+        let mut vistos = std::collections::HashSet::new();
         for k in kinds {
-            let (fast, precise) = k.columns();
-            assert_ne!(fast, precise);
-            assert!(seen.insert(fast));
-            assert!(seen.insert(precise));
+            let posiciones: Vec<usize> = k
+                .incrementos()
+                .iter()
+                .enumerate()
+                .filter(|(_, v)| **v == 1)
+                .map(|(i, _)| i)
+                .collect();
+            assert_eq!(posiciones.len(), 2);
+            assert!(vistos.insert(posiciones[0]));
+            assert!(vistos.insert(posiciones[1]));
         }
     }
 

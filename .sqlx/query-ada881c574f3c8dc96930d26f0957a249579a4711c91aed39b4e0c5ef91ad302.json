@@ -1,0 +1,12 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "REFRESH MATERIALIZED VIEW mv_trending_samples",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": []
+  },
+  "hash": "ada881c574f3c8dc96930d26f0957a249579a4711c91aed39b4e0c5ef91ad302"
+}

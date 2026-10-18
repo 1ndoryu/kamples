@@ -1,0 +1,58 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT\n                id AS \"id!\",\n                relacion_id AS \"relacion_id!\",\n                youtube_id,\n                compas_inicio_seg::DOUBLE PRECISION AS compas_inicio_seg,\n                compas_fin_seg::DOUBLE PRECISION    AS compas_fin_seg,\n                ruta_audio_completo,\n                sample_id\n             FROM cola_extraccion_samples\n             WHERE sample_id = $1\n             LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "relacion_id!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "youtube_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "compas_inicio_seg",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 4,
+        "name": "compas_fin_seg",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 5,
+        "name": "ruta_audio_completo",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "sample_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      null,
+      null,
+      true,
+      true
+    ]
+  },
+  "hash": "aa6e6021214c84b4279971d122875dbbe2aba7c480424dfbeb595f8f3b0d576b"
+}

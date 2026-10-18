@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT cancion_fuente_id AS \"cancion_fuente_id!\",\n                      cancion_destino_id AS \"cancion_destino_id!\"\n               FROM relaciones_sample\n               WHERE id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "cancion_fuente_id!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "cancion_destino_id!",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "0d43f47295d63e534fdec387cb07d48848d55010df1ba2aacf95354e610b8e2c"
+}

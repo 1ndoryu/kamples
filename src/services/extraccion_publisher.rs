@@ -291,10 +291,11 @@ impl ExtraccionPublisherService {
         let formato = detectar_formato(ruta_origen);
 
         // Necesitamos creador_id + slug para construir storage_key coherente.
-        let row: (i32, String) = sqlx::query_as(
-            "SELECT creador_id, slug FROM samples WHERE id = $1 AND eliminado_en IS NULL",
+        let row = sqlx::query!(
+            r#"SELECT creador_id AS "creador_id!", slug AS "slug!"
+               FROM samples WHERE id = $1 AND eliminado_en IS NULL"#,
+            sample_id
         )
-        .bind(sample_id)
         .fetch_optional(pool)
         .await
         .map_err(AppError::from)?
@@ -303,10 +304,10 @@ impl ExtraccionPublisherService {
         let now = chrono::Utc::now();
         let storage_key = format!(
             "samples/{}/{:04}/{:02}/{}-r{}.{}",
-            row.0,
+            row.creador_id,
             now.year(),
             now.month(),
-            row.1,
+            row.slug,
             now.timestamp(),
             formato,
         );
@@ -328,7 +329,7 @@ impl ExtraccionPublisherService {
 
         let mut tx = pool.begin().await.map_err(AppError::from)?;
 
-        sqlx::query(
+        sqlx::query!(
             "UPDATE samples
              SET ruta_original = $2,
                  audio_hash    = $3,
@@ -339,13 +340,13 @@ impl ExtraccionPublisherService {
                  ruta_waveform   = NULL,
                  metadata = COALESCE(metadata, '{}'::jsonb) || $6
              WHERE id = $1",
+            sample_id,
+            storage_key,
+            audio_hash,
+            tamano,
+            formato,
+            metadata_patch
         )
-        .bind(sample_id)
-        .bind(&storage_key)
-        .bind(&audio_hash)
-        .bind(tamano)
-        .bind(&formato)
-        .bind(&metadata_patch)
         .execute(&mut *tx)
         .await
         .map_err(AppError::from)?;
@@ -356,12 +357,12 @@ impl ExtraccionPublisherService {
             "ruta_original": storage_key,
             "trigger": "reemplazo_extraccion",
         });
-        sqlx::query(
+        sqlx::query!(
             "INSERT INTO cola_procesamiento_ia (tipo, entidad_id, operacion, metadata)
              VALUES ('sample', $1, 'analisis_audio', $2)",
+            sample_id,
+            cola_meta
         )
-        .bind(sample_id)
-        .bind(&cola_meta)
         .execute(&mut *tx)
         .await
         .map_err(AppError::from)?;
@@ -534,66 +535,33 @@ async fn vincular_sample_a_relacion(
     sample_id: i32,
     fila: &ColaExtraidoReclamado,
 ) -> Result<(), AppError> {
-    let rel: (i32, i32) = sqlx::query_as(
-        "SELECT cancion_fuente_id, cancion_destino_id FROM relaciones_sample WHERE id = $1",
-    )
-    .bind(fila.relacion_id)
-    .fetch_optional(pool)
-    .await
-    .map_err(AppError::from)?
-    .ok_or_else(|| AppError::NotFound(format!("relacion {} no existe", fila.relacion_id)))?;
+    let (cancion_fuente, cancion_destino) =
+        ColaExtraccionRepository::canciones_de_relacion(pool, fila.relacion_id)
+            .await?
+            .ok_or_else(|| AppError::NotFound(format!("relacion {} no existe", fila.relacion_id)))?;
 
-    let (col_lado, cancion_id) = match fila.lado.as_str() {
-        "fuente" => ("sample_fuente_id", rel.0),
-        "destino" => ("sample_destino_id", rel.1),
+    let (es_fuente, cancion_id) = match fila.lado.as_str() {
+        "fuente" => (true, cancion_fuente),
+        "destino" => (false, cancion_destino),
         otro => {
             return Err(AppError::BadRequest(format!("lado desconocido: {otro}")));
         }
     };
 
-    // Update dinÃ¡mico del lado (sample_fuente_id o sample_destino_id).
-    // El nombre de columna es whitelist (fuente/destino) â€” sin riesgo de inyecciÃ³n.
-    let sql =
-        format!("UPDATE relaciones_sample SET {col_lado} = $2, updated_at = NOW() WHERE id = $1");
-    sqlx::query(&sql)
-        .bind(fila.relacion_id)
-        .bind(sample_id)
-        .execute(pool)
-        .await
-        .map_err(AppError::from)?;
-
-    sqlx::query(
-        "UPDATE samples
-         SET relacion_sampleo_id = $2,
-             cancion_origen_id   = $3
-         WHERE id = $1",
+    // Escrituras en el repositorio: lado de la relación + enlace del sample.
+    ColaExtraccionRepository::vincular_lado(
+        pool,
+        fila.relacion_id,
+        sample_id,
+        es_fuente,
+        cancion_id,
     )
-    .bind(sample_id)
-    .bind(fila.relacion_id)
-    .bind(cancion_id)
-    .execute(pool)
-    .await
-    .map_err(AppError::from)?;
+    .await?;
 
     /* [294A-6] Heredar imagen_url de la cancion origen al sample (paridad con
      * PublicadorExtraccion::publicarItem PHP). El feed/admin renderizaba imagen
      * placeholder porque este paso faltaba en la version Rust. */
-    let imagen: Option<String> =
-        sqlx::query_scalar("SELECT imagen_url FROM canciones WHERE id = $1")
-            .bind(cancion_id)
-            .fetch_optional(pool)
-            .await
-            .map_err(AppError::from)?
-            .flatten();
-
-    if let Some(url) = imagen.filter(|v| !v.trim().is_empty()) {
-        sqlx::query("UPDATE samples SET imagen_url = $2 WHERE id = $1 AND imagen_url IS NULL")
-            .bind(sample_id)
-            .bind(url)
-            .execute(pool)
-            .await
-            .map_err(AppError::from)?;
-    }
+    ColaExtraccionRepository::heredar_imagen(pool, sample_id, cancion_id).await?;
 
     Ok(())
 }

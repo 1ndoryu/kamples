@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE samples\n         SET metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb\n         WHERE id = $1\n           AND NOT (COALESCE(metadata, '{}'::jsonb) ? 'timing_original')",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Jsonb"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f2f36ea016e068125b5dd5bded002b65fa7e6c3c48c996811cf585101f9cd55b"
+}

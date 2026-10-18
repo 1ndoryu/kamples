@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE relaciones_sample\n             SET sample_fuente_id  = CASE WHEN $3 THEN $2 ELSE sample_fuente_id END,\n                 sample_destino_id = CASE WHEN $3 THEN sample_destino_id ELSE $2 END,\n                 updated_at        = NOW()\n             WHERE id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Bool"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "ee03103c0b23552f6ec1d2db7ea6da4277f7f2946bbb83996dac3c69cc08989e"
+}

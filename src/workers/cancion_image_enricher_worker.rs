@@ -92,9 +92,10 @@ async fn procesar_una(
     /* Selecciona una cancion sin imagen y sin lookup reciente.
      * Prioriza canciones con `total_sampleada > 0` (las que aparecen en relaciones)
      * para que el feed/extracciones se beneficien primero. */
-    let row: Option<(i32, String, String)> = sqlx::query_as(
-        r"
-        SELECT c.id, c.titulo, a.nombre
+    // Alias "!" fuerza no nulo: el JOIN y el titulo siempre traen valor.
+    let row = sqlx::query!(
+        r#"
+        SELECT c.id AS "id!", c.titulo AS "titulo!", a.nombre AS "nombre!"
           FROM canciones c
           INNER JOIN artistas_musicales a ON a.id = c.artista_id
          WHERE (c.imagen_url IS NULL OR TRIM(c.imagen_url) = '')
@@ -104,15 +105,16 @@ async fn procesar_una(
                ) < NOW() - make_interval(days => $1)
          ORDER BY c.total_sampleada DESC NULLS LAST, c.id ASC
          LIMIT 1
-        ",
+        "#,
+        COOLDOWN_DAYS
     )
-    .bind(COOLDOWN_DAYS)
     .fetch_optional(pool)
     .await?;
 
-    let Some((cancion_id, titulo, artista)) = row else {
+    let Some(fila) = row else {
         return Ok(false);
     };
+    let (cancion_id, titulo, artista) = (fila.id, fila.titulo, fila.nombre);
 
     let query = format!("{} {}", artista.trim(), titulo.trim());
     let trimmed = query.trim();
@@ -126,8 +128,8 @@ async fn procesar_una(
             /* Descargar, optimizar y guardar localmente */
             match descargar_y_optimizar(client, &url, storage_root, cancion_id).await {
                 Ok(local_path) => {
-                    sqlx::query(
-                        r"
+                    sqlx::query!(
+                        r#"
                         UPDATE canciones
                            SET imagen_url = $2,
                                metadata = COALESCE(metadata, '{}'::jsonb)
@@ -136,10 +138,10 @@ async fn procesar_una(
                                                'imagen_lookup_at', NOW()::text
                                              )
                          WHERE id = $1
-                        ",
+                        "#,
+                        cancion_id,
+                        local_path
                     )
-                    .bind(cancion_id)
-                    .bind(&local_path)
                     .execute(pool)
                     .await?;
                     tracing::info!(
@@ -248,8 +250,8 @@ async fn descargar_y_optimizar(
 }
 
 async fn marcar_lookup(pool: &PgPool, cancion_id: i32, motivo: &str) -> Result<(), sqlx::Error> {
-    sqlx::query(
-        r"
+    sqlx::query!(
+        r#"
         UPDATE canciones
            SET metadata = COALESCE(metadata, '{}'::jsonb)
                           || jsonb_build_object(
@@ -257,10 +259,10 @@ async fn marcar_lookup(pool: &PgPool, cancion_id: i32, motivo: &str) -> Result<(
                                'imagen_lookup_motivo', $2::text
                              )
          WHERE id = $1
-        ",
+        "#,
+        cancion_id,
+        motivo
     )
-    .bind(cancion_id)
-    .bind(motivo)
     .execute(pool)
     .await?;
     Ok(())

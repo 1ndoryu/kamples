@@ -198,41 +198,40 @@ async fn fuente_trending(
      * como parámetro `INTERVAL '$N days'` vía interpolación segura: el set
      * sólo admite [7, 14, 30, 60, 90] y se aplica en una rama match abajo. */
     let dias = config.safe_dias_trending();
-    /* sqlx requiere SQL literal en macros; expandimos por valor permitido. */
-    let rows = match dias {
-        7 => trending_query(pool, "7 days", config.max_trending, blocked).await?,
-        30 => trending_query(pool, "30 days", config.max_trending, blocked).await?,
-        60 => trending_query(pool, "60 days", config.max_trending, blocked).await?,
-        90 => trending_query(pool, "90 days", config.max_trending, blocked).await?,
-        _ => trending_query(pool, "14 days", config.max_trending, blocked).await?,
+    /* El intervalo sale de un match exhaustivo sobre constantes, nunca de input
+     * externo. Se liga como texto y se convierte con `::text::interval`, porque
+     * un bind directo no vale para INTERVAL y la macro exige SQL literal. */
+    let intervalo = match dias {
+        7 => "7 days",
+        30 => "30 days",
+        60 => "60 days",
+        90 => "90 days",
+        _ => "14 days",
     };
-    Ok(rows)
+    trending_query(pool, intervalo, config.max_trending, blocked).await
 }
 
 async fn trending_query(
     pool: &PgPool,
-    interval_literal: &str,
+    intervalo: &str,
     limit: i64,
     blocked: &[i32],
 ) -> Result<Vec<i32>, AppError> {
-    /* No podemos parametrizar `INTERVAL` con bind, pero `interval_literal`
-     * proviene exclusivamente de un match exhaustivo sobre constantes,
-     * nunca de input externo, así que la concatenación es segura. */
-    let sql = format!(
-        "SELECT s.id AS id \
-           FROM samples s \
-          WHERE s.estado = 'activo' \
-            AND s.publicado_at > NOW() - INTERVAL '{interval_literal}' \
-            AND s.creador_id <> ALL($1::int[]) \
-          ORDER BY (s.total_likes * 2 + s.total_reproducciones + s.total_descargas * 3) DESC \
-          LIMIT $2"
-    );
-    let rows: Vec<(i32,)> = sqlx::query_as(&sql)
-        .bind(blocked)
-        .bind(limit)
-        .fetch_all(pool)
-        .await?;
-    Ok(rows.into_iter().map(|(id,)| id).collect())
+    let ids = sqlx::query_scalar!(
+        r#"SELECT s.id AS "id!"
+             FROM samples s
+            WHERE s.estado = 'activo'
+              AND s.publicado_at > NOW() - $1::text::interval
+              AND s.creador_id <> ALL($2::int[])
+            ORDER BY (s.total_likes * 2 + s.total_reproducciones + s.total_descargas * 3) DESC
+            LIMIT $3"#,
+        intervalo,
+        blocked,
+        limit
+    )
+    .fetch_all(pool)
+    .await?;
+    Ok(ids)
 }
 
 async fn fuente_embedding(

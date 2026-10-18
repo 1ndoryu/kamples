@@ -1,0 +1,130 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE usuarios_ext SET\n                nombre_visible    = COALESCE($1, nombre_visible),\n                bio               = COALESCE($2, bio),\n                avatar_url        = COALESCE($3, avatar_url),\n                portada_url       = COALESCE($4, portada_url),\n                sitio_web         = COALESCE($5, sitio_web),\n                generos_favoritos = COALESCE($6, generos_favoritos)\n             WHERE id = $7\n             RETURNING id, username, email, nombre_visible, bio, avatar_url, portada_url, sitio_web,\n                       generos_favoritos, plan, rol, verificado, total_seguidores, total_seguidos,\n                       total_samples, total_descargas, estado, created_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "email",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "nombre_visible",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "bio",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "avatar_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "portada_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "sitio_web",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 8,
+        "name": "generos_favoritos",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 9,
+        "name": "plan",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "rol",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 11,
+        "name": "verificado",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 12,
+        "name": "total_seguidores",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 13,
+        "name": "total_seguidos",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 14,
+        "name": "total_samples",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 15,
+        "name": "total_descargas",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 16,
+        "name": "estado",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 17,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Text",
+        "Text",
+        "Text",
+        "Varchar",
+        "Jsonb",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true
+    ]
+  },
+  "hash": "4649dd4b10678b0ea9460bc7330ba1eac9d5e60a1a9b4ce5d04221340949eadf"
+}

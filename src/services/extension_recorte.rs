@@ -138,15 +138,14 @@ pub async fn restaurar(pool: &PgPool, sample_id: i32) -> Result<EncoladoResult, 
     let cola = require_cola(pool, sample_id).await?;
 
     /* Leer timing_original directamente desde samples.metadata. */
-    let row: Option<(serde_json::Value,)> =
-        sqlx::query_as("SELECT COALESCE(metadata, '{}'::jsonb) FROM samples WHERE id = $1")
-            .bind(sample_id)
-            .fetch_optional(pool)
-            .await?;
-
-    let metadata = row
-        .ok_or_else(|| AppError::NotFound(format!("sample {sample_id} no encontrado")))?
-        .0;
+    // "metadata!" fuerza no nulo: COALESCE nunca devuelve NULL.
+    let metadata = sqlx::query_scalar!(
+        r#"SELECT COALESCE(metadata, '{}'::jsonb) AS "metadata!" FROM samples WHERE id = $1"#,
+        sample_id
+    )
+    .fetch_optional(pool)
+    .await?
+    .ok_or_else(|| AppError::NotFound(format!("sample {sample_id} no encontrado")))?;
 
     let timing = metadata
         .get("timing_original")
@@ -208,14 +207,15 @@ async fn guardar_timing_original_si_falta(
         "timing_original": { "inicio": inicio, "fin": fin }
     });
 
-    sqlx::query(
+    // El cast fija $2 a jsonb: sin él Postgres podría inferir text para el operador ||.
+    sqlx::query!(
         "UPDATE samples
-         SET metadata = COALESCE(metadata, '{}'::jsonb) || $2
+         SET metadata = COALESCE(metadata, '{}'::jsonb) || $2::jsonb
          WHERE id = $1
            AND NOT (COALESCE(metadata, '{}'::jsonb) ? 'timing_original')",
+        sample_id,
+        patch
     )
-    .bind(sample_id)
-    .bind(&patch)
     .execute(pool)
     .await?;
 
