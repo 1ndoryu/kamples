@@ -1,0 +1,95 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT a.id, a.titulo, a.slug, a.extracto, a.categoria, a.portada_url,\n                      a.moderacion_estado, a.moderacion_razon, a.created_at,\n                      a.autor_id,\n                      u.username AS autor_username,\n                      u.nombre_visible AS autor_nombre,\n                      u.avatar_url AS autor_avatar\n                 FROM articulos a\n                 JOIN usuarios_ext u ON u.id = a.autor_id\n                WHERE a.moderacion_estado IN ('pendiente', 'revision')\n                  AND a.eliminado_en IS NULL\n                ORDER BY a.created_at DESC\n                LIMIT $1 OFFSET $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "titulo",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "slug",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "extracto",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "categoria",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "portada_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "moderacion_estado",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "moderacion_razon",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 8,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 9,
+        "name": "autor_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 10,
+        "name": "autor_username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 11,
+        "name": "autor_nombre",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 12,
+        "name": "autor_avatar",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "19657193ac57c700f7be4d4dec6fbc4a562d71bbe44aec907a0ab0ae86c4dc00"
+}

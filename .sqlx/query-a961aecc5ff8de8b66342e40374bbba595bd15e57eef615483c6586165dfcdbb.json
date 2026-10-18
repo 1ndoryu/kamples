@@ -1,0 +1,94 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT id, tipo, estado, iniciado_at, completado_at,\n                      exitosos, fallidos, recortes, samples_publicados,\n                      canciones_nuevas, sampleos_nuevos, error_mensaje, metadata\n                 FROM lotes_procesamiento\n                WHERE tipo = $1\n                ORDER BY iniciado_at DESC\n                LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "tipo",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "estado",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "iniciado_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 4,
+        "name": "completado_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 5,
+        "name": "exitosos",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "fallidos",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "recortes",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 8,
+        "name": "samples_publicados",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 9,
+        "name": "canciones_nuevas",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 10,
+        "name": "sampleos_nuevos",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 11,
+        "name": "error_mensaje",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 12,
+        "name": "metadata",
+        "type_info": "Jsonb"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "a961aecc5ff8de8b66342e40374bbba595bd15e57eef615483c6586165dfcdbb"
+}

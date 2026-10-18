@@ -1,0 +1,31 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO contribuciones_pendientes (\n                contribuidor_id, cancion_destino_id, cancion_fuente_id,\n                cancion_nueva_titulo, cancion_nueva_artista, cancion_nueva_youtube_url,\n                cancion_nueva_lado, tipo_relacion, tipo_elemento, cambios_propuestos\n             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)\n             RETURNING id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Int4",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Jsonb"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "57fe353c83249b973813f2e40e2423f27f11455657d96242c78d41461452fd35"
+}

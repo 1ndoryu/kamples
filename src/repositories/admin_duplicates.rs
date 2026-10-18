@@ -1,6 +1,6 @@
-/* sentinel-disable-file sqlx-query-sin-macro sqlx-query-as-sin-macro — 274A-43 usa SQL runtime porque el entorno trabaja con SQLX_OFFLINE y no hay cache nueva para estas consultas admin batch. */
 /* [274A-43] Repositorio admin de duplicados: mueve SQL fuera del handler y agrega
- * backfill idempotente sin violar el indice unico de samples.audio_hash. */
+ * backfill idempotente sin violar el indice unico de samples.audio_hash.
+ * Consultas con macros sqlx: comprobadas al compilar y cacheadas en .sqlx. */
 
 use chrono::{DateTime, Utc};
 use sqlx::{FromRow, PgPool};
@@ -54,14 +54,15 @@ impl AdminDuplicatesRepository {
         limit: i64,
         offset: i64,
     ) -> Result<Vec<DuplicateAdminRow>, sqlx::Error> {
-        sqlx::query_as::<_, DuplicateAdminRow>(
-            r"SELECT d.id,
+        sqlx::query_as!(
+            DuplicateAdminRow,
+            r#"SELECT d.id,
                       d.tipo,
                       d.estado,
-                      d.created_at,
+                      d.created_at AS "created_at!",
                       so.id              AS original_id,
                       so.titulo          AS original_titulo,
-                      so.created_at      AS original_subido_at,
+                      so.created_at      AS "original_subido_at!",
                       so.ruta_preview    AS original_ruta_preview,
                       so.ruta_waveform   AS original_ruta_waveform,
                       uo.username        AS original_creador,
@@ -70,7 +71,7 @@ impl AdminDuplicatesRepository {
                       so.audio_hash      AS original_hash,
                       sd.id              AS duplicado_id,
                       sd.titulo          AS duplicado_titulo,
-                      sd.created_at      AS duplicado_subido_at,
+                      sd.created_at      AS "duplicado_subido_at!",
                       sd.ruta_preview    AS duplicado_ruta_preview,
                       sd.ruta_waveform   AS duplicado_ruta_waveform,
                       ud.username        AS duplicado_creador,
@@ -85,31 +86,32 @@ impl AdminDuplicatesRepository {
                 WHERE d.estado = $1
                   AND ($2::text IS NULL OR d.tipo = $2)
                 ORDER BY d.created_at DESC
-                LIMIT $3 OFFSET $4",
+                LIMIT $3 OFFSET $4"#,
+            estado,
+            tipo,
+            limit,
+            offset
         )
-        .bind(estado)
-        .bind(tipo)
-        .bind(limit)
-        .bind(offset)
         .fetch_all(pool)
         .await
     }
 
     pub async fn count_pending(pool: &PgPool) -> Result<i64, sqlx::Error> {
-        let total: (i64,) = sqlx::query_as(
-            r"SELECT COUNT(*)::bigint FROM duplicados_pendientes WHERE estado = 'pendiente'",
+        let total = sqlx::query_scalar!(
+            r#"SELECT COUNT(*)::bigint AS "total!" FROM duplicados_pendientes WHERE estado = 'pendiente'"#
         )
         .fetch_one(pool)
         .await?;
 
-        Ok(total.0)
+        Ok(total)
     }
 
     pub async fn list_samples_without_hash(
         pool: &PgPool,
         limit: i64,
     ) -> Result<Vec<BackfillSampleRow>, sqlx::Error> {
-        sqlx::query_as::<_, BackfillSampleRow>(
+        sqlx::query_as!(
+            BackfillSampleRow,
             r"SELECT id, creador_id, ruta_original
                  FROM samples
                 WHERE audio_hash IS NULL
@@ -117,8 +119,8 @@ impl AdminDuplicatesRepository {
                   AND eliminado_en IS NULL
                 ORDER BY id ASC
                 LIMIT $1",
+            limit
         )
-        .bind(limit)
         .fetch_all(pool)
         .await
     }
@@ -128,7 +130,8 @@ impl AdminDuplicatesRepository {
         audio_hash: &str,
         excluded_sample_id: i32,
     ) -> Result<Option<ExistingHashSampleRow>, sqlx::Error> {
-        sqlx::query_as::<_, ExistingHashSampleRow>(
+        sqlx::query_as!(
+            ExistingHashSampleRow,
             r"SELECT id, creador_id
                  FROM samples
                 WHERE audio_hash = $1
@@ -138,9 +141,9 @@ impl AdminDuplicatesRepository {
                 ORDER BY CASE estado WHEN 'activo' THEN 0 WHEN 'en_supervision' THEN 1 ELSE 2 END,
                          created_at ASC
                 LIMIT 1",
+            audio_hash,
+            excluded_sample_id
         )
-        .bind(audio_hash)
-        .bind(excluded_sample_id)
         .fetch_optional(pool)
         .await
     }
@@ -150,7 +153,7 @@ impl AdminDuplicatesRepository {
         sample_id: i32,
         audio_hash: &str,
     ) -> Result<bool, sqlx::Error> {
-        let result = sqlx::query(
+        let result = sqlx::query!(
             r"UPDATE samples
                  SET audio_hash = $2,
                      updated_at = NOW()
@@ -165,9 +168,9 @@ impl AdminDuplicatesRepository {
                         AND other.estado != 'eliminado'
                         AND other.eliminado_en IS NULL
                  )",
+            sample_id,
+            audio_hash
         )
-        .bind(sample_id)
-        .bind(audio_hash)
         .execute(pool)
         .await?;
 
@@ -182,27 +185,27 @@ impl AdminDuplicatesRepository {
     ) -> Result<bool, sqlx::Error> {
         let mut tx = pool.begin().await?;
 
-        let inserted = sqlx::query_as::<_, (i32,)>(
+        let inserted = sqlx::query_scalar!(
             r"INSERT INTO duplicados_pendientes (sample_original_id, sample_duplicado_id, tipo, estado, notas)
                  VALUES ($1, $2, $3, 'pendiente', 'Detectado por backfill de audio_hash en Rust')
                  ON CONFLICT (sample_original_id, sample_duplicado_id) DO NOTHING
                  RETURNING id",
+            original_sample_id,
+            duplicate_sample_id,
+            duplicate_kind
         )
-        .bind(original_sample_id)
-        .bind(duplicate_sample_id)
-        .bind(duplicate_kind)
         .fetch_optional(&mut *tx)
         .await?;
 
-        sqlx::query(
+        sqlx::query!(
             r"UPDATE samples
                  SET estado = 'en_supervision',
                      updated_at = NOW()
                WHERE id = $1
                  AND estado = 'activo'
                  AND eliminado_en IS NULL",
+            duplicate_sample_id
         )
-        .bind(duplicate_sample_id)
         .execute(&mut *tx)
         .await?;
 

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE samples\n                 SET audio_hash = $2,\n                     updated_at = NOW()\n               WHERE id = $1\n                 AND estado = 'activo'\n                 AND eliminado_en IS NULL\n                 AND NOT EXISTS (\n                     SELECT 1\n                       FROM samples other\n                      WHERE other.audio_hash = $2\n                        AND other.id != $1\n                        AND other.estado != 'eliminado'\n                        AND other.eliminado_en IS NULL\n                 )",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "6c5c460fedd4b8e3b99f050a551901963ef10601af5caf9a72e3ba653298dbe1"
+}

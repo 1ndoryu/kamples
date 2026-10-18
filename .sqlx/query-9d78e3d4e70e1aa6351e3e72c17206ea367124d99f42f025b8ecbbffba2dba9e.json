@@ -1,0 +1,95 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT p.id, p.autor_id, p.tipo, p.contenido AS \"contenido!\",\n                      COALESCE(p.imagenes, '{}')         AS \"imagenes!\",\n                      COALESCE(p.samples_adjuntos, '{}') AS \"samples_adjuntos!\",\n                      p.moderacion_estado, p.moderacion_detalle, p.moderacion_razon, p.created_at AS \"created_at!\",\n                      u.username AS autor_username,\n                      u.nombre_visible AS autor_nombre,\n                      u.avatar_url AS autor_avatar\n                 FROM publicaciones p\n                 JOIN usuarios_ext u ON u.id = p.autor_id\n                WHERE p.moderacion_estado IN ('pendiente', 'revision')\n                  AND p.eliminado_en IS NULL\n                ORDER BY p.created_at DESC\n                LIMIT $1 OFFSET $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "autor_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "tipo",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "contenido!",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "imagenes!",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 5,
+        "name": "samples_adjuntos!",
+        "type_info": "Int4Array"
+      },
+      {
+        "ordinal": 6,
+        "name": "moderacion_estado",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "moderacion_detalle",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 8,
+        "name": "moderacion_razon",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 9,
+        "name": "created_at!",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 10,
+        "name": "autor_username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 11,
+        "name": "autor_nombre",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 12,
+        "name": "autor_avatar",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      null,
+      null,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "9d78e3d4e70e1aa6351e3e72c17206ea367124d99f42f025b8ecbbffba2dba9e"
+}

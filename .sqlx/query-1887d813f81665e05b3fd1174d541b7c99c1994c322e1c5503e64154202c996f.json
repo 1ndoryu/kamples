@@ -1,0 +1,12 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE publicaciones\n             SET moderacion_estado = 'rechazado',\n                 moderacion_razon = 'rechazo_masivo'\n             WHERE moderacion_estado IN ('pendiente', 'revision')\n               AND eliminado_en IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": []
+  },
+  "hash": "1887d813f81665e05b3fd1174d541b7c99c1994c322e1c5503e64154202c996f"
+}

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM contribuciones_pendientes\n             WHERE id = $1 AND contribuidor_id = $2 AND estado = 'pendiente'",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "70b452e09f2f736cfb7abfe5ab325f8d7b59b550218eeac6b1e05e115eb5bee2"
+}

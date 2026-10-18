@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT EXISTS(\n                SELECT 1 FROM contribuciones_pendientes\n                WHERE relacion_existente_id = $1\n                  AND contribuidor_id = $2\n                  AND estado = 'pendiente'\n             ) AS \"existe!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "existe!",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "23f1ea8ec31578a9f5d1dbf9c36539f4409ff424fc91f352a4bcbdebb34af564"
+}

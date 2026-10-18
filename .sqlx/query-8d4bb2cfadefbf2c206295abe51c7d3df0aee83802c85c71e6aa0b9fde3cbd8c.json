@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE lotes_procesamiento\n                   SET estado = $2,\n                       completado_at = NOW(),\n                       exitosos = $3,\n                       fallidos = $4,\n                       recortes = $5,\n                       samples_publicados = $6,\n                       canciones_nuevas = $7,\n                       sampleos_nuevos = $8,\n                       error_mensaje = $9,\n                       metadata = COALESCE($10, metadata, '{}'::jsonb)\n                     WHERE id = $1::bigint",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Varchar",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Text",
+        "Jsonb"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "8d4bb2cfadefbf2c206295abe51c7d3df0aee83802c85c71e6aa0b9fde3cbd8c"
+}

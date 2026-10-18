@@ -1,0 +1,100 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT id, contribuidor_id, cancion_destino_id, cancion_fuente_id,\n                    cancion_nueva_titulo, cancion_nueva_artista, cancion_nueva_youtube_url,\n                    cancion_nueva_lado, tipo_relacion, tipo_elemento, tipo_contribucion,\n                    relacion_existente_id, cambios_propuestos, estado AS \"estado!\"\n             FROM contribuciones_pendientes\n             WHERE id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "contribuidor_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "cancion_destino_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "cancion_fuente_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "cancion_nueva_titulo",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "cancion_nueva_artista",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "cancion_nueva_youtube_url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "cancion_nueva_lado",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 8,
+        "name": "tipo_relacion",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 9,
+        "name": "tipo_elemento",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "tipo_contribucion",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 11,
+        "name": "relacion_existente_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 12,
+        "name": "cambios_propuestos",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 13,
+        "name": "estado!",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "edd9f6913552c00c22b669e1df9d05fe21875465982b0fd53d47a0d97f88a4d9"
+}

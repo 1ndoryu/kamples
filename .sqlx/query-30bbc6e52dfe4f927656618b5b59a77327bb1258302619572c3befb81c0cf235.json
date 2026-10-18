@@ -1,0 +1,151 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT d.id,\n                      d.tipo,\n                      d.estado,\n                      d.created_at AS \"created_at!\",\n                      so.id              AS original_id,\n                      so.titulo          AS original_titulo,\n                      so.created_at      AS \"original_subido_at!\",\n                      so.ruta_preview    AS original_ruta_preview,\n                      so.ruta_waveform   AS original_ruta_waveform,\n                      uo.username        AS original_creador,\n                      uo.id              AS original_creador_id,\n                      so.slug            AS original_slug,\n                      so.audio_hash      AS original_hash,\n                      sd.id              AS duplicado_id,\n                      sd.titulo          AS duplicado_titulo,\n                      sd.created_at      AS \"duplicado_subido_at!\",\n                      sd.ruta_preview    AS duplicado_ruta_preview,\n                      sd.ruta_waveform   AS duplicado_ruta_waveform,\n                      ud.username        AS duplicado_creador,\n                      ud.id              AS duplicado_creador_id,\n                      sd.slug            AS duplicado_slug,\n                      sd.audio_hash      AS duplicado_hash\n                 FROM duplicados_pendientes d\n                 JOIN samples so       ON so.id = d.sample_original_id\n                 JOIN usuarios_ext uo  ON uo.id = so.creador_id\n                 JOIN samples sd       ON sd.id = d.sample_duplicado_id\n                 JOIN usuarios_ext ud  ON ud.id = sd.creador_id\n                WHERE d.estado = $1\n                  AND ($2::text IS NULL OR d.tipo = $2)\n                ORDER BY d.created_at DESC\n                LIMIT $3 OFFSET $4",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "tipo",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "estado",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "created_at!",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 4,
+        "name": "original_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "original_titulo",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "original_subido_at!",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "original_ruta_preview",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "original_ruta_waveform",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 9,
+        "name": "original_creador",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "original_creador_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 11,
+        "name": "original_slug",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 12,
+        "name": "original_hash",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 13,
+        "name": "duplicado_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 14,
+        "name": "duplicado_titulo",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 15,
+        "name": "duplicado_subido_at!",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 16,
+        "name": "duplicado_ruta_preview",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 17,
+        "name": "duplicado_ruta_waveform",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 18,
+        "name": "duplicado_creador",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 19,
+        "name": "duplicado_creador_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 20,
+        "name": "duplicado_slug",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 21,
+        "name": "duplicado_hash",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "30bbc6e52dfe4f927656618b5b59a77327bb1258302619572c3befb81c0cf235"
+}

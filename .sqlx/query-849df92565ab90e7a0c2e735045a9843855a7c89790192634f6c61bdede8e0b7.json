@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE cola_extraccion_samples\n                  SET sample_id = NULL\n                WHERE sample_id = ANY($1::int[])",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4Array"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "849df92565ab90e7a0c2e735045a9843855a7c89790192634f6c61bdede8e0b7"
+}

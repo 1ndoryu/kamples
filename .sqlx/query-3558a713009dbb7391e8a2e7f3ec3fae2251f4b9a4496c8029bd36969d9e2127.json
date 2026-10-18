@@ -1,0 +1,150 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT cp.id,\n                cp.contribuidor_id,\n                u.username AS contribuidor_username,\n                cp.cancion_destino_id,\n                cp.cancion_fuente_id,\n                cp.cancion_nueva_titulo,\n                cp.cancion_nueva_artista,\n                cp.cancion_nueva_youtube_url,\n                cp.cancion_nueva_lado,\n                cp.tipo_relacion,\n                cp.tipo_elemento,\n                cp.tipo_contribucion,\n                cp.relacion_existente_id,\n                cp.cambios_propuestos,\n                cp.estado AS \"estado!\",\n                cp.moderador_nota,\n                cp.created_at AS \"created_at!\",\n                cp.resuelto_at,\n                cd.titulo AS destino_titulo,\n                cf.titulo AS fuente_titulo,\n                cd.slug AS cancion_destino_slug,\n                cf.slug AS cancion_fuente_slug\n             FROM contribuciones_pendientes cp\n             JOIN usuarios_ext u ON u.id = cp.contribuidor_id\n             LEFT JOIN canciones cd ON cd.id = cp.cancion_destino_id\n             LEFT JOIN canciones cf ON cf.id = cp.cancion_fuente_id\n             WHERE cp.contribuidor_id = $1 ORDER BY cp.created_at DESC LIMIT $2 OFFSET $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "contribuidor_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "contribuidor_username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "cancion_destino_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "cancion_fuente_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "cancion_nueva_titulo",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "cancion_nueva_artista",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "cancion_nueva_youtube_url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 8,
+        "name": "cancion_nueva_lado",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 9,
+        "name": "tipo_relacion",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "tipo_elemento",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 11,
+        "name": "tipo_contribucion",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 12,
+        "name": "relacion_existente_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 13,
+        "name": "cambios_propuestos",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 14,
+        "name": "estado!",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 15,
+        "name": "moderador_nota",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 16,
+        "name": "created_at!",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 17,
+        "name": "resuelto_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 18,
+        "name": "destino_titulo",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 19,
+        "name": "fuente_titulo",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 20,
+        "name": "cancion_destino_slug",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 21,
+        "name": "cancion_fuente_slug",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "3558a713009dbb7391e8a2e7f3ec3fae2251f4b9a4496c8029bd36969d9e2127"
+}

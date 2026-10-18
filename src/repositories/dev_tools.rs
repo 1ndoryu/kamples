@@ -1,6 +1,6 @@
-/* sentinel-disable-file sqlx-query-sin-macro sqlx-query-as-sin-macro — queries parametrizadas runtime; no usar macros nuevas sin cache SQLX_OFFLINE. */
 /* [274A-54..58] Repositorio de operaciones dev Sample Discovery.
- * Extrae SQL fuera de handlers para mantener DIP y reducir superficie del controlador. */
+ * Extrae SQL fuera de handlers para mantener DIP y reducir superficie del controlador.
+ * Consultas con macros sqlx: comprobadas al compilar y cacheadas en .sqlx. */
 
 use serde_json::Value;
 use sqlx::{FromRow, PgPool};
@@ -28,7 +28,7 @@ struct RelacionRecorteRow {
 
 impl DevToolsRepository {
     pub async fn purgar_canciones(pool: &PgPool) -> Result<(), AppError> {
-        sqlx::query(
+        sqlx::query!(
             "TRUNCATE TABLE
                 cola_extraccion_samples,
                 scraping_log,
@@ -46,7 +46,8 @@ impl DevToolsRepository {
     pub async fn tomar_pendiente_scraping(
         pool: &PgPool,
     ) -> Result<Option<ScrapingPendiente>, AppError> {
-        let row = sqlx::query_as::<_, ScrapingPendiente>(
+        let row = sqlx::query_as!(
+            ScrapingPendiente,
             "SELECT url, tipo_pagina
              FROM scraping_log
              WHERE estado = 'pendiente'
@@ -62,21 +63,22 @@ impl DevToolsRepository {
         pool: &PgPool,
         relacion_id: i32,
     ) -> Result<Vec<i32>, AppError> {
-        let relacion = sqlx::query_as::<_, RelacionRecorteRow>(
-            "SELECT
+        let relacion = sqlx::query_as!(
+            RelacionRecorteRow,
+            r#"SELECT
                 r.id,
                 cf.youtube_id AS fuente_youtube_id,
                 cd.youtube_id AS destino_youtube_id,
                 r.sample_fuente_id,
                 r.sample_destino_id,
-                COALESCE(r.timings_fuente, '[]'::jsonb) AS timings_fuente,
-                COALESCE(r.timings_destino, '[]'::jsonb) AS timings_destino
+                COALESCE(r.timings_fuente, '[]'::jsonb) AS "timings_fuente!",
+                COALESCE(r.timings_destino, '[]'::jsonb) AS "timings_destino!"
              FROM relaciones_sample r
              JOIN canciones cf ON cf.id = r.cancion_fuente_id
              JOIN canciones cd ON cd.id = r.cancion_destino_id
-             WHERE r.id = $1",
+             WHERE r.id = $1"#,
+            relacion_id
         )
-        .bind(relacion_id)
         .fetch_optional(pool)
         .await?
         .ok_or_else(|| AppError::NotFound("Relación no encontrada".into()))?;
@@ -111,11 +113,18 @@ impl DevToolsRepository {
     ) -> Result<i32, AppError> {
         let timing_inicio = f64_to_i16(inicio)?;
         let duracion = (fin - inicio).max(1.0);
-        let row: (i32,) = sqlx::query_as(
+        // Metadata se liga a una variable para que la macro reciba una expresion simple.
+        let metadata = serde_json::json!({
+            "origen": "dev_recorte_generar",
+            "lado": lado,
+            "relacion_id": relacion.id,
+            "requested_at": chrono::Utc::now().to_rfc3339(),
+        });
+        let id = sqlx::query_scalar!(
             "INSERT INTO cola_extraccion_samples (
                      relacion_id, youtube_id, timing_inicio_seg, compas_inicio_seg,
                      compas_fin_seg, duracion_compas_seg, lado, estado, metadata_extraccion
-                 ) VALUES ($1, $2, $3, $4, $5, $6, $7, 'pendiente', $8)
+                 ) VALUES ($1, $2, $3, $4::float8, $5::float8, $6::float8, $7, 'pendiente', $8)
                  ON CONFLICT (relacion_id, lado) DO UPDATE SET
                      youtube_id = EXCLUDED.youtube_id,
                      timing_inicio_seg = EXCLUDED.timing_inicio_seg,
@@ -128,23 +137,18 @@ impl DevToolsRepository {
                      proximo_intento_at = NULL,
                      metadata_extraccion = EXCLUDED.metadata_extraccion
                  RETURNING id",
+            relacion.id,
+            youtube_id,
+            timing_inicio,
+            inicio,
+            fin,
+            duracion,
+            lado,
+            metadata
         )
-        .bind(relacion.id)
-        .bind(youtube_id)
-        .bind(timing_inicio)
-        .bind(inicio)
-        .bind(fin)
-        .bind(duracion)
-        .bind(lado)
-        .bind(serde_json::json!({
-            "origen": "dev_recorte_generar",
-            "lado": lado,
-            "relacion_id": relacion.id,
-            "requested_at": chrono::Utc::now().to_rfc3339(),
-        }))
         .fetch_one(pool)
         .await?;
-        Ok(row.0)
+        Ok(id)
     }
 }
 

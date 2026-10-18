@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE comentarios\n             SET moderacion_estado = $2,\n                 updated_at = NOW()\n             WHERE id = $1\n             RETURNING autor_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "autor_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "a80008cdfc2fe92df42d9c9c4fd4481e5e2b8c6950ce30b3908bda31da4f5705"
+}

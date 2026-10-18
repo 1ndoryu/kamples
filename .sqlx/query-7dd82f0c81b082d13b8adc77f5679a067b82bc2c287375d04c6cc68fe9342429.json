@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE publicaciones\n             SET moderacion_estado = $2,\n                 moderacion_razon = COALESCE($3, moderacion_razon)\n             WHERE id = $1 AND eliminado_en IS NULL\n             RETURNING autor_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "autor_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "7dd82f0c81b082d13b8adc77f5679a067b82bc2c287375d04c6cc68fe9342429"
+}

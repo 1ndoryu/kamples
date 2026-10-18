@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT EXISTS(\n                SELECT 1 FROM relaciones_sample\n                WHERE cancion_destino_id = $1\n                  AND cancion_fuente_id = $2\n                  AND tipo_relacion = $3\n             ) AS \"existe!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "existe!",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "79550fd85d3fcfe1143fd8bc4d61545a2921086916e2d77f1925686d0e1a930f"
+}

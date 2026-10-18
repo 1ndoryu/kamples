@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO duplicados_pendientes (sample_original_id, sample_duplicado_id, tipo, estado, notas)\n                 VALUES ($1, $2, $3, 'pendiente', 'Detectado por backfill de audio_hash en Rust')\n                 ON CONFLICT (sample_original_id, sample_duplicado_id) DO NOTHING\n                 RETURNING id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "612315edee416450b9008300d62e1558ee5639e1a85b724e2dba4ccd69cdade7"
+}

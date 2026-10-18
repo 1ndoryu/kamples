@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT s.id\n             FROM samples s\n             WHERE s.id <> $1\n               AND s.embedding IS NOT NULL\n               AND s.estado = 'activo'\n               AND s.eliminado_en IS NULL\n             ORDER BY s.embedding <=> (SELECT embedding FROM samples WHERE id = $1)\n             LIMIT $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "8c6a395c430a13cef45356def532e1e08ff65f4a92bfcd0ea906156eabff8bff"
+}

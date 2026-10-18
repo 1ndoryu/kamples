@@ -1,0 +1,26 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT url, tipo_pagina\n             FROM scraping_log\n             WHERE estado = 'pendiente'\n             ORDER BY created_at ASC, id ASC\n             LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "tipo_pagina",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "f2362c4e12eee8b5096118562be333505484c1f7ee00d0f5622493adabbdf2c4"
+}

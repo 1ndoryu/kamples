@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT estado, error_mensaje\n                 FROM lotes_procesamiento\n                WHERE tipo = $1\n                ORDER BY iniciado_at DESC\n                LIMIT 20",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "estado",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "error_mensaje",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      true
+    ]
+  },
+  "hash": "d2c667ab4867d50c7565c1453050050240b87500c153ecab096d5eaac9163f67"
+}

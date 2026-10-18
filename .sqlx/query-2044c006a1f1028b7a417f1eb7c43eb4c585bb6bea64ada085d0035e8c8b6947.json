@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT id\n             FROM samples\n             WHERE creador_id = $1\n               AND eliminado_en IS NULL\n             ORDER BY created_at DESC\n             LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "2044c006a1f1028b7a417f1eb7c43eb4c585bb6bea64ada085d0035e8c8b6947"
+}

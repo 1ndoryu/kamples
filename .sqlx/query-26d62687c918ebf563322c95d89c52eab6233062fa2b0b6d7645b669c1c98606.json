@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE publicaciones\n             SET moderacion_estado = 'rechazado',\n                 moderacion_razon = 'rechazo_masivo'\n             WHERE autor_id = $1\n               AND COALESCE(moderacion_estado, '') <> 'rechazado'\n               AND eliminado_en IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "26d62687c918ebf563322c95d89c52eab6233062fa2b0b6d7645b669c1c98606"
+}

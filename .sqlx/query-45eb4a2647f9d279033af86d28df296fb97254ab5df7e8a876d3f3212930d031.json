@@ -1,0 +1,58 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT\n                r.id,\n                cf.youtube_id AS fuente_youtube_id,\n                cd.youtube_id AS destino_youtube_id,\n                r.sample_fuente_id,\n                r.sample_destino_id,\n                COALESCE(r.timings_fuente, '[]'::jsonb) AS \"timings_fuente!\",\n                COALESCE(r.timings_destino, '[]'::jsonb) AS \"timings_destino!\"\n             FROM relaciones_sample r\n             JOIN canciones cf ON cf.id = r.cancion_fuente_id\n             JOIN canciones cd ON cd.id = r.cancion_destino_id\n             WHERE r.id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "fuente_youtube_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "destino_youtube_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "sample_fuente_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "sample_destino_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "timings_fuente!",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 6,
+        "name": "timings_destino!",
+        "type_info": "Jsonb"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      true,
+      true,
+      true,
+      null,
+      null
+    ]
+  },
+  "hash": "45eb4a2647f9d279033af86d28df296fb97254ab5df7e8a876d3f3212930d031"
+}

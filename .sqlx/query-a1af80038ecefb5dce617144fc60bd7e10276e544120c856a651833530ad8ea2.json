@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE samples\n             SET embedding = $2::text::vector,\n                 updated_at = NOW()\n             WHERE id = $1\n               AND eliminado_en IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a1af80038ecefb5dce617144fc60bd7e10276e544120c856a651833530ad8ea2"
+}

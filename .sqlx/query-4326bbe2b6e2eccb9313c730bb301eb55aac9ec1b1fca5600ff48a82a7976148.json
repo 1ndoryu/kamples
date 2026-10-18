@@ -1,0 +1,26 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE contribuciones_pendientes\n             SET estado = $2,\n                 moderador_id = $3,\n                 moderador_nota = $4,\n                 relacion_creada_id = $5,\n                 resuelto_at = NOW()\n             WHERE id = $1 AND estado = 'pendiente'\n             RETURNING id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Varchar",
+        "Int4",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "4326bbe2b6e2eccb9313c730bb301eb55aac9ec1b1fca5600ff48a82a7976148"
+}

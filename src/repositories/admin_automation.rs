@@ -1,6 +1,6 @@
-/* sentinel-disable-file sqlx-query-sin-macro sqlx-query-as-sin-macro — 274A-46 usa SQL runtime parametrizado por SQLX_OFFLINE sin cache nueva para consultas admin. */
 /* [274A-46] Repositorio de automatizacion: lotes e historial salen del handler
- * para que reactivar pueda compartir el mismo contrato de estado. */
+ * para que reactivar pueda compartir el mismo contrato de estado.
+ * Consultas con macros sqlx: comprobadas al compilar y cacheadas en .sqlx. */
 
 use chrono::{DateTime, Utc};
 use sqlx::{FromRow, PgPool};
@@ -43,7 +43,8 @@ impl AdminAutomationRepository {
         process_type: &str,
         metadata: Option<serde_json::Value>,
     ) -> Result<AutomationBatchRow, sqlx::Error> {
-        sqlx::query_as::<_, AutomationBatchRow>(
+        sqlx::query_as!(
+            AutomationBatchRow,
             r"INSERT INTO lotes_procesamiento (
                     tipo, estado, metadata
                 )
@@ -51,9 +52,9 @@ impl AdminAutomationRepository {
                 RETURNING id, tipo, estado, iniciado_at, completado_at,
                           exitosos, fallidos, recortes, samples_publicados,
                           canciones_nuevas, sampleos_nuevos, error_mensaje, metadata",
+            process_type,
+            metadata
         )
-        .bind(process_type)
-        .bind(metadata)
         .fetch_one(pool)
         .await
     }
@@ -62,14 +63,15 @@ impl AdminAutomationRepository {
         pool: &PgPool,
         batch_id: i64,
     ) -> Result<Option<AutomationBatchRow>, sqlx::Error> {
-        sqlx::query_as::<_, AutomationBatchRow>(
+        sqlx::query_as!(
+            AutomationBatchRow,
             r"SELECT id, tipo, estado, iniciado_at, completado_at,
                       exitosos, fallidos, recortes, samples_publicados,
                       canciones_nuevas, sampleos_nuevos, error_mensaje, metadata
                  FROM lotes_procesamiento
-                WHERE id = $1",
+                WHERE id = $1::bigint",
+            batch_id
         )
-        .bind(batch_id)
         .fetch_optional(pool)
         .await
     }
@@ -79,7 +81,7 @@ impl AdminAutomationRepository {
         batch_id: i64,
         update: &AutomationBatchUpdate,
     ) -> Result<(), sqlx::Error> {
-        sqlx::query(
+        sqlx::query!(
             r"UPDATE lotes_procesamiento
                    SET estado = $2,
                        completado_at = NOW(),
@@ -91,18 +93,18 @@ impl AdminAutomationRepository {
                        sampleos_nuevos = $8,
                        error_mensaje = $9,
                        metadata = COALESCE($10, metadata, '{}'::jsonb)
-                     WHERE id = $1",
+                     WHERE id = $1::bigint",
+            batch_id,
+            update.estado,
+            update.exitosos,
+            update.fallidos,
+            update.recortes,
+            update.samples_publicados,
+            update.canciones_nuevas,
+            update.sampleos_nuevos,
+            update.error_mensaje,
+            update.metadata
         )
-        .bind(batch_id)
-        .bind(&update.estado)
-        .bind(update.exitosos)
-        .bind(update.fallidos)
-        .bind(update.recortes)
-        .bind(update.samples_publicados)
-        .bind(update.canciones_nuevas)
-        .bind(update.sampleos_nuevos)
-        .bind(&update.error_mensaje)
-        .bind(&update.metadata)
         .execute(pool)
         .await?;
 
@@ -113,7 +115,8 @@ impl AdminAutomationRepository {
         pool: &PgPool,
         process_type: &str,
     ) -> Result<Option<AutomationBatchRow>, sqlx::Error> {
-        sqlx::query_as::<_, AutomationBatchRow>(
+        sqlx::query_as!(
+            AutomationBatchRow,
             r"SELECT id, tipo, estado, iniciado_at, completado_at,
                       exitosos, fallidos, recortes, samples_publicados,
                       canciones_nuevas, sampleos_nuevos, error_mensaje, metadata
@@ -121,8 +124,8 @@ impl AdminAutomationRepository {
                 WHERE tipo = $1
                 ORDER BY iniciado_at DESC
                 LIMIT 1",
+            process_type
         )
-        .bind(process_type)
         .fetch_optional(pool)
         .await
     }
@@ -131,21 +134,21 @@ impl AdminAutomationRepository {
         pool: &PgPool,
         process_type: &str,
     ) -> Result<i32, sqlx::Error> {
-        let rows: Vec<(String, Option<String>)> = sqlx::query_as(
+        let rows = sqlx::query!(
             r"SELECT estado, error_mensaje
                  FROM lotes_procesamiento
                 WHERE tipo = $1
                 ORDER BY iniciado_at DESC
                 LIMIT 20",
+            process_type
         )
-        .bind(process_type)
         .fetch_all(pool)
         .await?;
 
         let mut count = 0_i32;
-        for (status, error_message) in rows {
-            if status == "error" {
-                if is_missing_report_error(error_message.as_deref()) {
+        for fila in rows {
+            if fila.estado == "error" {
+                if is_missing_report_error(fila.error_mensaje.as_deref()) {
                     continue;
                 }
                 count += 1;
@@ -163,7 +166,8 @@ impl AdminAutomationRepository {
         limit: i64,
         offset: i64,
     ) -> Result<Vec<AutomationBatchRow>, sqlx::Error> {
-        sqlx::query_as::<_, AutomationBatchRow>(
+        sqlx::query_as!(
+            AutomationBatchRow,
             r"SELECT id, tipo, estado, iniciado_at, completado_at,
                       exitosos, fallidos, recortes, samples_publicados,
                       canciones_nuevas, sampleos_nuevos, error_mensaje, metadata
@@ -171,10 +175,10 @@ impl AdminAutomationRepository {
                 WHERE ($1::text IS NULL OR tipo = $1)
                 ORDER BY iniciado_at DESC
                 LIMIT $2 OFFSET $3",
+            process_type,
+            limit,
+            offset
         )
-        .bind(process_type)
-        .bind(limit)
-        .bind(offset)
         .fetch_all(pool)
         .await
     }
@@ -183,16 +187,16 @@ impl AdminAutomationRepository {
         pool: &PgPool,
         process_type: Option<&str>,
     ) -> Result<i64, sqlx::Error> {
-        let total: (i64,) = sqlx::query_as(
-            r"SELECT COUNT(*)::bigint
+        let total = sqlx::query_scalar!(
+            r#"SELECT COUNT(*)::bigint AS "total!"
                  FROM lotes_procesamiento
-                WHERE ($1::text IS NULL OR tipo = $1)",
+                WHERE ($1::text IS NULL OR tipo = $1)"#,
+            process_type
         )
-        .bind(process_type)
         .fetch_one(pool)
         .await?;
 
-        Ok(total.0)
+        Ok(total)
     }
 }
 

@@ -1,7 +1,7 @@
-/* sentinel-disable-file sqlx-query-sin-macro sqlx-query-as-sin-macro — 274A-53 usa SQL runtime parametrizado para evitar cache SQLx nueva en el endpoint admin destructivo. */
 /* [274A-53] Repositorio admin de limpieza masiva de samples.
  * Por que: legacy borra archivos fisicos y luego BD; Rust agrupa el borrado
- * de BD por IDs ya limpiados para evitar N roundtrips sin perder paridad. */
+ * de BD por IDs ya limpiados para evitar N roundtrips sin perder paridad.
+ * Consultas con macros sqlx: comprobadas al compilar y cacheadas en .sqlx. */
 
 use sqlx::{FromRow, PgPool};
 
@@ -20,7 +20,8 @@ impl AdminSamplesRepository {
     pub async fn list_all_for_deletion(
         pool: &PgPool,
     ) -> Result<Vec<AdminSampleAssetRow>, sqlx::Error> {
-        sqlx::query_as::<_, AdminSampleAssetRow>(
+        sqlx::query_as!(
+            AdminSampleAssetRow,
             r"SELECT id, ruta_original, ruta_optimizada, ruta_preview, ruta_waveform
                 FROM samples
                ORDER BY id ASC",
@@ -37,21 +38,23 @@ impl AdminSamplesRepository {
         let sample_ids = ids.to_vec();
         let mut tx = pool.begin().await?;
 
-        sqlx::query(
+        sqlx::query!(
             r"UPDATE cola_extraccion_samples
                   SET sample_id = NULL
                 WHERE sample_id = ANY($1::int[])",
+            &sample_ids
         )
-        .bind(&sample_ids)
         .execute(&mut *tx)
         .await?;
 
-        let deleted = sqlx::query(r"DELETE FROM samples WHERE id = ANY($1::int[])")
-            .bind(&sample_ids)
-            .execute(&mut *tx)
-            .await?;
+        let deleted = sqlx::query!(
+            r"DELETE FROM samples WHERE id = ANY($1::int[])",
+            &sample_ids
+        )
+        .execute(&mut *tx)
+        .await?;
 
-        sqlx::query(
+        sqlx::query!(
             r"WITH counts AS (
                     SELECT u.id, COUNT(s.id)::int AS total
                       FROM usuarios_ext u

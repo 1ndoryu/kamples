@@ -1,0 +1,12 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "WITH counts AS (\n                    SELECT u.id, COUNT(s.id)::int AS total\n                      FROM usuarios_ext u\n                      LEFT JOIN samples s\n                        ON s.creador_id = u.id\n                       AND s.eliminado_en IS NULL\n                     GROUP BY u.id\n               )\n               UPDATE usuarios_ext u\n                  SET total_samples = counts.total\n                 FROM counts\n                WHERE u.id = counts.id",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": []
+  },
+  "hash": "cc80ebb6175e1e1f477f3922ee23c1247c99ff269cf3f1a00987369bec276777"
+}

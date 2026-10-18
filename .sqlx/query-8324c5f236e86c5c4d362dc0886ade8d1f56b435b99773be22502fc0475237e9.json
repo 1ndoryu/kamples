@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE articulos\n             SET moderacion_estado = $2::text,\n                 moderacion_razon = CASE WHEN $2::text = 'rechazado' THEN COALESCE($3, 'revision_manual') ELSE moderacion_razon END,\n                 publicado_en = CASE WHEN $2::text = 'aprobado' THEN COALESCE(publicado_en, NOW()) ELSE publicado_en END,\n                 updated_at = NOW()\n             WHERE id = $1 AND eliminado_en IS NULL\n             RETURNING autor_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "autor_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "8324c5f236e86c5c4d362dc0886ade8d1f56b435b99773be22502fc0475237e9"
+}

@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO contribuciones_pendientes (\n                contribuidor_id, relacion_existente_id, tipo_contribucion, cambios_propuestos\n             ) VALUES ($1, $2, 'edicion', $3)\n             RETURNING id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Jsonb"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "390197ec2a2611bd178b2650abc01a511ca7d74ad8b6d6c94831780d43fbf095"
+}

@@ -1,0 +1,20 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT COUNT(*)::bigint AS \"total!\"\n             FROM samples\n             WHERE estado = 'activo'\n               AND eliminado_en IS NULL",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "total!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "be8649a7a41a012a60b6a7f5e6400e23b5cd7ad7505d6c44ede031cc08ba2fc7"
+}

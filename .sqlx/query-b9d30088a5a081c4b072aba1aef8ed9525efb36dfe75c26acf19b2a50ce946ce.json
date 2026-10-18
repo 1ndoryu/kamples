@@ -1,0 +1,12 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "TRUNCATE TABLE\n                cola_extraccion_samples,\n                scraping_log,\n                relaciones_sample,\n                canciones_artistas,\n                canciones,\n                artistas_musicales\n             RESTART IDENTITY CASCADE",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": []
+  },
+  "hash": "b9d30088a5a081c4b072aba1aef8ed9525efb36dfe75c26acf19b2a50ce946ce"
+}

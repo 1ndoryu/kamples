@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT COUNT(*)::bigint AS \"total!\"\n                 FROM lotes_procesamiento\n                WHERE ($1::text IS NULL OR tipo = $1)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "total!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "87f7d92e6bd18c91cef47f3c9a428f37b5d3623a5d17a7b6d9d943e9d4093a4b"
+}

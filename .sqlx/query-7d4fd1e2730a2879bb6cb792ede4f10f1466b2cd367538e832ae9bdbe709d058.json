@@ -1,0 +1,20 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT id\n             FROM samples\n             WHERE embedding IS NOT NULL\n               AND estado = 'activo'\n               AND eliminado_en IS NULL\n             ORDER BY id\n             LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "7d4fd1e2730a2879bb6cb792ede4f10f1466b2cd367538e832ae9bdbe709d058"
+}

@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO contribuciones_pendientes (\n                contribuidor_id, relacion_existente_id, tipo_contribucion, moderador_nota\n             ) VALUES ($1, $2, 'eliminacion', $3)\n             RETURNING id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "8999c6c26300129a656cae59d006ab202e735c70585e9ab50de930ee79ec6493"
+}

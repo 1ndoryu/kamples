@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE reportes\n             SET estado = $2,\n                 resuelto_por = $3,\n                 resuelto_at = NOW()\n             WHERE id = $1\n               AND COALESCE(estado, 'pendiente') = 'pendiente'",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Varchar",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "90929c323f20a74a75c5e9b720d0a3cf36972793597a76486dcc17fbf8bfa3be"
+}

@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE samples\n                 SET estado = 'en_supervision',\n                     updated_at = NOW()\n               WHERE id = $1\n                 AND estado = 'activo'\n                 AND eliminado_en IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "8da877f08fb4f0760d82bc6cfb3adf81cb3626c00dbfb58ce2b9bebbe38afae5"
+}
