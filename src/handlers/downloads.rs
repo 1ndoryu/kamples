@@ -14,7 +14,7 @@ use crate::middleware::CurrentUser;
 use crate::models::{DownloadGrantRequest, SampleSummary, SyncChangelogTipo};
 use crate::repositories::{
     BillingRepository, CompletedDownloadRevenueShareInsert, DownloadRepository, FreeCodeRepository,
-    SyncChangelogRepository,
+    SampleDownloadInfo, SyncChangelogRepository,
 };
 use crate::services::download_token;
 use crate::services::SampleCatalogService;
@@ -112,7 +112,6 @@ const PURCHASED_SAMPLES_LIMIT: i64 = 50;
         (status = 429, description = "Límite diario excedido"),
     )
 )]
-#[allow(clippy::too_many_lines)]
 pub async fn register_download(
     State(state): State<AppState>,
     user: CurrentUser,
@@ -158,21 +157,12 @@ pub async fn register_download(
         consume_credito = false;
     }
 
-    if !es_propietario && !es_codigo_gratis {
-        let precio = info.precio.unwrap_or(0.0);
-        if precio > 0.0 && !ya_descargado && !ya_comprado {
-            if info.es_premium && plan != "free" {
-                consume_credito = false;
-            } else {
-                return Err(AppError::Forbidden(format!(
-                    "Este sample requiere compra individual (precio {precio:.2})"
-                )));
-            }
-        } else if info.es_premium && plan == "free" && !ya_comprado {
-            return Err(AppError::Forbidden(
-                "Se requiere plan Pro o Premium para descargar este sample".into(),
-            ));
-        }
+    /* Solo el plan premium cubre la descarga sin consumir crédito; el resto se rechaza. */
+    if !es_propietario
+        && !es_codigo_gratis
+        && cubre_plan_premium(&info, &plan, ya_descargado, ya_comprado)?
+    {
+        consume_credito = false;
     }
 
     let limite_base = plan_daily_limit(&plan);
@@ -188,43 +178,10 @@ pub async fn register_download(
         }
     }
 
-    DownloadRepository::register(&state.pool, user.user_id, sample_id, "wav").await?;
-
-    state
-        .algo_planner
-        .register_interaction(
-            &state.pool,
-            &state.redis,
-            user.user_id,
-            InteractionKind::Descarga,
-        )
-        .await?;
-
-    /* [246A-1] Registrar en changelog para delta sync del desktop. */
-    SyncChangelogRepository::insert_entry(
-        &state.pool,
-        user.user_id,
-        SyncChangelogTipo::SampleAdded,
-        sample_id,
-        serde_json::json!({"origen": "download"}),
-    )
-    .await
-    .ok();
+    registrar_efectos_descarga(&state, user.user_id, sample_id).await?;
 
     if plan != "free" && !es_propietario {
-        if let Err(error) =
-            register_download_revenue_share(&state, user.user_id, info.creador_id, sample_id, &plan)
-                .await
-        {
-            tracing::error!(
-                buyer_id = user.user_id,
-                creator_id = info.creador_id,
-                sample_id,
-                plan = %plan,
-                error = %error,
-                "revenue share fallido para descarga"
-            );
-        }
+        reparto_descarga_creador(&state, user.user_id, info.creador_id, sample_id, &plan).await;
     }
 
     let restantes_post = limite.map(|l| (l - usadas - i64::from(consume_credito)).max(0));
@@ -240,6 +197,80 @@ pub async fn register_download(
         consume_credito,
         restantes: restantes_post.or(restantes),
     }))
+}
+
+/* Reglas de compra y plan para descargar. Devuelve `true` si el plan premium cubre
+ * la descarga sin consumir crédito; `Err` si el sample exige compra o plan superior. */
+fn cubre_plan_premium(
+    info: &SampleDownloadInfo,
+    plan: &str,
+    ya_descargado: bool,
+    ya_comprado: bool,
+) -> Result<bool, AppError> {
+    let precio = info.precio.unwrap_or(0.0);
+    if precio > 0.0 && !ya_descargado && !ya_comprado {
+        if info.es_premium && plan != "free" {
+            return Ok(true);
+        }
+        return Err(AppError::Forbidden(format!(
+            "Este sample requiere compra individual (precio {precio:.2})"
+        )));
+    }
+    if info.es_premium && plan == "free" && !ya_comprado {
+        return Err(AppError::Forbidden(
+            "Se requiere plan Pro o Premium para descargar este sample".into(),
+        ));
+    }
+    Ok(false)
+}
+
+/* Efectos de una descarga registrada: contador diario, interacción del planner
+ * y entrada en el changelog de sync (sin bloquear si falla). */
+async fn registrar_efectos_descarga(
+    state: &AppState,
+    user_id: i32,
+    sample_id: i32,
+) -> Result<(), AppError> {
+    DownloadRepository::register(&state.pool, user_id, sample_id, "wav").await?;
+
+    state
+        .algo_planner
+        .register_interaction(&state.pool, &state.redis, user_id, InteractionKind::Descarga)
+        .await?;
+
+    /* [246A-1] Registrar en changelog para delta sync del desktop. */
+    SyncChangelogRepository::insert_entry(
+        &state.pool,
+        user_id,
+        SyncChangelogTipo::SampleAdded,
+        sample_id,
+        serde_json::json!({"origen": "download"}),
+    )
+    .await
+    .ok();
+    Ok(())
+}
+
+/* El reparto al creador no debe bloquear la descarga: si falla, solo se registra el error. */
+async fn reparto_descarga_creador(
+    state: &AppState,
+    buyer_id: i32,
+    creator_id: i32,
+    sample_id: i32,
+    plan: &str,
+) {
+    if let Err(error) =
+        register_download_revenue_share(state, buyer_id, creator_id, sample_id, plan).await
+    {
+        tracing::error!(
+            buyer_id,
+            creator_id,
+            sample_id,
+            plan = %plan,
+            error = %error,
+            "revenue share fallido para descarga"
+        );
+    }
 }
 
 #[utoipa::path(

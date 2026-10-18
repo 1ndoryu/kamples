@@ -21,7 +21,7 @@
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
-use sqlx::PgPool;
+use sqlx::{PgPool, Postgres, Transaction};
 use tokio::sync::Mutex;
 use tokio::task::JoinHandle;
 
@@ -105,13 +105,9 @@ impl TagAffinityService {
     /// Recalcula TODOS los pesos de tags para un usuario en una transacción.
     /// (1) DELETE filas viejas; (2) INSERT-FROM-WITH con las 7 CTEs `utag_*`.
     /// Devuelve cantidad de filas insertadas.
-    #[allow(clippy::too_many_lines)]
     pub async fn recalculate_for_user(pool: &PgPool, user_id: i32) -> Result<u64, AppError> {
         let mut tx = pool.begin().await?;
-
-        sqlx::query!("DELETE FROM user_tag_scores WHERE user_id = $1", user_id)
-            .execute(&mut *tx)
-            .await?;
+        borrar_pesos_usuario(&mut tx, user_id).await?;
 
         /* Una sola query CTE: agrega todos los pesos por tag desde 7 fuentes
          * y los mergea via GROUP BY. utag_ctx limita a top-8 tags por
@@ -281,6 +277,18 @@ impl TagAffinityService {
     pub fn new_inflight_locks() -> InflightLocks {
         Arc::new(Mutex::new(HashSet::new()))
     }
+}
+
+/* Borra los pesos previos del usuario dentro de la misma transacción del recálculo,
+ * para que el INSERT posterior reemplace el conjunto completo sin filas huérfanas. */
+async fn borrar_pesos_usuario(
+    tx: &mut Transaction<'_, Postgres>,
+    user_id: i32,
+) -> Result<(), AppError> {
+    sqlx::query!("DELETE FROM user_tag_scores WHERE user_id = $1", user_id)
+        .execute(&mut **tx)
+        .await?;
+    Ok(())
 }
 
 #[cfg(test)]

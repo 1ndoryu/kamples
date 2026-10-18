@@ -220,7 +220,6 @@ pub async fn list_replies(
         (status = 422, description = "Validación de comentario"),
     )
 )]
-#[allow(clippy::too_many_lines)] // handler con validaciones secuenciales (target, contenido, archivos, persistencia)
 pub async fn create_comment(
     State(state): State<AppState>,
     user: CurrentUser,
@@ -298,36 +297,46 @@ pub async fn create_comment(
         }
     };
 
-    if let Some(parent_id) = parsed.parent_id {
-        CommentRepository::increment_replies(&state.pool, parent_id).await?;
+    let respuesta = finalizar_comentario(
+        &state,
+        user.user_id,
+        created_id,
+        (target_kind, target_id),
+        parsed.parent_id,
+    )
+    .await?;
+    Ok((StatusCode::CREATED, Json(respuesta)))
+}
+
+/* Tras persistir el comentario: actualiza contadores, registra la interacción,
+ * devuelve el comentario ya listo y avisa del fanout (si falla, solo se registra el aviso). */
+async fn finalizar_comentario(
+    state: &AppState,
+    user_id: i32,
+    created_id: i32,
+    destino: (CommentTargetKind, i32),
+    parent_id: Option<i32>,
+) -> Result<CommentMutationResponse, AppError> {
+    let (target_kind, target_id) = destino;
+    if let Some(parent) = parent_id {
+        CommentRepository::increment_replies(&state.pool, parent).await?;
     }
     CommentRepository::recount_target(&state.pool, target_kind, target_id).await?;
     state
         .algo_planner
-        .register_interaction(
-            &state.pool,
-            &state.redis,
-            user.user_id,
-            InteractionKind::Comentario,
-        )
+        .register_interaction(&state.pool, &state.redis, user_id, InteractionKind::Comentario)
         .await?;
 
-    let hidden = collect_hidden_author_ids(&state, Some(user.user_id)).await?;
-    let comment = CommentRepository::get(&state.pool, Some(user.user_id), created_id, &hidden)
+    let hidden = collect_hidden_author_ids(state, Some(user_id)).await?;
+    let comment = CommentRepository::get(&state.pool, Some(user_id), created_id, &hidden)
         .await?
         .ok_or_else(|| AppError::NotFound(format!("comentario {created_id} no existe")))?;
 
-    if let Err(error) = maybe_notify_comment_creation(
-        &state,
-        user.user_id,
-        target_kind,
-        target_id,
-        parsed.parent_id,
-    )
-    .await
+    if let Err(error) =
+        maybe_notify_comment_creation(state, user_id, target_kind, target_id, parent_id).await
     {
         warn!(
-            actor_id = user.user_id,
+            actor_id = user_id,
             comment_id = created_id,
             target_kind = target_kind.as_db_str(),
             target_id,
@@ -336,13 +345,10 @@ pub async fn create_comment(
         );
     }
 
-    Ok((
-        StatusCode::CREATED,
-        Json(CommentMutationResponse {
-            ok: true,
-            comment: normalize_comment_detail(comment, state.public_base_url.as_deref()),
-        }),
-    ))
+    Ok(CommentMutationResponse {
+        ok: true,
+        comment: normalize_comment_detail(comment, state.public_base_url.as_deref()),
+    })
 }
 
 #[utoipa::path(
