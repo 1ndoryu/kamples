@@ -116,6 +116,15 @@ pub struct CreateUploadSampleParams<'a> {
 }
 
 impl SampleRepository {
+    /// Total de samples activos y no eliminados (contador del feed).
+    pub async fn contar_activos(pool: &PgPool) -> Result<i64, sqlx::Error> {
+        sqlx::query_scalar!(
+            r#"SELECT COUNT(*) AS "total!" FROM samples WHERE eliminado_en IS NULL AND estado = 'activo'"#
+        )
+        .fetch_one(pool)
+        .await
+    }
+
     pub async fn find_pipeline_sample(
         pool: &PgPool,
         sample_id: i32,

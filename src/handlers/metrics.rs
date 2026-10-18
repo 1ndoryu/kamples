@@ -1,5 +1,6 @@
 /* [174A-97] /metrics endpoint Prometheus text. */
 
+use crate::repositories::AdminPanelRepository;
 use crate::AppState;
 use axum::extract::State;
 use axum::http::header;
@@ -16,21 +17,10 @@ pub async fn metrics(State(state): State<AppState>) -> impl IntoResponse {
     let redis_enabled = i64::from(state.redis.is_some());
     let stripe_enabled = i64::from(state.stripe_runtime.is_some());
 
-    let ia_pending: i64 =
-        sqlx::query_scalar("SELECT COUNT(*)::bigint FROM ia_queue WHERE estado = 'pendiente'")
-            .fetch_one(pool)
-            .await
-            .unwrap_or(-1);
-    let scraping_pending: i64 =
-        sqlx::query_scalar("SELECT COUNT(*)::bigint FROM scraping_log WHERE estado = 'pendiente'")
-            .fetch_one(pool)
-            .await
-            .unwrap_or(-1);
-    let suscripciones_activas: i64 =
-        sqlx::query_scalar("SELECT COUNT(*)::bigint FROM suscripciones WHERE estado = 'activa'")
-            .fetch_one(pool)
-            .await
-            .unwrap_or(-1);
+    let conteos = AdminPanelRepository::conteos_metricas(pool).await;
+    let ia_pending = conteos.ia_pendientes;
+    let scraping_pending = conteos.scraping_pendientes;
+    let suscripciones_activas = conteos.suscripciones_activas;
 
     let mut body = String::with_capacity(1024);
     let version = env!("CARGO_PKG_VERSION");

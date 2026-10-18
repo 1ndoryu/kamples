@@ -19,6 +19,18 @@ pub struct RegisterPlayOutcome {
 }
 
 impl PlayRepository {
+    /// `true` si el sample existe y no está eliminado. Evita que el INSERT de
+    /// `reproducciones` falle por la FK y devuelva 500 (ver handlers/plays.rs).
+    pub async fn existe_activo(pool: &PgPool, sample_id: i32) -> Result<bool, AppError> {
+        let id = sqlx::query_scalar!(
+            "SELECT id FROM samples WHERE id = $1 AND eliminado_en IS NULL",
+            sample_id,
+        )
+        .fetch_optional(pool)
+        .await?;
+        Ok(id.is_some())
+    }
+
     /// Devuelve los IDs únicos de samples reproducidos por el usuario.
     /// Se usa para pintar indicadores de "ya escuchado" en la UI legacy.
     pub async fn list_played_ids(pool: &PgPool, user_id: i32) -> Result<Vec<i32>, AppError> {

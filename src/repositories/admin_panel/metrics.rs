@@ -6,7 +6,40 @@ use crate::models::{
     AdminActivityPoint, AdminActivityQuery, AdminActivityResponse, AdminSummaryStats,
 };
 
+/* Conteos del endpoint /metrics (Prometheus). */
+pub struct ConteosMetricas {
+    pub ia_pendientes: i64,
+    pub scraping_pendientes: i64,
+    pub suscripciones_activas: i64,
+}
+
 impl AdminPanelRepository {
+    /// Conteos para /metrics, consultados en paralelo. Si una consulta falla,
+    /// devuelve -1 en ese contador: es el contrato existente del endpoint.
+    pub async fn conteos_metricas(pool: &PgPool) -> ConteosMetricas {
+        /* `ia_queue` usa la columna `status`: la antigua `estado` no existe y el
+         * gauge quedaba siempre en -1 sin avisar. */
+        let (ia, scraping, subs) = tokio::join!(
+            sqlx::query_scalar!(
+                r#"SELECT COUNT(*)::bigint AS "n!" FROM ia_queue WHERE status = 'pending'"#
+            )
+            .fetch_one(pool),
+            sqlx::query_scalar!(
+                r#"SELECT COUNT(*)::bigint AS "n!" FROM scraping_log WHERE estado = 'pendiente'"#
+            )
+            .fetch_one(pool),
+            sqlx::query_scalar!(
+                r#"SELECT COUNT(*)::bigint AS "n!" FROM suscripciones WHERE estado = 'activa'"#
+            )
+            .fetch_one(pool),
+        );
+        ConteosMetricas {
+            ia_pendientes: ia.unwrap_or(-1),
+            scraping_pendientes: scraping.unwrap_or(-1),
+            suscripciones_activas: subs.unwrap_or(-1),
+        }
+    }
+
     pub async fn summary(pool: &PgPool) -> Result<AdminSummaryStats, AppError> {
         let mut builder = QueryBuilder::<Postgres>::new(
             r"SELECT

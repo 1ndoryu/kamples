@@ -12,6 +12,24 @@ const PROFILE_COLS: &str = "id, username, email, nombre_visible, bio, avatar_url
     total_samples, total_descargas, estado, created_at";
 
 impl ProfileRepository {
+    /// Perfiles básicos (id, username, nombre visible, avatar) de varios usuarios
+    /// en una sola consulta. Se usa para listas de seguidores.
+    pub async fn perfiles_basicos(
+        pool: &PgPool,
+        ids: &[i32],
+    ) -> Result<Vec<(i32, String, String, Option<String>)>, sqlx::Error> {
+        let rows = sqlx::query!(
+            "SELECT id, username, nombre_visible, avatar_url FROM usuarios_ext WHERE id = ANY($1)",
+            ids,
+        )
+        .fetch_all(pool)
+        .await?;
+        Ok(rows
+            .into_iter()
+            .map(|r| (r.id, r.username, r.nombre_visible, r.avatar_url))
+            .collect())
+    }
+
     pub async fn find_by_id(pool: &PgPool, id: i32) -> Result<Option<UserProfile>, sqlx::Error> {
         let sql = format!("SELECT {PROFILE_COLS} FROM usuarios_ext WHERE id = $1");
         sqlx::query_as::<_, UserProfile>(&sql)

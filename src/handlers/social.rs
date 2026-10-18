@@ -10,7 +10,9 @@ use crate::errors::AppError;
 #[allow(unused_imports)]
 use crate::errors::ErrorResponse;
 use crate::middleware::{CurrentUser, OptionalUser};
-use crate::repositories::{BlockRepository, BlockedUser, FollowRepository, UserRepository};
+use crate::repositories::{
+    BlockRepository, BlockedUser, FollowRepository, ProfileRepository, UserRepository,
+};
 use crate::services::NotificationFanoutService;
 use crate::AppState;
 use tracing::warn;
@@ -307,12 +309,7 @@ pub async fn seguidores(
     }
 
     /* Batch lookup de perfiles basicos. */
-    let rows: Vec<(i32, String, String, Option<String>)> = sqlx::query_as(
-        "SELECT id, username, nombre_visible, avatar_url FROM usuarios_ext WHERE id = ANY($1)",
-    )
-    .bind(&follower_ids)
-    .fetch_all(&state.pool)
-    .await?;
+    let rows = ProfileRepository::perfiles_basicos(&state.pool, &follower_ids).await?;
 
     /* Map id → profile para mantener el orden de follows.created_at. */
     let profile_map: std::collections::HashMap<i32, (String, String, Option<String>)> =

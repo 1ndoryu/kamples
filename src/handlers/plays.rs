@@ -86,12 +86,7 @@ pub async fn register_play(
      * Sin esto, el INSERT explota con `reproducciones_sample_id_fkey` y devuelve
      * 500 al frontend, que cachea IDs de samples ya borrados (p. ej. tras un wipe
      * de la cola de extraccion). 404 es la respuesta correcta. */
-    let exists: Option<(i32,)> =
-        sqlx::query_as("SELECT id FROM samples WHERE id = $1 AND eliminado_en IS NULL")
-            .bind(sample_id)
-            .fetch_optional(&state.pool)
-            .await?;
-    if exists.is_none() {
+    if !PlayRepository::existe_activo(&state.pool, sample_id).await? {
         return Err(AppError::NotFound(format!("sample {sample_id} no existe")));
     }
 

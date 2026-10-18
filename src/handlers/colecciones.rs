@@ -449,12 +449,12 @@ pub async fn sugerencias_coleccion(
     let per_page = q.per_page.unwrap_or(20).clamp(1, SUGERENCIAS_MAX_PER_PAGE);
     let offset = (page - 1) * per_page;
 
-    let contexto = fetch_coleccion_contexto(&state, id).await?;
+    let contexto = ColeccionesRepository::contexto_muestras(&state.pool, id).await?;
     if contexto.is_empty() {
         return Ok(Json(ColeccionSugerenciasResponse { data: Vec::new() }));
     }
 
-    let exclude = fetch_coleccion_sample_ids(&state, id).await?;
+    let exclude = ColeccionesRepository::ids_muestras(&state.pool, id).await?;
     let (top_tags, avg_bpm, dominant_key) = aggregate_coleccion_context(&contexto);
 
     let records = SampleRepository::find_samples_by_aggregated_scoring(
@@ -476,45 +476,6 @@ pub async fn sugerencias_coleccion(
         .collect();
 
     Ok(Json(ColeccionSugerenciasResponse { data }))
-}
-
-async fn fetch_coleccion_contexto(
-    state: &AppState,
-    coleccion_id: i64,
-) -> Result<Vec<SampleContextRow>, AppError> {
-    let rows = sqlx::query_as!(
-        SampleContextRow,
-        r#"
-        SELECT
-            COALESCE(s.tags, ARRAY[]::text[]) AS "tags!: Vec<String>",
-            s.bpm AS "bpm?",
-            s.key AS "music_key?"
-        FROM samples s
-        JOIN coleccion_samples cs ON cs.sample_id = s.id
-        WHERE cs.coleccion_id = $1
-          AND s.estado = 'activo'
-          AND s.eliminado_en IS NULL
-        "#,
-        coleccion_id
-    )
-    .fetch_all(&state.pool)
-    .await
-    .map_err(AppError::from)?;
-    Ok(rows)
-}
-
-async fn fetch_coleccion_sample_ids(
-    state: &AppState,
-    coleccion_id: i64,
-) -> Result<Vec<i32>, AppError> {
-    let rows = sqlx::query_scalar!(
-        r#"SELECT sample_id AS "sample_id!" FROM coleccion_samples WHERE coleccion_id = $1"#,
-        coleccion_id
-    )
-    .fetch_all(&state.pool)
-    .await
-    .map_err(AppError::from)?;
-    Ok(rows)
 }
 
 fn aggregate_coleccion_context(

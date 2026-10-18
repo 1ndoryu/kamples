@@ -19,6 +19,7 @@
 
 use sqlx::PgPool;
 
+use super::SampleContextRow;
 use crate::errors::AppError;
 
 mod legacy;
@@ -447,6 +448,45 @@ impl ColeccionesRepository {
         .fetch_one(pool)
         .await?;
         Ok(r)
+    }
+
+    /* Contexto (tags, bpm, key) de las muestras activas de una colección.
+     * Movido desde handlers/colecciones.rs: la SQL queda idéntica (caché .sqlx). */
+    pub async fn contexto_muestras(
+        pool: &PgPool,
+        coleccion_id: i64,
+    ) -> Result<Vec<SampleContextRow>, AppError> {
+        let rows = sqlx::query_as!(
+            SampleContextRow,
+            r#"
+        SELECT
+            COALESCE(s.tags, ARRAY[]::text[]) AS "tags!: Vec<String>",
+            s.bpm AS "bpm?",
+            s.key AS "music_key?"
+        FROM samples s
+        JOIN coleccion_samples cs ON cs.sample_id = s.id
+        WHERE cs.coleccion_id = $1
+          AND s.estado = 'activo'
+          AND s.eliminado_en IS NULL
+        "#,
+            coleccion_id
+        )
+        .fetch_all(pool)
+        .await
+        .map_err(AppError::from)?;
+        Ok(rows)
+    }
+
+    /* IDs de las muestras de una colección (para excluirlas de sugerencias). */
+    pub async fn ids_muestras(pool: &PgPool, coleccion_id: i64) -> Result<Vec<i32>, AppError> {
+        let rows = sqlx::query_scalar!(
+            r#"SELECT sample_id AS "sample_id!" FROM coleccion_samples WHERE coleccion_id = $1"#,
+            coleccion_id
+        )
+        .fetch_all(pool)
+        .await
+        .map_err(AppError::from)?;
+        Ok(rows)
     }
 
     /* Valida que `parent_id` exista, pertenezca al mismo usuario, y que su propio

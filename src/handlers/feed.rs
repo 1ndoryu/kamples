@@ -206,11 +206,7 @@ pub async fn get_feed(
         /* [166B-1] Total activo para el contador del frontend.
          * En modo recomendador no hay filtros, así que contamos todos los samples
          * activos públicos de una pasada. */
-        let total: i64 = sqlx::query_scalar(
-            "SELECT COUNT(*) FROM samples WHERE eliminado_en IS NULL AND estado = 'activo'",
-        )
-        .fetch_one(&state.pool)
-        .await?;
+        let total: i64 = SampleRepository::contar_activos(&state.pool).await?;
 
         return Ok(Json(FeedResponse {
             items,
