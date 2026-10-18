@@ -21,4 +21,12 @@ ignore = [
     # Decidido: excepción de 1 mes (2026-10-12). VENCE 2026-11-12.
     # Al vencer: renovar con fecha nueva; solo se puede quitar cuando el lock se regenere (ver [16A-4]).
     "RUSTSEC-2023-0071",
+    # RUSTSEC-2026-0367/0368/0369 (zip 1.1.4, parche en 9.0.0). Motivo: `zip` 1.x entra solo como
+    # build-dependency de utoipa-swagger-ui 7.1.0 (`cargo tree -i zip@1.1.4`): solo lo usa su build.rs
+    # para descomprimir Swagger UI en build, una entrada fija y no del usuario. El código del backend
+    # usa zip 9 (colecciones/zip.rs). Decidido: excepción de 1 mes (2026-10-18).
+    # VENCE 2026-11-18. Al vencer: subir utoipa-swagger-ui a 10.x (zip 8.6+) y quitar la entrada.
+    "RUSTSEC-2026-0367",
+    "RUSTSEC-2026-0368",
+    "RUSTSEC-2026-0369",
 ]
