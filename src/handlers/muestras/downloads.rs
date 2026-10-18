@@ -6,7 +6,7 @@ use axum::{Json, Router};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use super::free_codes::normalize_optional_free_code;
+use crate::handlers::free_codes::normalize_optional_free_code;
 use crate::algorithm::InteractionKind;
 use crate::domain::{calculate_subscription_download_revenue_share, KamplesPlanId};
 use crate::errors::AppError;
