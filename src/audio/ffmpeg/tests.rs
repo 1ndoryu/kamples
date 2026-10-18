@@ -1,3 +1,4 @@
+use super::cli::temp_file_path;
 use super::*;
 use serial_test::serial;
 
