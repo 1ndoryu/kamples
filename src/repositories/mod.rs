@@ -1,153 +1,118 @@
-mod admin_automation;
-mod admin_duplicates;
-mod admin_experiments;
-mod admin_ia_queue;
-mod admin_moderation;
-mod admin_panel;
-mod admin_samples;
-mod admin_seed;
-mod app_config;
-mod article;
+mod admin;
 mod biblioteca;
-mod billing;
-mod block;
-mod cola_extraccion;
-mod coleccion;
-mod comment;
-mod contribuciones;
-mod conversation;
-mod creator_dashboard;
-mod dev_tools;
-mod download;
-mod fcm;
-mod follow;
-mod free_code;
-mod ia_queue;
-mod like;
-mod message;
-mod moderation;
+mod colas;
+mod comunicacion;
+mod contenido;
+mod moderacion;
 mod music;
-mod notification;
-mod notification_target;
-mod play;
-mod post;
-mod processing_queue;
-mod profile;
-mod push;
-mod report;
-mod sample;
-mod sample_catalog;
-mod saved_collection;
-mod search;
-mod seo;
-mod sync_changelog;
-mod sync_full;
-mod user;
+mod samples;
+mod social;
+mod usuarios;
 
-pub use admin_automation::{AdminAutomationRepository, AutomationBatchRow, AutomationBatchUpdate};
-pub use admin_duplicates::{
+pub use admin::admin_automation::{AdminAutomationRepository, AutomationBatchRow, AutomationBatchUpdate};
+pub use admin::admin_duplicates::{
     AdminDuplicatesRepository, BackfillSampleRow, DuplicateAdminRow, ExistingHashSampleRow,
 };
-pub use admin_experiments::{AdminExperimentsRepository, EmbeddingSampleRow, TestUserRow};
-pub use admin_ia_queue::{
+pub use admin::admin_experiments::{AdminExperimentsRepository, EmbeddingSampleRow, TestUserRow};
+pub use colas::admin_ia_queue::{
     AdminIaQueueItem, AdminIaQueueListParams, AdminIaQueueRepository, AdminIaQueueStats,
 };
-pub use admin_moderation::{
+pub use admin::admin_moderation::{
     AdminModerationRepository, ArticuloPendiente, PublicacionPendiente, ReportePendiente,
 };
-pub use admin_panel::AdminPanelRepository;
-pub use admin_samples::{AdminSampleAssetRow, AdminSamplesRepository};
-pub use admin_seed::{AdminSeedRepository, InsertSeedUserInput};
-pub use app_config::{AppConfigEntry, AppConfigRepository};
-pub use article::{
+pub use admin::admin_panel::AdminPanelRepository;
+pub use admin::admin_samples::{AdminSampleAssetRow, AdminSamplesRepository};
+pub use admin::admin_seed::{AdminSeedRepository, InsertSeedUserInput};
+pub use usuarios::app_config::{AppConfigEntry, AppConfigRepository};
+pub use contenido::article::{
     ArticleAuthorSummary, ArticleCategoryCount, ArticleDetail, ArticleEmbed, ArticleMeta,
     ArticleRepository, ArticleSummary, CreateArticleParams, UpdateArticleParams,
 };
-pub use biblioteca::{
+pub use biblioteca::repositorio::{
     BibliotecaRepository, CarpetaRow, ColeccionadosFilters, FiltroReaccion, SampleContextRow,
     CARPETA_DEFAULT,
 };
-pub use billing::{
+pub use usuarios::billing::{
     BillingRepository, CompletedDownloadRevenueShareInsert, CompletedSamplePurchaseInsert,
     CreatorPayoutInsert, SampleCheckoutCandidate, StripeUserProfile, SubscriptionRecord,
     UpsertStripeSubscriptionRecord,
 };
-pub use block::{BlockRepository, BlockedUser};
-pub use cola_extraccion::{
+pub use social::block::{BlockRepository, BlockedUser};
+pub use colas::cola_extraccion::{
     ColaExtraccionRepository, ColaExtraccionRow, ColaExtraidoReclamado, EncolarParams,
     EstadisticasCola,
 };
-pub use coleccion::{
+pub use biblioteca::coleccion::{
     Coleccion, ColeccionOp, ColeccionSample, ColeccionSampleFile, ColeccionesRepository,
     LegacyColeccionParentRecord, LegacyColeccionRecord, LegacyColeccionSampleRecord,
 };
-pub use comment::{
+pub use social::comment::{
     CommentAuthorSummary, CommentContentKind, CommentContext, CommentDetail, CommentRepository,
     CommentTargetKind, CreateCommentParams,
 };
-pub use contribuciones::{
+pub use moderacion::contribuciones::{
     ActualizarContribucionRecord, ContribucionModeracion, ContribucionPendiente,
     ContribucionesRepository, CrearContribucionRecord,
 };
-pub use conversation::{
+pub use comunicacion::conversation::{
     ConversationParticipantSummary, ConversationRepository, ConversationSummary,
 };
-pub use creator_dashboard::CreatorDashboardRepository;
-pub use dev_tools::{DevToolsRepository, ScrapingPendiente};
-pub use download::{DownloadRepository, SampleDownloadInfo, SampleFileInfo, UserDownloadAllowance};
-pub use fcm::{FcmTokenRecord, FcmTokenRepository, RegisterFcmTokenRecord};
-pub use follow::FollowRepository;
-pub use free_code::{CreateFreeCodeInput, FreeCodeRecord, FreeCodeRepository};
-pub use ia_queue::{
+pub use usuarios::creator_dashboard::CreatorDashboardRepository;
+pub use admin::dev_tools::{DevToolsRepository, ScrapingPendiente};
+pub use samples::download::{DownloadRepository, SampleDownloadInfo, SampleFileInfo, UserDownloadAllowance};
+pub use comunicacion::fcm::{FcmTokenRecord, FcmTokenRepository, RegisterFcmTokenRecord};
+pub use social::follow::FollowRepository;
+pub use usuarios::free_code::{CreateFreeCodeInput, FreeCodeRecord, FreeCodeRepository};
+pub use colas::ia_queue::{
     retry_backoff_duration, IaQueueFailureDisposition, IaQueueRepository, QueuedIaJob,
 };
-pub use like::{LikeKind, LikeRepository, Reaction};
-pub use message::{
+pub use social::like::{LikeKind, LikeRepository, Reaction};
+pub use comunicacion::message::{
     ConversationMessage, CreateMessageParams, DirectMessageKind, MessageRepository,
     SharedSampleMessage,
 };
-pub use moderation::ModerationRepository;
+pub use moderacion::moderation::ModerationRepository;
 pub use music::MusicRepository;
-pub use notification::{
+pub use comunicacion::notification::{
     CreateNotificationRecord, NotificationActor, NotificationRepository, UserNotification,
 };
-pub use notification_target::{
+pub use comunicacion::notification_target::{
     NotificationTargetRepository, PostNotificationMeta, SampleNotificationMeta,
 };
-pub use play::{PlayRepository, RegisterPlayOutcome};
-pub use post::{
+pub use samples::play::{PlayRepository, RegisterPlayOutcome};
+pub use contenido::post::{
     PostAuthorSummary, PostDetail, PostListParams, PostRepository, RepostedPostSummary,
 };
-pub use processing_queue::{
+pub use colas::processing_queue::{
     retry_backoff_minutes, ProcessingQueueRepository, QueueFailureDisposition,
     QueuedAudioProcessingJob,
 };
-pub use profile::ProfileRepository;
-pub use push::{
+pub use usuarios::profile::ProfileRepository;
+pub use comunicacion::push::{
     PushSubscriptionRecord, PushSubscriptionRepository, RegisterPushSubscriptionRecord,
 };
-pub use report::{
+pub use moderacion::report::{
     CreateReportRecord, LegalReportRow, ReportRepository, AUTO_HIDE_POST_REPORT_THRESHOLD,
     AUTO_HIDE_SAMPLE_REPORT_THRESHOLD,
 };
-pub use sample::{
+pub use samples::sample::{
     ApplyAudioIaMetadataParams, AudioIaSample, AudioPipelineSample, CompleteAudioPipelineParams,
     CreateUploadSampleParams, CreatedUploadSample, DuplicateSampleCandidate,
     MarkAudioPipelineFailedParams, SampleRepository, SaveAudioAnalysisParams,
     SaveAudioAssetsParams,
 };
-pub use sample_catalog::{
+pub use samples::sample_catalog::{
     CriterioScoring, OwnedSampleRecord, SampleCatalogDetailRecord, SampleCatalogSummaryRecord,
     SampleListFilters,
     SampleListResult, SampleSortOrder, SampleTextSearch, TagAggregateFilters, TagAggregateItem,
     TagAggregatesResult, UpdateSamplePatch,
 };
-pub use saved_collection::{SavedColeccion, SavedCollectionsRepository};
-pub use search::{
+pub use biblioteca::saved_collection::{SavedColeccion, SavedCollectionsRepository};
+pub use contenido::search::{
     SearchCollectionRecord, SearchRepository, SearchSampleRecord, SearchSampleRelationRecord,
     SearchSongRecord, SearchUserRecord,
 };
-pub use seo::SeoRepository;
-pub use sync_changelog::SyncChangelogRepository;
-pub use sync_full::SyncFullRepository;
-pub use user::{OAuthRepository, UserRepository};
+pub use contenido::seo::SeoRepository;
+pub use biblioteca::sync_changelog::SyncChangelogRepository;
+pub use biblioteca::sync_full::SyncFullRepository;
+pub use usuarios::user::{OAuthRepository, UserRepository};

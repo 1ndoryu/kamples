@@ -19,7 +19,7 @@
 
 use sqlx::PgPool;
 
-use super::SampleContextRow;
+use crate::repositories::SampleContextRow;
 use crate::errors::AppError;
 
 mod legacy;

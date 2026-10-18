@@ -6,7 +6,7 @@ use utoipa::ToSchema;
 
 use crate::errors::AppError;
 
-use super::DirectMessageKind;
+use crate::repositories::DirectMessageKind;
 
 pub struct ConversationRepository;
 
