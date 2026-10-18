@@ -284,17 +284,59 @@ pub(crate) fn build_sample_summary(
     }
 }
 
-/* [clippy] Refactorizar no aporta valor: es mapeo puro record->response. */
-#[allow(clippy::too_many_lines)]
-fn build_sample_detail(
-    record: SampleCatalogDetailRecord,
-    public_base_url: Option<&str>,
-    current_user_id: Option<i32>,
-) -> SampleDetailResponse {
-    let is_owner = current_user_id.is_some_and(|user_id| user_id == record.creator_id);
+/* Campos del JSONB metadata_extraccion, tipados; ausentes o de otro tipo quedan en None. */
+#[derive(Default)]
+struct MetaExtraccion {
+    fuente_titulo: Option<String>,
+    fuente_artista: Option<String>,
+    dest_titulo: Option<String>,
+    dest_artista: Option<String>,
+    tipo_elemento: Option<String>,
+    recorte_por_compas: Option<String>,
+    formato: Option<String>,
+    descarga_metodo: Option<String>,
+    descarga_fuente_url: Option<String>,
+    descarga_fuente_titulo: Option<String>,
+    descarga_fuente_artista: Option<String>,
+    votos_total: Option<i32>,
+    duracion_extraida: Option<f64>,
+    tamano_bytes: Option<i32>,
+}
 
-    /* [166A-1] QQ51: Construir cancion_origen enriquecido si hay datos */
-    let cancion_origen = record.cancion_origen_id.and_then(|_| {
+impl MetaExtraccion {
+    fn desde_json(valor: Option<&serde_json::Value>) -> Self {
+        let Some(obj) = valor.and_then(serde_json::Value::as_object) else {
+            return Self::default();
+        };
+        let texto = |k: &str| obj.get(k).and_then(|v| v.as_str()).map(str::to_owned);
+        // Enteros fuera de rango i32 se descartan en lugar de truncarse.
+        let entero = |k: &str| {
+            obj.get(k)
+                .and_then(serde_json::Value::as_i64)
+                .and_then(|n| i32::try_from(n).ok())
+        };
+        Self {
+            fuente_titulo: texto("fuente_titulo"),
+            fuente_artista: texto("fuente_artista"),
+            dest_titulo: texto("destino_titulo"),
+            dest_artista: texto("destino_artista"),
+            tipo_elemento: texto("tipo_elemento"),
+            recorte_por_compas: texto("recorte_por_compas"),
+            formato: texto("formato"),
+            descarga_metodo: texto("descarga_metodo"),
+            descarga_fuente_url: texto("descarga_fuente_url"),
+            descarga_fuente_titulo: texto("descarga_fuente_titulo"),
+            descarga_fuente_artista: texto("descarga_fuente_artista"),
+            votos_total: entero("votos_total"),
+            duracion_extraida: obj.get("duracion").and_then(serde_json::Value::as_f64),
+            tamano_bytes: entero("tamano_bytes"),
+        }
+    }
+}
+
+/* [166A-1] QQ51: Construir cancion_origen enriquecido si hay datos */
+fn build_cancion_origen(record: &SampleCatalogDetailRecord) -> Option<CancionOrigenResumen> {
+    record.cancion_origen_id.and_then(|_| {
         let titulo = record.cancion_origen_titulo.as_deref()?;
         let slug = record.cancion_origen_slug.as_deref()?;
         Some(CancionOrigenResumen {
@@ -305,119 +347,59 @@ fn build_sample_detail(
             whosampled_url: record.cancion_origen_whosampled_url.clone(),
             bpm: record.cancion_origen_bpm,
         })
-    });
+    })
+}
 
-    /* [166A-1] QQ117: Construir extraccion si existe al menos una fila */
+/* [166A-1] QQ117: Construir extraccion si existe al menos una fila */
+fn build_extraccion(record: &SampleCatalogDetailRecord) -> Option<ExtraccionSampleResponse> {
     let has_extraccion = record.extraccion_youtube_id.is_some()
         || record.extraccion_bpm_detectado.is_some()
         || record.extraccion_estado.is_some();
-    let extraccion = if has_extraccion {
-        /* QQ23: Extraer campos del JSONB metadata_extraccion */
-        let (
-            fuente_titulo,
-            fuente_artista,
-            dest_titulo,
-            dest_artista,
-            tipo_elemento,
-            recorte_por_compas,
-            formato,
-            descarga_metodo,
-            descarga_fuente_url,
-            descarga_fuente_titulo,
-            descarga_fuente_artista,
-            votos_total,
-            duracion_extraida,
-            tamano_bytes,
-        ) = record
-            .extraccion_metadata
-            .as_ref()
-            .and_then(|v| v.as_object())
-            .map_or(
-                (
-                    None, None, None, None, None, None, None, None, None, None, None, None, None,
-                    None,
-                ),
-                |obj| {
-                    #[allow(
-                        clippy::cast_possible_truncation,
-                        clippy::redundant_closure_for_method_calls
-                    )]
-                    let i = |k: &str| obj.get(k).and_then(|v| v.as_i64()).map(|n| n as i32);
-                    (
-                        obj.get("fuente_titulo")
-                            .and_then(|v| v.as_str())
-                            .map(std::string::ToString::to_string),
-                        obj.get("fuente_artista")
-                            .and_then(|v| v.as_str())
-                            .map(std::string::ToString::to_string),
-                        obj.get("destino_titulo")
-                            .and_then(|v| v.as_str())
-                            .map(std::string::ToString::to_string),
-                        obj.get("destino_artista")
-                            .and_then(|v| v.as_str())
-                            .map(std::string::ToString::to_string),
-                        obj.get("tipo_elemento")
-                            .and_then(|v| v.as_str())
-                            .map(std::string::ToString::to_string),
-                        obj.get("recorte_por_compas")
-                            .and_then(|v| v.as_str())
-                            .map(std::string::ToString::to_string),
-                        obj.get("formato")
-                            .and_then(|v| v.as_str())
-                            .map(std::string::ToString::to_string),
-                        obj.get("descarga_metodo")
-                            .and_then(|v| v.as_str())
-                            .map(std::string::ToString::to_string),
-                        obj.get("descarga_fuente_url")
-                            .and_then(|v| v.as_str())
-                            .map(std::string::ToString::to_string),
-                        obj.get("descarga_fuente_titulo")
-                            .and_then(|v| v.as_str())
-                            .map(std::string::ToString::to_string),
-                        obj.get("descarga_fuente_artista")
-                            .and_then(|v| v.as_str())
-                            .map(std::string::ToString::to_string),
-                        i("votos_total"),
-                        obj.get("duracion").and_then(serde_json::Value::as_f64),
-                        i("tamano_bytes"),
-                    )
-                },
-            );
+    if !has_extraccion {
+        return None;
+    }
+    let meta = MetaExtraccion::desde_json(record.extraccion_metadata.as_ref());
+    Some(ExtraccionSampleResponse {
+        youtube_id: record.extraccion_youtube_id.clone(),
+        spotify_id: record.extraccion_spotify_id.clone(),
+        timing_inicio_seg: record.extraccion_timing_inicio_seg,
+        bpm_detectado: record.extraccion_bpm_detectado,
+        duracion_compas_seg: record.extraccion_duracion_compas_seg,
+        compas_inicio_seg: record.extraccion_compas_inicio_seg,
+        compas_fin_seg: record.extraccion_compas_fin_seg,
+        lado: record.extraccion_lado.clone(),
+        estado: record.extraccion_estado.clone(),
+        ruta_audio_extraido: record.extraccion_ruta_audio.clone(),
+        tiene_audio_completo: record.extraccion_ruta_audio_completo.is_some(),
+        fuente_url: meta.descarga_fuente_url,
+        fuente_titulo: meta.descarga_fuente_titulo,
+        fuente_artista: meta.descarga_fuente_artista,
+        descarga_metodo: meta.descarga_metodo,
+        sampleo_fuente_titulo: meta.fuente_titulo,
+        sampleo_fuente_artista: meta.fuente_artista,
+        sampleo_destino_titulo: meta.dest_titulo,
+        sampleo_destino_artista: meta.dest_artista,
+        fuente_slug: record.extraccion_fuente_slug.clone(),
+        fuente_album: record.extraccion_fuente_album.clone(),
+        destino_slug: record.extraccion_destino_slug.clone(),
+        destino_album: record.extraccion_destino_album.clone(),
+        votos_total: meta.votos_total,
+        tipo_elemento: meta.tipo_elemento,
+        recorte_por_compas: meta.recorte_por_compas,
+        duracion_extraida: meta.duracion_extraida,
+        formato_extraido: meta.formato,
+        tamano_bytes: meta.tamano_bytes.map(i64::from),
+    })
+}
 
-        Some(ExtraccionSampleResponse {
-            youtube_id: record.extraccion_youtube_id.clone(),
-            spotify_id: record.extraccion_spotify_id.clone(),
-            timing_inicio_seg: record.extraccion_timing_inicio_seg,
-            bpm_detectado: record.extraccion_bpm_detectado,
-            duracion_compas_seg: record.extraccion_duracion_compas_seg,
-            compas_inicio_seg: record.extraccion_compas_inicio_seg,
-            compas_fin_seg: record.extraccion_compas_fin_seg,
-            lado: record.extraccion_lado.clone(),
-            estado: record.extraccion_estado.clone(),
-            ruta_audio_extraido: record.extraccion_ruta_audio.clone(),
-            tiene_audio_completo: record.extraccion_ruta_audio_completo.is_some(),
-            fuente_url: descarga_fuente_url,
-            fuente_titulo: descarga_fuente_titulo,
-            fuente_artista: descarga_fuente_artista,
-            descarga_metodo,
-            sampleo_fuente_titulo: fuente_titulo,
-            sampleo_fuente_artista: fuente_artista,
-            sampleo_destino_titulo: dest_titulo,
-            sampleo_destino_artista: dest_artista,
-            fuente_slug: record.extraccion_fuente_slug.clone(),
-            fuente_album: record.extraccion_fuente_album.clone(),
-            destino_slug: record.extraccion_destino_slug.clone(),
-            destino_album: record.extraccion_destino_album.clone(),
-            votos_total,
-            tipo_elemento,
-            recorte_por_compas,
-            duracion_extraida,
-            formato_extraido: formato,
-            tamano_bytes: tamano_bytes.map(i64::from),
-        })
-    } else {
-        None
-    };
+fn build_sample_detail(
+    record: SampleCatalogDetailRecord,
+    public_base_url: Option<&str>,
+    current_user_id: Option<i32>,
+) -> SampleDetailResponse {
+    let is_owner = current_user_id.is_some_and(|user_id| user_id == record.creator_id);
+    let cancion_origen = build_cancion_origen(&record);
+    let extraccion = build_extraccion(&record);
 
     /* [166A-1] Construir URL de WhoSampled desde whosampled_id */
     let whosampled_url = record
