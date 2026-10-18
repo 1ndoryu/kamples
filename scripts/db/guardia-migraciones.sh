@@ -4,8 +4,8 @@
 # con su motivo escrito.
 #
 # Uso:
-#   ./scripts/guardia-migraciones.sh                 # revisa todas las .up.sql
-#   ./scripts/guardia-migraciones.sh <archivo.sql>…  # revisa solo esas
+#   ./scripts/db/guardia-migraciones.sh                 # revisa todas las .up.sql
+#   ./scripts/db/guardia-migraciones.sh <archivo.sql>…  # revisa solo esas
 #
 # Exit: 0 sin hallazgos no declarados, 1 si hay alguno.
 #
@@ -16,9 +16,9 @@
 set -euo pipefail
 
 AQUI=$(cd "$(dirname "$0")" && pwd)
-RAIZ=$(cd "$AQUI/.." && pwd)
-# shellcheck source=lib/migraciones.sh
-. "$AQUI/lib/migraciones.sh"
+RAIZ=$(cd "$AQUI/../.." && pwd)
+# shellcheck source=../lib/migraciones.sh
+. "$AQUI/../lib/migraciones.sh"
 
 PERMITIDAS="$RAIZ/migrations/.destructivas-permitidas"
 
@@ -72,7 +72,7 @@ if [ "$NUEVOS" -gt 0 ]; then
 [guardia] ${NUEVOS} migracion(es) con SQL destructivo no declarado.
 Si es intencionado, anadelas a migrations/.destructivas-permitidas con el
 formato <nombre-de-archivo>|<motivo> y saca copia de seguridad ANTES:
-    ./scripts/backup-postgres.sh pre-migracion
+    ./scripts/db/backup-postgres.sh pre-migracion
 FIN
     exit 1
 fi

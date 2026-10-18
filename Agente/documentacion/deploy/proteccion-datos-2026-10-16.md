@@ -16,7 +16,7 @@ bases vacías).
 
 Al revisarlo aparecieron dos defectos concretos en los scripts del repo:
 
-1. `scripts/backup-postgres.sh` volcaba con
+1. `scripts/db/backup-postgres.sh` volcaba con
    `docker compose exec -T postgres pg_dump … > "$OUT"`. Si el `exec` falla, el
    redirect **ya ha creado `$OUT`**: queda un archivo de 0 bytes con un nombre
    que parece un backup. Nada lo distinguía de uno bueno.
@@ -52,14 +52,14 @@ el tamaño: es no tener ninguna entrada `TABLE DATA`.
 
 | Script | Qué hace |
 |---|---|
-| `scripts/backup-postgres.sh [etiqueta]` | Volcado manual. Escribe a `.partial`, verifica y solo entonces renombra. Un fallo no deja nada que parezca un backup. |
+| `scripts/db/backup-postgres.sh [etiqueta]` | Volcado manual. Escribe a `.partial`, verifica y solo entonces renombra. Un fallo no deja nada que parezca un backup. |
 | `scripts/backup-postgres-loop.sh` | Sidecar cada 6 h. Verifica antes de aceptar, avisa tras 3 fallos seguidos y si el último bueno tiene más de dos intervalos. La rotación **conserva siempre el más reciente**, aunque supere la retención. |
-| `scripts/restore-postgres.sh <dump> [--aplicar] [--forzar]` | La única vía sancionada de restaurar. Sin `--aplicar` es simulación. |
+| `scripts/db/restore-postgres.sh <dump> [--aplicar] [--forzar]` | La única vía sancionada de restaurar. Sin `--aplicar` es simulación. |
 | `scripts/backup-uploads.sh [etiqueta]` | Copia manual de `/data/kamples/uploads`. Comprueba que el tar trae el mismo número de archivos que el origen. |
 | `scripts/backup-uploads-loop.sh` | Sidecar cada 24 h de los **archivos físicos**. Mismas garantías que el loop de la base: verifica antes de aceptar, avisa tras 3 fallos y si el último bueno tiene más de dos intervalos, y rota conservando siempre el más reciente. Monta los uploads en **solo lectura**. |
 | `scripts/lib/tar-uploads.sh` | Reglas de verificación de las copias de uploads, compartidas por el script manual y el sidecar para que los dos caminos no puedan divergir. |
-| `scripts/migrar.sh <archivo.up.sql>…` | Guardia → copia verificada → aplicar. |
-| `scripts/guardia-migraciones.sh [archivos…]` | Se niega a dar por bueno SQL destructivo no declarado. |
+| `scripts/db/migrar.sh <archivo.up.sql>…` | Guardia → copia verificada → aplicar. |
+| `scripts/db/guardia-migraciones.sh [archivos…]` | Se niega a dar por bueno SQL destructivo no declarado. |
 
 ### Garantías de `restore-postgres.sh`
 
@@ -90,7 +90,7 @@ acceso al host del stack. **En producción AGENTS §10 prohíbe el SSH directo y
 Docker remoto**, así que allí es obligatorio el de coolify-manager-rs:
 
 ```bash
-PG_EXEC='cm exec --name kamples --target postgres --' ./scripts/restore-postgres.sh <dump> --aplicar
+PG_EXEC='cm exec --name kamples --target postgres --' ./scripts/db/restore-postgres.sh <dump> --aplicar
 ```
 
 Es la única pieza que cambia entre entornos, y por eso es una variable.

@@ -3,12 +3,12 @@
 # documentaba el roadmap:100, que no paraba ante un error ni dejaba copia.
 #
 # Uso:
-#   ./scripts/migrar.sh migrations/20260703000000_fix_colecciones_schema.up.sql
+#   ./scripts/db/migrar.sh migrations/20260703000000_fix_colecciones_schema.up.sql
 #
 # El ejecutor dentro del contenedor lo elige `PG_EXEC` (ver
 # scripts/lib/dump-postgres.sh). En producción, donde AGENTS §10 prohíbe el SSH
 # directo, es obligatorio el de coolify-manager-rs:
-#   PG_EXEC='cm exec --name kamples --target postgres --' ./scripts/migrar.sh <archivo.up.sql>
+#   PG_EXEC='cm exec --name kamples --target postgres --' ./scripts/db/migrar.sh <archivo.up.sql>
 #
 # Lo que hace, en este orden, y no admite saltarse ningún paso:
 #   1. Guardia: se niega si el archivo lleva SQL destructivo no declarado.
@@ -24,11 +24,11 @@
 set -euo pipefail
 
 AQUI=$(cd "$(dirname "$0")" && pwd)
-RAIZ=$(cd "$AQUI/.." && pwd)
-# shellcheck source=lib/migraciones.sh
-. "$AQUI/lib/migraciones.sh"
-# shellcheck source=lib/dump-postgres.sh
-. "$AQUI/lib/dump-postgres.sh"
+RAIZ=$(cd "$AQUI/../.." && pwd)
+# shellcheck source=../lib/migraciones.sh
+. "$AQUI/../lib/migraciones.sh"
+# shellcheck source=../lib/dump-postgres.sh
+. "$AQUI/../lib/dump-postgres.sh"
 
 if [ "$#" -eq 0 ]; then
     echo "uso: $0 <archivo.up.sql> [mas archivos]" >&2
@@ -70,4 +70,4 @@ done
 
 echo "[migrar] OK: ${#} migracion(es) aplicada(s) sobre ${POSTGRES_DB}"
 echo "[migrar] si algo va mal, la copia previa es la mas reciente en /data/kamples/db_dumps"
-echo "[migrar] restaurar: ./scripts/restore-postgres.sh <archivo.dump>"
+echo "[migrar] restaurar: ./scripts/db/restore-postgres.sh <archivo.dump>"

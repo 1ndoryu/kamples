@@ -17,7 +17,7 @@
 #      archivos físicos en /data/kamples/uploads sobreviven. Hacer backup
 #      cron de /data/kamples a un bucket externo (S3/B2) ANTES de cualquier
 #      deploy.
-#   4. Antes de `redeploy` en Coolify, ejecutar `scripts/backup-postgres.sh`
+#   4. Antes de `redeploy` en Coolify, ejecutar `scripts/db/backup-postgres.sh`
 #      manualmente. Coolify NO hace backup automático de servicios.
 #   5. La política `restart: unless-stopped` previene que un crash silente
 #      degenere en pérdida de datos por reinicios fallidos.

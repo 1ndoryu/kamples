@@ -45,7 +45,7 @@ El deploy anterior era PHP (WordPress). Hay que limpiarlo preservando los upload
 |---|---|---|
 | 1.1 | Verificar qué existe: `docker ps --filter "name=kamples"` y `ls -la /data/kamples/` | Diagnóstico |
 | 1.2 | Backup de uploads: `./scripts/backup-uploads.sh pre-migracion` (verifica el tar antes de darlo por bueno) | Bajo |
-| 1.3 | Backup de BD (si existe PostgreSQL de kamples): `./scripts/backup-postgres.sh pre-migracion` | Bajo |
+| 1.3 | Backup de BD (si existe PostgreSQL de kamples): `./scripts/db/backup-postgres.sh pre-migracion` | Bajo |
 | 1.4 | Parar stack PHP: `docker compose -f <ruta> down` (**SIN `-v`**) | Medio — verificar que no toca otros stacks |
 | 1.5 | Eliminar contenedores/images PHP (NO volúmenes ni bind-mounts) | Bajo |
 | 1.6 | Verificar que `/data/kamples/uploads/` sigue intacto | Diagnóstico |
@@ -163,11 +163,11 @@ cm exec --name kamples --target postgres -- ls -lt /dumps/
 
 # Simulación: verifica el dump y dice qué haría, sin tocar nada
 PG_EXEC='cm exec --name kamples --target postgres --' \
-    ./scripts/restore-postgres.sh /data/kamples/db_dumps/<archivo>.dump
+    ./scripts/db/restore-postgres.sh /data/kamples/db_dumps/<archivo>.dump
 
 # Restaurar de verdad
 PG_EXEC='cm exec --name kamples --target postgres --' \
-    ./scripts/restore-postgres.sh /data/kamples/db_dumps/<archivo>.dump --aplicar
+    ./scripts/db/restore-postgres.sh /data/kamples/db_dumps/<archivo>.dump --aplicar
 ```
 
 Luego reinicia la app para reconectar: `cm restart --name kamples`.
@@ -267,14 +267,14 @@ Después de CADA operación que toque el servidor:
 
 1. **NUNCA** `docker compose down -v` — borra `kamples_postgres_data`
 2. **NUNCA** renombrar volúmenes ya creados
-3. **Antes de deploy/migración:** backup manual con `scripts/backup-postgres.sh pre-deploy`
+3. **Antes de deploy/migración:** backup manual con `scripts/db/backup-postgres.sh pre-deploy`
 4. **Bind-mount** `/data/kamples/uploads` → `/data/uploads` — NO mover sin migrar archivos
 5. **Sidecar** `postgres-backup` cada 6h, rotación 14 días — NO sustituye backup off-site
 6. **`restart: unless-stopped`** — no reinicia si se detuvo manualmente
 7. **Toda operación en servidor:** verificar studio + nakomi después
 8. **Si hay duda:** parar y preguntar al usuario
-9. **Migraciones:** solo con `scripts/migrar.sh` (guardia + copia verificada + una transacción). El `psql` a mano no para ante un error.
-10. **Restaurar:** solo con `scripts/restore-postgres.sh`. **NUNCA** `pg_restore --clean` directo sobre un dump sin verificar.
+9. **Migraciones:** solo con `scripts/db/migrar.sh` (guardia + copia verificada + una transacción). El `psql` a mano no para ante un error.
+10. **Restaurar:** solo con `scripts/db/restore-postgres.sh`. **NUNCA** `pg_restore --clean` directo sobre un dump sin verificar.
 11. **Uploads:** copia con `scripts/backup-uploads.sh`. La base de datos NO contiene los archivos físicos.
 
 ---

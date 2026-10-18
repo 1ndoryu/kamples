@@ -4,13 +4,13 @@
 # dejó una base vacía en el incidente que esta viñeta existe para evitar.
 #
 # Uso:
-#   ./scripts/restore-postgres.sh <archivo.dump>              # simulación
-#   ./scripts/restore-postgres.sh <archivo.dump> --aplicar    # restaura
+#   ./scripts/db/restore-postgres.sh <archivo.dump>              # simulación
+#   ./scripts/db/restore-postgres.sh <archivo.dump> --aplicar    # restaura
 #
 # El ejecutor dentro del contenedor lo elige `PG_EXEC` (ver
 # scripts/lib/dump-postgres.sh). En producción, donde AGENTS §10 prohíbe el SSH
 # directo, es obligatorio el de coolify-manager-rs:
-#   PG_EXEC='cm exec --name kamples --target postgres --' ./scripts/restore-postgres.sh <dump> --aplicar
+#   PG_EXEC='cm exec --name kamples --target postgres --' ./scripts/db/restore-postgres.sh <dump> --aplicar
 #
 # Garantías, en orden:
 #   1. El dump se VERIFICA antes de tocar nada (tamaño, formato, esquema).
@@ -28,8 +28,8 @@
 set -euo pipefail
 
 AQUI=$(cd "$(dirname "$0")" && pwd)
-# shellcheck source=lib/dump-postgres.sh
-. "$AQUI/lib/dump-postgres.sh"
+# shellcheck source=../lib/dump-postgres.sh
+. "$AQUI/../lib/dump-postgres.sh"
 
 DUMP_DIR="${DB_DUMPS_DIR:-/data/kamples/db_dumps}"
 

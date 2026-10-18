@@ -6,7 +6,7 @@
 #   más reciente aunque supere la retención.
 # - Falla loud (no silencia errores).
 #
-# Para restaurar NO se usa pg_restore a mano: usa scripts/restore-postgres.sh,
+# Para restaurar NO se usa pg_restore a mano: usa scripts/db/restore-postgres.sh,
 # que verifica el dump y saca una copia de seguridad previa antes de tocar
 # nada. La instrucción destructiva que había aquí antes
 # (`pg_restore --clean --if-exists`) es justo lo que dejó una base vacía: no

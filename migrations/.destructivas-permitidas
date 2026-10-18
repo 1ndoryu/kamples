@@ -4,9 +4,9 @@
 #
 # Añadir una línea aquí NO es un trámite: es la constancia de que alguien
 # decidió borrar datos y por qué. Antes de aplicar una migración de esta lista,
-# copia de seguridad verificada:  ./scripts/backup-postgres.sh pre-migracion
+# copia de seguridad verificada:  ./scripts/db/backup-postgres.sh pre-migracion
 #
-# Lo revisa:  ./scripts/guardia-migraciones.sh
+# Lo revisa:  ./scripts/db/guardia-migraciones.sh
 #
 # ---------------------------------------------------------------------------
 # [174A-66] El DROP es intencionado y va seguido del CREATE de la tabla nueva:

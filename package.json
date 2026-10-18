@@ -31,7 +31,7 @@
     "tauri:build": "npm --prefix clients/desktop run tauri:build",
     "tauri:type-check": "npm --prefix clients/desktop run type-check",
     "bd:test": "bash scripts/lib/dump-postgres.test.sh && bash scripts/lib/migraciones.test.sh",
-    "bd:guardia": "bash scripts/guardia-migraciones.sh",
+    "bd:guardia": "bash scripts/db/guardia-migraciones.sh",
     "archivos:test": "bash scripts/lib/tar-uploads.test.sh",
     "compose:test": "bash scripts/lib/compose-tracked.test.sh",
     "scripts:test": "npm run bd:test && npm run archivos:test && npm run compose:test"

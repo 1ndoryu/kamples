@@ -4,7 +4,7 @@
 # producción.
 #
 # Uso:
-#   ./scripts/backup-postgres.sh [etiqueta]
+#   ./scripts/db/backup-postgres.sh [etiqueta]
 #
 # El dump queda en /data/kamples/db_dumps/<db>-<ISO8601>-<etiqueta>.dump
 # y NO se rota (el sidecar postgres-backup solo rota los suyos).
@@ -12,7 +12,7 @@
 # El ejecutor dentro del contenedor lo elige `PG_EXEC` (ver
 # scripts/lib/dump-postgres.sh). En producción, donde AGENTS §10 prohíbe el SSH
 # directo, es obligatorio pasar el de coolify-manager-rs:
-#   PG_EXEC='cm exec --name kamples --target postgres --' ./scripts/backup-postgres.sh pre-deploy
+#   PG_EXEC='cm exec --name kamples --target postgres --' ./scripts/db/backup-postgres.sh pre-deploy
 #
 # [150 por que] Antes esta función volcaba con
 # `docker compose exec -T postgres pg_dump ... > "$OUT"`. Si el exec fallaba,
@@ -25,8 +25,8 @@
 set -euo pipefail
 
 AQUI=$(cd "$(dirname "$0")" && pwd)
-# shellcheck source=lib/dump-postgres.sh
-. "$AQUI/lib/dump-postgres.sh"
+# shellcheck source=../lib/dump-postgres.sh
+. "$AQUI/../lib/dump-postgres.sh"
 
 LABEL="${1:-manual}"
 DUMP_DIR="${DB_DUMPS_DIR:-/data/kamples/db_dumps}"
