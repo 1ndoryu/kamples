@@ -10,7 +10,14 @@
 
 use chrono::{Duration as ChronoDuration, Utc};
 
+use super::cache::{
+    fresh_cache_key, fresh_ttl, release_lock, stale_cache_key, try_acquire_lock, warm_lock_key,
+    MEMORY_CACHE, MEMORY_LOCKS,
+};
+use super::puntuacion::apply_diversity;
+use super::similares::jaccard_overlap;
 use super::*;
+use std::time::{Duration, Instant};
 
 #[test]
 fn legacy_defaults_match_php_constants() {
