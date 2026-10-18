@@ -63,7 +63,6 @@ const PLAN_FREE_LIMIT_PER_DAY: i64 = 5;
         (status = 429, description = "Creditos insuficientes para los samples nuevos"),
     )
 )]
-#[allow(clippy::too_many_lines)]
 pub async fn descargar_zip_coleccion(
     State(state): State<AppState>,
     user: CurrentUser,
@@ -136,39 +135,7 @@ pub async fn descargar_zip_coleccion(
     }
 
     let zip_bytes = build_zip_in_memory(samples.clone(), state.storage.clone()).await?;
-
-    for sample in &nuevos {
-        let _ =
-            DownloadRepository::register(&state.pool, user.user_id, sample.sample_id, "wav").await;
-        if plan != "free" && sample.creador_id != user.user_id {
-            let revenue = calculate_subscription_download_revenue_share(
-                plan.parse::<KamplesPlanId>().unwrap_or(KamplesPlanId::Free),
-            );
-            if revenue.price_cents > 0 {
-                let insert = CompletedDownloadRevenueShareInsert {
-                    buyer_id: user.user_id,
-                    creator_id: sample.creador_id,
-                    sample_id: sample.sample_id,
-                    amount_cents: revenue.price_cents,
-                    creator_amount_cents: revenue.creator_payout_cents,
-                    platform_fee_cents: revenue.platform_fee_cents,
-                };
-                if let Err(error) =
-                    BillingRepository::insert_completed_download_revenue_share(&state.pool, &insert)
-                        .await
-                {
-                    tracing::error!(
-                        buyer_id = user.user_id,
-                        creator_id = sample.creador_id,
-                        sample_id = sample.sample_id,
-                        plan = %plan,
-                        error = %error,
-                        "revenue share fallido para ZIP de coleccion"
-                    );
-                }
-            }
-        }
-    }
+    registrar_descargas_zip(&state, user.user_id, &plan, &nuevos).await;
 
     let _ = state
         .algo_planner
@@ -181,6 +148,52 @@ pub async fn descargar_zip_coleccion(
         .await;
 
     let filename = format!("{}.zip", sanitize_filename(&col.nombre));
+    Ok(respuesta_zip(&filename, zip_bytes))
+}
+
+/* Registra cada sample nuevo como descarga y, en planes de pago, su reparto al creador.
+ * Un fallo de registro se ignora (como antes) y el de reparto solo se registra en log. */
+async fn registrar_descargas_zip(
+    state: &AppState,
+    user_id: i32,
+    plan: &str,
+    nuevos: &[&ColeccionSampleFile],
+) {
+    for sample in nuevos {
+        let _ = DownloadRepository::register(&state.pool, user_id, sample.sample_id, "wav").await;
+        if plan != "free" && sample.creador_id != user_id {
+            let revenue = calculate_subscription_download_revenue_share(
+                plan.parse::<KamplesPlanId>().unwrap_or(KamplesPlanId::Free),
+            );
+            if revenue.price_cents > 0 {
+                let insert = CompletedDownloadRevenueShareInsert {
+                    buyer_id: user_id,
+                    creator_id: sample.creador_id,
+                    sample_id: sample.sample_id,
+                    amount_cents: revenue.price_cents,
+                    creator_amount_cents: revenue.creator_payout_cents,
+                    platform_fee_cents: revenue.platform_fee_cents,
+                };
+                if let Err(error) =
+                    BillingRepository::insert_completed_download_revenue_share(&state.pool, &insert)
+                        .await
+                {
+                    tracing::error!(
+                        buyer_id = user_id,
+                        creator_id = sample.creador_id,
+                        sample_id = sample.sample_id,
+                        plan = %plan,
+                        error = %error,
+                        "revenue share fallido para ZIP de coleccion"
+                    );
+                }
+            }
+        }
+    }
+}
+
+/* Respuesta binaria `application/zip` con el nombre de descarga indicado. */
+fn respuesta_zip(filename: &str, zip_bytes: Vec<u8>) -> axum::response::Response {
     let mut response = (StatusCode::OK, zip_bytes).into_response();
     response.headers_mut().insert(
         header::CONTENT_TYPE,
@@ -191,7 +204,7 @@ pub async fn descargar_zip_coleccion(
             .headers_mut()
             .insert(header::CONTENT_DISPOSITION, value);
     }
-    Ok(response)
+    response
 }
 
 /* Construye un ZIP DEFLATE en memoria. Trunca cuando supera MAX_ZIP_BYTES.

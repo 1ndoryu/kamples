@@ -149,7 +149,6 @@ pub fn routes() -> Router<AppState> {
  * Conserva las reglas críticas del flujo viejo: idempotencia por header,
  * límite de plan, mínimo 2 tags, validación por extensión + magic bytes y
  * persistencia inmediata del original para que la fase de pipeline continúe. */
-#[allow(clippy::too_many_lines)] // pipeline de upload con muchas validaciones lineales; dividir reduciría legibilidad
 pub async fn upload(
     State(state): State<AppState>,
     user: CurrentUser,
@@ -174,7 +173,71 @@ pub async fn upload(
         }
     }
 
-    let profile = ProfileRepository::find_by_id(&state.pool, user.user_id)
+    validar_cuota_subida(&state, user.user_id).await?;
+
+    let parsed = parse_upload_multipart(multipart).await?;
+    let audio_hash = hex::encode(Sha256::digest(&parsed.audio_bytes));
+    let nombres = nombres_subida(user.user_id, &parsed.titulo, parsed.formato);
+    state
+        .storage
+        .put_bytes(&nombres.storage_key, &parsed.audio_bytes)
+        .await?;
+
+    /* [166A-6] Subir portada si se proporciono. */
+    let imagen_url = match &parsed.portada_bytes {
+        Some(portada_bytes) => Some(
+            subir_portada(
+                &state,
+                user.user_id,
+                &nombres.slug,
+                portada_bytes,
+                parsed.portada_filename.as_deref(),
+            )
+            .await?,
+        ),
+        None => None,
+    };
+
+    let metadata = metadata_subida(&parsed);
+    let response = crear_sample_subido(
+        &state,
+        user.user_id,
+        &parsed,
+        &nombres,
+        &audio_hash,
+        imagen_url.as_deref(),
+        metadata,
+    )
+    .await?;
+
+    /* [246A-1] Registrar en changelog para delta sync del desktop. */
+    SyncChangelogRepository::insert_entry(
+        &state.pool,
+        user.user_id,
+        SyncChangelogTipo::SampleAdded,
+        response.sample_id,
+        serde_json::json!({"origen": "upload"}),
+    )
+    .await
+    .ok();
+
+    if let Some(key) = &idempotency_key {
+        IdempotencyStore::set_json(
+            &state.redis,
+            &format!("samples:upload:{}", user.user_id),
+            key,
+            IDEMPOTENCY_TTL_SECS,
+            &response,
+        )
+        .await?;
+    }
+
+    Ok((StatusCode::CREATED, Json(response)))
+}
+
+/* Comprueba la cuenta y el límite del plan antes de leer el multipart. */
+async fn validar_cuota_subida(state: &AppState, user_id: i32) -> Result<(), AppError> {
+    let profile = ProfileRepository::find_by_id(&state.pool, user_id)
         .await?
         .ok_or(AppError::NotFound("Usuario".into()))?;
     if profile.estado != "activo" {
@@ -194,73 +257,92 @@ pub async fn upload(
             profile.plan
         )));
     }
+    Ok(())
+}
 
-    let parsed = parse_upload_multipart(multipart).await?;
-    let audio_hash = hex::encode(Sha256::digest(&parsed.audio_bytes));
+struct NombresSubida {
+    id_corto: String,
+    slug: String,
+    storage_key: String,
+}
+
+/* Genera id corto, slug y clave de almacenamiento del audio original. */
+fn nombres_subida(user_id: i32, titulo: &str, formato: AudioUploadFormat) -> NombresSubida {
     let id_corto = generate_short_id();
-    let slug_base = slugify(&parsed.titulo);
+    let slug_base = slugify(titulo);
     let slug = format!(
         "{}-{id_corto}",
         if slug_base.is_empty() {
             "sample"
         } else {
-            &slug_base
+            slug_base.as_str()
         }
     );
-    let storage_key = build_storage_key(user.user_id, &slug, parsed.formato.extension());
+    let storage_key = build_storage_key(user_id, &slug, formato.extension());
+    NombresSubida {
+        id_corto,
+        slug,
+        storage_key,
+    }
+}
 
-    state
-        .storage
-        .put_bytes(&storage_key, &parsed.audio_bytes)
-        .await?;
+/* Sube la portada junto al audio y devuelve su URL pública. */
+async fn subir_portada(
+    state: &AppState,
+    user_id: i32,
+    slug: &str,
+    bytes: &[u8],
+    filename: Option<&str>,
+) -> Result<String, AppError> {
+    let ext = filename
+        .and_then(|name| std::path::Path::new(name).extension())
+        .and_then(|ext| ext.to_str())
+        .unwrap_or("jpg");
+    let portada_key = format!("samples/{user_id}/portadas/{slug}.{ext}");
+    state.storage.put_bytes(&portada_key, bytes).await?;
+    Ok(build_upload_url(state, &portada_key))
+}
 
-    /* [166A-6] Subir portada si se proporciono. */
-    let imagen_url = if let Some(portada_bytes) = &parsed.portada_bytes {
-        let ext = parsed
-            .portada_filename
-            .as_deref()
-            .and_then(|name| std::path::Path::new(name).extension())
-            .and_then(|ext| ext.to_str())
-            .unwrap_or("jpg");
-        let portada_key = format!(
-            "samples/{user}/portadas/{slug}.{ext}",
-            user = user.user_id,
-            slug = slug,
-            ext = ext
-        );
-        state.storage.put_bytes(&portada_key, portada_bytes).await?;
-        Some(build_upload_url(&state, &portada_key))
-    } else {
-        None
-    };
-
+/* Metadata libre del sample; conserva relacion y lado como hacia el legado. */
+fn metadata_subida(parsed: &ParsedUpload) -> serde_json::Value {
     let mut metadata = serde_json::json!({
         "filename_original": parsed.original_filename,
         "mime_type": parsed.formato.mime(),
         "sync_upload": parsed.sync_upload,
         "origen_subida": parsed.origen_subida,
     });
-    /* Preservar relacion_id en metadata como el legado hace. */
-    if let Some(ref relacion_id) = parsed.relacion_id {
+    if let Some(relacion_id) = parsed.relacion_id {
         metadata["relacion_id"] = serde_json::json!(relacion_id);
     }
-    if let Some(ref lado_relacion) = parsed.lado_relacion {
+    if let Some(lado_relacion) = &parsed.lado_relacion {
         metadata["lado_extraccion"] = serde_json::json!(lado_relacion);
     }
+    metadata
+}
 
+/* Persiste el sample; si falla, borra el audio ya subido para no dejar huérfanos. */
+async fn crear_sample_subido(
+    state: &AppState,
+    user_id: i32,
+    parsed: &ParsedUpload,
+    nombres: &NombresSubida,
+    audio_hash: &str,
+    imagen_url: Option<&str>,
+    metadata: serde_json::Value,
+) -> Result<UploadSampleResponse, AppError> {
     let created = match SampleRepository::create_upload_sample(
         &state.pool,
         CreateUploadSampleParams {
-            creador_id: user.user_id,
+            creador_id: user_id,
             titulo: &parsed.titulo,
-            slug: &slug,
-            id_corto: &id_corto,
+            slug: &nombres.slug,
+            id_corto: &nombres.id_corto,
             descripcion: &parsed.contenido,
             formato: parsed.formato.extension(),
             tamano: i64::try_from(parsed.audio_bytes.len()).unwrap_or(i64::MAX),
             tags: &parsed.tags,
-            audio_hash: &audio_hash,
-            ruta_original: &storage_key,
+            audio_hash,
+            ruta_original: &nombres.storage_key,
             permitir_descarga: parsed.permitir_descarga,
             licencia_libre: parsed.licencia_libre,
             es_premium: parsed.es_premium,
@@ -270,20 +352,21 @@ pub async fn upload(
             sync_upload: parsed.sync_upload,
             cancion_origen_id: parsed.cancion_origen_id,
             relacion_sampleo_id: parsed.relacion_id,
-            imagen_url: imagen_url.as_deref(),
+            imagen_url,
         },
     )
     .await
     {
         Ok(created) => created,
         Err(error) => {
-            let _ = state.storage.delete(&storage_key).await;
+            let _ = state.storage.delete(&nombres.storage_key).await;
             return Err(AppError::from(error));
         }
     };
 
     /* [166A-6] Si hay relacion_id + lado_relacion, vincular el sample a la relacion. */
-    if let (Some(relacion_id), Some(ref lado_relacion)) = (parsed.relacion_id, parsed.lado_relacion)
+    if let (Some(relacion_id), Some(lado_relacion)) =
+        (parsed.relacion_id, parsed.lado_relacion.as_ref())
     {
         SampleRepository::update_relacion_sample_link(
             &state.pool,
@@ -296,38 +379,14 @@ pub async fn upload(
         .await?;
     }
 
-    let response = UploadSampleResponse {
+    Ok(UploadSampleResponse {
         ok: true,
         sample_id: created.id,
         id_corto: created.id_corto,
         slug: created.slug,
-        url: build_upload_url(&state, &created.ruta_original),
+        url: build_upload_url(state, &created.ruta_original),
         estado: created.estado,
-    };
-
-    /* [246A-1] Registrar en changelog para delta sync del desktop. */
-    SyncChangelogRepository::insert_entry(
-        &state.pool,
-        user.user_id,
-        SyncChangelogTipo::SampleAdded,
-        created.id,
-        serde_json::json!({"origen": "upload"}),
-    )
-    .await
-    .ok();
-
-    if let Some(key) = &idempotency_key {
-        IdempotencyStore::set_json(
-            &state.redis,
-            &format!("samples:upload:{}", user.user_id),
-            key,
-            IDEMPOTENCY_TTL_SECS,
-            &response,
-        )
-        .await?;
-    }
-
-    Ok((StatusCode::CREATED, Json(response)))
+    })
 }
 
 async fn parse_precomputed_hash(body: Body) -> Result<(String, u64), AppError> {
@@ -434,202 +493,258 @@ impl AudioUploadFormat {
     }
 }
 
-#[allow(clippy::too_many_lines)] // parser multipart con muchos campos opcionales; dividir oscurece el flujo
-async fn parse_upload_multipart(mut multipart: Multipart) -> Result<ParsedUpload, AppError> {
-    let mut original_filename: Option<String> = None;
-    let mut titulo: Option<String> = None;
-    let mut contenido = String::new();
-    let mut tags: Vec<String> = Vec::new();
-    let mut permitir_descarga = true;
-    let mut licencia_libre = false;
-    let mut es_premium = false;
-    let mut mostrar_en_comunidad = true;
-    let mut sync_upload = false;
-    let mut origen_subida: Option<String> = None;
-    let mut precio: Option<f64> = None;
-    let mut formato: Option<AudioUploadFormat> = None;
-    let mut audio_bytes: Option<Vec<u8>> = None;
+/* Campos del multipart tal como llegan; los obligatorios quedan en None hasta validarse. */
+#[allow(clippy::struct_excessive_bools)]
+#[derive(Default)]
+struct CamposSubida {
+    original_filename: Option<String>,
+    titulo: Option<String>,
+    contenido: String,
+    tags: Vec<String>,
+    permitir_descarga: bool,
+    licencia_libre: bool,
+    es_premium: bool,
+    mostrar_en_comunidad: bool,
+    sync_upload: bool,
+    origen_subida: Option<String>,
+    precio: Option<f64>,
+    formato: Option<AudioUploadFormat>,
+    audio_bytes: Option<Vec<u8>>,
     /* [166A-6] Campos relacionales y portada. */
-    let mut cancion_origen_id: Option<i32> = None;
-    let mut relacion_id: Option<i32> = None;
-    let mut lado_relacion: Option<String> = None;
-    let mut inicio_segundos: Option<i32> = None;
-    let mut tipo_elemento: Option<String> = None;
-    let mut portada_bytes: Option<Vec<u8>> = None;
-    let mut portada_filename: Option<String> = None;
+    cancion_origen_id: Option<i32>,
+    relacion_id: Option<i32>,
+    lado_relacion: Option<String>,
+    inicio_segundos: Option<i32>,
+    tipo_elemento: Option<String>,
+    portada_bytes: Option<Vec<u8>>,
+    portada_filename: Option<String>,
+}
 
+/* Lee el multipart completo y devuelve la subida validada. */
+async fn parse_upload_multipart(mut multipart: Multipart) -> Result<ParsedUpload, AppError> {
+    let mut campos = CamposSubida {
+        permitir_descarga: true,
+        mostrar_en_comunidad: true,
+        ..CamposSubida::default()
+    };
     while let Some(field) = multipart
         .next_field()
         .await
         .map_err(|error| AppError::BadRequest(format!("multipart invalido: {error}")))?
     {
         let name = field.name().unwrap_or_default().to_string();
-        match name.as_str() {
-            "audio" => {
-                if audio_bytes.is_some() {
-                    return Err(AppError::BadRequest(
-                        "solo se permite un archivo audio".into(),
-                    ));
-                }
-                original_filename = field.file_name().map(ToString::to_string);
-                let bytes = collect_multipart_bytes(field, MAX_AUDIO_UPLOAD_BYTES).await?;
-                formato = Some(detect_audio_format(&bytes, original_filename.as_deref())?);
-                audio_bytes = Some(bytes);
-            }
-            "titulo" => titulo = Some(field.text().await.unwrap_or_default().trim().to_string()),
-            "contenido" | "descripcion" => {
-                contenido = field.text().await.unwrap_or_default().trim().to_string();
-            }
-            "tags" => tags = normalize_tags(&field.text().await.unwrap_or_default()),
-            "permitir_descarga" => {
-                permitir_descarga =
-                    parse_bool_field(&field.text().await.unwrap_or_default(), true)?;
-            }
-            "licencia_libre" => {
-                licencia_libre = parse_bool_field(&field.text().await.unwrap_or_default(), false)?;
-            }
-            "es_premium" => {
-                es_premium = parse_bool_field(&field.text().await.unwrap_or_default(), false)?;
-            }
-            "mostrar_en_comunidad" => {
-                mostrar_en_comunidad =
-                    parse_bool_field(&field.text().await.unwrap_or_default(), true)?;
-            }
-            "sync_upload" => {
-                sync_upload = parse_bool_field(&field.text().await.unwrap_or_default(), false)?;
-            }
-            "origen_subida" => {
-                let value = field.text().await.unwrap_or_default().trim().to_string();
-                if !value.is_empty() {
-                    origen_subida = Some(value);
-                }
-            }
-            "precio" => {
-                let raw = field.text().await.unwrap_or_default().trim().to_string();
-                if !raw.is_empty() {
-                    let parsed = raw
-                        .parse::<f64>()
-                        .map_err(|_| AppError::BadRequest("precio invalido".into()))?;
-                    if !(0.0..=9999.0).contains(&parsed) {
-                        return Err(AppError::BadRequest(
-                            "precio fuera de rango valido (0-9999)".into(),
-                        ));
-                    }
-                    precio = Some(parsed);
-                }
-            }
-            /* [166A-6] Campos relacionales para "subir sample de esta cancion". */
-            "cancion_origen_id" => {
-                let raw = field.text().await.unwrap_or_default().trim().to_string();
-                if !raw.is_empty() {
-                    cancion_origen_id =
-                        Some(raw.parse::<i32>().map_err(|_| {
-                            AppError::BadRequest("cancion_origen_id invalido".into())
-                        })?);
-                }
-            }
-            "relacion_id" => {
-                let raw = field.text().await.unwrap_or_default().trim().to_string();
-                if !raw.is_empty() {
-                    relacion_id = Some(
-                        raw.parse::<i32>()
-                            .map_err(|_| AppError::BadRequest("relacion_id invalido".into()))?,
-                    );
-                }
-            }
-            "lado_relacion" => {
-                let value = field.text().await.unwrap_or_default().trim().to_string();
-                if !value.is_empty() {
-                    if value != "fuente" && value != "destino" {
-                        return Err(AppError::BadRequest(
-                            "lado_relacion debe ser 'fuente' o 'destino'".into(),
-                        ));
-                    }
-                    lado_relacion = Some(value);
-                }
-            }
-            "inicio_segundos" => {
-                let raw = field.text().await.unwrap_or_default().trim().to_string();
-                if !raw.is_empty() {
-                    let segundos = raw
-                        .parse::<i32>()
-                        .map_err(|_| AppError::BadRequest("inicio_segundos invalido".into()))?;
-                    if segundos < 0 {
-                        return Err(AppError::BadRequest(
-                            "inicio_segundos no puede ser negativo".into(),
-                        ));
-                    }
-                    inicio_segundos = Some(segundos);
-                }
-            }
-            "tipo_elemento" => {
-                let value = field.text().await.unwrap_or_default().trim().to_string();
-                if !value.is_empty() {
-                    tipo_elemento = Some(value);
-                }
-            }
-            /* [166A-6] Portada del sample (imagen opcional). */
-            "portada" => {
-                if portada_bytes.is_some() {
-                    return Err(AppError::BadRequest(
-                        "solo se permite una imagen de portada".into(),
-                    ));
-                }
-                portada_filename = field.file_name().map(ToString::to_string);
-                let bytes = collect_multipart_bytes(field, MAX_PORTADA_BYTES).await?;
-                if !bytes.is_empty() {
-                    portada_bytes = Some(bytes);
-                }
-            }
-            _ => {}
-        }
+        leer_campo(&name, field, &mut campos).await?;
     }
+    finalizar_subida(campos)
+}
 
-    let audio_bytes = audio_bytes.ok_or(AppError::BadRequest(
+/* Reparte cada campo entre los dos lectores según su nombre. */
+async fn leer_campo(
+    name: &str,
+    field: axum::extract::multipart::Field<'_>,
+    campos: &mut CamposSubida,
+) -> Result<(), AppError> {
+    match name {
+        "audio" | "titulo" | "contenido" | "descripcion" | "tags" | "permitir_descarga"
+        | "licencia_libre" | "es_premium" | "mostrar_en_comunidad" | "sync_upload"
+        | "origen_subida" => leer_campo_principal(name, field, campos).await,
+        _ => leer_campo_relacion(name, field, campos).await,
+    }
+}
+
+/* Campos de contenido y flags: audio, titulo, tags y booleanos. */
+async fn leer_campo_principal(
+    name: &str,
+    field: axum::extract::multipart::Field<'_>,
+    campos: &mut CamposSubida,
+) -> Result<(), AppError> {
+    match name {
+        "audio" => {
+            if campos.audio_bytes.is_some() {
+                return Err(AppError::BadRequest(
+                    "solo se permite un archivo audio".into(),
+                ));
+            }
+            campos.original_filename = field.file_name().map(ToString::to_string);
+            let bytes = collect_multipart_bytes(field, MAX_AUDIO_UPLOAD_BYTES).await?;
+            campos.formato = Some(detect_audio_format(
+                &bytes,
+                campos.original_filename.as_deref(),
+            )?);
+            campos.audio_bytes = Some(bytes);
+        }
+        "titulo" => {
+            campos.titulo = Some(field.text().await.unwrap_or_default().trim().to_string());
+        }
+        "contenido" | "descripcion" => {
+            campos.contenido = field.text().await.unwrap_or_default().trim().to_string();
+        }
+        "tags" => campos.tags = normalize_tags(&field.text().await.unwrap_or_default()),
+        "permitir_descarga" => {
+            campos.permitir_descarga =
+                parse_bool_field(&field.text().await.unwrap_or_default(), true)?;
+        }
+        "licencia_libre" => {
+            campos.licencia_libre = parse_bool_field(&field.text().await.unwrap_or_default(), false)?;
+        }
+        "es_premium" => {
+            campos.es_premium = parse_bool_field(&field.text().await.unwrap_or_default(), false)?;
+        }
+        "mostrar_en_comunidad" => {
+            campos.mostrar_en_comunidad =
+                parse_bool_field(&field.text().await.unwrap_or_default(), true)?;
+        }
+        "sync_upload" => {
+            campos.sync_upload = parse_bool_field(&field.text().await.unwrap_or_default(), false)?;
+        }
+        "origen_subida" => {
+            let value = field.text().await.unwrap_or_default().trim().to_string();
+            if !value.is_empty() {
+                campos.origen_subida = Some(value);
+            }
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
+/* Campos de precio, relacion con canciones y portada. */
+async fn leer_campo_relacion(
+    name: &str,
+    field: axum::extract::multipart::Field<'_>,
+    campos: &mut CamposSubida,
+) -> Result<(), AppError> {
+    match name {
+        "precio" => {
+            let raw = field.text().await.unwrap_or_default().trim().to_string();
+            if !raw.is_empty() {
+                let parsed = raw
+                    .parse::<f64>()
+                    .map_err(|_| AppError::BadRequest("precio invalido".into()))?;
+                if !(0.0..=9999.0).contains(&parsed) {
+                    return Err(AppError::BadRequest(
+                        "precio fuera de rango valido (0-9999)".into(),
+                    ));
+                }
+                campos.precio = Some(parsed);
+            }
+        }
+        "cancion_origen_id" => {
+            let raw = field.text().await.unwrap_or_default().trim().to_string();
+            if !raw.is_empty() {
+                campos.cancion_origen_id = Some(
+                    raw.parse::<i32>()
+                        .map_err(|_| AppError::BadRequest("cancion_origen_id invalido".into()))?,
+                );
+            }
+        }
+        "relacion_id" => {
+            let raw = field.text().await.unwrap_or_default().trim().to_string();
+            if !raw.is_empty() {
+                campos.relacion_id = Some(
+                    raw.parse::<i32>()
+                        .map_err(|_| AppError::BadRequest("relacion_id invalido".into()))?,
+                );
+            }
+        }
+        "lado_relacion" => {
+            let value = field.text().await.unwrap_or_default().trim().to_string();
+            if !value.is_empty() {
+                if value != "fuente" && value != "destino" {
+                    return Err(AppError::BadRequest(
+                        "lado_relacion debe ser 'fuente' o 'destino'".into(),
+                    ));
+                }
+                campos.lado_relacion = Some(value);
+            }
+        }
+        "inicio_segundos" => {
+            let raw = field.text().await.unwrap_or_default().trim().to_string();
+            if !raw.is_empty() {
+                let segundos = raw
+                    .parse::<i32>()
+                    .map_err(|_| AppError::BadRequest("inicio_segundos invalido".into()))?;
+                if segundos < 0 {
+                    return Err(AppError::BadRequest(
+                        "inicio_segundos no puede ser negativo".into(),
+                    ));
+                }
+                campos.inicio_segundos = Some(segundos);
+            }
+        }
+        "tipo_elemento" => {
+            let value = field.text().await.unwrap_or_default().trim().to_string();
+            if !value.is_empty() {
+                campos.tipo_elemento = Some(value);
+            }
+        }
+        "portada" => {
+            if campos.portada_bytes.is_some() {
+                return Err(AppError::BadRequest(
+                    "solo se permite una imagen de portada".into(),
+                ));
+            }
+            campos.portada_filename = field.file_name().map(ToString::to_string);
+            let bytes = collect_multipart_bytes(field, MAX_PORTADA_BYTES).await?;
+            if !bytes.is_empty() {
+                campos.portada_bytes = Some(bytes);
+            }
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
+/* Valida los obligatorios y arma la subida lista para persistir. */
+fn finalizar_subida(campos: CamposSubida) -> Result<ParsedUpload, AppError> {
+    let audio_bytes = campos.audio_bytes.ok_or(AppError::BadRequest(
         "No se recibio archivo de audio".into(),
     ))?;
-    let formato = formato.ok_or(AppError::BadRequest(
+    let formato = campos.formato.ok_or(AppError::BadRequest(
         "No se pudo detectar el formato de audio".into(),
     ))?;
-    if tags.len() < 2 {
+    if campos.tags.len() < 2 {
         return Err(AppError::BadRequest(
             "Se requieren al menos 2 tags para subir un sample".into(),
         ));
     }
 
-    let fallback_title = original_filename
+    let fallback_title = campos
+        .original_filename
         .as_deref()
         .and_then(|filename| std::path::Path::new(filename).file_stem())
         .and_then(|stem| stem.to_str())
         .unwrap_or("sample")
         .to_string();
-    let titulo = titulo
+    let titulo = campos
+        .titulo
         .filter(|value| !value.is_empty())
         .unwrap_or(fallback_title);
 
     Ok(ParsedUpload {
-        original_filename: original_filename
+        original_filename: campos
+            .original_filename
             .unwrap_or_else(|| format!("upload.{}", formato.extension())),
         titulo,
-        contenido,
-        tags,
-        permitir_descarga,
-        licencia_libre,
-        es_premium,
-        mostrar_en_comunidad,
-        sync_upload,
-        origen_subida,
-        precio,
+        contenido: campos.contenido,
+        tags: campos.tags,
+        permitir_descarga: campos.permitir_descarga,
+        licencia_libre: campos.licencia_libre,
+        es_premium: campos.es_premium,
+        mostrar_en_comunidad: campos.mostrar_en_comunidad,
+        sync_upload: campos.sync_upload,
+        origen_subida: campos.origen_subida,
+        precio: campos.precio,
         formato,
         audio_bytes,
         /* [166A-6] Campos relacionales y portada. */
-        cancion_origen_id,
-        relacion_id,
-        lado_relacion,
-        inicio_segundos,
-        tipo_elemento,
-        portada_bytes,
-        portada_filename,
+        cancion_origen_id: campos.cancion_origen_id,
+        relacion_id: campos.relacion_id,
+        lado_relacion: campos.lado_relacion,
+        inicio_segundos: campos.inicio_segundos,
+        tipo_elemento: campos.tipo_elemento,
+        portada_bytes: campos.portada_bytes,
+        portada_filename: campos.portada_filename,
     })
 }
 
