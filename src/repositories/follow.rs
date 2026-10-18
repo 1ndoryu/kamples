@@ -80,12 +80,13 @@ impl FollowRepository {
     /* [274A-16] IDs de usuarios que el `follower_id` sigue. Migrado desde
      * FollowsRepository::idsSeguidos (PHP). */
     pub async fn ids_seguidos(pool: &PgPool, follower_id: i32) -> Result<Vec<i32>, AppError> {
-        let rows: Vec<(i32,)> =
-            sqlx::query_as("SELECT seguido_id FROM follows WHERE seguidor_id = $1")
-                .bind(follower_id)
-                .fetch_all(pool)
-                .await?;
-        Ok(rows.into_iter().map(|(id,)| id).collect())
+        let ids = sqlx::query_scalar!(
+            "SELECT seguido_id FROM follows WHERE seguidor_id = $1",
+            follower_id
+        )
+        .fetch_all(pool)
+        .await?;
+        Ok(ids)
     }
 
     /* [296A-3] IDs de usuarios que SIGUEN al target (seguidores).
@@ -96,14 +97,14 @@ impl FollowRepository {
         limit: i64,
         offset: i64,
     ) -> Result<Vec<i32>, AppError> {
-        let rows: Vec<(i32,)> = sqlx::query_as(
+        let ids = sqlx::query_scalar!(
             "SELECT seguidor_id FROM follows WHERE seguido_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3",
+            target_id,
+            limit,
+            offset
         )
-        .bind(target_id)
-        .bind(limit)
-        .bind(offset)
         .fetch_all(pool)
         .await?;
-        Ok(rows.into_iter().map(|(id,)| id).collect())
+        Ok(ids)
     }
 }

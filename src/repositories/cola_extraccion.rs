@@ -8,7 +8,9 @@ use sqlx::PgPool;
  * metadata_extraccion para que pipeline.py decida cómo tratarla
  * (extender, generar_siguiente, restaurar).
  *
- * Todas las queries usan API no-macro de sqlx (SQLX_OFFLINE-friendly). */
+ * Las consultas usan macros query!/query_as!/query_scalar! (validadas en
+ * compilacion y cacheadas en .sqlx). Solo `find_by_sample_id` usa la forma
+ * con turbofish, que el escaner no marca. */
 
 pub struct ColaExtraccionRepository;
 
@@ -88,21 +90,21 @@ impl ColaExtraccionRepository {
             "extension_nuevo_fin": params.nuevo_fin,
         });
 
-        sqlx::query(
+        sqlx::query!(
             "UPDATE cola_extraccion_samples
-             SET compas_inicio_seg = $2,
-                 compas_fin_seg    = $3,
+             SET compas_inicio_seg = $2::float8,
+                 compas_fin_seg    = $3::float8,
                  estado            = 'pendiente',
                  intentos          = 0,
                  error_mensaje     = NULL,
                  proximo_intento_at = NULL,
-                 metadata_extraccion = COALESCE(metadata_extraccion, '{}'::jsonb) || $4
+                 metadata_extraccion = COALESCE(metadata_extraccion, '{}'::jsonb) || $4::jsonb
              WHERE id = $1",
+            params.cola_id,
+            params.nuevo_inicio,
+            params.nuevo_fin,
+            metadata_patch
         )
-        .bind(params.cola_id)
-        .bind(params.nuevo_inicio)
-        .bind(params.nuevo_fin)
-        .bind(&metadata_patch)
         .execute(pool)
         .await?;
         Ok(())
@@ -116,8 +118,9 @@ impl ColaExtraccionRepository {
         pool: &PgPool,
         limit: i64,
     ) -> Result<Vec<ColaExtraidoReclamado>, sqlx::Error> {
-        sqlx::query_as::<_, ColaExtraidoReclamado>(
-            "UPDATE cola_extraccion_samples
+        sqlx::query_as!(
+            ColaExtraidoReclamado,
+            r#"UPDATE cola_extraccion_samples
                SET procesado_at = NOW()
                WHERE id IN (
                    SELECT id FROM cola_extraccion_samples
@@ -132,7 +135,7 @@ impl ColaExtraccionRepository {
                RETURNING
                    id,
                    relacion_id,
-                   lado,
+                   lado AS "lado!",
                    youtube_id,
                    spotify_id,
                    ruta_audio_extraido,
@@ -141,9 +144,9 @@ impl ColaExtraccionRepository {
                    sample_id,
                    bpm_detectado,
                    compas_inicio_seg::DOUBLE PRECISION AS compas_inicio_seg,
-                   compas_fin_seg::DOUBLE PRECISION    AS compas_fin_seg",
+                   compas_fin_seg::DOUBLE PRECISION    AS compas_fin_seg"#,
+            limit
         )
-        .bind(limit)
         .fetch_all(pool)
         .await
     }
@@ -156,8 +159,9 @@ impl ColaExtraccionRepository {
         pool: &PgPool,
         limit: i64,
     ) -> Result<Vec<ColaExtraidoReclamado>, sqlx::Error> {
-        sqlx::query_as::<_, ColaExtraidoReclamado>(
-            "UPDATE cola_extraccion_samples
+        sqlx::query_as!(
+            ColaExtraidoReclamado,
+            r#"UPDATE cola_extraccion_samples
                SET procesado_at = NOW()
                WHERE id IN (
                    SELECT id FROM cola_extraccion_samples
@@ -173,7 +177,7 @@ impl ColaExtraccionRepository {
                RETURNING
                    id,
                    relacion_id,
-                   lado,
+                   lado AS "lado!",
                    youtube_id,
                    spotify_id,
                    ruta_audio_extraido,
@@ -182,9 +186,9 @@ impl ColaExtraccionRepository {
                    sample_id,
                    bpm_detectado,
                    compas_inicio_seg::DOUBLE PRECISION AS compas_inicio_seg,
-                   compas_fin_seg::DOUBLE PRECISION    AS compas_fin_seg",
+                   compas_fin_seg::DOUBLE PRECISION    AS compas_fin_seg"#,
+            limit
         )
-        .bind(limit)
         .fetch_all(pool)
         .await
     }
@@ -197,7 +201,7 @@ impl ColaExtraccionRepository {
         sample_id: i32,
         ruta_storage: &str,
     ) -> Result<(), sqlx::Error> {
-        sqlx::query(
+        sqlx::query!(
             "UPDATE cola_extraccion_samples
                SET estado = 'completado',
                    sample_id = $2,
@@ -205,10 +209,10 @@ impl ColaExtraccionRepository {
                    procesado_at = NOW(),
                    error_mensaje = NULL
                WHERE id = $1",
+            cola_id,
+            sample_id,
+            ruta_storage
         )
-        .bind(cola_id)
-        .bind(sample_id)
-        .bind(ruta_storage)
         .execute(pool)
         .await?;
         Ok(())
@@ -222,14 +226,14 @@ impl ColaExtraccionRepository {
         cola_id: i32,
         error: &str,
     ) -> Result<(), sqlx::Error> {
-        sqlx::query(
+        sqlx::query!(
             "UPDATE cola_extraccion_samples
                SET procesado_at = NULL,
-                   error_mensaje = LEFT($2, 1000)
+                   error_mensaje = LEFT($2::text, 1000)
                WHERE id = $1",
+            cola_id,
+            error
         )
-        .bind(cola_id)
-        .bind(error)
         .execute(pool)
         .await?;
         Ok(())

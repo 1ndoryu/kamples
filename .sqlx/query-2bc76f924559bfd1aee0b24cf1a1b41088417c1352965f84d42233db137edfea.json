@@ -1,0 +1,41 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO app_config (clave, valor)\n               VALUES ($1, $2)\n               ON CONFLICT (clave) DO UPDATE\n                 SET valor = EXCLUDED.valor,\n                     updated_at = NOW()\n               RETURNING clave, valor, descripcion, updated_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "clave",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "valor",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 2,
+        "name": "descripcion",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Jsonb"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "2bc76f924559bfd1aee0b24cf1a1b41088417c1352965f84d42233db137edfea"
+}

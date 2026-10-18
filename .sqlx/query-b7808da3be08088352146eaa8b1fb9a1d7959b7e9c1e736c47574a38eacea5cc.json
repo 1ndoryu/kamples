@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT s.tags, s.bpm, s.key FROM samples s JOIN likes l ON l.target_id = s.id AND l.tipo = 'sample' WHERE l.usuario_id = $1 AND l.reaccion IN ('like','encanta') AND s.estado = 'activo' AND s.eliminado_en IS NULL",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "tags",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 1,
+        "name": "bpm",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "key",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "b7808da3be08088352146eaa8b1fb9a1d7959b7e9c1e736c47574a38eacea5cc"
+}

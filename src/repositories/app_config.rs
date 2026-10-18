@@ -8,8 +8,8 @@
  * consulta la tabla — para que un cambio surta efecto en el siguiente ciclo
  * sin necesidad de reiniciar el scraper.
  *
- * Se usa el API no-macro de sqlx (FromRow + bind) para no depender del
- * cache offline al cambiar queries. */
+ * Consultas con query_as! (validadas en compilacion contra el esquema y el
+ * cache .sqlx). */
 
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
@@ -32,14 +32,14 @@ impl AppConfigRepository {
         prefix: &str,
     ) -> Result<Vec<AppConfigEntry>, sqlx::Error> {
         let pattern = format!("{prefix}%");
-        /* sentinel-disable-next-line sqlx-query-as-sin-macro */
-        sqlx::query_as::<_, AppConfigEntry>(
+        sqlx::query_as!(
+            AppConfigEntry,
             r"SELECT clave, valor, descripcion, updated_at
                FROM app_config
                WHERE clave LIKE $1
                ORDER BY clave",
+            pattern
         )
-        .bind(pattern)
         .fetch_all(pool)
         .await
     }
@@ -52,30 +52,30 @@ impl AppConfigRepository {
         clave: &str,
         valor: &serde_json::Value,
     ) -> Result<AppConfigEntry, sqlx::Error> {
-        /* sentinel-disable-next-line sqlx-query-as-sin-macro */
-        sqlx::query_as::<_, AppConfigEntry>(
+        sqlx::query_as!(
+            AppConfigEntry,
             r"INSERT INTO app_config (clave, valor)
                VALUES ($1, $2)
                ON CONFLICT (clave) DO UPDATE
                  SET valor = EXCLUDED.valor,
                      updated_at = NOW()
                RETURNING clave, valor, descripcion, updated_at",
+            clave,
+            valor
         )
-        .bind(clave)
-        .bind(valor)
         .fetch_one(pool)
         .await
     }
 
     /// Lee una clave individual. None si no existe.
     pub async fn get(pool: &PgPool, clave: &str) -> Result<Option<AppConfigEntry>, sqlx::Error> {
-        /* sentinel-disable-next-line sqlx-query-as-sin-macro */
-        sqlx::query_as::<_, AppConfigEntry>(
+        sqlx::query_as!(
+            AppConfigEntry,
             r"SELECT clave, valor, descripcion, updated_at
                FROM app_config
                WHERE clave = $1",
+            clave
         )
-        .bind(clave)
         .fetch_optional(pool)
         .await
     }

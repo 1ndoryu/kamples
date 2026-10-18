@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE relaciones_sample\n                     SET sample_fuente_id = $2,\n                         tipo_elemento = COALESCE($3::text, tipo_elemento),\n                         timings_fuente = CASE WHEN $4::integer IS NOT NULL\n                             THEN COALESCE(timings_fuente, '[]'::jsonb) || to_jsonb($4::integer)\n                             ELSE timings_fuente END,\n                         updated_at = NOW()\n                     WHERE id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Text",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "9c11800b13d7846b713c58b405efb0e9ec5a2bab458db0f156cd83cc31f84046"
+}

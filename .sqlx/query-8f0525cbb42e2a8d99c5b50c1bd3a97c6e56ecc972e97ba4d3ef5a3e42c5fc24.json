@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT COALESCE(MAX(orden), -1) + 1 AS \"next_orden!\" FROM coleccion_samples WHERE coleccion_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "next_orden!",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "8f0525cbb42e2a8d99c5b50c1bd3a97c6e56ecc972e97ba4d3ef5a3e42c5fc24"
+}

@@ -488,19 +488,18 @@ impl BillingRepository {
         pool: &PgPool,
         creator_id: i32,
     ) -> Result<bool, sqlx::Error> {
-        /* sentinel-disable-next-line sqlx-query-as-sin-macro */
-        let (exists,) = sqlx::query_as::<_, (bool,)>(
-            r"
+        let exists = sqlx::query_scalar!(
+            r#"
             SELECT EXISTS(
                 SELECT 1
                 FROM transacciones
                 WHERE creador_id = $1
                   AND tipo = 'payout'
                   AND estado = 'pendiente'
-            )
-            ",
+            ) AS "exists!"
+            "#,
+            creator_id
         )
-        .bind(creator_id)
         .fetch_one(pool)
         .await?;
 
@@ -515,8 +514,7 @@ impl BillingRepository {
         let currency = insert.currency.to_ascii_uppercase();
         let idempotency_key = format!("stripe-payout:{}", insert.stripe_payout_id);
 
-        /* sentinel-disable-next-line sqlx-query-sin-macro */
-        sqlx::query(
+        sqlx::query!(
             r"
             INSERT INTO transacciones (
                 comprador_id,
@@ -546,13 +544,13 @@ impl BillingRepository {
             )
             ON CONFLICT DO NOTHING
             ",
+            insert.creator_id,
+            amount,
+            currency,
+            &insert.status,
+            &insert.stripe_payout_id,
+            idempotency_key
         )
-        .bind(insert.creator_id)
-        .bind(amount)
-        .bind(currency)
-        .bind(&insert.status)
-        .bind(&insert.stripe_payout_id)
-        .bind(idempotency_key)
         .execute(pool)
         .await?;
 

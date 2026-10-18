@@ -46,7 +46,6 @@ struct CountRow {
     total: i64,
 }
 
-type SampleContextTuple = (Option<Vec<String>>, Option<i32>, Option<String>);
 
 #[derive(Debug, Clone, Default)]
 pub struct ColeccionadosFilters {
@@ -282,17 +281,17 @@ impl BibliotecaRepository {
     }
 
     pub async fn contar_descargados(pool: &PgPool, user_id: i32) -> Result<i64, AppError> {
-        /* sentinel-disable-next-line sqlx-query-as-sin-macro */
-        let row = sqlx::query_as::<_, CountRow>(
-            "SELECT COUNT(*) AS total FROM descargas d \
-             INNER JOIN samples s ON s.id = d.sample_id \
-             WHERE d.usuario_id = $1 AND s.estado = 'activo' AND s.eliminado_en IS NULL",
+        // COUNT(*) siempre devuelve una fila; "total!" fuerza el tipo no nulo i64.
+        let total = sqlx::query_scalar!(
+            r#"SELECT COUNT(*) AS "total!" FROM descargas d
+               INNER JOIN samples s ON s.id = d.sample_id
+               WHERE d.usuario_id = $1 AND s.estado = 'activo' AND s.eliminado_en IS NULL"#,
+            user_id
         )
-        .bind(user_id)
         .fetch_one(pool)
         .await
         .map_err(AppError::from)?;
-        Ok(row.total)
+        Ok(total)
     }
 
     /* [274A-17] Historial de reproducciones del usuario, samples completos
@@ -671,39 +670,37 @@ impl BibliotecaRepository {
         pool: &PgPool,
         user_id: i32,
     ) -> Result<Vec<SampleContextRow>, AppError> {
-        /* sentinel-disable-next-line sqlx-query-as-sin-macro */
-        let rows: Vec<SampleContextTuple> = sqlx::query_as(
+        let rows = sqlx::query!(
             "SELECT s.tags, s.bpm, s.key \
              FROM samples s \
              JOIN likes l ON l.target_id = s.id AND l.tipo = 'sample' \
              WHERE l.usuario_id = $1 \
                AND l.reaccion IN ('like','encanta') \
                AND s.estado = 'activo' AND s.eliminado_en IS NULL",
+            user_id
         )
-        .bind(user_id)
         .fetch_all(pool)
         .await
         .map_err(AppError::from)?;
         Ok(rows
             .into_iter()
-            .map(|(tags, bpm, music_key)| SampleContextRow {
-                tags: tags.unwrap_or_default(),
-                bpm,
-                music_key,
+            .map(|r| SampleContextRow {
+                tags: r.tags.unwrap_or_default(),
+                bpm: r.bpm,
+                music_key: r.key,
             })
             .collect())
     }
 
     pub async fn ids_favoritos(pool: &PgPool, user_id: i32) -> Result<Vec<i32>, AppError> {
-        /* sentinel-disable-next-line sqlx-query-as-sin-macro */
-        let rows: Vec<(i32,)> = sqlx::query_as(
+        let ids = sqlx::query_scalar!(
             "SELECT target_id FROM likes WHERE usuario_id = $1 AND tipo = 'sample' \
              AND reaccion IN ('like','encanta')",
+            user_id
         )
-        .bind(user_id)
         .fetch_all(pool)
         .await
         .map_err(AppError::from)?;
-        Ok(rows.into_iter().map(|(id,)| id).collect())
+        Ok(ids)
     }
 }

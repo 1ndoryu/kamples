@@ -217,11 +217,11 @@ impl ColeccionesRepository {
         let mut tx = pool.begin().await?;
 
         /* 1. Verificar si ya pertenece a ESTA coleccion. */
-        let ya_en_esta: bool = sqlx::query_scalar(
-            "SELECT EXISTS(SELECT 1 FROM coleccion_samples WHERE coleccion_id = $1 AND sample_id = $2)",
+        let ya_en_esta = sqlx::query_scalar!(
+            r#"SELECT EXISTS(SELECT 1 FROM coleccion_samples WHERE coleccion_id = $1 AND sample_id = $2) AS "e!""#,
+            coleccion_id,
+            sample_id
         )
-        .bind(coleccion_id)
-        .bind(sample_id)
         .fetch_one(&mut *tx)
         .await?;
         if ya_en_esta {
@@ -230,53 +230,55 @@ impl ColeccionesRepository {
         }
 
         /* 2. Buscar si pertenece a OTRA coleccion del mismo usuario. */
-        let col_anterior: Option<i64> = sqlx::query_scalar(
+        let col_anterior = sqlx::query_scalar!(
             "SELECT cs.coleccion_id FROM coleccion_samples cs \
              WHERE cs.sample_id = $1 AND cs.usuario_id = $2 LIMIT 1",
+            sample_id,
+            usuario_id
         )
-        .bind(sample_id)
-        .bind(usuario_id)
         .fetch_optional(&mut *tx)
         .await?;
 
         /* 3. Si existe en otra, eliminarlo de la anterior. */
         if let Some(old_col) = col_anterior {
-            sqlx::query("DELETE FROM coleccion_samples WHERE coleccion_id = $1 AND sample_id = $2")
-                .bind(old_col)
-                .bind(sample_id)
-                .execute(&mut *tx)
-                .await?;
-            sqlx::query(
-                "UPDATE colecciones SET total_samples = GREATEST(total_samples - 1, 0), updated_at = NOW() WHERE id = $1",
+            sqlx::query!(
+                "DELETE FROM coleccion_samples WHERE coleccion_id = $1 AND sample_id = $2",
+                old_col,
+                sample_id
             )
-            .bind(old_col)
+            .execute(&mut *tx)
+            .await?;
+            sqlx::query!(
+                "UPDATE colecciones SET total_samples = GREATEST(total_samples - 1, 0), updated_at = NOW() WHERE id = $1",
+                old_col
+            )
             .execute(&mut *tx)
             .await?;
         }
 
         /* 4. Insertar en la nueva coleccion. */
-        let next_orden: i32 = sqlx::query_scalar(
-            r"SELECT COALESCE(MAX(orden), -1) + 1 FROM coleccion_samples WHERE coleccion_id = $1",
+        let next_orden = sqlx::query_scalar!(
+            r#"SELECT COALESCE(MAX(orden), -1) + 1 AS "next_orden!" FROM coleccion_samples WHERE coleccion_id = $1"#,
+            coleccion_id
         )
-        .bind(coleccion_id)
         .fetch_one(&mut *tx)
         .await?;
 
-        sqlx::query(
+        sqlx::query!(
             "INSERT INTO coleccion_samples (coleccion_id, sample_id, usuario_id, orden) \
              VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING",
+            coleccion_id,
+            sample_id,
+            usuario_id,
+            next_orden
         )
-        .bind(coleccion_id)
-        .bind(sample_id)
-        .bind(usuario_id)
-        .bind(next_orden)
         .execute(&mut *tx)
         .await?;
 
-        sqlx::query(
+        sqlx::query!(
             "UPDATE colecciones SET total_samples = total_samples + 1, updated_at = NOW() WHERE id = $1",
+            coleccion_id
         )
-        .bind(coleccion_id)
         .execute(&mut *tx)
         .await?;
 

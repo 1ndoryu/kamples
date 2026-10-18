@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE cola_extraccion_samples\n             SET compas_inicio_seg = $2::float8,\n                 compas_fin_seg    = $3::float8,\n                 estado            = 'pendiente',\n                 intentos          = 0,\n                 error_mensaje     = NULL,\n                 proximo_intento_at = NULL,\n                 metadata_extraccion = COALESCE(metadata_extraccion, '{}'::jsonb) || $4::jsonb\n             WHERE id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Float8",
+        "Float8",
+        "Jsonb"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "2ee38273a2d669a74436f71703a4e618b37df7c1a74540a286ded993d9d19a34"
+}

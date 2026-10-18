@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE publicaciones\n               SET moderacion_estado = $2,\n                   moderacion_detalle = $3,\n                   moderacion_razon = $4\n               WHERE id = $1\n                 AND eliminado_en IS NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Varchar",
+        "Jsonb",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "7706b8e05f6372739d5067295f5cbd058b099f166c3d06af43742f870dc1623a"
+}

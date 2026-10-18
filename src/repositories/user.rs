@@ -89,11 +89,13 @@ impl UserRepository {
         user_id: i32,
         nuevo_hash: &str,
     ) -> Result<(), sqlx::Error> {
-        sqlx::query("UPDATE usuarios_ext SET password_hash = $1 WHERE id = $2")
-            .bind(nuevo_hash)
-            .bind(user_id)
-            .execute(pool)
-            .await?;
+        sqlx::query!(
+            "UPDATE usuarios_ext SET password_hash = $1 WHERE id = $2",
+            nuevo_hash,
+            user_id
+        )
+        .execute(pool)
+        .await?;
         Ok(())
     }
 

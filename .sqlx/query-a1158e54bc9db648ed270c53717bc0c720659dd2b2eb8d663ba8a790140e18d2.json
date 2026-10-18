@@ -1,0 +1,40 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT clave, valor, descripcion, updated_at\n               FROM app_config\n               WHERE clave LIKE $1\n               ORDER BY clave",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "clave",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "valor",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 2,
+        "name": "descripcion",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "a1158e54bc9db648ed270c53717bc0c720659dd2b2eb8d663ba8a790140e18d2"
+}

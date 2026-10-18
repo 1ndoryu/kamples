@@ -1,0 +1,19 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO transacciones (\n                comprador_id,\n                creador_id,\n                sample_id,\n                tipo,\n                monto,\n                moneda,\n                pago_creador,\n                comision_plataforma,\n                estado,\n                stripe_payment_id,\n                idempotency_key\n            )\n            VALUES (\n                $1,\n                $1,\n                NULL,\n                'payout',\n                CAST($2 AS text)::numeric,\n                $3,\n                0,\n                0,\n                $4,\n                $5,\n                $6\n            )\n            ON CONFLICT DO NOTHING\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b0cd2e3f72714247e85bace70d74357f3970ef50d3893eb1ee31a11a81326ac1"
+}

@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT cs.coleccion_id FROM coleccion_samples cs WHERE cs.sample_id = $1 AND cs.usuario_id = $2 LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "coleccion_id",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "05f2915aaa5074bc3f6f18373642c7dab4547e4408ef3deb2f3f38086bcbfc9a"
+}

@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT target_id FROM likes WHERE usuario_id = $1 AND tipo = 'sample' AND reaccion IN ('like','encanta')",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "target_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "8e661b25560bdc995ae24661fd053e5104a1deda0b8605208d4faf3f5d931542"
+}

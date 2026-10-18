@@ -104,13 +104,13 @@ impl ModerationRepository {
     }
 
     pub async fn list_blocked(pool: &PgPool, bloqueador_id: i32) -> Result<Vec<i32>, AppError> {
-        let rows: Vec<(i32,)> = sqlx::query_as(
+        let ids = sqlx::query_scalar!(
             "SELECT bloqueado_id FROM bloqueos WHERE bloqueador_id = $1 ORDER BY created_at DESC",
+            bloqueador_id
         )
-        .bind(bloqueador_id)
         .fetch_all(pool)
         .await?;
-        Ok(rows.into_iter().map(|(id,)| id).collect())
+        Ok(ids)
     }
 
     /* [174A-51] Lista de usuarios que bloquearon a `target_id`. Necesario para
@@ -118,12 +118,12 @@ impl ModerationRepository {
      * de creadores que han bloqueado al usuario, ni de creadores bloqueados
      * por el usuario. Equivale a `BloqueosRepository::idsBloqueadores` legacy. */
     pub async fn list_blockers(pool: &PgPool, target_id: i32) -> Result<Vec<i32>, AppError> {
-        let rows: Vec<(i32,)> = sqlx::query_as(
+        let ids = sqlx::query_scalar!(
             "SELECT bloqueador_id FROM bloqueos WHERE bloqueado_id = $1 ORDER BY created_at DESC",
+            target_id
         )
-        .bind(target_id)
         .fetch_all(pool)
         .await?;
-        Ok(rows.into_iter().map(|(id,)| id).collect())
+        Ok(ids)
     }
 }

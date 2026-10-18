@@ -134,18 +134,18 @@ impl PostRepository {
         detalle: serde_json::Value,
         razon: &str,
     ) -> Result<bool, AppError> {
-        let updated = sqlx::query(
+        let updated = sqlx::query!(
             r#"UPDATE publicaciones
                SET moderacion_estado = $2,
                    moderacion_detalle = $3,
                    moderacion_razon = $4
                WHERE id = $1
                  AND eliminado_en IS NULL"#,
+            post_id,
+            estado,
+            detalle,
+            razon
         )
-        .bind(post_id)
-        .bind(estado)
-        .bind(detalle)
-        .bind(razon)
         .execute(pool)
         .await?
         .rows_affected();

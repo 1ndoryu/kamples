@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO coleccion_samples (coleccion_id, sample_id, usuario_id, orden) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int4",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "87d26dd0eb28a36aa46b4e1fd6fa887bbfd52825e4e6bebcc5f38a4ef040440e"
+}

@@ -441,8 +441,8 @@ impl SampleRepository {
      * Actualiza el sample_fuente_id o sample_destino_id segun lado_relacion,
      * y opcionalmente tipo_elemento y timings. timings_{fuente,destino} es JSONB.
      *
-     * Usamos sqlx::query (runtime) en vez de query! porque Option<i32> en CASE
-     * + to_jsonb confunde la inferencia de tipos del macro. */
+     * Usamos query! con casts explicitos ($3::text, $4::integer) para fijar el
+     * tipo de los parametros opcionales en COALESCE, CASE y to_jsonb. */
     pub async fn update_relacion_sample_link(
         pool: &PgPool,
         relacion_id: i32,
@@ -453,38 +453,38 @@ impl SampleRepository {
     ) -> Result<(), sqlx::Error> {
         match lado_relacion {
             "fuente" => {
-                sqlx::query(
+                sqlx::query!(
                     "UPDATE relaciones_sample
                      SET sample_fuente_id = $2,
-                         tipo_elemento = COALESCE($3, tipo_elemento),
-                         timings_fuente = CASE WHEN $4 IS NOT NULL
+                         tipo_elemento = COALESCE($3::text, tipo_elemento),
+                         timings_fuente = CASE WHEN $4::integer IS NOT NULL
                              THEN COALESCE(timings_fuente, '[]'::jsonb) || to_jsonb($4::integer)
                              ELSE timings_fuente END,
                          updated_at = NOW()
                      WHERE id = $1",
+                    relacion_id,
+                    sample_id,
+                    tipo_elemento,
+                    inicio_segundos
                 )
-                .bind(relacion_id)
-                .bind(sample_id)
-                .bind(tipo_elemento)
-                .bind(inicio_segundos)
                 .execute(pool)
                 .await?;
             }
             "destino" => {
-                sqlx::query(
+                sqlx::query!(
                     "UPDATE relaciones_sample
                      SET sample_destino_id = $2,
-                         tipo_elemento = COALESCE($3, tipo_elemento),
-                         timings_destino = CASE WHEN $4 IS NOT NULL
+                         tipo_elemento = COALESCE($3::text, tipo_elemento),
+                         timings_destino = CASE WHEN $4::integer IS NOT NULL
                              THEN COALESCE(timings_destino, '[]'::jsonb) || to_jsonb($4::integer)
                              ELSE timings_destino END,
                          updated_at = NOW()
                      WHERE id = $1",
+                    relacion_id,
+                    sample_id,
+                    tipo_elemento,
+                    inicio_segundos
                 )
-                .bind(relacion_id)
-                .bind(sample_id)
-                .bind(tipo_elemento)
-                .bind(inicio_segundos)
                 .execute(pool)
                 .await?;
             }

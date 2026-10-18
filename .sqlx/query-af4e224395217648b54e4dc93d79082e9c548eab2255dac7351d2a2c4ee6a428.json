@@ -1,0 +1,88 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE cola_extraccion_samples\n               SET procesado_at = NOW()\n               WHERE id IN (\n                   SELECT id FROM cola_extraccion_samples\n                   WHERE estado = 'extraido'\n                     AND sample_id IS NULL\n                     AND procesado_at IS NULL\n                     AND ruta_audio_extraido IS NOT NULL\n                   ORDER BY id\n                   LIMIT $1\n                   FOR UPDATE SKIP LOCKED\n               )\n               RETURNING\n                   id,\n                   relacion_id,\n                   lado AS \"lado!\",\n                   youtube_id,\n                   spotify_id,\n                   ruta_audio_extraido,\n                   ruta_audio_completo,\n                   metadata_extraccion,\n                   sample_id,\n                   bpm_detectado,\n                   compas_inicio_seg::DOUBLE PRECISION AS compas_inicio_seg,\n                   compas_fin_seg::DOUBLE PRECISION    AS compas_fin_seg",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "relacion_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "lado!",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "youtube_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "spotify_id",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "ruta_audio_extraido",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "ruta_audio_completo",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "metadata_extraccion",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 8,
+        "name": "sample_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 9,
+        "name": "bpm_detectado",
+        "type_info": "Int2"
+      },
+      {
+        "ordinal": 10,
+        "name": "compas_inicio_seg",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 11,
+        "name": "compas_fin_seg",
+        "type_info": "Float8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      null,
+      null
+    ]
+  },
+  "hash": "af4e224395217648b54e4dc93d79082e9c548eab2255dac7351d2a2c4ee6a428"
+}
