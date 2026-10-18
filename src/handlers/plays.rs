@@ -18,7 +18,7 @@ use crate::AppState;
  *
  * Port directo de `ReproduccionesController::registrar`. Diferencias:
  * - Rate limit (60/min) NO portado: pendiente cuando llegue el RateLimiter
- *   global. Ver tarea futura — el endpoint queda anotado con TODO.
+ *   global (pendiente en el roadmap, 18AA-2).
  * - Debounce 3s manejado por `PlayRepository::register_with_debounce`.
  * - Se invoca `AlgoPlanner::register_interaction(Reproduccion)` siempre y
  *   `Completa` adicionalmente cuando el cliente reporta `completada=true`.
@@ -95,8 +95,8 @@ pub async fn register_play(
         return Err(AppError::NotFound(format!("sample {sample_id} no existe")));
     }
 
-    /* TODO(174A-58 follow-up): rate limit 60/min por usuario cuando exista
-     * RateLimiter global. Mientras tanto el debounce de 3s mitiga abuso. */
+    /* Rate limit 60/min por usuario: pendiente en el roadmap (18AA-2), cuando
+     * exista un RateLimiter global. Mientras tanto el debounce de 3s mitiga abuso. */
 
     let outcome = PlayRepository::register_with_debounce(
         &state.pool,

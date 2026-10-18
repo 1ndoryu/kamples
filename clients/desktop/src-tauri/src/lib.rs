@@ -81,8 +81,8 @@ async fn iniciar_oauth_google(
         challenge = code_challenge,
     );
 
-    /* Abrir el navegador del sistema
-     * TODO: Migrar a tauri-plugin-opener cuando se actualice Tauri (reemplazo de shell.open) */
+    /* Abrir el navegador del sistema. Migrar a tauri-plugin-opener (reemplazo de
+     * shell.open) queda en el roadmap (18AA-2), al actualizar Tauri. */
     #[allow(deprecated)]
     use tauri_plugin_shell::ShellExt;
     app.shell()

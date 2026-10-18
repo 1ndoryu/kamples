@@ -11,7 +11,7 @@
  * - GET    /api/colecciones/:id/samples                Listar samples (en orden)
  *
  * NO portado:
- * - Optimistic locking (version) — TODO.
+ * - Optimistic locking (version) — pendiente en el roadmap (18AA-2).
  * - Sync changelog.
  * - Subir imagen multipart.
  * - Admin override.
