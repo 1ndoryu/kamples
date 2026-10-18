@@ -44,6 +44,18 @@ pub struct ColaExtraidoReclamado {
     pub compas_fin_seg: Option<f64>,
 }
 
+/// Conteos agregados de la cola para el panel de administracion.
+#[derive(Debug, Clone, sqlx::FromRow)]
+pub struct EstadisticasCola {
+    pub pendientes: i64,
+    pub en_proceso: i64,
+    pub revision_humana: i64,
+    pub extraido_sin_publicar: i64,
+    pub completados_24h: i64,
+    pub errores_24h: i64,
+    pub total: i64,
+}
+
 pub struct EncolarParams<'a> {
     pub cola_id: i32,
     pub nuevo_inicio: f64,
@@ -73,6 +85,25 @@ impl ColaExtraccionRepository {
         )
         .bind(sample_id)
         .fetch_optional(pool)
+        .await
+    }
+
+    /// Calcula todos los conteos del panel en una sola pasada con FILTER,
+    /// para no hacer una consulta por estado.
+    pub async fn estadisticas(pool: &PgPool) -> Result<EstadisticasCola, sqlx::Error> {
+        sqlx::query_as!(
+            EstadisticasCola,
+            r#"SELECT
+                  COUNT(*) FILTER (WHERE estado = 'pendiente')                                          AS "pendientes!",
+                  COUNT(*) FILTER (WHERE estado IN ('descargando','analizando','recortando'))           AS "en_proceso!",
+                  COUNT(*) FILTER (WHERE estado = 'revision_humana')                                    AS "revision_humana!",
+                  COUNT(*) FILTER (WHERE estado = 'extraido' AND sample_id IS NULL)                     AS "extraido_sin_publicar!",
+                  COUNT(*) FILTER (WHERE estado = 'completado' AND procesado_at >= NOW() - INTERVAL '24 hours') AS "completados_24h!",
+                  COUNT(*) FILTER (WHERE estado = 'error'      AND procesado_at >= NOW() - INTERVAL '24 hours') AS "errores_24h!",
+                  COUNT(*)                                                                              AS "total!"
+              FROM cola_extraccion_samples"#
+        )
+        .fetch_one(pool)
         .await
     }
 

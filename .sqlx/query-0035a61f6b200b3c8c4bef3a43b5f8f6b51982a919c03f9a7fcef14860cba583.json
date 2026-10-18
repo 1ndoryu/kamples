@@ -1,0 +1,56 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT\n                  COUNT(*) FILTER (WHERE estado = 'pendiente')                                          AS \"pendientes!\",\n                  COUNT(*) FILTER (WHERE estado IN ('descargando','analizando','recortando'))           AS \"en_proceso!\",\n                  COUNT(*) FILTER (WHERE estado = 'revision_humana')                                    AS \"revision_humana!\",\n                  COUNT(*) FILTER (WHERE estado = 'extraido' AND sample_id IS NULL)                     AS \"extraido_sin_publicar!\",\n                  COUNT(*) FILTER (WHERE estado = 'completado' AND procesado_at >= NOW() - INTERVAL '24 hours') AS \"completados_24h!\",\n                  COUNT(*) FILTER (WHERE estado = 'error'      AND procesado_at >= NOW() - INTERVAL '24 hours') AS \"errores_24h!\",\n                  COUNT(*)                                                                              AS \"total!\"\n              FROM cola_extraccion_samples",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "pendientes!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "en_proceso!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "revision_humana!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "extraido_sin_publicar!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "completados_24h!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 5,
+        "name": "errores_24h!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "total!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "0035a61f6b200b3c8c4bef3a43b5f8f6b51982a919c03f9a7fcef14860cba583"
+}

@@ -15,13 +15,12 @@ use axum::extract::State;
 use axum::routing::get;
 use axum::{Json, Router};
 use serde::{Deserialize, Serialize};
-use sqlx::Row;
 use std::collections::BTreeMap;
 use utoipa::ToSchema;
 
 use crate::errors::AppError;
 use crate::middleware::CurrentUser;
-use crate::repositories::AppConfigRepository;
+use crate::repositories::{AppConfigRepository, ColaExtraccionRepository};
 use crate::AppState;
 
 const PREFIX_EXTRACCION: &str = "extraccion_";
@@ -241,30 +240,16 @@ pub async fn get_extraccion_stats(
 ) -> Result<Json<ExtraccionStats>, AppError> {
     user.require_admin()?;
 
-    /* Una sola pasada con FILTER para no hacer 6 roundtrips a la BD. */
-    /* sentinel-disable-next-line sqlx-query-sin-macro */
-    let row = sqlx::query( // sentinel-disable handler-accede-bd-rs
-        r"SELECT
-              COUNT(*) FILTER (WHERE estado = 'pendiente')                                          AS pendientes,
-              COUNT(*) FILTER (WHERE estado IN ('descargando','analizando','recortando'))           AS en_proceso,
-              COUNT(*) FILTER (WHERE estado = 'revision_humana')                                    AS revision_humana,
-              COUNT(*) FILTER (WHERE estado = 'extraido' AND sample_id IS NULL)                     AS extraido_sin_publicar,
-              COUNT(*) FILTER (WHERE estado = 'completado' AND procesado_at >= NOW() - INTERVAL '24 hours') AS completados_24h,
-              COUNT(*) FILTER (WHERE estado = 'error'      AND procesado_at >= NOW() - INTERVAL '24 hours') AS errores_24h,
-              COUNT(*)                                                                              AS total
-              FROM cola_extraccion_samples",
-    )
-    .fetch_one(&state.pool)
-    .await?;
+    let row = ColaExtraccionRepository::estadisticas(&state.pool).await?;
 
     Ok(Json(ExtraccionStats {
-        pendientes: row.get::<i64, _>("pendientes"),
-        en_proceso: row.get::<i64, _>("en_proceso"),
-        revision_humana: row.get::<i64, _>("revision_humana"),
-        extraido_sin_publicar: row.get::<i64, _>("extraido_sin_publicar"),
-        completados_24h: row.get::<i64, _>("completados_24h"),
-        errores_24h: row.get::<i64, _>("errores_24h"),
-        total: row.get::<i64, _>("total"),
+        pendientes: row.pendientes,
+        en_proceso: row.en_proceso,
+        revision_humana: row.revision_humana,
+        extraido_sin_publicar: row.extraido_sin_publicar,
+        completados_24h: row.completados_24h,
+        errores_24h: row.errores_24h,
+        total: row.total,
     }))
 }
 

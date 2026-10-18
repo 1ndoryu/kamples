@@ -75,6 +75,7 @@ pub use billing::{
 pub use block::{BlockRepository, BlockedUser};
 pub use cola_extraccion::{
     ColaExtraccionRepository, ColaExtraccionRow, ColaExtraidoReclamado, EncolarParams,
+    EstadisticasCola,
 };
 pub use coleccion::{
     Coleccion, ColeccionOp, ColeccionSample, ColeccionSampleFile, ColeccionesRepository,
