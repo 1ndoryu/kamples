@@ -19,6 +19,7 @@ use clap::Parser;
 use glory_backend::audio::ffmpeg::inspect_audio_file;
 use sha2::{Digest, Sha256};
 use slug::slugify;
+use sqlx::PgPool;
 use sqlx::postgres::PgPoolOptions;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -63,7 +64,9 @@ struct Args {
     yes: bool,
 }
 
-#[allow(clippy::too_many_lines)]
+/// Volumen de uploads del servidor caído; la ruta remota cuelga de él.
+const VOLUME_UPLOADS: &str = "/var/lib/docker/volumes/mo4so4440c488g8woow4cow0_uploads-data/_data";
+
 fn main() -> Result<()> {
     dotenvy::dotenv().ok();
     let args = Args::parse();
@@ -74,83 +77,29 @@ fn main() -> Result<()> {
         .context("No se pudo extraer el nombre del archivo de --archivo")?
         .to_string_lossy()
         .to_string();
-
-    println!("=== Rescate de Sample ===");
-    println!("  Archivo remoto:  {}", args.archivo);
-    println!("  Nombre:          {filename}");
-    println!("  Creador ID:      {}", args.creador_id);
-    println!("  Host:            {}", args.host);
-
-    if !args.yes {
-        println!();
-        print!("¿Continuar? (s/N): ");
-        let _ = std::io::Write::flush(&mut std::io::stdout());
-        let mut input = String::new();
-        std::io::stdin().read_line(&mut input)?;
-        if !input.trim().eq_ignore_ascii_case("s") {
-            println!("Cancelado.");
-            return Ok(());
-        }
+    imprimir_resumen(&args, &filename);
+    if !args.yes && !confirmar()? {
+        println!("Cancelado.");
+        return Ok(());
     }
 
     // ─── 1. Resolver SSH key ────────────────────────────────────────────────
     let ssh_key = resolve_ssh_key(args.ssh_key.as_ref())?;
     println!("  SSH key:         {ssh_key}");
 
-    // ─── 2. Ruta remota absoluta ────────────────────────────────────────────
-    let volume_uploads = "/var/lib/docker/volumes/mo4so4440c488g8woow4cow0_uploads-data/_data";
-    let remote_full = format!("{}/{}", volume_uploads, args.archivo);
+    // ─── 2-5. Verificar, medir y descargar el archivo remoto ────────────────
+    let remote_full = format!("{VOLUME_UPLOADS}/{}", args.archivo);
+    verificar_remoto(&args.host, &ssh_key, &remote_full)?;
+    let audio_bytes = descargar_remoto(&args.host, &ssh_key, &remote_full)?;
 
-    // ─── 3. Verificar existencia ────────────────────────────────────────────
-    let check = ssh_exec(
-        &args.host,
-        &ssh_key,
-        &format!("test -f '{remote_full}' && echo 'EXISTS' || echo 'NOT_FOUND'"),
-    )?;
-    if check.trim() != "EXISTS" {
-        anyhow::bail!("El archivo remoto no existe o no es accesible:\n  {remote_full}");
-    }
-    println!("  ✓ Archivo existe en el servidor");
-
-    // ─── 4. Tamaño remoto ───────────────────────────────────────────────────
-    let remote_size = ssh_exec(
-        &args.host,
-        &ssh_key,
-        &format!("stat --format='%s' '{remote_full}'"),
-    )?;
-    let remote_size = remote_size.trim().parse::<u64>().unwrap_or(0);
-    #[allow(clippy::cast_precision_loss)]
-    let remote_size_mb = remote_size as f64 / 1_048_576.0;
-    println!("  Tamaño remoto:   {remote_size_mb:.2} MB");
-
-    // ─── 5. Descargar vía base64 ────────────────────────────────────────────
-    println!("  ↓ Descargando...");
-    let b64_output = ssh_exec(&args.host, &ssh_key, &format!("base64 -w0 '{remote_full}'"))?;
-    let audio_bytes = base64::engine::general_purpose::STANDARD
-        .decode(b64_output.trim())
-        .context("Error al decodificar base64 del archivo remoto")?;
-    #[allow(clippy::cast_precision_loss)]
-    let downloaded_mb = audio_bytes.len() as f64 / 1_048_576.0;
-    println!(
-        "  ✓ Descargado: {} bytes ({downloaded_mb:.2} MB)",
-        audio_bytes.len()
-    );
-
-    // ─── 6. Parsear filename ────────────────────────────────────────────────
+    // ─── 6. Parsear filename, generar id_corto y slug ───────────────────────
     let metadata = parse_filename(&filename);
     let titulo = args.titulo.clone().unwrap_or(metadata.titulo.clone());
     let extension = filename.rsplit('.').next().unwrap_or("mp3").to_string();
-
-    // ─── 7. Generar id_corto y slug ─────────────────────────────────────────
     let id_corto = generate_short_id();
-    let slug_base = slugify(&titulo);
-    let slug = if slug_base.is_empty() {
-        format!("sample-{id_corto}")
-    } else {
-        format!("{slug_base}-{id_corto}")
-    };
+    let slug = generar_slug(&titulo, &id_corto);
 
-    // ─── 8. Guardar archivo en storage ─────────────────────────────────────
+    // ─── 7. Guardar archivo en storage ──────────────────────────────────────
     let now = Utc::now();
     let storage_key = format!(
         "samples/{}/{:04}/{:02}/{}.{}",
@@ -161,65 +110,191 @@ fn main() -> Result<()> {
         extension
     );
     let storage_root = env::var("STORAGE_ROOT").unwrap_or_else(|_| "./uploads".to_string());
-    let storage_path = PathBuf::from(&storage_root).join(&storage_key); // sentinel-disable path-join-sin-canonicalize — los segmentos son un i32, un slug y una extension de file_name()
+    let storage_path = guardar_archivo(&storage_root, &storage_key, &audio_bytes)?;
+
+    // ─── 8. Preparar datos y registrar en BD ────────────────────────────────
+    let database_url = env::var("DATABASE_URL").context("DATABASE_URL no definida en .env")?;
+    println!("  🗄  Conectando a BD...");
+    #[allow(clippy::cast_possible_wrap)]
+    let tamano = audio_bytes.len() as i64;
+    let rescate = Rescate {
+        creador_id: args.creador_id,
+        titulo,
+        slug,
+        id_corto,
+        formato: extension.to_uppercase(),
+        tamano,
+        tags: args.tags.split(',').map(|s| s.trim().to_string()).collect(),
+        audio_hash: hash_sha256(&audio_bytes),
+        meta: construir_meta(&args, &metadata),
+        tipo_sample: metadata.tipo.as_deref().map_or("loop", map_tipo),
+        bpm: metadata.bpm,
+        key: metadata.key,
+        storage_key,
+        storage_root,
+        storage_path,
+    };
+    let rt = tokio::runtime::Runtime::new()?;
+    let sample_id = rt.block_on(registrar_en_bd(&database_url, &rescate))?;
+
+    // ─── 10. Resultado final ────────────────────────────────────────────────
+    imprimir_resultado(sample_id, &rescate);
+    Ok(())
+}
+
+/// Datos del rescate ya calculados; los comparten las escrituras de BD.
+struct Rescate {
+    creador_id: i32,
+    titulo: String,
+    slug: String,
+    id_corto: String,
+    formato: String,
+    tamano: i64,
+    tags: Vec<String>,
+    audio_hash: String,
+    meta: serde_json::Value,
+    tipo_sample: &'static str,
+    bpm: Option<i32>,
+    key: Option<String>,
+    storage_key: String,
+    storage_root: String,
+    storage_path: PathBuf,
+}
+
+/// Muestra el resumen antes de tocar nada.
+fn imprimir_resumen(args: &Args, filename: &str) {
+    println!("=== Rescate de Sample ===");
+    println!("  Archivo remoto:  {}", args.archivo);
+    println!("  Nombre:          {filename}");
+    println!("  Creador ID:      {}", args.creador_id);
+    println!("  Host:            {}", args.host);
+}
+
+/// Pide confirmación; solo cuenta una "s" explícita.
+fn confirmar() -> Result<bool> {
+    println!();
+    print!("¿Continuar? (s/N): ");
+    let _ = std::io::Write::flush(&mut std::io::stdout());
+    let mut input = String::new();
+    std::io::stdin().read_line(&mut input)?;
+    Ok(input.trim().eq_ignore_ascii_case("s"))
+}
+
+/// Comprueba que el archivo remoto existe y muestra su tamaño.
+fn verificar_remoto(host: &str, ssh_key: &str, remote_full: &str) -> Result<()> {
+    let check = ssh_exec(
+        host,
+        ssh_key,
+        &format!("test -f '{remote_full}' && echo 'EXISTS' || echo 'NOT_FOUND'"),
+    )?;
+    if check.trim() != "EXISTS" {
+        anyhow::bail!("El archivo remoto no existe o no es accesible:\n  {remote_full}");
+    }
+    println!("  ✓ Archivo existe en el servidor");
+
+    let remote_size = ssh_exec(host, ssh_key, &format!("stat --format='%s' '{remote_full}'"))?;
+    let remote_size = remote_size.trim().parse::<u64>().unwrap_or(0);
+    #[allow(clippy::cast_precision_loss)]
+    let remote_size_mb = remote_size as f64 / 1_048_576.0;
+    println!("  Tamaño remoto:   {remote_size_mb:.2} MB");
+    Ok(())
+}
+
+/// Descarga el archivo remoto vía base64 (evita depender de coolify-manager-rs).
+fn descargar_remoto(host: &str, ssh_key: &str, remote_full: &str) -> Result<Vec<u8>> {
+    println!("  ↓ Descargando...");
+    let b64_output = ssh_exec(host, ssh_key, &format!("base64 -w0 '{remote_full}'"))?;
+    let audio_bytes = base64::engine::general_purpose::STANDARD
+        .decode(b64_output.trim())
+        .context("Error al decodificar base64 del archivo remoto")?;
+    #[allow(clippy::cast_precision_loss)]
+    let downloaded_mb = audio_bytes.len() as f64 / 1_048_576.0;
+    println!(
+        "  ✓ Descargado: {} bytes ({downloaded_mb:.2} MB)",
+        audio_bytes.len()
+    );
+    Ok(audio_bytes)
+}
+
+/// Slug legible + id corto; sin título usable cae a `sample-<id>`.
+fn generar_slug(titulo: &str, id_corto: &str) -> String {
+    let slug_base = slugify(titulo);
+    if slug_base.is_empty() {
+        format!("sample-{id_corto}")
+    } else {
+        format!("{slug_base}-{id_corto}")
+    }
+}
+
+/// Escribe el audio en el storage local y devuelve la ruta final.
+fn guardar_archivo(storage_root: &str, storage_key: &str, bytes: &[u8]) -> Result<PathBuf> {
+    let storage_path = PathBuf::from(storage_root).join(storage_key); // sentinel-disable path-join-sin-canonicalize — los segmentos son un i32, un slug y una extension de file_name()
     if let Some(parent) = storage_path.parent() {
         fs::create_dir_all(parent).context("Error al crear directorios de storage")?;
     }
-    fs::write(&storage_path, &audio_bytes).context("Error al escribir archivo en storage")?;
+    fs::write(&storage_path, bytes).context("Error al escribir archivo en storage")?;
     println!("  ✓ Archivo guardado: {}", storage_path.display());
+    Ok(storage_path)
+}
 
-    // ─── 9. Insertar en BD ──────────────────────────────────────────────────
-    let database_url = env::var("DATABASE_URL").context("DATABASE_URL no definida en .env")?;
-    println!("  🗄  Conectando a BD...");
+/// SHA-256 en hexadecimal; identifica el audio en la BD.
+fn hash_sha256(bytes: &[u8]) -> String {
+    let mut hasher = Sha256::new();
+    hasher.update(bytes);
+    format!("{:x}", hasher.finalize())
+}
 
-    let rt = tokio::runtime::Runtime::new()?;
-    let sample_id = rt.block_on(async {
-        let pool = PgPoolOptions::new()
-            .max_connections(2)
-            .connect(&database_url)
-            .await
-            .context("Error al conectar a BD")?;
+/// Metadata JSON del sample: origen del rescate más lo que da el nombre del archivo.
+fn construir_meta(args: &Args, metadata: &FileMetadata) -> serde_json::Value {
+    let mut meta = serde_json::json!({
+        "rescatado": true,
+        "fecha_rescate": Utc::now().to_rfc3339(),
+        "archivo_original": args.archivo,
+        "servidor_origen": args.host,
+    });
+    if let Some(v) = &metadata.bpm {
+        meta["bpm"] = serde_json::json!(v);
+    }
+    if let Some(v) = &metadata.key {
+        meta["tonalidad"] = serde_json::json!(v);
+    }
+    if let Some(v) = &metadata.genero {
+        meta["genero"] = serde_json::json!(v);
+    }
+    if let Some(v) = &metadata.artista {
+        meta["artista"] = serde_json::json!(v);
+    }
+    meta
+}
 
-        // Calcular hash SHA-256
-        let audio_hash = {
-            let mut hasher = Sha256::new();
-            hasher.update(&audio_bytes);
-            format!("{:x}", hasher.finalize())
-        };
+/// Abre la conexión y ejecuta las escrituras del rescate en orden.
+async fn registrar_en_bd(database_url: &str, r: &Rescate) -> Result<i32> {
+    let pool = PgPoolOptions::new()
+        .max_connections(2)
+        .connect(database_url)
+        .await
+        .context("Error al conectar a BD")?;
+    let fila_id = insertar_sample(&pool, r).await?;
 
-        let formato = extension.to_uppercase();
-        #[allow(clippy::cast_possible_wrap)]
-        let tamano = audio_bytes.len() as i64;
+    // Actualizar contador en usuarios_ext
+    sqlx::query!(
+        "UPDATE usuarios_ext SET total_samples = COALESCE(total_samples, 0) + 1 WHERE id = $1",
+        r.creador_id
+    )
+    .execute(&pool)
+    .await
+    .context("Error al actualizar contador de samples del usuario")?;
 
-        // Tags como array PostgreSQL
-        let tags: Vec<String> = args.tags.split(',').map(|s| s.trim().to_string()).collect();
+    analizar_audio(&pool, r, fila_id).await?;
+    encolar_analisis(&pool, fila_id).await?;
+    Ok(fila_id)
+}
 
-        // Metadata con info del rescate
-        let mut meta = serde_json::json!({
-            "rescatado": true,
-            "fecha_rescate": Utc::now().to_rfc3339(),
-            "archivo_original": args.archivo,
-            "servidor_origen": args.host,
-        });
-        if let Some(v) = &metadata.bpm {
-            meta["bpm"] = serde_json::json!(v);
-        }
-        if let Some(v) = &metadata.key {
-            meta["tonalidad"] = serde_json::json!(v);
-        }
-        if let Some(v) = &metadata.genero {
-            meta["genero"] = serde_json::json!(v);
-        }
-        if let Some(v) = &metadata.artista {
-            meta["artista"] = serde_json::json!(v);
-        }
-
-        // Mapear tipo desde filename (Vocals → "vocal", Loop → "loop", etc.)
-        let tipo_sample = metadata.tipo.as_deref().map_or("loop", map_tipo);
-
-        // INSERT con todos los campos relevantes
-        // Los argumentos son tipados por la columna: bpm INT, key VARCHAR(3), tamano BIGINT
-        let fila_id = sqlx::query_scalar!(
+/// INSERT del sample. La query va con la indentación original: el hash de la
+/// caché `.sqlx` depende del texto exacto del literal.
+async fn insertar_sample(pool: &PgPool, r: &Rescate) -> Result<i32> {
+    // Los argumentos son tipados por la columna: bpm INT, key VARCHAR(3), tamano BIGINT
+    let fila_id = sqlx::query_scalar!(
             r#"
             INSERT INTO samples (
                 creador_id, titulo, slug, id_corto, descripcion,
@@ -237,68 +312,62 @@ fn main() -> Result<()> {
                     $12, $13, $14, 0.0)
             RETURNING id AS "id!"
             "#,
-            args.creador_id,
-            titulo,
-            slug,
-            id_corto,
+            r.creador_id,
+            r.titulo.clone(),
+            r.slug.clone(),
+            r.id_corto.clone(),
             "Sample rescatado del servidor",
-            formato,
-            tamano,
-            &tags,
-            audio_hash,
-            storage_key,
-            meta,
-            metadata.bpm,
-            metadata.key.as_deref(),
-            tipo_sample
+            r.formato.clone(),
+            r.tamano,
+            &r.tags,
+            r.audio_hash.clone(),
+            r.storage_key.clone(),
+            r.meta.clone(),
+            r.bpm,
+            r.key.as_deref(),
+            r.tipo_sample
         )
-        .fetch_one(&pool)
+        .fetch_one(pool)
         .await
         .context("Error al insertar sample en BD")?;
+    Ok(fila_id)
+}
 
-        // Actualizar contador en usuarios_ext
-        sqlx::query!(
-            "UPDATE usuarios_ext SET total_samples = COALESCE(total_samples, 0) + 1 WHERE id = $1",
-            args.creador_id
-        )
-        .execute(&pool)
+/// Duración y waveform del audio guardado; actualiza la fila del sample.
+async fn analizar_audio(pool: &PgPool, r: &Rescate, fila_id: i32) -> Result<()> {
+    println!("  🎵 Analizando audio...");
+    let audio_meta = inspect_audio_file(&r.storage_path, Some("mp3"), None)
         .await
-        .context("Error al actualizar contador de samples del usuario")?;
+        .context("Error al inspeccionar archivo de audio")?;
+    let duracion = audio_meta.duration_seconds;
+    println!(
+        "     Duración: {:.2}s | Formato: {} | Peaks: {}",
+        duracion,
+        audio_meta.format,
+        audio_meta.waveform_peaks.len()
+    );
 
-        // ─── Análisis de audio: duración + waveform ────────────────────────────
-        println!("  🎵 Analizando audio...");
-        let audio_meta = inspect_audio_file(&storage_path, Some("mp3"), None)
-            .await
-            .context("Error al inspeccionar archivo de audio")?;
-        let duracion = audio_meta.duration_seconds;
-        println!(
-            "     Duración: {:.2}s | Formato: {} | Peaks: {}",
-            duracion,
-            audio_meta.format,
-            audio_meta.waveform_peaks.len()
-        );
+    // Guardar waveform como JSON junto al audio
+    let waveform_key = {
+        let parent = Path::new(&r.storage_key)
+            .parent()
+            .map(|p| p.to_string_lossy().replace('\\', "/"))
+            .unwrap_or_default();
+        format!("{parent}/{}_waveform.json", r.id_corto)
+    };
+    let waveform_storage_path = PathBuf::from(&r.storage_root).join(&waveform_key); // sentinel-disable path-join-sin-canonicalize — los segmentos son un i32, un slug y una extension de file_name()
+    if let Some(parent) = waveform_storage_path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+    let waveform_bytes =
+        serde_json::to_vec(&audio_meta.waveform_peaks).context("Error al serializar waveform")?;
+    fs::write(&waveform_storage_path, &waveform_bytes).context("Error al guardar waveform")?;
 
-        // Guardar waveform como JSON en storage
-        let waveform_key = {
-            let parent = Path::new(&storage_key)
-                .parent()
-                .map(|p| p.to_string_lossy().replace('\\', "/"))
-                .unwrap_or_default();
-            format!("{parent}/{id_corto}_waveform.json")
-        };
-        let waveform_storage_path = PathBuf::from(&storage_root).join(&waveform_key); // sentinel-disable path-join-sin-canonicalize — los segmentos son un i32, un slug y una extension de file_name()
-        if let Some(parent) = waveform_storage_path.parent() {
-            fs::create_dir_all(parent)?;
-        }
-        let waveform_bytes = serde_json::to_vec(&audio_meta.waveform_peaks)
-            .context("Error al serializar waveform")?;
-        fs::write(&waveform_storage_path, &waveform_bytes).context("Error al guardar waveform")?;
-
-        // Actualizar sample con duración, ruta_optimizada (mismo archivo, ya es MP3),
-        // waveform y publicado_at para que aparezca primero en "Recientes"
-        // duracion es REAL en BD: el f32 de inspect_audio_file encaja sin conversión
-        sqlx::query!(
-            r#"
+    // Actualizar sample con duración, ruta_optimizada (mismo archivo, ya es MP3),
+    // waveform y publicado_at para que aparezca primero en "Recientes".
+    // duracion es REAL en BD: el f32 de inspect_audio_file encaja sin conversión
+    sqlx::query!(
+        r#"
             UPDATE samples
             SET duracion = $1,
                 ruta_optimizada = $2,
@@ -307,75 +376,77 @@ fn main() -> Result<()> {
                 formato = $5
             WHERE id = $6
             "#,
-            duracion,
-            storage_key, // ruta_optimizada = misma que original (ya es MP3)
-            waveform_key,
-            Utc::now(),
-            formato,
-            fila_id
-        )
-        .execute(&pool)
-        .await
-        .context("Error al actualizar análisis de audio en BD")?;
+        duracion,
+        r.storage_key.clone(), // ruta_optimizada = misma que original (ya es MP3)
+        waveform_key,
+        Utc::now(),
+        r.formato.clone(),
+        fila_id
+    )
+    .execute(pool)
+    .await
+    .context("Error al actualizar análisis de audio en BD")?;
+    Ok(())
+}
 
-        // Encolar análisis IA técnico (cola_procesamiento_ia) para workers
-        // que procesan embedding vectorial cuando estén habilitados.
-        sqlx::query!(
-            r#"
+/// Encola el análisis técnico (workers de embeddings) y la metadata creativa IA.
+async fn encolar_analisis(pool: &PgPool, fila_id: i32) -> Result<()> {
+    // Encolar análisis IA técnico (cola_procesamiento_ia) para workers
+    // que procesan embedding vectorial cuando estén habilitados.
+    sqlx::query!(
+        r#"
             INSERT INTO cola_procesamiento_ia (tipo, entidad_id, operacion, metadata)
             VALUES ('sample', $1, 'analisis_audio', $2)
             "#,
-            fila_id,
-            serde_json::json!({"prioridad": "baja", "origen": "rescate"})
-        )
-        .execute(&pool)
-        .await
-        .context("Error al encolar análisis IA técnico")?;
+        fila_id,
+        serde_json::json!({"prioridad": "baja", "origen": "rescate"})
+    )
+    .execute(pool)
+    .await
+    .context("Error al encolar análisis IA técnico")?;
 
-        // Encolar metadata creativa IA (ia_queue) para que el worker de IA
-        // genere tags, género, emoción, instrumentos, etc. cuando esté activo.
-        // Esto salta el pipeline técnico (rescatar ya hizo duración/waveform/BPM/key).
-        // Usamos ON CONFLICT sobre el índice parcial para no duplicar si ya existe
-        // una entrada activa para este sample.
-        sqlx::query!(
-            r#"
+    // Encolar metadata creativa IA (ia_queue) para que el worker de IA
+    // genere tags, género, emoción, instrumentos, etc. cuando esté activo.
+    // Esto salta el pipeline técnico (rescatar ya hizo duración/waveform/BPM/key).
+    // Usamos ON CONFLICT sobre el índice parcial para no duplicar si ya existe
+    // una entrada activa para este sample.
+    sqlx::query!(
+        r#"
             INSERT INTO ia_queue (sample_id, status, metadata)
             VALUES ($1, 'pending', $2)
             ON CONFLICT (sample_id) WHERE status IN ('pending', 'processing', 'retry_scheduled')
             DO NOTHING
             "#,
-            fila_id,
-            serde_json::json!({"origen": "rescate"})
-        )
-        .execute(&pool)
-        .await
-        .context("Error al encolar metadata creativa IA")?;
+        fila_id,
+        serde_json::json!({"origen": "rescate"})
+    )
+    .execute(pool)
+    .await
+    .context("Error al encolar metadata creativa IA")?;
+    Ok(())
+}
 
-        Ok::<i32, anyhow::Error>(fila_id)
-    })?;
-
-    // ─── 10. Resultado final ────────────────────────────────────────────────
+/// Imprime el resultado final con las URLs para comprobar el rescate.
+fn imprimir_resultado(sample_id: i32, r: &Rescate) {
     let public_base =
         env::var("PUBLIC_BASE_URL").unwrap_or_else(|_| "http://127.0.0.1:3001".to_string());
     let upload_url = format!(
         "{}/uploads/{}",
         public_base.trim_end_matches('/'),
-        storage_key
+        r.storage_key
     );
 
     println!();
     println!("🎉 ¡RESCATE COMPLETADO!");
     println!("   ID:            {sample_id}");
-    println!("   ID corto:      {id_corto}");
-    println!("   Slug:          {slug}");
-    println!("   Storage key:   {storage_key}");
-    println!("   Archivo local: {}", storage_path.display());
+    println!("   ID corto:      {}", r.id_corto);
+    println!("   Slug:          {}", r.slug);
+    println!("   Storage key:   {}", r.storage_key);
+    println!("   Archivo local: {}", r.storage_path.display());
     println!("   URL pública:   {upload_url}");
     println!();
     println!("   Para verlo:  cargo run --bin glory-backend");
     println!("   Y luego:     curl http://127.0.0.1:3001/api/samples/{sample_id}");
-
-    Ok(())
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
