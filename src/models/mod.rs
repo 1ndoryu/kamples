@@ -1,14 +1,12 @@
 mod admin;
 mod article;
+mod cuenta;
 mod dashboard;
 mod music;
-mod payment;
-mod profile;
 mod report;
 mod sample;
 mod search;
 mod sync;
-mod user;
 
 pub use admin::{
     AdminActivityPoint, AdminActivityQuery, AdminActivityResponse, AdminExtractionQueueItem,
@@ -40,7 +38,7 @@ pub use music::{
     SongArtistInput, SongArtistLink, SongDetailResponse, SongListResponse, UpdateArtistRequest,
     UpdateRelationRequest, UpdateSongRequest, VerifyRelationRequest,
 };
-pub use payment::{
+pub use cuenta::{
     ClaimFreeCodeRequest, ClaimFreeCodeResponse, CreateSampleCheckoutRequest,
     CreateSubscriptionCheckoutRequest, CreatorConnectBalance, CreatorConnectState,
     CreatorConnectStatus, CreatorPayoutResponse, DownloadGrantRequest, FreeCodeTargetType,
@@ -48,7 +46,7 @@ pub use payment::{
     PaymentPlanPeriod, PaymentPlanPublic, PaymentPlansResponse, PaymentRedirectResponse,
     PaymentWebhookResponse, VerifyFreeCodeResponse,
 };
-pub use profile::{
+pub use cuenta::{
     PrivateProfileResponse, PublicProfileResponse, UpdateProfileRequest, UserProfile,
 };
 pub use report::{
@@ -75,7 +73,7 @@ pub use sync::{
     MeSyncColeccionesResponse, SyncChangelogDelta, SyncChangelogEntry, SyncChangelogQuery,
     SyncChangelogTipo, SyncColeccion, SyncColeccionesData, SyncSample,
 };
-pub use user::{
+pub use cuenta::{
     AuthResponse, ChangeEmailRequest, ChangePasswordRequest, GoogleAuthRequest, GooglePkceRequest,
     LoginRequest, LogoutRequest, RefreshRequest, RegisterRequest, SimpleOkResponse, User,
     UserResponse,
