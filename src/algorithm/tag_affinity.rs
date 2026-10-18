@@ -108,12 +108,93 @@ impl TagAffinityService {
     pub async fn recalculate_for_user(pool: &PgPool, user_id: i32) -> Result<u64, AppError> {
         let mut tx = pool.begin().await?;
         borrar_pesos_usuario(&mut tx, user_id).await?;
+        let filas = insertar_pesos_usuario(&mut tx, user_id).await?;
+        tx.commit().await?;
+        Ok(filas)
+    }
 
-        /* Una sola query CTE: agrega todos los pesos por tag desde 7 fuentes
-         * y los mergea via GROUP BY. utag_ctx limita a top-8 tags por
-         * frecuencia para evitar inflar con tags marginales (paridad con
-         * el legado). */
-        let result = sqlx::query!(
+    /// Recalcula para todos los usuarios con actividad reciente (24h).
+    /// Worker `algo_planner` (174A-55) lo invoca periódicamente.
+    pub async fn recalculate_active(pool: &PgPool, limit: i64) -> Result<u32, AppError> {
+        let usuarios = sqlx::query!(
+            r#"
+            SELECT DISTINCT usuario_id AS "usuario_id!"
+            FROM reproducciones
+            WHERE created_at > NOW() - INTERVAL '24 hours'
+            LIMIT $1
+            "#,
+            limit,
+        )
+        .fetch_all(pool)
+        .await?;
+
+        let mut count = 0u32;
+        for row in usuarios {
+            if Self::recalculate_for_user(pool, row.usuario_id)
+                .await
+                .is_ok()
+            {
+                count += 1;
+            }
+        }
+        Ok(count)
+    }
+
+    /// Lanza recálculo asíncrono usando un lock in-process para evitar
+    /// recálculos duplicados concurrentes del mismo usuario.
+    ///
+    /// `locks` es un `InflightLocks` compartido (típicamente vive en
+    /// `AppState`). Devuelve `Some(handle)` si se lanzó, `None` si ya
+    /// había uno en vuelo para este usuario.
+    pub fn schedule_recalc(pool: PgPool, user_id: i32, locks: &InflightLocks) -> JoinHandle<()> {
+        let locks_clone = Arc::clone(locks);
+        tokio::spawn(async move {
+            {
+                let mut guard = locks_clone.lock().await;
+                if guard.contains(&user_id) {
+                    return;
+                }
+                guard.insert(user_id);
+            }
+
+            if let Err(error) = Self::recalculate_for_user(&pool, user_id).await {
+                tracing::warn!(
+                    target: "kamples.tag_affinity",
+                    %error,
+                    user_id,
+                    "recalculo async fallo"
+                );
+            }
+
+            let mut guard = locks_clone.lock().await;
+            guard.remove(&user_id);
+        })
+    }
+
+    /// Helper para construir el `InflightLocks` compartido.
+    #[must_use]
+    pub fn new_inflight_locks() -> InflightLocks {
+        Arc::new(Mutex::new(HashSet::new()))
+    }
+}
+
+/* Borra los pesos previos del usuario dentro de la misma transacción del recálculo,
+ * para que el INSERT posterior reemplace el conjunto completo sin filas huérfanas. */
+async fn borrar_pesos_usuario(
+    tx: &mut Transaction<'_, Postgres>,
+    user_id: i32,
+) -> Result<(), AppError> {
+    sqlx::query!("DELETE FROM user_tag_scores WHERE user_id = $1", user_id)
+        .execute(&mut **tx)
+        .await?;
+    Ok(())
+}
+
+/* Inserta los pesos recalculados con una sola query CTE: agrega todos los pesos por tag
+ * desde 7 fuentes y los mergea via GROUP BY. utag_ctx limita a top-8 tags por frecuencia
+ * para evitar inflar con tags marginales (paridad con el legado). */
+async fn insertar_pesos_usuario(tx: &mut Transaction<'_, Postgres>, user_id: i32) -> Result<u64, AppError> {
+    let result = sqlx::query!(
             r#"
             WITH enriched AS (
                 SELECT s.id AS sample_id, s.tags_enriquecidos AS etags
@@ -207,88 +288,9 @@ impl TagAffinityService {
             "#,
             user_id,
         )
-        .execute(&mut *tx)
-        .await?;
-
-        tx.commit().await?;
-        Ok(result.rows_affected())
-    }
-
-    /// Recalcula para todos los usuarios con actividad reciente (24h).
-    /// Worker `algo_planner` (174A-55) lo invoca periódicamente.
-    pub async fn recalculate_active(pool: &PgPool, limit: i64) -> Result<u32, AppError> {
-        let usuarios = sqlx::query!(
-            r#"
-            SELECT DISTINCT usuario_id AS "usuario_id!"
-            FROM reproducciones
-            WHERE created_at > NOW() - INTERVAL '24 hours'
-            LIMIT $1
-            "#,
-            limit,
-        )
-        .fetch_all(pool)
-        .await?;
-
-        let mut count = 0u32;
-        for row in usuarios {
-            if Self::recalculate_for_user(pool, row.usuario_id)
-                .await
-                .is_ok()
-            {
-                count += 1;
-            }
-        }
-        Ok(count)
-    }
-
-    /// Lanza recálculo asíncrono usando un lock in-process para evitar
-    /// recálculos duplicados concurrentes del mismo usuario.
-    ///
-    /// `locks` es un `InflightLocks` compartido (típicamente vive en
-    /// `AppState`). Devuelve `Some(handle)` si se lanzó, `None` si ya
-    /// había uno en vuelo para este usuario.
-    pub fn schedule_recalc(pool: PgPool, user_id: i32, locks: &InflightLocks) -> JoinHandle<()> {
-        let locks_clone = Arc::clone(locks);
-        tokio::spawn(async move {
-            {
-                let mut guard = locks_clone.lock().await;
-                if guard.contains(&user_id) {
-                    return;
-                }
-                guard.insert(user_id);
-            }
-
-            if let Err(error) = Self::recalculate_for_user(&pool, user_id).await {
-                tracing::warn!(
-                    target: "kamples.tag_affinity",
-                    %error,
-                    user_id,
-                    "recalculo async fallo"
-                );
-            }
-
-            let mut guard = locks_clone.lock().await;
-            guard.remove(&user_id);
-        })
-    }
-
-    /// Helper para construir el `InflightLocks` compartido.
-    #[must_use]
-    pub fn new_inflight_locks() -> InflightLocks {
-        Arc::new(Mutex::new(HashSet::new()))
-    }
-}
-
-/* Borra los pesos previos del usuario dentro de la misma transacción del recálculo,
- * para que el INSERT posterior reemplace el conjunto completo sin filas huérfanas. */
-async fn borrar_pesos_usuario(
-    tx: &mut Transaction<'_, Postgres>,
-    user_id: i32,
-) -> Result<(), AppError> {
-    sqlx::query!("DELETE FROM user_tag_scores WHERE user_id = $1", user_id)
         .execute(&mut **tx)
         .await?;
-    Ok(())
+    Ok(result.rows_affected())
 }
 
 #[cfg(test)]
