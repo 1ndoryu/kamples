@@ -231,7 +231,7 @@ async fn build_zip_in_memory(
         let mut cursor = std::io::Cursor::new(Vec::<u8>::new());
         {
             let mut writer = zip::ZipWriter::new(&mut cursor);
-            let options: zip::write::FileOptions<'_, ()> = zip::write::FileOptions::default()
+            let options: zip::write::FileOptions<'_, '_, ()> = zip::write::FileOptions::default()
                 .compression_method(zip::CompressionMethod::Deflated)
                 .large_file(false);
             for (name, bytes) in payloads {

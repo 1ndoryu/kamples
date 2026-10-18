@@ -117,7 +117,7 @@ parking_lot = "0.12"
 mime = "0.3"
 mime_guess = "2"
 url = "2"
-zip = { version = "2", default-features = false, features = ["deflate"] }
+zip = { version = "9", default-features = false, features = ["deflate"] }
 # [174A-108b] rustls 0.23 requiere registrar un CryptoProvider explícito cuando hay
 # múltiples backends compilados. Lo expone como dep directa para llamarlo desde main.
 rustls = { version = "0.23", default-features = false, features = ["aws-lc-rs"] }
