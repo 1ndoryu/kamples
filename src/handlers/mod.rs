@@ -88,6 +88,10 @@ pub fn create_router(
                 None
             }
         },
+        /* [18AA-2] El mismo limitador de la capa, para que los handlers puedan
+         * aplicar topes propios (p. ej. `/play` por usuario) sobre el mismo
+         * estado compartido en vez de crear un contador paralelo. */
+        limitador: std::sync::Arc::clone(&limitador),
     };
 
     /* CORS: en desarrollo se permite todo. En producción, restringir orígenes */

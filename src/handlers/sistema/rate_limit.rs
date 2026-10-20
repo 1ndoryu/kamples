@@ -21,7 +21,12 @@
  * el proxy y solo se usa como último recurso. Confiar en `X-Forwarded-For`
  * sin proxy delante permitiría falsificar la clave, pero el despliegue
  * siempre lleva proxy: si algún día se expone el binario a pelo, hay que
- * quitar esas cabeceras de `CABECERAS_IP`. */
+ * quitar esas cabeceras de `CABECERAS_IP`.
+ *
+ * [18AA-2] El mismo tipo sirve además para topes que no son por IP: el cubo
+ * guarda su propio presupuesto y `consumir_con` permite a un handler contar
+ * por usuario (el `POST /api/samples/{id}/play` mantiene los 60/min por
+ * usuario del legado, clave `play:<id>`). */
 
 use std::collections::HashMap;
 use std::net::{IpAddr, SocketAddr};
@@ -47,6 +52,11 @@ const MAX_ENTRADAS: usize = 20_000;
 struct Cubo {
     fichas: f64,
     ultima: Instant,
+    /* El presupuesto va en el cubo, no en el limitador, para que una misma
+     * instancia sirva a varios topes: el global por IP y los que un handler
+     * aplique por su cuenta (p. ej. el de `/play` por usuario, 18AA-2). */
+    capacidad: f64,
+    por_segundo: f64,
 }
 
 /* Estado compartido de la capa. `Mutex` de std, no de tokio: la sección
@@ -73,20 +83,35 @@ impl Limitador {
         })
     }
 
-    /* Descuenta una ficha de la clave. Devuelve los segundos que hay que
-     * esperar para poder reintentar si el cubo está vacío. */
+    /* Descuenta una ficha de la clave con el presupuesto del limitador.
+     * Devuelve los segundos que hay que esperar para poder reintentar si el
+     * cubo está vacío. */
     fn consumir(&self, clave: &str) -> Result<(), u64> {
+        self.consumir_con(clave, self.capacidad, self.por_segundo)
+    }
+
+    /* Igual que `consumir` pero con un presupuesto propio de esa clave. [por que]
+     * El limitador global cuenta por IP; un handler con tope por usuario
+     * (18AA-2, `POST /api/samples/{id}/play`) necesita su propio cubo sin
+     * gastar el de la IP. La clave debe ser distinta de las que usa la capa
+     * (las IPs) para no mezclar contadores. */
+    pub fn consumir_con(&self, clave: &str, capacidad: f64, por_segundo: f64) -> Result<(), u64> {
+        let capacidad = capacidad.max(1.0);
+        let por_segundo = por_segundo.max(0.01);
+
         let mut cubos = self.cubos.lock().unwrap_or_else(PoisonError::into_inner);
         self.podar(&mut cubos);
 
         let ahora = Instant::now();
         let cubo = cubos.entry(clave.to_string()).or_insert(Cubo {
-            fichas: self.capacidad,
+            fichas: capacidad,
             ultima: ahora,
+            capacidad,
+            por_segundo,
         });
 
         let transcurrido = ahora.duration_since(cubo.ultima).as_secs_f64();
-        cubo.fichas = (cubo.fichas + transcurrido * self.por_segundo).min(self.capacidad);
+        cubo.fichas = (cubo.fichas + transcurrido * cubo.por_segundo).min(cubo.capacidad);
         cubo.ultima = ahora;
 
         if cubo.fichas >= 1.0 {
@@ -96,7 +121,7 @@ impl Limitador {
 
         /* `faltan` es positivo y finito (fichas >= 0, por_segundo > 0); el
          * tope de un día evita que un cubo raro desborde la conversión. */
-        let faltan = (1.0 - cubo.fichas) / self.por_segundo;
+        let faltan = (1.0 - cubo.fichas) / cubo.por_segundo;
         let espera = Duration::from_secs_f64(faltan.clamp(0.001, 86_400.0));
         Err(espera.as_secs().max(1))
     }
@@ -112,9 +137,8 @@ impl Limitador {
         *ultima = Instant::now();
         drop(ultima);
 
-        let lleno = self.capacidad;
         let quieto = Duration::from_secs(10);
-        cubos.retain(|_, cubo| cubo.fichas < lleno || cubo.ultima.elapsed() < quieto);
+        cubos.retain(|_, cubo| cubo.fichas < cubo.capacidad || cubo.ultima.elapsed() < quieto);
         if cubos.len() >= MAX_ENTRADAS {
             cubos.clear();
         }

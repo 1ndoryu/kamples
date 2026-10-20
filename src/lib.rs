@@ -65,4 +65,8 @@ pub struct AppState {
     /* [276A-3] Servicio de moderación con visión (Groq Vision + texto).
      * Usado para moderación asíncrona de publicaciones con imágenes. */
     pub moderation: Option<Arc<services::ModerationService>>,
+    /* [18AA-2] Limitador de la capa (mismo Arc que la capa por IP): los
+     * handlers lo reutilizan para topes propios, p. ej. el de `/play` por
+     * usuario. Ver `handlers/sistema/rate_limit.rs`. */
+    pub limitador: Arc<handlers::rate_limit::Limitador>,
 }

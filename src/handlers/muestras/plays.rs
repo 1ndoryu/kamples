@@ -17,14 +17,21 @@ use crate::AppState;
 /* [174A-58] Tracking de reproducciones (`POST /api/samples/{id}/play`).
  *
  * Port directo de `ReproduccionesController::registrar`. Diferencias:
- * - Rate limit (60/min) NO portado: pendiente cuando llegue el RateLimiter
- *   global (pendiente en el roadmap, 18AA-2).
+ * - Rate limit 60/min por usuario (18AA-2): el limitador global de la capa
+ *   cuenta por IP; el legado contaba por usuario, y esa es la clave que se
+ *   usa aquí (`play:<id>`).
  * - Debounce 3s manejado por `PlayRepository::register_with_debounce`.
  * - Se invoca `AlgoPlanner::register_interaction(Reproduccion)` siempre y
  *   `Completa` adicionalmente cuando el cliente reporta `completada=true`.
  */
 
 const PLAY_DEBOUNCE_SECONDS: i64 = 3;
+
+/* [18AA-2] 60/min por usuario: una ficha por segundo con ráfaga de 60. Es el
+ * tope del legado (`ReproduccionesController::registrar`), pensado para que una
+ * sesión normal no lo roce. */
+const PLAY_RPS: f64 = 1.0;
+const PLAY_RAFAGA: f64 = 60.0;
 
 #[derive(Debug, Clone, Deserialize, ToSchema, Validate, Default)]
 pub struct RegisterPlayRequest {
@@ -71,6 +78,7 @@ pub struct PlayedIdsResponse {
         (status = 200, description = "Play debounced (fusionado con uno reciente)", body = RegisterPlayResponse),
         (status = 400, description = "Body inválido", body = ErrorResponse),
         (status = 401, description = "No autenticado", body = ErrorResponse),
+        (status = 429, description = "Tope de 60/min por usuario superado", body = ErrorResponse),
     )
 )]
 pub async fn register_play(
@@ -90,8 +98,18 @@ pub async fn register_play(
         return Err(AppError::NotFound(format!("sample {sample_id} no existe")));
     }
 
-    /* Rate limit 60/min por usuario: pendiente en el roadmap (18AA-2), cuando
-     * exista un RateLimiter global. Mientras tanto el debounce de 3s mitiga abuso. */
+    /* [18AA-2] Tope por usuario del legado (60/min). El limitador de la capa ya
+     * frena por IP, pero el usuario autenticado es la clave que importaba: dos
+     * clientes tras la misma IP (NAT, proxy) no deben compartir el cubo. */
+    if let Err(segundos) = state.limitador.consumir_con(
+        &format!("play:{}", user.user_id),
+        PLAY_RAFAGA,
+        PLAY_RPS,
+    ) {
+        return Err(AppError::TooManyRequests(format!(
+            "demasiadas reproducciones seguidas; reintentar en {segundos}s"
+        )));
+    }
 
     let outcome = PlayRepository::register_with_debounce(
         &state.pool,

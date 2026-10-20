@@ -83,6 +83,42 @@ fn solo_los_metodos_mutantes_se_limitan() {
 }
 
 #[test]
+fn el_tope_por_usuario_no_gasta_el_de_la_ip() {
+    /* [18AA-2] `consumir_con` es lo que usa `/play` para su 60/min por usuario.
+     * Dos claves con presupuestos distintos no se pisan: agotar la del usuario
+     * no puede dejar sin fichas la de la capa (ni al revés). */
+    let limitador = Limitador::nuevo(1.0, 2.0);
+
+    assert!(limitador.consumir_con("play:7", 1.0, 1.0).is_ok());
+    assert!(
+        limitador.consumir_con("play:7", 1.0, 1.0).is_err(),
+        "el cubo del usuario se agota con su propio tope"
+    );
+    assert!(
+        limitador.consumir("1.2.3.4").is_ok(),
+        "el cubo de la IP sigue lleno"
+    );
+    assert!(
+        limitador.consumir_con("play:8", 1.0, 1.0).is_ok(),
+        "otro usuario estrena su cubo"
+    );
+}
+
+#[test]
+fn el_cubo_por_usuario_se_recarga_con_el_tiempo() {
+    let limitador = Limitador::nuevo(1.0, 1.0);
+
+    assert!(limitador.consumir_con("play:7", 1.0, 2.0).is_ok());
+    assert!(limitador.consumir_con("play:7", 1.0, 2.0).is_err());
+
+    envejecer(&limitador, "play:7", 1.0);
+    assert!(
+        limitador.consumir_con("play:7", 1.0, 2.0).is_ok(),
+        "1 s a 2 rps son 2 fichas"
+    );
+}
+
+#[test]
 fn la_ip_sale_de_la_cabecera_del_proxy() {
     let peer: IpAddr = "10.0.0.9".parse().unwrap();
 
@@ -139,12 +175,18 @@ fn la_ip_ipv4_mapeada_no_cuenta_como_dos_clientes() {
 
 /* Coloca un cubo con un estado concreto sin pasar por `consumir`. */
 fn sembrar(limitador: &Limitador, clave: &str, fichas: f64, hace_segundos: f64) {
+    /* [18AA-2] El cubo lleva su propio presupuesto y la poda compara las
+     * fichas con él: el sembrado tiene que copiarlo del limitador o la poda
+     * decide con un tope que no es el suyo. */
+    let (capacidad, por_segundo) = (limitador.capacidad, limitador.por_segundo);
     let mut cubos = limitador.cubos.lock().unwrap();
     cubos.insert(
         clave.to_string(),
         Cubo {
             fichas,
             ultima: hace(hace_segundos),
+            capacidad,
+            por_segundo,
         },
     );
 }
