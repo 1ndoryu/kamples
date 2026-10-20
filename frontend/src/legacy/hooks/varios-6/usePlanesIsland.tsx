@@ -168,7 +168,7 @@ export const usePlanesIsland = () => {
         }
 
         /* [183A-87] En desktop Tauri, window.location.href mata la SPA React.
-         * Se abre Stripe en el navegador del sistema via plugin-shell.
+         * Se abre Stripe en el navegador del sistema via plugin-opener.
          * La sesión Tauri (auth.json) se preserva intacta. */
         if (esEscritorio()) {
             setError(null);

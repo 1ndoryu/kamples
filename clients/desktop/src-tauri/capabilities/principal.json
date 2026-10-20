@@ -43,9 +43,9 @@
     "process:default",
     "process:allow-exit",
     "process:allow-restart",
-    "shell:default",
+    "opener:default",
     {
-      "identifier": "shell:allow-open",
+      "identifier": "opener:allow-open-url",
       "allow": [
         { "url": "^https://(www\\.)?kamples\\.com(/|$)" },
         { "url": "^https://accounts\\.google\\.com(/|$)" },

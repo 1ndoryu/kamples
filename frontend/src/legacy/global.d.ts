@@ -180,11 +180,12 @@ declare module '@tauri-apps/api/app' {
 }
 
 /*
- * Declaración de módulo para tauri-plugin-shell.
- * QL48: necesario para abrir enlaces externos desde Android/desktop.
+ * Declaración de módulo para tauri-plugin-opener (sustituye al plugin-shell
+ * deprecado en Tauri 2). QL48: necesario para abrir enlaces externos desde
+ * Android/desktop.
  */
-declare module '@tauri-apps/plugin-shell' {
-    export function open(path: string): Promise<void>;
+declare module '@tauri-apps/plugin-opener' {
+    export function openUrl(url: string): Promise<void>;
 }
 
 declare module '@capacitor/app' {

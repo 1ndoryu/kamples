@@ -69,17 +69,17 @@ export const esEscritorio = (): boolean =>
 
 /**
  * Abre un enlace en el navegador externo del sistema.
- * En Tauri usa plugin-shell open(), en web usa window.open().
+ * En Tauri usa plugin-opener openUrl(), en web usa window.open().
  */
 export async function abrirEnlaceExterno(url: string): Promise<void> {
     try {
         if (esTauri()) {
-            const { open } = await import('@tauri-apps/plugin-shell');
-            await open(url);
+            const { openUrl } = await import('@tauri-apps/plugin-opener');
+            await openUrl(url);
             return;
         }
     } catch {
-        /* Fallback a window.open si plugin-shell falla */
+        /* Fallback a window.open si plugin-opener falla */
     }
     window.open(url, '_blank', 'noopener,noreferrer');
 }

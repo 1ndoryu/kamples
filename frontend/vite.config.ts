@@ -28,7 +28,7 @@ export default defineConfig({
       '@tauri-apps/plugin-deep-link': fileURLToPath(new URL('./src/bootstrap/tauriPluginsShim.ts', import.meta.url)),
       '@tauri-apps/plugin-dialog': fileURLToPath(new URL('./src/bootstrap/tauriPluginsShim.ts', import.meta.url)),
       '@tauri-apps/plugin-fs': fileURLToPath(new URL('./src/bootstrap/tauriPluginsShim.ts', import.meta.url)),
-      '@tauri-apps/plugin-shell': fileURLToPath(new URL('./src/bootstrap/tauriPluginsShim.ts', import.meta.url)),
+      '@tauri-apps/plugin-opener': fileURLToPath(new URL('./src/bootstrap/tauriPluginsShim.ts', import.meta.url)),
       '@tauri-apps/plugin-notification': fileURLToPath(new URL('./src/bootstrap/tauriPluginsShim.ts', import.meta.url)),
       '@tauri-apps/plugin-store': fileURLToPath(new URL('./src/bootstrap/tauriPluginsShim.ts', import.meta.url)),
       '@capacitor/filesystem': fileURLToPath(new URL('./src/bootstrap/tauriPluginsShim.ts', import.meta.url)),

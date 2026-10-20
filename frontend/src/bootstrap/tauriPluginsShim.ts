@@ -14,6 +14,8 @@ export const remove = noop;
 export const BaseDirectory = { Document: 0, Download: 1, Cache: 2 } as const;
 
 export const open = noop;
+/* [18AA-2] `plugin-opener` sustituye al `plugin-shell` deprecado. */
+export const openUrl = noop;
 class CommandStub {
   static create(): CommandStub { return new CommandStub(); }
   async execute() { return { stdout: '', stderr: '', code: 0 }; }
@@ -26,5 +28,5 @@ export const sendNotification = noop;
 
 export default {
     writeFile, readFile, readTextFile, writeTextFile, exists, mkdir, remove, BaseDirectory,
-    open, Command, isPermissionGranted, requestPermission, sendNotification,
+    open, openUrl, Command, isPermissionGranted, requestPermission, sendNotification,
 };

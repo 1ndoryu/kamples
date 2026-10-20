@@ -105,8 +105,8 @@ declare module '@tauri-apps/plugin-notification' {
     }): Promise<void>;
 }
 
-declare module '@tauri-apps/plugin-shell' {
-    export function open(path: string): Promise<void>;
+declare module '@tauri-apps/plugin-opener' {
+    export function openUrl(url: string): Promise<void>;
 }
 
 /* Window augmentations — propiedades específicas del proyecto

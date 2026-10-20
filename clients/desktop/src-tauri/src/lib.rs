@@ -81,12 +81,11 @@ async fn iniciar_oauth_google(
         challenge = code_challenge,
     );
 
-    /* Abrir el navegador del sistema. Migrar a tauri-plugin-opener (reemplazo de
-     * shell.open) queda en el roadmap (18AA-2), al actualizar Tauri. */
-    #[allow(deprecated)]
-    use tauri_plugin_shell::ShellExt;
-    app.shell()
-        .open(&auth_url, None)
+    /* [18AA-2] Abrir el navegador del sistema con tauri-plugin-opener, que
+     * sustituye al `shell.open` deprecado de Tauri 2. */
+    use tauri_plugin_opener::OpenerExt;
+    app.opener()
+        .open_url(&auth_url, None::<&str>)
         .map_err(|e| format!("Error abriendo navegador para OAuth: {}", e))?;
 
     /* Canal para recibir el código de autorización desde el hilo bloqueante */
@@ -500,7 +499,7 @@ pub fn run() {
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_process::init())
-        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_store::Builder::default().build());
 
     /* Plugin mobile-only: deep-link (OAuth Android via kamples://auth) */

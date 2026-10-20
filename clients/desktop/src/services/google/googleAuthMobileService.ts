@@ -13,7 +13,7 @@
  * El client_secret NUNCA sale del servidor.
  */
 
-import { open } from '@tauri-apps/plugin-shell';
+import { openUrl } from '@tauri-apps/plugin-opener';
 import { getCurrent, onOpenUrl } from '@tauri-apps/plugin-deep-link';
 import { crearLogger } from '@app/services/varios-1/logger';
 import { extraerResultadoDeepLink, leerDeepLinkPendienteAndroid, type GoogleAuthMobileResult } from './googleAuthDeepLink';
@@ -247,7 +247,7 @@ export async function iniciarGoogleOAuthMobile(): Promise<GoogleAuthMobileResult
         }, 1500);
 
         /* Abrir Chrome con la URL de autorizacion */
-        open(authUrl).catch(err => {
+        openUrl(authUrl).catch(err => {
             if (!resuelta) {
                 resuelta = true;
                 limpiar();
