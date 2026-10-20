@@ -4,16 +4,12 @@ KAMPLES (`glory-rust-template`) es una plataforma de samples y música en migrac
 
 ## Siguiente bloque
 
-- [ ] `18AA-2` — **Pendientes de código que salen de los TODO (2026-10-18).**
-  (a) Rate limit 60/min por usuario en `POST /api/samples/{id}/play` (`handlers/plays.rs`), cuando exista un RateLimiter global; hoy solo mitiga el debounce de 3 s.
-  (b) Bloqueo optimista (`version`) en colecciones (`handlers/colecciones.rs`).
-  (c) Migrar `shell.open` a `tauri-plugin-opener` en el escritorio (`clients/desktop/src-tauri/src/lib.rs`), al actualizar Tauri.
-  Criterio de hecho: los tres pendientes cerrados y `Arranque gate "KAMPLES" --cierre` sin hallazgos nuevos (KAMPLES está en 0 hallazgos Sentinel desde el cierre de 18AA-1; ninguno de los tres bloquea el tablero).
-  Nota: la rama `origin/dependabot/cargo/cargo-b86f39491b` ya no existe en el remoto; su commit no integrado (`86f4aae8`, dependencias cargo) está superado por `main` (serde_with 3.21.0, webp 0.3.1, tauri 2.12.0, rustls 0.23.45) y queda rescatado en `/c/tmp/kamples-rescate/dependabot-cargo-b86f3949.bundle` (verificado) y en `refs/rescate/dependabot-cargo-b86f3949`.
+Nada en cola.
 
 ## Pendientes
 
-Nada más en cola: `18AA-2` es lo único abierto y va en el bloque anterior.
+Nada en cola. `18AA-2` cerró el 2026-10-20 (ver `Agente/completados/tareas-2026-10-20.md`), con la
+nota de rescate de la rama dependabot que llevaba colgada.
 
 ## Bloqueos
 
