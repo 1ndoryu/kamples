@@ -43,8 +43,9 @@ pub use colas::cola_extraccion::{
     EstadisticasCola,
 };
 pub use biblioteca::coleccion::{
-    Coleccion, ColeccionOp, ColeccionSample, ColeccionSampleFile, ColeccionesRepository,
-    LegacyColeccionParentRecord, LegacyColeccionRecord, LegacyColeccionSampleRecord,
+    CambiosColeccion, Coleccion, ColeccionOp, ColeccionSample, ColeccionSampleFile,
+    ColeccionesRepository, LegacyColeccionParentRecord, LegacyColeccionRecord,
+    LegacyColeccionSampleRecord,
 };
 pub use social::comment::{
     CommentAuthorSummary, CommentContentKind, CommentContext, CommentDetail, CommentRepository,

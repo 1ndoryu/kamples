@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE colecciones SET\n                 nombre        = COALESCE($2, nombre),\n                 descripcion   = CASE WHEN $3::bool THEN $4 ELSE descripcion END,\n                 publica       = COALESCE($5, publica),\n                 imagen_url    = CASE WHEN $6::bool THEN $7 ELSE imagen_url END,\n                 parent_id     = CASE WHEN $8::bool THEN $9 ELSE parent_id END,\n                 version       = version + 1,\n                 updated_at    = NOW()\n               WHERE id = $1 AND eliminado_en IS NULL\n                 AND ($10::int IS NULL OR version = $10)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Text",
+        "Bool",
+        "Text",
+        "Bool",
+        "Bool",
+        "Text",
+        "Bool",
+        "Int8",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "885eb398632c68bbecc79e0e63c547f0a188a8d95bc24cdc9dea049f57055b6b"
+}

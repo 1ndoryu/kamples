@@ -24,6 +24,10 @@ pub struct UpdateColeccionRequest {
     pub imagen_url: Option<Option<String>>,
     #[serde(default, deserialize_with = "deserialize_optional_field")]
     pub parent_id: Option<Option<i64>>,
+    /* [18AA-2] Bloqueo optimista opcional: la `version` que el cliente leyó.
+     * Si se omite, el PUT pisa sin comprobar (compatible con clientes viejos);
+     * si se envía y no coincide con la fila, responde 409. */
+    pub version: Option<i32>,
 }
 
 /* Helper para distinguir "campo ausente" vs "campo presente con null".
@@ -146,7 +150,7 @@ pub async fn get_coleccion(
         (status = 200, body = OkResponse),
         (status = 403, description = "No autorizado"),
         (status = 404, description = "No encontrada"),
-        (status = 409, description = "Nombre duplicado"),
+        (status = 409, description = "Nombre duplicado o version desactualizada"),
     )
 )]
 pub async fn update_coleccion(
@@ -178,17 +182,22 @@ pub async fn update_coleccion(
     let nombre = body.nombre.as_deref().map(str::trim);
     let descripcion = body.descripcion.as_ref().map(|o| o.as_deref());
     let imagen_url = body.imagen_url.as_ref().map(|o| o.as_deref());
-    let ok = ColeccionesRepository::update(
-        &state.pool,
-        id,
+    let cambios = CambiosColeccion {
         nombre,
         descripcion,
-        body.publica,
+        publica: body.publica,
         imagen_url,
-        body.parent_id,
-    )
-    .await?;
+        parent_id: body.parent_id,
+    };
+    let ok = ColeccionesRepository::update(&state.pool, id, cambios, body.version).await?;
     if !ok {
+        /* [18AA-2] Sin filas puede ser que no exista o que la version no
+         * cuadre. Se distingue con un fetch: solo si sigue viva hubo choque. */
+        if ColeccionesRepository::fetch(&state.pool, id).await?.is_some() {
+            return Err(AppError::Conflict(
+                "la coleccion cambio desde que la leiste; recarga y reintenta".into(),
+            ));
+        }
         return Err(AppError::NotFound(format!("coleccion {id} no encontrada")));
     }
     Ok(Json(OkResponse { ok: true }))

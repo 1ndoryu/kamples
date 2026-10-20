@@ -11,7 +11,6 @@
  * - check_parent_valid (mismo dueño + profundidad <= 2)
  *
  * NO portado:
- * - Optimistic locking via `version` (campo existe pero no se valida en update todavía).
  * - Sync changelog.
  * - Subir imagen multipart.
  * - Manejo avanzado de hijas en delete (cascade DB se encarga).
@@ -74,6 +73,24 @@ pub struct ColeccionSampleFile {
     pub storage_key: String,
     pub es_premium: bool,
     pub creador_id: i32,
+}
+
+/* [18AA-2] Cambios de un `UPDATE` de coleccion. Va en struct y no en una lista
+ * de argumentos porque son cinco campos opcionales con la misma forma
+ * (`Option` = no tocar, `Some(None)` = poner a NULL): pasados sueltos, el
+ * llamante puede confundir el orden sin que el compilador lo note.
+ * `version` no vive aqui: no es un campo a escribir, es el testigo del bloqueo
+ * optimista y `update` lo recibe aparte para que se vea que es otra cosa. */
+#[derive(Debug, Clone)]
+pub struct CambiosColeccion<'a> {
+    pub nombre: Option<&'a str>,
+    #[allow(clippy::option_option)]
+    pub descripcion: Option<Option<&'a str>>,
+    pub publica: Option<bool>,
+    #[allow(clippy::option_option)]
+    pub imagen_url: Option<Option<&'a str>>,
+    #[allow(clippy::option_option)]
+    pub parent_id: Option<Option<i64>>,
 }
 
 impl ColeccionesRepository {
@@ -152,12 +169,17 @@ impl ColeccionesRepository {
     pub async fn update(
         pool: &PgPool,
         id: i64,
-        nombre: Option<&str>,
-        #[allow(clippy::option_option)] descripcion: Option<Option<&str>>,
-        publica: Option<bool>,
-        #[allow(clippy::option_option)] imagen_url: Option<Option<&str>>,
-        #[allow(clippy::option_option)] parent_id: Option<Option<i64>>,
+        cambios: CambiosColeccion<'_>,
+        /* [18AA-2] Version que el cliente leyó. `None` = sin comprobacion. */
+        version: Option<i32>,
     ) -> Result<bool, AppError> {
+        let CambiosColeccion {
+            nombre,
+            descripcion,
+            publica,
+            imagen_url,
+            parent_id,
+        } = cambios;
         /* COALESCE para campos opcionales: si se pasa None, conserva valor actual. */
         let res = sqlx::query!(
             r#"UPDATE colecciones SET
@@ -168,7 +190,8 @@ impl ColeccionesRepository {
                  parent_id     = CASE WHEN $8::bool THEN $9 ELSE parent_id END,
                  version       = version + 1,
                  updated_at    = NOW()
-               WHERE id = $1 AND eliminado_en IS NULL"#,
+               WHERE id = $1 AND eliminado_en IS NULL
+                 AND ($10::int IS NULL OR version = $10)"#,
             id,
             nombre,
             descripcion.is_some(),
@@ -178,6 +201,7 @@ impl ColeccionesRepository {
             imagen_url.flatten(),
             parent_id.is_some(),
             parent_id.flatten(),
+            version,
         )
         .execute(pool)
         .await

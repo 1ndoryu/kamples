@@ -11,7 +11,6 @@
  * - GET    /api/colecciones/:id/samples                Listar samples (en orden)
  *
  * NO portado:
- * - Optimistic locking (version) — pendiente en el roadmap (18AA-2).
  * - Sync changelog.
  * - Subir imagen multipart.
  * - Admin override.
@@ -29,8 +28,8 @@ use crate::errors::AppError;
 use crate::middleware::{CurrentUser, OptionalUser};
 use crate::models::SampleSummary;
 use crate::repositories::{
-    Coleccion, ColeccionSample, ColeccionesRepository, CriterioScoring, SampleContextRow,
-    SampleRepository, SavedColeccion, SavedCollectionsRepository,
+    CambiosColeccion, Coleccion, ColeccionSample, ColeccionesRepository, CriterioScoring,
+    SampleContextRow, SampleRepository, SavedColeccion, SavedCollectionsRepository,
 };
 use crate::services::build_sample_summary;
 use crate::AppState;
