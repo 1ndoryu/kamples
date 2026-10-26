@@ -29,4 +29,9 @@ ignore = [
     "RUSTSEC-2026-0367",
     "RUSTSEC-2026-0368",
     "RUSTSEC-2026-0369",
+    # RUSTSEC-2026-0387 (crypto-bigint 0.5.5, variabilidad de tiempo). Motivo: sin parche dentro de la
+    # línea 0.13; entra por p256 0.13.2 ← {glory-backend, web-push-native 0.5.0}. web-push-native solo se
+    # usa en src/services/notificaciones/push.rs. Decidido: excepción de 1 mes
+    # (2026-10-26). VENCE 2026-11-26. Al vencer: migrar web-push-native o subir p256 a 0.14+ (ver roadmap, Bloqueos).
+    "RUSTSEC-2026-0387",
 ]
