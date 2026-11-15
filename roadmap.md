@@ -4,7 +4,10 @@ KAMPLES (`glory-rust-template`) es una plataforma de samples y música en migrac
 
 ## Siguiente bloque
 
-Nada en cola.
+- [ ] `19AA-1` — **Comprobar "Salir" del tray en la app de escritorio.** El paquete ya arranca en
+  limpio, sube un sample real hasta `activo`, sobrevive a un reinicio y deja el `.dump` en
+  `backups/`; falta ver con la ventana delante que `Salir` del menú de la bandeja apaga
+  `glory-backend.exe` y `postgres.exe` y deja libre el 4317 (el cierre brusco ya está probado).
 
 ## Pendientes
 

@@ -163,6 +163,17 @@ async function inicializar(): Promise<void> {
         try { origenServidor = new URL(apiUrl).origin; } catch { /* fallback abajo */ }
     }
 
+    /* [por que] El lanzador de escritorio inyecta __KAMPLES_CONFIG__ con el
+     * backend empotrado ANTES de cargar la página. Si ya viene, se respeta:
+     * reescribirlo con kamples.com haría que el panel hablara con la nube en
+     * vez de con la base local. */
+    const configPrevia = (window.__KAMPLES_CONFIG__ as { serverUrl?: string } | undefined)?.serverUrl;
+
+    if (configPrevia) {
+        /* Absoluta por contrato (el lanzador la escribe con el origen del
+         * backend); si no lo fuera, se descarta y se sigue con el fallback. */
+        try { origenServidor = new URL(configPrevia).origin; } catch { /* fallback */ }
+    }
     if (!origenServidor) {
         /* DEV: NO forzar producción — usar URL relativa para que Vite proxy
          * maneje las peticiones. En prod, GLORY_CONTEXT.apiUrl ya es absoluta. */

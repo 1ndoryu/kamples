@@ -2,7 +2,11 @@
   "$schema": "https://raw.githubusercontent.com/nicdelhi/tauri2-schema/main/capability.json",
   "identifier": "principal",
   "description": "Permisos compartidos entre desktop y mobile",
-  "windows": ["main", "sync-panel", "config-sync"],
+  "windows": [
+    "main",
+    "sync-panel",
+    "config-sync"
+  ],
   "permissions": [
     "core:default",
     "core:window:allow-minimize",
@@ -47,10 +51,18 @@
     {
       "identifier": "opener:allow-open-url",
       "allow": [
-        { "url": "^https://(www\\.)?kamples\\.com(/|$)" },
-        { "url": "^https://accounts\\.google\\.com(/|$)" },
-        { "url": "^https://checkout\\.stripe\\.com(/|$)" },
-        { "url": "^https://billing\\.stripe\\.com(/|$)" }
+        {
+          "url": "^https://(www\\.)?kamples\\.com(/|$)"
+        },
+        {
+          "url": "^https://accounts\\.google\\.com(/|$)"
+        },
+        {
+          "url": "^https://checkout\\.stripe\\.com(/|$)"
+        },
+        {
+          "url": "^https://billing\\.stripe\\.com(/|$)"
+        }
       ]
     },
     "store:default",
@@ -74,6 +86,25 @@
     "notification:allow-remove-active",
     "notification:allow-create-channel",
     "notification:allow-delete-channel",
-    "notification:allow-list-channels"
-  ]
+    "notification:allow-list-channels",
+    "allow-obtener-version",
+    "allow-obtener-plataforma",
+    "allow-archivo-existe",
+    "allow-obtener-tamano-archivo",
+    "allow-leer-token-fcm-android",
+    "allow-leer-navegacion-fcm-pendiente",
+    "allow-leer-deep-link-android-pendiente",
+    "allow-obtener-espacio-disponible",
+    "allow-abrir-carpeta",
+    "allow-seleccionar-archivo",
+    "allow-mostrar-ventana-config",
+    "allow-toggle-ventana-sync",
+    "allow-toggle-devtools",
+    "allow-iniciar-oauth-google"
+  ],
+  "remote": {
+    "urls": [
+      "http://127.0.0.1:4317/*"
+    ]
+  }
 }

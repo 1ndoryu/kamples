@@ -148,6 +148,11 @@ export default defineConfig({
             '@tauri-apps/plugin-fs': resolve(__dirname, 'node_modules/@tauri-apps/plugin-fs'),
             '@tauri-apps/plugin-shell': resolve(__dirname, 'node_modules/@tauri-apps/plugin-shell'),
             '@tauri-apps/api/app': resolve(__dirname, 'node_modules/@tauri-apps/api/app'),
+            /* Resto de plugins: el front heredado importa algunos desde `@app`
+             * (p. ej. plugin-opener en plataforma.ts) y se resolvían contra el
+             * node_modules del front, donde no están. Un solo alias cubre todos
+             * los subpaquetes; va al final para no pisar los de arriba. */
+            '@tauri-apps': resolve(__dirname, 'node_modules/@tauri-apps'),
             /* [256A-1c] Stub para @mezclador (DAW) — no disponible en desktop */
             '@mezclador': resolve(__dirname, 'src/stubs/mezclador'),
             /* [256A-1c] Stubs para Capacitor — no instalado en desktop (solo mobile) */

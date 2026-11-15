@@ -7,6 +7,11 @@ use std::path::PathBuf;
 
 use tauri::Manager;
 
+/* App de escritorio autocontenida: PostgreSQL portable, backend y ffmpeg viajan
+ * con el .exe. En móvil no existe (no hay procesos hijos que lanzar). */
+#[cfg(desktop)]
+mod escritorio;
+
 #[cfg(desktop)]
 use tauri::{
     menu::{Menu, MenuItem},
@@ -490,6 +495,31 @@ fn mostrar_ventana_sync(app: &tauri::AppHandle) {
     }
 }
 
+/* Servicios de la app empaquetada, extraídos de `run` para que esta función no
+ * pase del límite de líneas del gate. */
+#[cfg(desktop)]
+fn abrir_servicios(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
+    /* [por que aquí y no en el builder] Si PostgreSQL o el backend no
+     * arrancan, la ventana tiene que decirlo, no quedarse en blanco. Los
+     * servicios se guardan en el estado de la app para que sigan vivos
+     * mientras exista la ventana y se apaguen al salir. */
+    let rutas = escritorio::ajustes::Rutas::detectar()
+        .map_err(|e| -> Box<dyn std::error::Error> { e.into() })?;
+    match escritorio::ajustes::instancia_viva() {
+        Some(url) => escritorio::ventanas::apuntar(app, &url)?,
+        None => match escritorio::arranque::arrancar(&rutas) {
+            Ok((url, servicio)) => {
+                app.manage(escritorio::arranque::Estado(std::sync::Mutex::new(Some(servicio))));
+                escritorio::ventanas::apuntar(app, &url)?;
+            }
+            Err(error) => {
+                escritorio::ventanas::mostrar_error(app, &error)?;
+            }
+        },
+    }
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     /* Plugins compartidos (todos los targets) */
@@ -551,6 +581,7 @@ pub fn run() {
     #[cfg(desktop)]
     let builder = builder.setup(|app| {
         configurar_tray(app)?;
+        abrir_servicios(app)?;
 
         /* Cerrar popup sync al perder foco (click fuera).
          * Delay de 220ms para que el toggle del tray icon tenga prioridad:
@@ -600,10 +631,29 @@ pub fn run() {
     #[cfg(not(desktop))]
     let builder = builder.setup(|_app| Ok(()));
 
-    /* El bucle de eventos solo termina con error: no hay nada a lo que
-     * volver, asi que se deja dicho y se sale con codigo distinto de cero. */
-    if let Err(error) = builder.run(tauri::generate_context!()) {
-        eprintln!("Error al iniciar Kamples: {error}");
-        std::process::exit(1);
-    }
+    /* [por que el bucle a mano] `Salir` del tray llamaba a `app.exit(0)`, que
+     * NO suelta el estado gestionado: `postgres.exe` y `glory-backend.exe`
+     * seguían vivos tras cerrar la app y la siguiente apertura encontraba el
+     * puerto 4317 ocupado por un backend huérfano. Soltar el `Servicio` aquí
+     * apaga el backend antes que PostgreSQL, como manda su orden de campos. */
+    let aplicacion = match builder.build(tauri::generate_context!()) {
+        Ok(app) => app,
+        Err(error) => {
+            /* Sin app no hay ventana donde avisar: queda el log del sistema y
+             * la salida con error del proceso. */
+            eprintln!("Kamples no pudo iniciarse: {error}");
+            std::process::exit(1);
+        }
+    };
+    aplicacion.run(|app, evento| {
+        #[cfg(desktop)]
+        if let tauri::RunEvent::Exit = evento {
+            if let Some(estado) = app.try_state::<escritorio::arranque::Estado>() {
+                if let Ok(mut guardia) = estado.0.lock() {
+                    drop(guardia.take());
+                }
+            }
+        }
+        let _ = (app, evento);
+    });
 }

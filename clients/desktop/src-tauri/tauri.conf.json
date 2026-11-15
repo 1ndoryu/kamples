@@ -6,60 +6,14 @@
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "",
     "frontendDist": "../dist"
   },
   "app": {
     "withGlobalTauri": false,
-    "windows": [
-      {
-        "label": "main",
-        "title": "Kamples",
-        "width": 1280,
-        "height": 800,
-        "minWidth": 900,
-        "minHeight": 600,
-        "center": true,
-        "decorations": true,
-        "resizable": true,
-        "fullscreen": false,
-        "transparent": false
-      },
-      {
-        "label": "sync-panel",
-        "title": "Kamples Sync",
-        "url": "sync.html",
-        "width": 380,
-        "height": 520,
-        "minWidth": 320,
-        "minHeight": 400,
-        "visible": false,
-        "decorations": false,
-        "resizable": false,
-        "alwaysOnTop": true,
-        "skipTaskbar": true,
-        "center": false,
-        "shadow": false,
-        "transparent": true,
-        "closable": false
-      },
-      {
-        "label": "config-sync",
-        "title": "Configuración",
-        "url": "config.html",
-        "width": 460,
-        "height": 500,
-        "visible": false,
-        "decorations": false,
-        "resizable": false,
-        "alwaysOnTop": false,
-        "skipTaskbar": false,
-        "center": true
-      }
-    ],
+    "windows": [],
     "security": {
-      "csp": "default-src 'self'; connect-src 'self' http://localhost http://localhost:1420 http://localhost:3001 https://api.kamples.com wss://api.kamples.com https://samples.nakomi.studio wss://samples.nakomi.studio ws://localhost:3001 https://*.stripe.com https://accounts.google.com ipc: http://ipc.localhost; img-src 'self' http://localhost:3001 https://api.kamples.com asset: http://asset.localhost data: blob: https:; media-src 'self' http://localhost:3001 https://api.kamples.com asset: http://asset.localhost blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' https://accounts.google.com; frame-src 'self' https://accounts.google.com",
-      "dangerousDisableAssetCspModification": false
+      "csp": "default-src 'self' http://127.0.0.1:4317; connect-src 'self' http://127.0.0.1:4317 ws://127.0.0.1:4317 https://api.kamples.com wss://api.kamples.com https://*.stripe.com https://accounts.google.com ipc: http://ipc.localhost; img-src 'self' http://127.0.0.1:4317 asset: http://asset.localhost data: blob: https:; media-src 'self' http://127.0.0.1:4317 asset: http://asset.localhost blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'unsafe-inline' https://accounts.google.com; frame-src 'self' https://accounts.google.com"
     }
   },
   "bundle": {
@@ -72,7 +26,10 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": ["icons/32x32.png", "icons/favicon.svg"],
+    "resources": [
+      "icons/32x32.png",
+      "icons/favicon.svg"
+    ],
     "windows": {
       "certificateThumbprint": null,
       "digestAlgorithm": "sha256",
@@ -82,7 +39,12 @@
   "plugins": {
     "deep-link": {
       "mobile": [
-        { "scheme": ["kamples"], "host": "auth" }
+        {
+          "scheme": [
+            "kamples"
+          ],
+          "host": "auth"
+        }
       ]
     },
     "updater": {

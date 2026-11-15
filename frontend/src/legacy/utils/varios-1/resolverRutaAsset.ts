@@ -28,6 +28,17 @@ const PREFIJO_COLORS_SPA = '/legacy-assets/colors';
 const esEntornoTauri = (): boolean =>
     typeof window !== 'undefined' && !!(window as unknown as Record<string, unknown>).__TAURI_INTERNALS__;
 
+/* [por que] La app de escritorio empaquetada trae su propio backend en
+ * 127.0.0.1: el lanzador escribe `__KAMPLES_CONFIG__.serverUrl` antes de cargar
+ * el bundle. Si existe, los assets se quedan relativos (resuelven contra ese
+ * origen, que sirve /legacy-assets); prefijarlos con kamples.com los mandaría a
+ * la nube y la landing mostraba imágenes rotas. */
+const servidorLocal = (): boolean => {
+    if (typeof window === 'undefined') return false;
+    const config = (window as unknown as { __KAMPLES_CONFIG__?: { serverUrl?: string } }).__KAMPLES_CONFIG__;
+    return !!config?.serverUrl;
+};
+
 function rebaseAsset(ruta: string): string {
     if (ruta.startsWith(PREFIJO_LEGACY_WP)) {
         return PREFIJO_SPA + ruta.slice(PREFIJO_LEGACY_WP.length);
@@ -61,6 +72,9 @@ export const resolverRutaAsset = (rutaRelativa: string): string => {
         }
         /* En producción Tauri, si ya es absoluta con el dominio correcto, devolverla tal cual */
         if (rutaRelativa.startsWith(SERVIDOR_PROD)) return rutaRelativa;
+        /* App de escritorio con backend propio: ruta relativa rebasada, que
+         * resuelve contra el origen local. */
+        if (servidorLocal()) return rebaseAsset(rutaRelativa);
         return `${SERVIDOR_PROD}${rutaRelativa}`;
     }
     /* Stripear dominio de producción en entorno SPA/dev para rebasear correctamente */

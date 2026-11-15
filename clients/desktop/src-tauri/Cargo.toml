@@ -8,7 +8,10 @@ rust-version = "1.77.2"
 
 [lib]
 name = "kamples_desktop_lib"
-crate-type = ["lib", "cdylib", "staticlib"]
+# Solo `lib`: `cdylib`/`staticlib` son para móvil y no enlazan con
+# `+crt-static` (el runtime estático no trae `_initialize_onexit_table`), que es
+# lo que usa el build de Windows para no depender del VC++ Redistributable.
+crate-type = ["lib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
@@ -25,6 +28,9 @@ tauri-plugin-store = "2"
 tauri-plugin-deep-link = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+# Secretos de firma de sesión: 32 bytes del generador del sistema, no de un hash
+# de reloj, que cualquiera podría reproducir.
+getrandom = "0.2"
 
 # Dependencias solo desktop (tray, drag-and-drop, window state, updater, fs2)
 [target.'cfg(not(target_os = "android"))'.dependencies]
@@ -32,3 +38,13 @@ tauri-plugin-updater = "2"
 tauri-plugin-window-state = "2"
 tauri-plugin-drag = "2.1.0"
 fs2 = "0.4"
+
+# Job Object de Windows: los procesos hijos (PostgreSQL, backend) mueren con el
+# lanzador aunque este se caiga o lo maten; solo se enlaza en desktop.
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59", features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_System_JobObjects",
+    "Win32_System_Threading",
+] }
