@@ -13,6 +13,7 @@ pub mod config;
 pub mod domain;
 pub mod errors;
 pub mod handlers;
+pub mod marca;
 pub mod middleware;
 pub mod models;
 pub mod repositories;

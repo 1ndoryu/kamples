@@ -30,7 +30,7 @@ pub fn apuntar(app: &tauri::App, base: &str) -> Result<(), Box<dyn std::error::E
      * más, y hay que pedir `/`, que es la que el router sí conoce. */
     let principal = WebviewWindowBuilder::new(app, "main", url(""))
         .initialization_script(configurar_api)
-        .title("Kamples")
+        .title(crate::marca::NOMBRE)
         .inner_size(1280.0, 800.0)
         .min_inner_size(900.0, 600.0)
         .center()
@@ -52,7 +52,7 @@ pub fn apuntar(app: &tauri::App, base: &str) -> Result<(), Box<dyn std::error::E
      * principio, igual que estaba declarada en `tauri.conf.json`. */
     let sync = WebviewWindowBuilder::new(app, "sync-panel", url("sync.html"))
         .initialization_script(configurar_api)
-        .title("Kamples Sync")
+        .title(&format!("{} Sync", crate::marca::NOMBRE))
         .inner_size(380.0, 520.0)
         .decorations(false)
         .resizable(false)
@@ -152,17 +152,18 @@ fn poner_icono_grande(_ventana: &tauri::WebviewWindow) {}
 /// Sustituye la ventana principal por una página con el error de arranque.
 pub fn mostrar_error(app: &tauri::App, error: &str) -> Result<(), Box<dyn std::error::Error>> {
     let ruta = escritorio_logs();
+    let nombre = crate::marca::NOMBRE;
     let html = format!(
         "<!doctype html><html lang=es><meta charset=utf-8>\
-         <title>Kamples no pudo arrancar</title>\
+         <title>{nombre} no pudo arrancar</title>\
          <body style=\"font-family:Segoe UI,system-ui,sans-serif;background:#14161a;\
          color:#e6e8eb;padding:48px;line-height:1.6\">\
-         <h1 style=\"font-size:22px;margin:0 0 16px\">Kamples no pudo arrancar</h1>\
+         <h1 style=\"font-size:22px;margin:0 0 16px\">{nombre} no pudo arrancar</h1>\
          <p style=\"margin:0 0 12px\">{}</p>\
          <p style=\"margin:0 0 12px;color:#9aa4b2\">Los detalles están en:<br>\
          <code style=\"color:#e6e8eb\">{}</code></p>\
          <p style=\"margin:24px 0 0;color:#9aa4b2\">Cierra esta ventana desde el icono \
-         de Kamples en la bandeja del sistema y vuelve a abrirla.</p></body></html>",
+         de {nombre} en la bandeja del sistema y vuelve a abrirla.</p></body></html>",
         escapar(error),
         escapar(&ruta),
     );
@@ -172,7 +173,7 @@ pub fn mostrar_error(app: &tauri::App, error: &str) -> Result<(), Box<dyn std::e
     let ventana = match app.get_webview_window("main") {
         Some(v) => v,
         None => WebviewWindowBuilder::new(app, "main", WebviewUrl::App("index.html".into()))
-            .title("Kamples")
+            .title(crate::marca::NOMBRE)
             .inner_size(880.0, 560.0)
             .center()
             .build()?,
@@ -195,7 +196,7 @@ fn escritorio_logs() -> String {
                 .display()
                 .to_string()
         })
-        .unwrap_or_else(|| "la carpeta de logs de Kamples".to_string())
+        .unwrap_or_else(|| format!("la carpeta de logs de {}", crate::marca::NOMBRE))
 }
 
 /// El mensaje puede traer rutas con `&` o `<`; sin esto la página de error se

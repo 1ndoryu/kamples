@@ -20,8 +20,12 @@ use std::process::{Child, Stdio};
 use std::time::{Duration, Instant};
 
 /// Nombre del rol y de la base. Fijos: la app es de un solo usuario en su PC.
-pub const ROL: &str = "kamples";
-pub const BASE: &str = "kamples";
+///
+/// [por que siguen al slug y no al nombre] El rol y la base viven dentro de un
+/// `pgdata` ya inicializado; renombrarlos por un cambio de marca dejaría la app
+/// sin su propia base. Cambiarlos exige recrear el cluster y migrar los datos.
+pub const ROL: &str = crate::marca::IDENTIDAD_SLUG;
+pub const BASE: &str = crate::marca::IDENTIDAD_SLUG;
 /// Clave del rol. Fija: el servidor escucha SOLO en 127.0.0.1, así que no
 /// protege de nadie; evita el caso de `trust`, que sí quedaría expuesto si
 /// alguna vez se cambia `listen_addresses`.

@@ -337,7 +337,7 @@ impl StripeService {
     ) -> AppResult<StripeConnectPayoutSummary> {
         let currency = currency.to_ascii_lowercase();
         let amount = amount_cents.to_string();
-        let description = format!("Kamples payout creator {creator_id}");
+        let description = format!("{} payout creator {creator_id}", crate::marca::NOMBRE);
         let creator_id = creator_id.to_string();
         let params = [
             ("amount", amount.as_str()),

@@ -213,7 +213,8 @@ fn load_optional_smtp() -> Result<Option<SmtpConfig>, ConfigError> {
         .unwrap_or_else(|| "587".to_string())
         .parse()?;
     let from_email = first_env(&["SMTP_FROM_EMAIL", "SMTP_FROM"]).unwrap_or_else(|| user.clone());
-    let from_name = first_env(&["SMTP_FROM_NAME"]).unwrap_or_else(|| "Kamples".to_string());
+    let from_name = first_env(&["SMTP_FROM_NAME"])
+        .unwrap_or_else(|| crate::marca::NOMBRE.to_string());
     let secure = first_env(&["SMTP_SECURE"]).unwrap_or_else(|| "tls".to_string());
 
     Ok(Some(SmtpConfig {

@@ -9,10 +9,16 @@ use std::path::{Path, PathBuf};
 
 /// Carpeta bajo %LOCALAPPDATA% donde viven los datos que deben perdurar.
 ///
-/// [por que no `Kamples` a secas] Ese nombre es el que usa el instalador de
-/// Windows para el programa: un desinstalador borra la carpeta entera y se
-/// llevaría la base y los samples. Un nombre propio no lo toca nadie más.
-pub const CARPETA_DATOS: &str = "KamplesDatos";
+/// [por que no el nombre de la app a secas] Esa carpeta es la que usa el
+/// instalador de Windows para el programa: un desinstalador borra la carpeta
+/// entera y se llevaría la base y los samples. Un nombre propio no lo toca
+/// nadie más.
+///
+/// [por que sale de `marca.json` y no de `NOMBRE`] Los datos ya existen en los
+/// equipos con ese nombre. Sigue a `identidad.carpetaDatos`, que se cambia solo
+/// migrando la carpeta; renombrarla porque cambie la marca dejaría la base
+/// huérfana.
+pub const CARPETA_DATOS: &str = crate::marca::IDENTIDAD_CARPETA_DATOS;
 
 /// Número de puerto para el backend. Se busca uno libre a partir de aquí, así
 /// que dos copias de la app abiertas a la vez no se pisan.
@@ -201,7 +207,8 @@ pub fn exigir_puerto_libre() -> Result<(), String> {
         Ok(_) => Ok(()),
         Err(_) => Err(format!(
             "el puerto {PUERTO_PREFERIDO} está ocupado por otro programa; \
-             cierra lo que lo use y vuelve a abrir Kamples"
+             cierra lo que lo use y vuelve a abrir {}",
+            crate::marca::NOMBRE
         )),
     }
 }

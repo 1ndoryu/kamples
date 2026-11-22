@@ -166,7 +166,7 @@ fn human_title_for_type(notification_type: &str) -> &'static str {
         "venta" => "Venta de sample",
         "pago" => "Pago recibido",
         "moderacion" => "Aviso de moderación",
-        _ => "Kamples",
+        _ => crate::marca::NOMBRE,
     }
 }
 

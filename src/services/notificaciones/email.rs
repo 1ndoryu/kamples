@@ -6,7 +6,7 @@ use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor};
 
 use crate::config::AppConfig;
 
-const DEFAULT_SITE_URL: &str = "https://kamples.com";
+const DEFAULT_SITE_URL: &str = crate::marca::SITIO_URL;
 
 #[derive(Clone)]
 pub struct EmailDeliveryRuntime {
@@ -199,19 +199,23 @@ impl EmailNotificationService {
 fn render_welcome_content(user_name: &str, site_url: &str) -> EmailContent {
     let name = escape_html(user_name);
     let site_url = escape_html(site_url);
+    /* El nombre de la marca se interpola y no se escribe: es un literal que
+     * viaja al correo de cada usuaria y tiene que salir de `marca.json`. */
+    let marca = crate::marca::NOMBRE;
     let inner = format!(
         concat!(
             "<p style=\"margin:0 0 16px;color:#333;font-size:16px;\">Hola {name},</p>",
-            "<p style=\"margin:0 0 16px;color:#333;font-size:16px;\">Tu cuenta en Kamples ha sido creada exitosamente. Ya puedes explorar, descargar y compartir samples con la comunidad.</p>",
+            "<p style=\"margin:0 0 16px;color:#333;font-size:16px;\">Tu cuenta en {marca} ha sido creada exitosamente. Ya puedes explorar, descargar y compartir samples con la comunidad.</p>",
             "<p style=\"margin:0 0 24px;color:#333;font-size:16px;\">Empieza descubriendo samples ahora:</p>",
             "{button}"
         ),
         name = name,
-        button = render_button("Explorar Kamples", &site_url),
+        marca = marca,
+        button = render_button(&format!("Explorar {marca}"), &site_url),
     );
 
     EmailContent {
-        subject: "Bienvenido a Kamples".to_string(),
+        subject: format!("Bienvenido a {marca}"),
         html: render_shell(&inner, &site_url),
     }
 }
@@ -272,12 +276,13 @@ fn render_notification_content(input: &NotificationOptInEmailInput) -> EmailCont
             "<p style=\"margin:0 0 16px;color:#333;font-size:16px;font-weight:bold;\">{headline}</p>",
             "<p style=\"margin:0 0 24px;color:#333;font-size:16px;\">{message}</p>",
             "{action}",
-            "<p style=\"margin:24px 0 0;color:#666;font-size:13px;\">Recibes este correo porque activaste notificaciones por email en Kamples.</p>"
+            "<p style=\"margin:24px 0 0;color:#666;font-size:13px;\">Recibes este correo porque activaste notificaciones por email en {marca}.</p>"
         ),
         greeting = greeting,
         headline = headline,
         message = message,
         action = action,
+        marca = crate::marca::NOMBRE,
     );
 
     EmailContent {
@@ -293,13 +298,14 @@ fn render_shell(inner: &str, site_url: &str) -> String {
             "<body style=\"margin:0;padding:0;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;\">",
             "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#f5f5f5;padding:24px 0;\"><tr><td align=\"center\">",
             "<table width=\"560\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#ffffff;border-radius:8px;overflow:hidden;\">",
-            "<tr><td style=\"background:#1a1a2e;padding:24px;text-align:center;\"><h1 style=\"margin:0;color:#ffffff;font-size:22px;\">Kamples</h1></td></tr>",
+            "<tr><td style=\"background:#1a1a2e;padding:24px;text-align:center;\"><h1 style=\"margin:0;color:#ffffff;font-size:22px;\">{marca}</h1></td></tr>",
             "<tr><td style=\"padding:32px 24px;\">{inner}</td></tr>",
-            "<tr><td style=\"padding:16px 24px;border-top:1px solid #e9ecef;text-align:center;\"><p style=\"margin:0;color:#999;font-size:12px;\"><a href=\"{site_url}\" style=\"color:#999;text-decoration:none;\">Kamples</a></p></td></tr>",
+            "<tr><td style=\"padding:16px 24px;border-top:1px solid #e9ecef;text-align:center;\"><p style=\"margin:0;color:#999;font-size:12px;\"><a href=\"{site_url}\" style=\"color:#999;text-decoration:none;\">{marca}</a></p></td></tr>",
             "</table></td></tr></table></body></html>"
         ),
         inner = inner,
         site_url = site_url,
+        marca = crate::marca::NOMBRE,
     )
 }
 
@@ -345,10 +351,10 @@ mod tests {
     fn welcome_template_contains_name_and_site_url() {
         let content = render_welcome_content("Ada", "https://kamples.com");
 
-        assert_eq!(content.subject, "Bienvenido a Kamples");
+        assert_eq!(content.subject, format!("Bienvenido a {}", crate::marca::NOMBRE));
         assert!(content.html.contains("Hola Ada"));
         assert!(content.html.contains("https://kamples.com"));
-        assert!(content.html.contains("Explorar Kamples"));
+        assert!(content.html.contains(&format!("Explorar {}", crate::marca::NOMBRE)));
     }
 
     #[test]

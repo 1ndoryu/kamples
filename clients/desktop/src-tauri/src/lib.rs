@@ -12,6 +12,9 @@ use tauri::Manager;
 #[cfg(desktop)]
 mod escritorio;
 
+/* Nombre e identidad de la marca: generado desde `marca.json`. */
+mod marca;
+
 #[cfg(desktop)]
 use tauri::{
     menu::{Menu, MenuItem},
@@ -127,20 +130,23 @@ async fn iniciar_oauth_google(
                         });
 
                     /* Responder al browser para que el usuario sepa que puede cerrar la ventana */
-                    let html = b"<!DOCTYPE html><html><head><meta charset='utf-8'>\
-                        <title>Kamples</title></head>\
+                    let html = format!(
+                        "<!DOCTYPE html><html><head><meta charset='utf-8'>\
+                        <title>{nombre}</title></head>\
                         <body style='font-family:system-ui,sans-serif;text-align:center;padding:60px;background:#0f0f0f;color:#fff'>\
                         <h2>Autenticacion completada</h2>\
-                        <p>Puedes cerrar esta ventana y volver a Kamples.</p>\
+                        <p>Puedes cerrar esta ventana y volver a {nombre}.</p>\
                         <script>setTimeout(()=>window.close(),2000)</script>\
-                        </body></html>";
+                        </body></html>",
+                        nombre = crate::marca::NOMBRE
+                    );
                     let http_response = format!(
                         "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\
                          Content-Length: {}\r\nConnection: close\r\n\r\n",
                         html.len()
                     );
                     let _ = stream_write.write_all(http_response.as_bytes());
-                    let _ = stream_write.write_all(html);
+                    let _ = stream_write.write_all(html.as_bytes());
 
                     match code {
                         Some(c) => { let _ = tx.send(Ok(c)); }
@@ -406,12 +412,18 @@ fn toggle_ventana_sync(app: tauri::AppHandle) -> Result<(), String> {
 /*
  * Configura el tray icon con menu contextual.
  * Left-click y "Sincronización" abren la ventana sync-panel (popup).
- * "Mostrar Kamples" abre la ventana principal.
+ * "Mostrar" (con el nombre de la app) abre la ventana principal.
  */
 #[cfg(desktop)]
 fn configurar_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let sincronizacion = MenuItem::with_id(app, "sincronizacion", "Sincronización", true, None::<&str>)?;
-    let mostrar = MenuItem::with_id(app, "mostrar", "Mostrar Kamples", true, None::<&str>)?;
+    let mostrar = MenuItem::with_id(
+        app,
+        "mostrar",
+        format!("Mostrar {}", crate::marca::NOMBRE),
+        true,
+        None::<&str>,
+    )?;
     let ocultar = MenuItem::with_id(app, "ocultar", "Minimizar a bandeja", true, None::<&str>)?;
     let salir = MenuItem::with_id(app, "salir", "Salir", true, None::<&str>)?;
 
@@ -424,7 +436,7 @@ fn configurar_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
 
     let mut tray = TrayIconBuilder::new()
         .menu(&menu)
-        .tooltip("Kamples")
+        .tooltip(crate::marca::NOMBRE)
         .on_menu_event(|app, event| match event.id.as_ref() {
             "sincronizacion" => {
                 mostrar_ventana_sync(app);
@@ -641,7 +653,7 @@ pub fn run() {
         Err(error) => {
             /* Sin app no hay ventana donde avisar: queda el log del sistema y
              * la salida con error del proceso. */
-            eprintln!("Kamples no pudo iniciarse: {error}");
+            eprintln!("{} no pudo iniciarse: {error}", crate::marca::NOMBRE);
             std::process::exit(1);
         }
     };

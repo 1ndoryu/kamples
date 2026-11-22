@@ -257,9 +257,12 @@ pub async fn metadata(
         if let Ok(Some(row)) = SeoRepository::profile_metadata(pool, username).await {
             let display = row.nombre_visible;
             let bio = row.bio.unwrap_or_default();
-            let title = format!("{display} | Perfil en Kamples");
+            let title = format!("{display} | Perfil en {}", crate::marca::NOMBRE);
             let description = if bio.is_empty() {
-                format!("Descubre los samples de {display} en Kamples.")
+                format!(
+                    "Descubre los samples de {display} en {}.",
+                    crate::marca::NOMBRE
+                )
             } else {
                 bio
             };
@@ -285,7 +288,7 @@ pub async fn metadata(
     if let Some(slug) = path.strip_prefix("/blog/") {
         let slug = slug.trim_end_matches('/');
         if let Ok(Some(row)) = SeoRepository::article_metadata(pool, slug).await {
-            let title = format!("{} | Blog Kamples", row.titulo);
+            let title = format!("{} | Blog {}", row.titulo, crate::marca::NOMBRE);
             let extracto = row.extracto;
             let description = if extracto.is_empty() {
                 row.titulo.clone()
@@ -311,8 +314,14 @@ pub async fn metadata(
 
     /* Fallback genérico para rutas desconocidas. */
     Ok(Json(SeoMetadata {
-        title: "Kamples | Samples gratis y herramientas para productores".into(),
-        description: "Descarga samples, packs y conecta con productores en Kamples.".into(),
+        title: format!(
+            "{} | Samples gratis y herramientas para productores",
+            crate::marca::NOMBRE
+        ),
+        description: format!(
+            "Descarga samples, packs y conecta con productores en {}.",
+            crate::marca::NOMBRE
+        ),
         canonical,
         og_image: None,
         og_type: "website".into(),
