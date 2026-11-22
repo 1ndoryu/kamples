@@ -7,6 +7,8 @@
 
 import { esCapacitor } from '../varios-1/plataforma';
 import { crearElemento, cuerpoDocumento } from '@/platform/documento';
+/* La subcarpeta de Documentos lleva el nombre de la marca; sale de `marca.json`. */
+import { NOMBRE as MARCA } from '../../../marca';
 
 /* [183A-95] Convierte ArrayBuffer a base64 en chunks para evitar
  * stack overflow en btoa() con archivos grandes (WAV 5-20MB).
@@ -65,13 +67,13 @@ export async function descargarArchivo(url: string, nombreArchivo: string): Prom
     /* [183A-92] Guardar en Documents (accesible vía gestor de archivos, sin permisos).
      * Subcarpeta Kamples/ para organización. */
     await Filesystem.mkdir({
-        path: 'Kamples',
+        path: MARCA,
         directory: Directory.Documents,
         recursive: true,
     }).catch(() => { /* ya existe — ignorar */ });
 
     const resultado = await Filesystem.writeFile({
-        path: `Kamples/${nombreArchivo}`,
+        path: `${MARCA}/${nombreArchivo}`,
         data: base64,
         directory: Directory.Documents,
         recursive: false,

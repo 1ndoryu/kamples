@@ -2,11 +2,12 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
 import { colorsPlaceholderPlugin } from './vite-plugins/colors-placeholder.ts';
+import { marcaHtml } from './vite-plugins/marca-html.ts';
 
 const apiTarget = process.env.KAMPLES_API_TARGET || 'http://localhost:3001';
 
 export default defineConfig({
-  plugins: [react(), colorsPlaceholderPlugin()],
+  plugins: [react(), colorsPlaceholderPlugin(), marcaHtml()],
   /* [204A-1] Aliases que replican exactamente los del frontend WordPress legacy.
    * Ver glorytemplate/App/React/tsconfig.json. */
   resolve: {
@@ -17,6 +18,8 @@ export default defineConfig({
       /* [266A-1] @desktop apunta a clients/desktop/src para imports dinamicos del
        * flujo de auth desktop (authDesktopService) desde el frontend web. */
       '@desktop': fileURLToPath(new URL('../clients/desktop/src', import.meta.url)),
+      /* Constantes de marca: un solo import desde cualquier capa. */
+      '@marca': fileURLToPath(new URL('./src/marca.ts', import.meta.url)),
       /* [204A-1] Stub modulos nativos (Tauri/Capacitor) para builds web.
        * El legacy importa dinamicamente estos modulos solo en desktop/movil; en web
        * Rollup necesita resolverlos a un stub para no fallar el build. */

@@ -9,6 +9,7 @@ import { CampoTexto } from '../../components/ui/varios-1/CampoTexto';
 import { GloryLink } from '@/core/router';
 import { useRegistroIsland } from '../../hooks/varios-7/useRegistroIsland';
 import '../../styles/componentes/varios-4/login.css';
+import { NOMBRE } from '@marca';
 
 export const RegistroIsland = (): JSX.Element => {
     const {
@@ -27,7 +28,7 @@ export const RegistroIsland = (): JSX.Element => {
             <div className="loginCaja">
                 <div className="loginLogo">
                     <Music size={32} />
-                    <span className="loginLogoTexto">Kamples</span>
+                    <span className="loginLogoTexto">{NOMBRE}</span>
                 </div>
 
                 <h1 className="loginTitulo">Crea tu cuenta</h1>

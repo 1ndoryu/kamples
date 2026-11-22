@@ -10,6 +10,7 @@
 
 import { useEffect } from 'react';
 import { useReproductorStore } from '@app/stores/varios-3/reproductorStore';
+import { NOMBRE } from '@marca';
 
 /* Verificar soporte de MediaSession (no disponible en SSR ni todos los navegadores) */
 const mediaSessionDisponible = (): boolean =>
@@ -51,7 +52,7 @@ export const useMediaSession = (): void => {
                 }
 
                 const { titulo, imagenUrl, creador } = state.sampleActual;
-                const artista = creador?.username ?? 'Kamples';
+                const artista = creador?.username ?? NOMBRE;
 
                 /* Construir artwork array. MediaSession acepta multiples tamanos. */
                 const artwork: MediaImage[] = [];
@@ -67,7 +68,7 @@ export const useMediaSession = (): void => {
                 session.metadata = new MediaMetadata({
                     title: titulo,
                     artist: artista,
-                    album: 'Kamples',
+                    album: NOMBRE,
                     artwork,
                 });
 
@@ -89,8 +90,8 @@ export const useMediaSession = (): void => {
             }
             session.metadata = new MediaMetadata({
                 title: titulo,
-                artist: creador?.username ?? 'Kamples',
-                album: 'Kamples',
+                artist: creador?.username ?? NOMBRE,
+                album: NOMBRE,
                 artwork,
             });
             session.playbackState = estadoInicial.reproduciendo ? 'playing' : 'paused';

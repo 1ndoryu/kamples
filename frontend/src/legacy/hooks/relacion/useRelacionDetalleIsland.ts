@@ -5,6 +5,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
+import { NOMBRE } from '@marca';
 import { useRelacionDetalle } from '@app/hooks/relacion/useRelacionDetalle';
 import { useComentarios } from '@app/hooks/varios-3/useComentarios';
 import { useMenuRelacionDetalle } from '@app/hooks/menu/useMenuRelacionDetalle';
@@ -76,7 +77,7 @@ export const useRelacionDetalleIsland = (idEfectivo?: string) => {
         : '';
 
     useEffect(() => {
-        if (tituloSeo) document.title = `${tituloSeo} | Kamples`;
+        if (tituloSeo) document.title = `${tituloSeo} | ${NOMBRE}`;
     }, [tituloSeo]);
 
     /* Embed URLs */

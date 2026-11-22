@@ -4,6 +4,8 @@
  * Props: tamano controla width/height, color hereda currentColor por defecto.
  */
 
+import { NOMBRE } from '@marca';
+
 interface LogoKamplesProps {
     tamano?: number;
     color?: string;
@@ -22,7 +24,7 @@ export const LogoKamples = ({
         height={tamano * (18.05 / 16.7)}
         fill={color}
         className={className}
-        aria-label="Kamples"
+        aria-label={NOMBRE}
         role="img"
     >
         <path d="M10.6,12.47h5.87v1.87h-5.95l2.31,2.28-1.33,1.33-2.22-2.23v2.29h-1.86v-2.33l-2.26,2.28-1.33-1.35,2.28-2.26H.23v-1.87h5.74c-2-1.99-3.99-3.98-5.97-5.96l1.36-1.35c1.99,2,4,4.01,6.01,6.02.01,0,.03-.02.04-.03V0h1.87v11.15l6-6,1.33,1.32c-1.99,1.99-3.98,3.97-6,5.99h0Z" />

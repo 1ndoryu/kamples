@@ -7,6 +7,7 @@
 
 import '../../styles/variables.css';
 import '../../styles/legal.css';
+import { NOMBRE } from '@marca';
 
 export const PrivacidadIsland = (): JSX.Element => (
     <div className="contenedorLegal" id="paginaPrivacidad">
@@ -16,7 +17,7 @@ export const PrivacidadIsland = (): JSX.Element => (
         <section className="seccionLegal">
             <h2 className="seccionLegalTitulo">1. Información que recopilamos</h2>
             <p>
-                Al usar Kamples, recopilamos la siguiente información:
+                Al usar {NOMBRE}, recopilamos la siguiente información:
             </p>
             <ul>
                 <li><strong>Datos de cuenta:</strong> nombre de usuario, email y contraseña cifrada al registrarte.</li>

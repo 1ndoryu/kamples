@@ -4,6 +4,7 @@
  */
 
 import { Check, X, Minus } from 'lucide-react';
+import { NOMBRE } from '@marca';
 import '../../../styles/componentes/landing/landingComparativa.css';
 
 type Soporte = 'si' | 'no' | 'parcial';
@@ -36,7 +37,8 @@ const FILAS: FilaComparativa[] = [
     { funcion: 'Publicar servicios gratis', kamples: 'si', splice: 'no', beatstar: 'no', samplefocus: 'no', looperman: 'no' },
 ];
 
-const COMPETIDORES = ['Kamples', 'Splice', 'Beatstar', 'Samplefocus', 'Looperman'] as const;
+/* El primer competidor es la propia app: sale de la marca, no de un literal. */
+const COMPETIDORES = [NOMBRE, 'Splice', 'Beatstar', 'Samplefocus', 'Looperman'] as const;
 
 const IconoSoporte = ({ valor }: { valor: Soporte }): JSX.Element => {
     if (valor === 'si') return <Check size={16} className="comparativaIconoSi" />;
@@ -46,14 +48,14 @@ const IconoSoporte = ({ valor }: { valor: Soporte }): JSX.Element => {
 
 export const TablaComparativa = (): JSX.Element => (
     <section className="landingComparativa" id="landingComparativa">
-        <h2 className="landingComparativaTitulo">Por qué Kamples</h2>
+        <h2 className="landingComparativaTitulo">Por qué {NOMBRE}</h2>
         <div className="landingComparativaTabla">
             <table>
                 <thead>
                     <tr>
                         <th>Funciones</th>
                         {COMPETIDORES.map(c => (
-                            <th key={c} className={c === 'Kamples' ? 'comparativaDestacado' : ''}>
+                            <th key={c} className={c === NOMBRE ? 'comparativaDestacado' : ''}>
                                 {c}
                             </th>
                         ))}

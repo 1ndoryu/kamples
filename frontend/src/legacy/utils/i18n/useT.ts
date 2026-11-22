@@ -5,6 +5,7 @@ import { useIdiomaStore, type Idioma } from './idiomaStore';
 import esJson from './es.json';
 import enJson from './en.json';
 import jaJson from './ja.json';
+import { NOMBRE as MARCA } from '../../../marca';
 
 type Libro = Record<string, string>;
 type Params = Record<string, string | number>;
@@ -19,8 +20,11 @@ function resolver(libro: Libro, clave: string, fallback: Libro): string {
     return libro[clave] ?? fallback[clave] ?? clave;
 }
 
+/* `marca` se inyecta siempre: los textos que llevan el nombre de la app lo
+ * escriben como `{marca}`, y así cambiar la marca no toca los tres idiomas. */
 function interpolar(texto: string, params: Params): string {
-    return texto.replace(/\{(\w+)\}/g, (_, k) => String(params[k] ?? `{${k}}`));
+    const conMarca: Params = { marca: MARCA, ...params };
+    return texto.replace(/\{(\w+)\}/g, (_, k) => String(conMarca[k] ?? `{${k}}`));
 }
 
 export interface UseTResult {
@@ -32,7 +36,7 @@ export function useT(): UseTResult {
     const idioma = useIdiomaStore(s => s.idioma);
     const t = (clave: string, params?: Params): string => {
         const texto = resolver(libros[idioma], clave, libros.es);
-        return params ? interpolar(texto, params) : texto;
+        return interpolar(texto, params ?? {});
     };
     return { t, idioma };
 }
@@ -46,6 +50,6 @@ export function getT(idioma?: Idioma): (clave: string, params?: Params) => strin
     })();
     return (clave, params) => {
         const texto = resolver(libros[i], clave, libros.es);
-        return params ? interpolar(texto, params) : texto;
+        return interpolar(texto, params ?? {});
     };
 }

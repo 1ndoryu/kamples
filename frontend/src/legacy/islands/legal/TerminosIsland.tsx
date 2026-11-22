@@ -7,6 +7,7 @@
 
 import '../../styles/variables.css';
 import '../../styles/legal.css';
+import { NOMBRE } from '@marca';
 
 export const TerminosIsland = (): JSX.Element => (
     <div className="contenedorLegal" id="paginaTerminos">
@@ -16,7 +17,7 @@ export const TerminosIsland = (): JSX.Element => (
         <section className="seccionLegal">
             <h2 className="seccionLegalTitulo">1. Aceptación de los términos</h2>
             <p>
-                Al acceder o utilizar Kamples, aceptas estar sujeto a estos términos.
+                Al acceder o utilizar {NOMBRE}, aceptas estar sujeto a estos términos.
                 Si no estás de acuerdo, no utilices la plataforma.
             </p>
         </section>
@@ -24,7 +25,7 @@ export const TerminosIsland = (): JSX.Element => (
         <section className="seccionLegal">
             <h2 className="seccionLegalTitulo">2. Descripción del servicio</h2>
             <p>
-                Kamples es una plataforma de descubrimiento y compartición de samples de audio.
+                {NOMBRE} es una plataforma de descubrimiento y compartición de samples de audio.
                 Los usuarios pueden explorar, subir, descargar y organizar samples musicales,
                 así como descubrir relaciones de sampleo entre canciones.
             </p>
@@ -43,11 +44,11 @@ export const TerminosIsland = (): JSX.Element => (
         <section className="seccionLegal">
             <h2 className="seccionLegalTitulo">4. Contenido del usuario</h2>
             <p>
-                Al subir contenido a Kamples:
+                Al subir contenido a {NOMBRE}:
             </p>
             <ul>
                 <li>Declaras que tienes los derechos necesarios sobre el contenido.</li>
-                <li>Otorgas a Kamples una licencia no exclusiva para alojar, mostrar y distribuir
+                <li>Otorgas a {NOMBRE} una licencia no exclusiva para alojar, mostrar y distribuir
                     el contenido dentro de la plataforma.</li>
                 <li>Conservas todos tus derechos de propiedad sobre tu contenido original.</li>
                 <li>No subirás contenido ilegal, ofensivo o que infrinja derechos de terceros.</li>
@@ -57,11 +58,11 @@ export const TerminosIsland = (): JSX.Element => (
         <section className="seccionLegal">
             <h2 className="seccionLegalTitulo">5. Propiedad intelectual y DMCA</h2>
             <p>
-                Kamples respeta la propiedad intelectual. Los recortes de audio están
+                {NOMBRE} respeta la propiedad intelectual. Los recortes de audio están
                 disponibles con fines educativos y de referencia para la comunidad de productores.
             </p>
             <p>
-                Si consideras que contenido en Kamples infringe tus derechos de autor,
+                Si consideras que contenido en {NOMBRE} infringe tus derechos de autor,
                 puedes enviar una notificación DMCA a: <strong>dmca@kamples.com</strong>
             </p>
             <p>
@@ -69,7 +70,7 @@ export const TerminosIsland = (): JSX.Element => (
             </p>
             <ul>
                 <li>Identificación de la obra protegida.</li>
-                <li>URL del contenido infractor en Kamples.</li>
+                <li>URL del contenido infractor en {NOMBRE}.</li>
                 <li>Tu información de contacto.</li>
                 <li>Declaración de buena fe de que el uso no está autorizado.</li>
                 <li>Tu firma electrónica o física.</li>
@@ -94,7 +95,7 @@ export const TerminosIsland = (): JSX.Element => (
         <section className="seccionLegal">
             <h2 className="seccionLegalTitulo">7. Limitación de responsabilidad</h2>
             <p>
-                Kamples se proporciona &quot;tal cual&quot; sin garantías de ningún tipo.
+                {NOMBRE} se proporciona &quot;tal cual&quot; sin garantías de ningún tipo.
                 No nos hacemos responsables de daños indirectos, incidentales o consecuentes
                 derivados del uso de la plataforma. Nuestra responsabilidad máxima se limita
                 al monto pagado por el usuario en los 12 meses anteriores al evento.

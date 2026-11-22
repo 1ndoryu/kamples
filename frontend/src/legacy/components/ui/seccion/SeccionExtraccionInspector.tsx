@@ -6,6 +6,7 @@
  */
 
 import { Download, ExternalLink } from 'lucide-react';
+import { NOMBRE } from '@marca';
 import type { ExtraccionSample } from '@app/types';
 
 interface CampoProps {
@@ -101,7 +102,7 @@ export const SeccionExtraccionInspector = ({ extraccion, sampleSlug }: SeccionEx
 
                 {/* Sample en kamples */}
                 {sampleSlug && (
-                    <CampoLink etiqueta="Sample en Kamples" url={`/sample/${sampleSlug}/`} texto={`/sample/${sampleSlug}/`} ancho />
+                    <CampoLink etiqueta={`Sample en ${NOMBRE}`} url={`/sample/${sampleSlug}/`} texto={`/sample/${sampleSlug}/`} ancho />
                 )}
 
                 {/* Fuente de descarga */}

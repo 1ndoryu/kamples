@@ -10,13 +10,14 @@
  */
 
 import type { GloryRoutesMap } from '../glory-core/core/router/navigationStore';
+import { NOMBRE as MARCA } from '../marca';
 
 export const ROUTES: GloryRoutesMap = {
     /* InicioIsland muestra LandingPublica para deslogueados y el feed para autenticados.
      * Es la pagina raiz correcta. BienvenidaIsland es solo el onboarding post-registro. */
-    '/': { island: 'InicioIsland', props: {}, title: 'Kamples' },
-    '/home/': { island: 'InicioIsland', props: {}, title: 'Inicio - Kamples' },
-    '/bienvenida/': { island: 'BienvenidaIsland', props: {}, title: 'Bienvenida - Kamples' },
+    '/': { island: 'InicioIsland', props: {}, title: MARCA },
+    '/home/': { island: 'InicioIsland', props: {}, title: `Inicio - ${MARCA}` },
+    '/bienvenida/': { island: 'BienvenidaIsland', props: {}, title: `Bienvenida - ${MARCA}` },
     '/samples/': { island: 'FeedSamplesIsland', props: {}, title: 'Samples' },
 
     /* Auth: en SPA viven como rutas; los islands LoginIsland/RegistroIsland renderizan

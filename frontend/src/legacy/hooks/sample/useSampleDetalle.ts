@@ -116,7 +116,7 @@ export function useSampleDetalle({ slugProp }: SampleDetalleParams) {
             setDescargado(true);
             try {
                 const uri = await descargarArchivo(resp.data.url, resp.data.nombre || sample.titulo || 'sample');
-                if (uri) toast.exito('Sample guardado en Documentos/Kamples');
+                if (uri) toast.exito(getT()('sample.toast.guardadoDocumentos'));
             } catch {
                 toast.error(getT()('error.guardarArchivo'));
             }

@@ -10,6 +10,7 @@ import { CampoTexto } from '../../components/ui/varios-1/CampoTexto';
 import { GloryLink } from '@/core/router';
 import { useAuth } from '../../hooks/varios-1/useAuth';
 import '../../styles/componentes/varios-4/login.css';
+import { NOMBRE } from '@marca';
 
 export const LoginIsland = (): JSX.Element => {
     /* Estado controlado — useRef falla en Android porque el IME no confirma el valor
@@ -28,7 +29,7 @@ export const LoginIsland = (): JSX.Element => {
             <div className="loginCaja">
                 <div className="loginLogo">
                     <Music size={32} />
-                    <span className="loginLogoTexto">Kamples</span>
+                    <span className="loginLogoTexto">{NOMBRE}</span>
                 </div>
 
                 <h1 className="loginTitulo">Inicia sesión</h1>

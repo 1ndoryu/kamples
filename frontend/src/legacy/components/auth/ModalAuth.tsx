@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect, useCallback, type FormEvent } from 'react';
+import { NOMBRE } from '@marca';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { BotonBase } from '../ui/boton/BotonBase';
@@ -211,7 +212,7 @@ export const ModalAuth = (): JSX.Element | null => {
                 <aside className="authPanelImagen">
                     {/* [256A-1c] Sin loading=lazy para evitar intervention del browser que pospone
                      * la carga de la imagen en Tauri WebView. Se carga eager (por defecto). */}
-                    <img src={imagenAuth} alt="Kamples" className="authImagen" />
+                    <img src={imagenAuth} alt={NOMBRE} className="authImagen" />
                 </aside>
             )}
             <section className="authPanelContenido">

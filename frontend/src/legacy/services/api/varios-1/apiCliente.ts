@@ -4,6 +4,7 @@
  * Centraliza headers, manejo de errores y tipado.
  */
 
+import { CABECERA_AUTH } from '@marca';
 import { crearLogger } from '../../varios-1/logger';
 import { useAuthStore } from '../../../stores/auth/authStore';
 
@@ -247,7 +248,7 @@ export const apiPeticion = async <T>(
             ...(nonce ? { 'X-WP-Nonce': nonce } : {}),
             ...(tokenNativo ? {
                 Authorization: `Bearer ${tokenNativo}`,
-                'X-Kamples-Auth': `Bearer ${tokenNativo}`,
+                [CABECERA_AUTH]: `Bearer ${tokenNativo}`,
             } : {}),
             ...headers,
         },

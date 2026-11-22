@@ -9,6 +9,7 @@
  * - SVG inline → el elemento <svg> es DOM real, se escala por viewBox sin object-fit.
  */
 
+import { NOMBRE } from '@marca';
 import '../../../styles/componentes/landing/landingCaracteristicas.css';
 
 /* Imports ?raw — Vite incluye el texto SVG directamente en el bundle */
@@ -35,13 +36,13 @@ const BLOQUES: Bloque[] = [
         clase: 'landingBloque1',
         divClase: 'div1',
         svgHTML: div1Raw,
-        descripcion: 'Kamples centraliza herramientas de producción musical dispersas en una sola plataforma optimizada para cada etapa del proceso creativo.',
+        descripcion: `${NOMBRE} centraliza herramientas de producción musical dispersas en una sola plataforma optimizada para cada etapa del proceso creativo.`,
     },
     {
         clase: 'landingBloque2',
         divClase: 'div2',
         svgHTML: null,
-        descripcion: 'Usamos inteligencia artificial para reconocimiento de patrones, mejora de algoritmos y supervisión. Kamples aprende de los usuarios para mejorar continuamente.',
+        descripcion: `Usamos inteligencia artificial para reconocimiento de patrones, mejora de algoritmos y supervisión. ${NOMBRE} aprende de los usuarios para mejorar continuamente.`,
     },
     {
         clase: 'landingBloque3',
@@ -65,7 +66,7 @@ const BLOQUES: Bloque[] = [
         clase: 'landingBloque6',
         divClase: 'div6',
         svgHTML: div6Raw,
-        descripcion: 'Algoritmos inteligentes de recomendación: Kamples entiende tus gustos y recomienda recursos apropiados para ti y tus proyectos.',
+        descripcion: `Algoritmos inteligentes de recomendación: ${NOMBRE} entiende tus gustos y recomienda recursos apropiados para ti y tus proyectos.`,
     },
     {
         clase: 'landingBloque7',
@@ -83,7 +84,7 @@ const BLOQUES: Bloque[] = [
         clase: 'landingBloque9',
         divClase: 'div9',
         svgHTML: div9Raw,
-        descripcion: 'Exprésate a través de música, samples, kits, posts y colaboraciones. Kamples comprende que el arte tiene múltiples formas de expresión.',
+        descripcion: `Exprésate a través de música, samples, kits, posts y colaboraciones. ${NOMBRE} comprende que el arte tiene múltiples formas de expresión.`,
     },
 ];
 
