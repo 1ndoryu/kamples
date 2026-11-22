@@ -20,6 +20,8 @@
     "emit:openapi": "powershell -ExecutionPolicy Bypass -File scripts/emit-openapi.ps1",
     "codegen": "npm run emit:openapi && npm --prefix frontend run codegen",
     "test": "cargo test",
+    "marca": "node scripts/marca/generar.mjs",
+    "marca:check": "node scripts/marca/generar.mjs --revisar",
     "roadmap": "node scripts/check-roadmap.mjs",
     "roadmap:watch": "node scripts/check-roadmap.mjs --watch",
     "audit:api": "node scripts/audit-api.mjs",

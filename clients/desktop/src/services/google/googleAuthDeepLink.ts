@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
+import { IDENTIDAD_ESQUEMA_ENLACE, NOMBRE } from '@marca';
 import type { UsuarioAutenticado } from '@app/types/varios-1/usuario';
 
 export interface GoogleAuthMobileResult {
@@ -20,8 +21,8 @@ export async function leerDeepLinkPendienteAndroid(): Promise<string | null> {
 
 export function extraerResultadoDeepLink(urlStr: string): GoogleAuthMobileResult {
     const url = new URL(urlStr);
-    if (url.protocol !== 'kamples:' || url.host !== 'auth') {
-        throw new Error('Deep link OAuth no coincide con Kamples');
+    if (url.protocol !== `${IDENTIDAD_ESQUEMA_ENLACE}:` || url.host !== 'auth') {
+        throw new Error(`Deep link OAuth no coincide con ${NOMBRE}`);
     }
 
     const payload = url.searchParams.get('payload');

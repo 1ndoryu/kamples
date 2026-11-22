@@ -4,6 +4,10 @@ KAMPLES (`glory-rust-template`) es una plataforma de samples y música en migrac
 
 ## Siguiente bloque
 
+- [ ] `21AA-1` — **Marca en una sola fuente.** Hoy el nombre visible se escribe a mano en Rust,
+  TypeScript, HTML e i18n; centralizarlo en `marca.json` + `scripts/marca/generar.mjs` (con
+  `npm run marca:check` en verde y `Arranque app "KAMPLES"` recompilado) deja cambiarlo con un
+  fichero y regenerar, sin tocar la identidad que ya usan los datos en disco.
 - [ ] `19AA-1` — **Comprobar "Salir" del tray en la app de escritorio.** El paquete ya arranca en
   limpio, sube un sample real hasta `activo`, sobrevive a un reinicio y deja el `.dump` en
   `backups/`; falta ver con la ventana delante que `Salir` del menú de la bandeja apaga

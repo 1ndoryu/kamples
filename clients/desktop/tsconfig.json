@@ -21,6 +21,7 @@
             "@/*": ["../../frontend/src/glory-core/*"],
             "@app/*": ["../../frontend/src/legacy/*"],
             "@desktop/*": ["./src/*"],
+            "@marca": ["../../frontend/src/marca.ts"],
             "react": ["./node_modules/@types/react"],
             "react/*": ["./node_modules/@types/react/*"],
             "react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime"],

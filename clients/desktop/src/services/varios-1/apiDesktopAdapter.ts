@@ -11,6 +11,7 @@
  * y un token JWT persistente en vez del nonce de sesion.
  */
 
+import { CABECERA_AUTH } from '@marca';
 import { esDesktop } from './desktopService';
 import { obtenerToken } from '../auth/authDesktopService';
 /* [256A-1c] Import estático del adaptador Rust. Antes era import() dinámico, lo que causaba
@@ -207,7 +208,7 @@ async function manejarSesionExpirada(): Promise<void> {
                 const resp = await fetchOriginal(`${baseUrl}/kamples/v1/me`, {
                     headers: {
                         'Authorization': `Bearer ${tokenActual}`,
-                        'X-Kamples-Auth': `Bearer ${tokenActual}`,
+                        [CABECERA_AUTH]: `Bearer ${tokenActual}`,
                     },
                 });
                 if (resp.ok) {
@@ -265,7 +266,7 @@ export function inyectarAuthHeader(token: string): void {
         if (url.includes('/wp-json/') || url.includes('/api/')) {
             headers.set('Authorization', `Bearer ${token}`);
             /* Fallback para nginx/LocalWP que no pasan Authorization a PHP-FPM */
-            headers.set('X-Kamples-Auth', `Bearer ${token}`);
+            headers.set(CABECERA_AUTH, `Bearer ${token}`);
         }
 
         /* Llamar al siguiente wrapper en la cadena (Rust adapter o browser fetch) */

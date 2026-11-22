@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'path';
+import { marcaHtml } from '../../frontend/vite-plugins/marca-html.ts';
 
 /*
  * Vite config para Kamples Desktop (Tauri 2.0)
@@ -23,7 +24,7 @@ const apiTarget = process.env.KAMPLES_API_TARGET || 'http://localhost:3001';
 const envRaiz = loadEnv('production', resolve(__dirname, '..'), '');
 
 export default defineConfig({
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), marcaHtml()],
 
     /* Inyectar config publica del proyecto en el bundle (build time) */
     define: {
@@ -139,6 +140,8 @@ export default defineConfig({
             '@app': resolve(__dirname, '../../frontend/src/legacy'),
             /* Desktop-specific code */
             '@desktop': resolve(__dirname, 'src'),
+            /* Constantes de marca, compartidas con el front principal. */
+            '@marca': resolve(__dirname, '../../frontend/src/marca.ts'),
             /* Cliente Orval compartido con la SPA Rust principal */
             '@api': resolve(__dirname, '../../frontend/src/api/generated'),
             /* Dependencias: usar node_modules local del desktop */

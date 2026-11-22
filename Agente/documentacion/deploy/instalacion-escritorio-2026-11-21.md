@@ -65,6 +65,8 @@ desde 5433.
 
 ## Instalación anterior
 
-Queda un `C:\Users\Owner\AppData\Local\Kamples` del instalador NSIS de marzo de 2026
-(`kamples-desktop.exe`, `uninstall.exe`). Es otra app, ajena a esta carpeta; desinstalarla es
-decisión de la usuaria.
+El instalador NSIS de marzo de 2026 (`C:\Users\Owner\AppData\Local\Kamples`,
+`kamples-desktop.exe` + `uninstall.exe`) se desinstaló el 2026-11-21 con su propio
+`uninstall.exe` (código 0): carpeta, clave HKCU de desinstalación y acceso del menú Inicio
+borrados, sin restos en AppData. `KamplesDatos` no se tocó, porque el desinstalador borra
+`Kamples` y no `KamplesDatos`.

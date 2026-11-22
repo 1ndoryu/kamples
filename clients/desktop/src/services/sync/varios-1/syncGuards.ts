@@ -10,6 +10,8 @@
  * syncService y syncCollectionService ambos necesitan estas utilidades.
  */
 
+import { CABECERA_AUTH } from '@marca';
+
 /* Descarga masiva en curso — suprime eventos de carpeta del watcher durante sync */
 
 let descargaMasivaActiva = false;
@@ -213,7 +215,7 @@ export function obtenerHeadersSync(incluirContentType = true): Record<string, st
     }
     if (tokenSync) {
         headers['Authorization'] = `Bearer ${tokenSync}`;
-        headers['X-Kamples-Auth'] = `Bearer ${tokenSync}`;
+        headers[CABECERA_AUTH] = `Bearer ${tokenSync}`;
     }
     return headers;
 }
