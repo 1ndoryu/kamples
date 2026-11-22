@@ -35,6 +35,7 @@ pub fn apuntar(app: &tauri::App, base: &str) -> Result<(), Box<dyn std::error::E
         .min_inner_size(900.0, 600.0)
         .center()
         .build()?;
+    poner_icono_grande(&principal);
     /* Cerrar la ventana principal la oculta, no la destruye: el tray tiene que
      * poder volver a mostrarla. Para cerrar de verdad está "Salir". */
     let app_handle = app.handle().clone();
@@ -86,6 +87,67 @@ pub fn apuntar(app: &tauri::App, base: &str) -> Result<(), Box<dyn std::error::E
 
     Ok(())
 }
+
+/// Pone en la ventana el icono grande (barra de tareas y Alt+Tab).
+///
+/// [por que hace falta] Tauri, a través de tao, solo asigna el icono pequeño
+/// (`WM_SETICON` + `ICON_SMALL`); el grande lo deja vacío porque no expone la
+/// opción `taskbar_icon`. La barra de tareas pide `ICON_BIG`, no lo encuentra y
+/// dibuja el icono genérico de Windows. Aquí se carga el icono que
+/// `tauri-build` ya incrustó en el `.exe` (id 32512) al tamaño del sistema y se
+/// asigna a la ventana. En otros sistemas el bundle ya llega bien.
+#[cfg(windows)]
+fn poner_icono_grande(ventana: &tauri::WebviewWindow) {
+    use windows_sys::Win32::Foundation::HWND;
+    use windows_sys::Win32::System::LibraryLoader::GetModuleHandleW;
+    use windows_sys::Win32::UI::WindowsAndMessaging::{
+        GetSystemMetrics, LoadImageW, SendMessageW, ICON_BIG, IMAGE_ICON, SM_CXICON, SM_CYICON,
+        WM_SETICON,
+    };
+
+    /* Id que tauri-build da al icono del `.exe` (constante
+     * `WINDOWS_APP_ICON_RESOURCE_ID` de tauri-utils). */
+    const ID_ICONO_APP: usize = 32512;
+
+    let Ok(nativa) = ventana.hwnd() else {
+        return;
+    };
+    /* `hwnd()` devuelve el `HWND` del crate `windows` y aquí se usa
+     * `windows-sys`; los dos son `*mut c_void`. */
+    let manejador: HWND = nativa.0;
+
+    /* `GetSystemMetrics` devuelve 0 si falla; 32 es el tamaño de la barra de
+     * tareas a 96 ppp, con el que Windows se queda en ese caso. */
+    let lado = |metrica: i32| match unsafe { GetSystemMetrics(metrica) } {
+        n if n > 0 => n,
+        _ => 32,
+    };
+
+    /* Si falla la carga (icono sin incrustar, recurso roto) no se toca nada:
+     * la ventana conserva el pequeño y la app sigue usable. */
+    let icono = unsafe {
+        LoadImageW(
+            GetModuleHandleW(std::ptr::null()),
+            ID_ICONO_APP as usize as *const u16, // MAKEINTRESOURCE: el id va como puntero
+            IMAGE_ICON,
+            lado(SM_CXICON),
+            lado(SM_CYICON),
+            0,
+        )
+    };
+    if icono.is_null() {
+        return;
+    }
+
+    /* El icono cargado pertenece al proceso y vive hasta que este muere, así
+     * que no se libera: Windows no lo copia al asignarlo. */
+    unsafe {
+        SendMessageW(manejador, WM_SETICON, ICON_BIG as usize, icono as isize);
+    }
+}
+
+#[cfg(not(windows))]
+fn poner_icono_grande(_ventana: &tauri::WebviewWindow) {}
 
 /// Sustituye la ventana principal por una página con el error de arranque.
 pub fn mostrar_error(app: &tauri::App, error: &str) -> Result<(), Box<dyn std::error::Error>> {
