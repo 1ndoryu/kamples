@@ -45,6 +45,9 @@ desktop.ini
 # pero sin esta línea el repo no lo llevaba y el sidecar no arrancaba en un clon
 # limpio — sin copias y sin que nada lo dijera.
 !/scripts/backup-uploads-loop.sh
+# Wrapper de cargo (obligatorio para `Arranque app`) y generador de la marca.
+!/scripts/run-cargo.mjs
+!/scripts/marca/
 /prerendered/
 /node_modules/
 /cliente/

@@ -1,0 +1,12 @@
+{
+  "_leeme": "Fuente única de la marca. Cambia `nombre` y ejecuta `node scripts/marca/generar.mjs`; el resto del árbol se regenera. `identidad` NO se cambia sin migrar los datos: ver Agente/documentacion/producto/marca-2026-11-21.md.",
+  "nombre": "Kamples",
+  "nombreCorto": "Kamples",
+  "identidad": {
+    "slug": "kamples",
+    "identifier": "app.kamples.desktop",
+    "esquemaEnlace": "kamples",
+    "carpetaDatos": "KamplesDatos",
+    "dominio": "kamples.com"
+  }
+}
