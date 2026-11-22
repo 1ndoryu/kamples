@@ -108,6 +108,10 @@ ndarray = "0.16"
 # Image processing (on-demand optimization, 104A-5)
 image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp", "gif"] }
 webp = { version = "0.3", default-features = false }
+# [build-2026-11-22] Sin la feature `sse41`, libwebp-sys compila su `yuv_sse41.c` sin `-msse4.1`
+# y clang 18 lo rechaza (intrínsecos siempre-inline sin target feature); el build cruzado a Windows
+# dependía de un CFLAGS exportado a mano en la 89. Con la feature, su build.rs pasa el flag él mismo.
+libwebp-sys = { version = "0.9.6", features = ["sse41"] }
 
 # Concurrencia
 dashmap = "6"

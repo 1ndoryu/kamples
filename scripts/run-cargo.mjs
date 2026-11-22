@@ -19,11 +19,28 @@ const RCARGO_DIR = path.resolve(
   'remoto',
 );
 const taller = await import(pathToFileURL(path.join(RCARGO_DIR, 'rcargo.mjs')).href);
-const argvCargo = process.argv.slice(2);
 const config = taller.cargarConfig();
 const proyecto = taller.detectarProyecto(process.cwd());
 
-if (taller.modoEfectivo(argvCargo, config, proyecto) !== 'remoto') {
+/* Entorno que el build cruzado necesita y que el taller no tiene por defecto. Antes se exportaba
+ * a mano en la 89 (`CFLAGS`, `SWAGGER_UI_DOWNLOAD_URL`) y al perderse el export el build moría:
+ * primero en `libwebp-sys` (ya curado en `Cargo.toml` con la feature `sse41`), luego en
+ * `utoipa-swagger-ui`, que intenta descargarse el zip de GitHub desde `build.rs`. Se fijan aquí,
+ * el único punto por el que pasa cargo de este proyecto; lo que se pase a mano manda. */
+const POR_DEFECTO = [
+  `--prepath=/usr/lib/llvm-18/bin`,
+  // `cm-sweep` no toca `~/.local/share`: el zip sobrevive al barrido (a diferencia de `/var/tmp`).
+  `--env=SWAGGER_UI_DOWNLOAD_URL=file:///home/dev/.local/share/kamples/swagger-ui-v5.17.12.zip`,
+];
+const argvUsuario = process.argv.slice(2);
+const argvCargo = [
+  ...argvUsuario,
+  ...POR_DEFECTO.filter((d) => {
+    const clave = d.slice(0, d.indexOf('='));
+    return !argvUsuario.some((a) => a === clave || a.startsWith(`${clave}=`));
+  }),
+];
+if (taller.modoEfectivo(argvUsuario, config, proyecto) !== 'remoto') {
   /* El modo local ya no existe: se sale en claro en vez de fallar con un ENOENT. */
   console.error('[run-cargo] El portátil no compila Rust: quita --local y compila en el taller.');
   process.exit(1);

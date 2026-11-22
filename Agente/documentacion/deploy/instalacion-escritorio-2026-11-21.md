@@ -38,11 +38,20 @@ programa y su desinstalador borra esa carpeta entera.
 
 ## Actualizar la app
 
-1. Compilar en la 89 y traer el binario nuevo (nunca en el portátil):
+1. Compilar en la 89 (nunca en el portátil). El wrapper del proyecto ya lleva el entorno que
+   exige el build cruzado, así que no hacen falta banderas:
 
    ```powershell
-   node workspace-manager/scripts/remoto/rcargo.mjs --proyecto=KAMPLES xwin build --release --target x86_64-pc-windows-msvc --manifest-path clients/desktop/src-tauri/Cargo.toml --bin kamples-desktop --prepath=/usr/lib/llvm-18/bin
+   node scripts/run-cargo.mjs xwin build --release --bin kamples-desktop --manifest-path clients/desktop/src-tauri/Cargo.toml
+   node scripts/run-cargo.mjs xwin build --release --bin glory-backend
    ```
+
+   Ese entorno (`--prepath` del llvm de lld-link y `SWAGGER_UI_DOWNLOAD_URL` apuntando al zip de
+   Swagger UI en `~/.local/share/kamples/`) antes se exportaba a mano en la 89; al perderse el
+   export, el build moría primero en `libwebp-sys` (clang 18 rechaza `yuv_sse41.c` sin
+   `-msse4.1`) y después en `utoipa-swagger-ui` (descarga desde `build.rs`). Lo de webp se curó en
+   `Cargo.toml` con la feature `sse41`; lo de Swagger, en `scripts/run-cargo.mjs`. No pases
+   `--prepath` desde Git Bash en el portátil: reescribe `/usr/...` a `C:/Program Files/Git/usr/...`.
 
 2. Parar la app (bandeja → Salir) y comprobar que el 4317 quedó libre.
 3. Sustituir solo los archivos de programa que cambiaron: `Kamples.exe`, `glory-backend.exe`,
